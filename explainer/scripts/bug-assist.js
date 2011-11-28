@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
         inputs[name] = input;
     });
 
+    form.appendChild(document.createTextNode(', or '));
+    var a = form.appendChild(document.createElement('a'));
+    a.textContent = 'view bugs filed';
+    a.href = 'http://www.w3.org/Bugs/Public/showdependencytree.cgi?id=14949';
+    a.target = '_blank';
+    form.appendChild(document.createTextNode('.'));
+
     form.addEventListener('submit', function() {
         var selectedText = window.getSelection().toString();
         if (selectedText)
