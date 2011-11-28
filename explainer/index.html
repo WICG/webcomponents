@@ -625,7 +625,25 @@ var shadow = new ShadowRoot(anyElement);
 
 <p>Component encapsulation is partially enforced with shadow DOM, ensuring that shadow DOM nodes never appear in the event dispatch, range, focus-related DOM accessors or any APIs that query DOM nodes. It is up the author of the component to choose whether the inner state is exposed.
 
-<p>Component confinement is much trickier. Perhaps it needs to be tackled as a separate effort.
+<p>Component confinement is trickier, but possible using existing primitives, such as <code>iframe</code> or workers. The general solution would be to treat the component as the corruptible agent, which is responsible for the component user interface and interaction with the document. The component would then load a worker (or an <code>iframe</code>) and communicate with it using <code>postMessage</code>:
+
+<pre><code>
+&lt;!--- located at http://example.com/adorable/button --&gt;
+&lt;element name=&quot;x-adore-button&quot; extends=&quot;button&quot;&gt;
+    &lt;script&gt;
+        var service = new Worker(&#x27;http://example.com/adorable/service/worker.js&#x27;);
+        service.onmessage = function(event) {
+            // process responses from the service.
+            ...
+        }
+        // set up UI.
+        ...
+        // start interacting with the worker.
+        service.postMessage(&#x27;hello&#x27;);
+    &lt;/script&gt;
+    &lt;template&gt;I adore this&lt;/template&gt;
+&lt;/element&gt;
+</code></pre>
 
 <h2>Example</h2>
 
