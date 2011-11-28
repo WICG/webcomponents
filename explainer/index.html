@@ -45,13 +45,13 @@
     &lt;div&gt;
         &lt;img src=&quot;&quot;&gt;
         &lt;div class=&quot;content&quot;&gt;&lt;/div&gt;
-        ...
+        &hellip;
     &lt;/div&gt;
 &lt;/template&gt;
 
 var t = document.querySelector("#commentTemplate");
 // Populate content and img[src] values in the template.
-// ...
+// &hellip;
 someElement.appendChild(t.content.cloneNode());
 </code></pre>
 
@@ -65,23 +65,23 @@ someElement.appendChild(t.content.cloneNode());
 
 <pre><code>
 &lt;decorator id=&quot;fade-to-white&quot;&gt;
- &lt;template&gt;
-   &lt;div style=&quot;position: relative;&quot;&gt;
-     &lt;style scoped&gt;
-       #fog {
-         position: absolute;
-         left: 0;
-         bottom: 0;
-         right: 0;
-         height: 5em;
-         background: linear-gradient(
-             bottom, white 0%, rgba(255, 255, 255, 0) 100%);
-       }
-     &lt;content&gt;&lt;/content&gt;
-     &lt;div id=&quot;fog&quot;&gt;&lt;/div&gt;
-     &lt;/style&gt;
-   &lt;/div&gt;
- &lt;/template&gt;
+    &lt;template&gt;
+        &lt;div style=&quot;position: relative;&quot;&gt;
+            &lt;style scoped&gt;
+                #fog {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    height: 5em;
+                    background: linear-gradient(
+                    bottom, white 0%, rgba(255, 255, 255, 0) 100%);
+                }
+            &lt;/style&gt;
+            &lt;content&gt;&lt;/content&gt;
+            &lt;div id=&quot;fog&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/template&gt;
 &lt;/decorator&gt;
 </code></pre>
 
@@ -91,8 +91,8 @@ someElement.appendChild(t.content.cloneNode());
 
 <pre><code>
 .poem {
- decorator: url(#fade-to-white);
- font-variant: small-caps;
+    decorator: url(#fade-to-white);
+    font-variant: small-caps;
 }
 </code></pre>
 
@@ -100,8 +100,8 @@ someElement.appendChild(t.content.cloneNode());
 
 <pre><code>
 &lt;div class=&quot;poem&quot;&gt;
- Two roads diverged in a yellow wood,&lt;br&gt;
- &hellip;
+    Two roads diverged in a yellow wood,&lt;br&gt;
+    &hellip;
 &lt;/div&gt;
 </code></pre>
 
@@ -109,11 +109,11 @@ someElement.appendChild(t.content.cloneNode());
 
 <pre><code>
 &lt;div style=&quot;font-variant: small-caps;&quot;&gt;
- &lt;div style=&quot;position: relative;&quot;&gt;
-   Two roads diverged in a yellow wood,&lt;br&gt;
-   ...
-   &lt;div style=&quot;position: absolute; left: 0; &hellip;&quot;&gt;&lt;/div&gt;
- &lt;/div&gt;
+    &lt;div style=&quot;position: relative;&quot;&gt;
+        Two roads diverged in a yellow wood,&lt;br&gt;
+        &hellip;
+        &lt;div style=&quot;position: absolute; left: 0; &hellip;&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
 
@@ -138,16 +138,16 @@ someElement.appendChild(t.content.cloneNode());
 
 <pre><code>
 &lt;decorator id=&quot;decorator-event-demo&quot;&gt;
- &lt;script&gt;
-   function h(event) {
-     alert(event.target);
-   }
-   this.listen({selector: &#x27;#b&#x27;, type: &#x27;click&#x27;, handler: h});
- &lt;/script&gt;
- &lt;template&gt;
-   &lt;content&gt;&lt;/content&gt;
-   &lt;button id=&quot;b&quot;&gt;Bar&lt;/button&gt;
- &lt;/template&gt;
+    &lt;script&gt;
+        function h(event) {
+            alert(event.target);
+        }
+        this.listen({selector: &quot;#b&quot;, type: &quot;click&quot;, handler: h});
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;content&gt;&lt;/content&gt;
+        &lt;button id=&quot;b&quot;&gt;Bar&lt;/button&gt;
+    &lt;/template&gt;
 &lt;/decorator&gt;
 </code></pre>
 
@@ -186,43 +186,43 @@ Foo[Bar]
 
 <pre><code>
 details {
- decorator: url(#details-closed);
+    decorator: url(#details-closed);
 }
 details[open] {
- decorator: url(#details-open);
+    decorator: url(#details-open);
 }
 
 &lt;decorator id=&quot;details-closed&quot;&gt;
- &lt;script&gt;
-   this.listen({
-     selector: &#x27;#summary&#x27;, type: &#x27;click&#x27;,
-     handler: function (event) {
-       event.currentTarget.open = true;
-     }
-   });
- &lt;/script&gt;
- &lt;template&gt;
-   &lt;a id=&quot;summary&quot;&gt;
-     &amp;gt; &lt;content select=&quot;summary:first-of-type&quot;&gt;&lt;/content&gt;
-   &lt;/a&gt;
- &lt;/template&gt;
+    &lt;script&gt;
+        this.listen({
+            selector: &quot;#summary&quot;, type: &quot;click&quot;,
+            handler: function (event) {
+                event.currentTarget.open = true;
+            }
+        });
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;a id=&quot;summary&quot;&gt;
+            &amp;gt; &lt;content select=&quot;summary:first-of-type&quot;&gt;&lt;/content&gt;
+        &lt;/a&gt;
+    &lt;/template&gt;
 &lt;/decorator&gt;
 
 &lt;decorator id=&quot;details-open&quot;&gt;
- &lt;template&gt;
-   &lt;script&gt;
-     this.listen({
-       selector: &#x27;#summary&#x27;, type: &#x27;click&#x27;,
-       handler: function (event) {
-         event.target.open = false;
-       }
-     });
-   &lt;/script&gt;
-   &lt;a id=&quot;summary&quot;&gt;
-     V &lt;content select=&quot;summary:first-of-type&quot;&gt;&lt;/content&gt;
-   &lt;/a&gt;
-   &lt;content&gt;&lt;/content&gt;
- &lt;/template&gt;
+    &lt;template&gt;
+        &lt;script&gt;
+            this.listen({
+                selector: &quot;#summary&quot;, type: &quot;click&quot;,
+                handler: function (event) {
+                    event.currentTarget.open = false;
+                }
+            });
+        &lt;/script&gt;
+        &lt;a id=&quot;summary&quot;&gt;
+            V &lt;content select=&quot;summary:first-of-type&quot;&gt;&lt;/content&gt;
+        &lt;/a&gt;
+        &lt;content&gt;&lt;/content&gt;
+    &lt;/template&gt;
 &lt;/decorator&gt;
 </code></pre>
 
@@ -238,7 +238,7 @@ details[open] {
 
 <pre><code>
 &lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;
-...
+    &hellip;
 &lt;/element&gt;
 </code></pre>
 
@@ -258,21 +258,21 @@ details[open] {
 
 <pre><code>
 &lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;
- &lt;template&gt;
-   &lt;style scoped&gt;
-     ::bound-element { display: transparent; }
-     div.fancy {
-       ...
-     }
-   &lt;/style&gt;
-   &lt;div class=&quot;fancy&quot;&gt;
-     &lt;content&gt;&lt;/content&gt;
-     &lt;div id=&quot;t&quot;&gt;&lt;/div&gt;
-     &lt;div id=&quot;l&quot;&gt;&lt;/div&gt;
-     &lt;div id=&quot;b&quot;&gt;&lt;/div&gt;
-     &lt;div id=&quot;r&quot;&gt;&lt;/div&gt;
-   &lt;/div&gt;
- &lt;/template&gt;
+    &lt;template&gt;
+        &lt;style scoped&gt;
+            ::bound-element { display: transparent; }
+            div.fancy {
+                &hellip;
+            }
+        &lt;/style&gt;
+        &lt;div class=&quot;fancy&quot;&gt;
+            &lt;content&gt;&lt;/content&gt;
+            &lt;div id=&quot;t&quot;&gt;&lt;/div&gt;
+            &lt;div id=&quot;l&quot;&gt;&lt;/div&gt;
+            &lt;div id=&quot;b&quot;&gt;&lt;/div&gt;
+            &lt;div id=&quot;r&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/template&gt;
 &lt;/element&gt;
 </code></pre>
 
@@ -284,13 +284,13 @@ details[open] {
 
 <pre><code>
 &lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;  &lt;!-- definition --&gt;
-    ...
+    &hellip;
 &lt;/element&gt;
 </code></pre>
 
 <pre><code>
 &lt;button is=&quot;x-fancybutton&quot; onclick=&quot;showTimeClicked(event);&quot;&gt;  &lt;!-- use --&gt;
- Show time
+    Show time
 &lt;/button&gt;
 </code></pre>
 
@@ -307,10 +307,10 @@ alert(b.outerHTML); // will display '&lt;button is=&quot;x-fancybutton&quot;&gt;
 
 <pre><code>
 &lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot; constructor=&quot;FancyButton&quot;&gt;
-    ...
+    &hellip;
 &lt;/element&gt;
 
-...
+&hellip;
 
 var b = new FancyButton();
 document.body.appendChild(b);
@@ -320,27 +320,27 @@ document.body.appendChild(b);
 
 <pre><code>
 &lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot; constructor=&quot;FancyButton&quot;&gt;
- ...
- &lt;script&gt;
-   FancyButton.prototype.razzle = function () {
-     ...
-   };
-   FancyButton.prototype.dazzle = function () {
-     ...
-   };
- &lt;/script&gt;
+    &hellip;
+    &lt;script&gt;
+    FancyButton.prototype.razzle = function () {
+        &hellip;
+    };
+    FancyButton.prototype.dazzle = function () {
+        &hellip;
+    };
+    &lt;/script&gt;
 &lt;/element&gt;
 
-...
+&hellip;
 
 &lt;script&gt;
-   var b = new FancyButton();
-   b.textContent = &#x27;Show time&#x27;;
-   document.body.appendChild(b);
-   b.addEventListener(&#x27;click&#x27;, function (event) {
-     event.target.dazzle();
-   });
-   b.razzle();
+    var b = new FancyButton();
+    b.textContent = &quot;Show time&quot;;
+    document.body.appendChild(b);
+    b.addEventListener(&quot;click&quot;, function (event) {
+        event.target.dazzle();
+    });
+    b.razzle();
 &lt;/script&gt;
 </code></pre>
 
@@ -352,7 +352,7 @@ document.body.appendChild(b);
         if (this === window)
             useComponentModelPolyfill(&quot;x-chart&quot;, &quot;Chart&quot;);
         else {
-            // ...
+            // &hellip;
         }
     &lt;/script&gt;
 &lt;/element&gt;
@@ -371,10 +371,10 @@ document.body.appendChild(b);
 <pre><code>
 &lt;element extends=&quot;table&quot; name=&quot;x-chart&quot;&gt;
     &lt;script&gt;
-        // ...
+        // &hellip;
         var Chart = this.generatedConstructor;
-        Chart.prototype.shizzle = function() { /* ... */ };
-        // ...
+        Chart.prototype.shizzle = function() { /* &hellip; */ };
+        // &hellip;
     &lt;/script&gt;
 &lt;/element&gt;
 </code></pre>
@@ -396,22 +396,22 @@ alert(div.outerHTML); // displays &lt;div&gt;&lt;/div&gt;
 
 <pre><code>
 function showTimeClicked(event) {
- // event.target may be an HTMLButtonElement or a FancyButton
+    // event.target may be an HTMLButtonElement or a FancyButton
 
- if (!event.target.razzle) {
-   // razzle, part of the FancyButton API, is missing
-   // so upgrade has not happened yet
-   event.target.addEventListener('upgrade', function (upgradeEvent) {
-     showTime(upgradeEvent.replacement);
-   });
-   return;
- }
+    if (!event.target.razzle) {
+        // razzle, part of the FancyButton API, is missing
+        // so upgrade has not happened yet
+        event.target.addEventListener('upgrade', function (upgradeEvent) {
+            showTime(upgradeEvent.replacement);
+        });
+        return;
+    }
 
- showTime(event.target);
+    showTime(event.target);
 }
 
 function showTime(b) {
- // b is FancyButton
+    // b is FancyButton
 }
 </code></pre>
 
@@ -436,14 +436,14 @@ function showTime(b) {
 <pre><code>
 &lt;element extends=&quot;time&quot; name=&quot;x-clock&quot;&gt;
 &lt;script&gt;
-// ...
+// &hellip;
 
         this.lifecycle({
             inserted: function() { this.startUpdatingClock(); },
             removed: function() { this.stopUpdatingClock(); }
         });
 
-// ...
+// &hellip;
 &lt;/script&gt;
 &lt;/element&gt;
 </code></pre>
@@ -454,7 +454,7 @@ function showTime(b) {
 
 <pre><code>
 &lt;element extends=&quot;x-clock&quot; name=&quot;x-grandfatherclock&quot;&gt;
-    ...
+    &hellip;
 &lt;/element&gt;
 </code></pre>
 
@@ -513,7 +513,7 @@ function showTime(b) {
 <pre><code>
 &lt;div&gt;
     &lt;shadow&gt;&lt;!-- range slider renders here --&gt;&lt;/shadow&gt;
-    &lt;div class=&quot;ticks&quot;&gt; ... &lt;/div&gt;
+    &lt;div class=&quot;ticks&quot;&gt; &hellip; &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
 
@@ -524,7 +524,7 @@ function showTime(b) {
     <li>element shadow DOM (I got here first, nyah!)
     <li>shadow DOM of the element sub-class
     <li>shadow DOM of the element sub-sub-class
-    <li>...
+    <li>&hellip;
     <li>some shadow DOM added using script
     <li>decorator shadow (applied and removed with CSS rules&mdash;not technically a shadow DOM, but can, too, have <code>&lt;content&gt;</code> and <code>&lt;shadow&gt;</code> elements)
 </ol>
@@ -631,15 +631,15 @@ var shadow = new ShadowRoot(anyElement);
 &lt;!--- located at http://example.com/adorable/button --&gt;
 &lt;element name=&quot;x-adore-button&quot; extends=&quot;button&quot;&gt;
     &lt;script&gt;
-        var service = new Worker(&#x27;http://example.com/adorable/service/worker.js&#x27;);
+        var service = new Worker(&quot;http://example.com/adorable/service/worker.js&quot;);
         service.onmessage = function(event) {
             // process responses from the service.
-            ...
+            &hellip;
         }
         // set up UI.
-        ...
+        &hellip;
         // start interacting with the worker.
-        service.postMessage(&#x27;hello&#x27;);
+        service.postMessage(&quot;hello&quot;);
     &lt;/script&gt;
     &lt;template&gt;I adore this&lt;/template&gt;
 &lt;/element&gt;
@@ -651,34 +651,34 @@ var shadow = new ShadowRoot(anyElement);
 
 <pre><code>
 &lt;decorator id=&quot;timezone-map&quot;&gt;
-   &lt;script&gt;
-       var timezones = [&#x27;PST&#x27;, ... ];
+    &lt;script&gt;
+        var timezones = [&quot;PST&quot;, &hellip; ];
 
-       function createHandler(timezone)
-       {
-           this.listen({
-               selector: &#x27;#&#x27; + timezone,
-               type: &#x27;click&#x27;,
-               handler: function() {
-                   // Decorators are late-bound, we must check for type.
-                   if (this instanceof HTMLSelectElement)
-                       this.selectedIndex = this[timezone].index;
-               }
-           });
-       }
+        function createHandler(timezone)
+        {
+            this.listen({
+                selector: &quot;#&quot; + timezone,
+                type: &quot;click&quot;,
+                handler: function() {
+                    // Decorators are late-bound, we must check for type.
+                    if (this instanceof HTMLSelectElement)
+                        this.selectedIndex = this[timezone].index;
+                }
+            });
+        }
 
-       timezones.forEach(createHandler, this);
-   &lt;/script&gt;
-   &lt;template&gt;
-       &lt;svg ...&gt;
-           &lt;g id=&quot;worldShapes&quot;&gt; ... &lt;/g&gt;
-           &lt;g id=&quot;timezoneShapes&quot;&gt;
-               &lt;path id=&quot;PST&quot; ...&gt;
-               &lt;path id=&quot;CST&quot; ...&gt;
-           &lt;/g&gt;
-           ...
-       &lt;/svg&gt;
-   &lt;/template&gt;
+        timezones.forEach(createHandler, this);
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;svg &hellip;&gt;
+            &lt;g id=&quot;worldShapes&quot;&gt; &hellip; &lt;/g&gt;
+            &lt;g id=&quot;timezoneShapes&quot;&gt;
+                &lt;path id=&quot;PST&quot; &hellip;&gt;
+                &lt;path id=&quot;CST&quot; &hellip;&gt;
+            &lt;/g&gt;
+            &hellip;
+        &lt;/svg&gt;
+    &lt;/template&gt;
 &lt;/decorator&gt;
 </code></pre>
 
@@ -695,7 +695,7 @@ select.timezones {
 <pre><code>
 &lt;select class=&quot;timezones&quot;&gt;
     &lt;option&gt;PST&lt;/option&gt;
-    ...
+    &hellip;
 &lt;/select&gt;
 </code></pre>
 
@@ -703,30 +703,30 @@ select.timezones {
 
 <pre><code>
 &lt;element extends=&quot;select&quot; name=&quot;x-timezone-map&quot; constructor=&quot;MapSelector&quot;&gt;
-   &lt;script&gt;
-       this.lifecycle({
-           created: function(shadowRoot) {
-               var select = shadowRoot.shadowHost;
-               var timezones = shadowRoot.querySelector(&#x27;#timezoneShapes&#x27;);
-               timezones.addEventHandler(&#x27;click&#x27;, function() {
-                   if (event.target != this)
-                       select.selectedIndex = select[event.target.id].index;
-               });
-           }
-       });
+    &lt;script&gt;
+        this.lifecycle({
+            created: function(shadowRoot) {
+                var select = shadowRoot.shadowHost;
+                var timezones = shadowRoot.querySelector(&quot;#timezoneShapes&quot;);
+                timezones.addEventHandler(&quot;click&quot;, function() {
+                    if (event.target != this)
+                        select.selectedIndex = select[event.target.id].index;
+                });
+            }
+        });
 
-       MapSelector.prototype.isDaylightSaving = function() { /* ... */ }
-   &lt;/script&gt;
-   &lt;template&gt;
-       &lt;svg&gt;
-           &lt;g id=&quot;worldShapes&quot;&gt; ... &lt;/g&gt;
-           &lt;g id=&quot;timezoneShapes&quot;&gt;
-               &lt;path id=&quot;PST&quot; ...&gt;
-               &lt;path id=&quot;CST&quot; ...&gt;
-           &lt;/g&gt;
-           ...
-       &lt;/svg&gt;
-   &lt;/template&gt;
+        MapSelector.prototype.isDaylightSaving = function() { /* &hellip; */ }
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;svg&gt;
+            &lt;g id=&quot;worldShapes&quot;&gt; &hellip; &lt;/g&gt;
+            &lt;g id=&quot;timezoneShapes&quot;&gt;
+                &lt;path id=&quot;PST&quot; &hellip;&gt;
+                &lt;path id=&quot;CST&quot; &hellip;&gt;
+            &lt;/g&gt;
+            &hellip;
+        &lt;/svg&gt;
+    &lt;/template&gt;
 &lt;/element&gt;
 </code></pre>
 
@@ -735,7 +735,7 @@ select.timezones {
 <pre><code>
 &lt;select is=&quot;x-timezone-map&quot;&gt;
     &lt;option&gt;PST&lt;/option&gt;
-    ...
+    &hellip;
 &lt;/select&gt;
 </code></pre>
 
@@ -852,7 +852,7 @@ Object.getPrototypeOf(FancyButton.prototype) ===
 
 document.body.lastChild === b &rArr; true
 b.tagName &rArr; &quot;button&quot;
-b.outerHTML &rArr; &quot;&lt;button is=&#x27;FancyButton&#x27;&gt;&lt;/button&gt;&quot;
+b.outerHTML &rArr; &quot;&lt;button is=&quot;FancyButton&quot;&gt;&lt;/button.html&gt;&quot;
 b instanceof FancyButton &rArr; true
 b instanceof HTMLButtonElement &rArr; true
 </code></pre>
