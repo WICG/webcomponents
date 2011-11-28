@@ -1,0 +1,65 @@
+<element extends="input" name="x-entry-helper">
+    <script>
+        this.lifecycle({
+            create: function(shadowRoot) {
+                if (this.type != 'text')
+                    return;
+                this._options = shadowRoot.querySelector('ul');
+                this.addEventListemer('keydown', this._handleKeyDownEvent);
+                this.setAttribute('autocomplete', 'off');
+            }
+        });
+
+        var Helper = this.generatedConstructor;
+        Helper.prototype._handleKeyDownEvent = function(evt)
+        {
+            this.open();
+        }
+
+        Helper.prototype._settingsChanged = function()
+        {
+            if (!this._open)
+                return;
+            /* .. */
+            
+        }
+
+        Helper.prototype.populate = function()
+        {
+            
+        }
+
+        Helper.prototype.open = function()
+        {
+            if (this._open)
+                return;
+            else
+                this._options.style.display = '';
+
+            // Show entry helper window and attempt completion match.
+            // ..
+
+            this._open = true;
+            this.dispatchEvent(new Event('open'));
+        }
+
+        this.reflectAttribute('x-highlight-matches', 'highlightMatches', Helper.prototype._settingsChanged);
+        this.reflectAttribute('list', 'list', Helper.prototype._settingsChanged);
+        this.setupEvent('helperopen')
+    </script>
+    <template>
+        <style scoped>
+            ul {
+                width: 200px;
+                height: 200px;
+                position: absolute;
+                /* ... */
+            }
+            /* ... */
+        </style>
+        <div>
+            <shadow></shadow>
+            <ul></ul>
+        </div>
+    </template>
+</element>

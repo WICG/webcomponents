@@ -1,0 +1,30 @@
+<decorator id="timezone-map">
+    <script>
+        var timezones = ['pst', ... ];
+
+        function createHandler(timezone)
+        {
+            this.listen({
+                selector: '#' + timezone,
+                type: 'click',
+                handler: function() {
+                    // Decorators are late-bound, so we must check for type.
+                    if (this instanceof HTMLSelectElement)
+                        this.selectedIndex = this[timezone].index;
+                }
+            });
+        }
+
+        timezones.forEach(createHandler, this);
+    </script>
+    <template>
+        <svg ...>
+            <g id="worldShapes"> ... </g>
+            <g id="timezoneShapes">
+                <path id="PST" ...>
+                <path id="CST" ...>
+            </g>
+            ...
+        </svg>
+    </template>
+</decorator>

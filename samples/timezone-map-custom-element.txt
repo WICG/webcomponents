@@ -1,0 +1,26 @@
+<element extends="select" name="x-timezone-map" constructor="MapSelector">
+    <script>
+        this.lifecycle({
+            created: function(shadowRoot) {
+                select = shadowRoot.shadowHost;
+                shadowRoot.querySelector('#timezoneShapes').addEventHandler('click', function() {
+                    if (event.target != this) {
+                        select.selectedIndex = select[event.target.id].index;
+                        // FIXME: Highlight the timezone.
+                    }
+                });
+                // FIXME: Add "change" listener to adjust currently highlighted timezone.
+            }
+        });
+    </script>
+    <template>
+        <svg>
+            <g id="worldShapes"> ... </g>
+            <g id="timezoneShapes">
+                <path id="PST" ...>
+                <path id="CST" ...>
+            </g>
+            ...
+        </svg>
+    </template>
+</element>
