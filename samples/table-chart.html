@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Components Example: Table-based Charts</title>
+</head>
+<body>
+<h1>Web Components Example: Table-based Charts</h1>
+<pre><code>
+&lt;element extends=&quot;table&quot; name=&quot;x-table-chart&quot; constructor=&quot;TableChart&quot;&gt;
+    &lt;script&gt;
+
+        this.lifecycle({
+            created: function(shadowRoot) {
+                this._canvas = shadowRoot.firstElementChild;
+                this.draw();
+            },
+            inserted: function() { this._visible = true; },
+            removed: function() { this._visible = false; }
+        });
+
+        TableChart.prototype.draw = function()
+        {
+            if (!this._visible)
+                return;
+
+            var type = this.chartType;
+            var color = this.chartColor;
+            var canvas = this._canvas;
+
+            // Read the table data and draw the graph on canvas.
+            // ...
+
+            this.dispatchEvent(new Event(&#x27;draw&#x27;));
+        }
+
+        this.reflectAttribute(&#x27;x-chart-type&#x27;, &#x27;chartType&#x27;, TableChart.prototype.draw);
+        this.reflectAttribute(&#x27;x-chart-color&#x27;, &#x27;chartColor&#x27;, TableChart.prototype.draw);
+        this.setupEvent(&#x27;draw&#x27;);
+
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;canvas&gt;&lt;/canvas&gt;
+    &lt;/template&gt;
+&lt;/element&gt;
+</code></pre>
+</body>
+</html>

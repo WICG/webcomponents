@@ -1,13 +1,21 @@
-<element extends="input" name="x-entry-helper">
-    <script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Components Examples: Entry Helper</title>
+</head>
+<body>
+<h1>Web Components Example: Entry Helper</h1>
+<pre><code>
+&lt;element extends=&quot;input&quot; name=&quot;x-entry-helper&quot;&gt;
+    &lt;script&gt;
         this.lifecycle({
             create: function(shadowRoot) {
-                if (this.type != 'text')
+                if (this.type != &#x27;text&#x27;)
                     return;
-                this._options = shadowRoot.querySelector('ul');
-                this.setAttribute('autocomplete', 'off');
-                document.addEventListemer('keydown', this._handleKeyDownEvent);
-                document.addEventListener('mouseup', this._handleMouseUpEvent);
+                this._options = shadowRoot.querySelector(&#x27;ul&#x27;);
+                this.setAttribute(&#x27;autocomplete&#x27;, &#x27;off&#x27;);
+                document.addEventListemer(&#x27;keydown&#x27;, this._handleKeyDownEvent);
+                document.addEventListener(&#x27;mouseup&#x27;, this._handleMouseUpEvent);
             }
         });
 
@@ -45,7 +53,7 @@
 
         Helper.prototype.clear = function()
         {
-            // clear helper window's contents.
+            // clear helper window&#x27;s contents.
         }
 
         Helper.prototype.populate = function()
@@ -59,13 +67,13 @@
             if (this._open)
                 return;
             else
-                this._options.style.display = '';
+                this._options.style.display = &#x27;&#x27;;
 
             // Show entry helper window and attempt completion match.
             // ..
 
             this._open = true;
-            this.dispatchEvent(new Event('helperopen'));
+            this.dispatchEvent(new Event(&#x27;helperopen&#x27;));
         }
 
         Helper.prototype.close = function()
@@ -73,12 +81,12 @@
             // close entry helper.
         }
 
-        this.reflectAttribute('x-highlight-matches', 'highlightMatches', Helper.prototype._settingsChanged);
-        this.reflectAttribute('list', 'list', Helper.prototype._settingsChanged);
-        this.setupEvent('helperopen');
-    </script>
-    <template>
-        <style scoped>
+        this.reflectAttribute(&#x27;x-highlight-matches&#x27;, &#x27;highlightMatches&#x27;, Helper.prototype._settingsChanged);
+        this.reflectAttribute(&#x27;list&#x27;, &#x27;list&#x27;, Helper.prototype._settingsChanged);
+        this.setupEvent(&#x27;helperopen&#x27;);
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;style scoped&gt;
             ul {
                 width: 200px;
                 height: 200px;
@@ -86,10 +94,13 @@
                 /* ... */
             }
             /* ... */
-        </style>
-        <div>
-            <shadow></shadow>
-            <ul></ul>
-        </div>
-    </template>
-</element>
+        &lt;/style&gt;
+        &lt;div&gt;
+            &lt;shadow&gt;&lt;/shadow&gt;
+            &lt;ul&gt;&lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/template&gt;
+&lt;/element&gt;
+</code></pre>
+</body>
+</html>

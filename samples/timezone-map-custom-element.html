@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Components Example: Timezone Selection via Image</title>
+</head>
+<body>
+<h1>Web Components Example: Timezone Selection via Image</h1>
+<pre><code>
+&lt;element extends=&quot;select&quot; name=&quot;x-timezone-map&quot; constructor=&quot;MapSelector&quot;&gt;
+    &lt;script&gt;
+        this.lifecycle({
+            created: function(shadowRoot) {
+                select = shadowRoot.shadowHost;
+                shadowRoot.querySelector(&#x27;#timezoneShapes&#x27;).addEventHandler(&#x27;click&#x27;, function() {
+                    if (event.target != this) {
+                        select.selectedIndex = select[event.target.id].index;
+                        // FIXME: Highlight the timezone.
+                    }
+                });
+                // FIXME: Add &quot;change&quot; listener to adjust currently highlighted timezone.
+            }
+        });
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;svg&gt;
+            &lt;g id=&quot;worldShapes&quot;&gt; ... &lt;/g&gt;
+            &lt;g id=&quot;timezoneShapes&quot;&gt;
+                &lt;path id=&quot;PST&quot; ...&gt;
+                &lt;path id=&quot;CST&quot; ...&gt;
+            &lt;/g&gt;
+            ...
+        &lt;/svg&gt;
+    &lt;/template&gt;
+&lt;/element&gt;
+</code></pre>
+</body>
+</html>

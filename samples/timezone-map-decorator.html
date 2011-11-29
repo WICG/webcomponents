@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Components Example: Timezone Selection via Image (decorator)</title>
+</head>
+<body>
+<h1>Web Components Example: Timezone Selection via Image (decorator)</h1>
+<pre><code>
+&lt;decorator id=&quot;timezone-map&quot;&gt;
+    &lt;script&gt;
+        var timezones = [&#x27;pst&#x27;, ... ];
+
+        function createHandler(timezone)
+        {
+            this.listen({
+                selector: &#x27;#&#x27; + timezone,
+                type: &#x27;click&#x27;,
+                handler: function() {
+                    // Decorators are late-bound, so we must check for type.
+                    if (this instanceof HTMLSelectElement)
+                        this.selectedIndex = this[timezone].index;
+                }
+            });
+        }
+
+        timezones.forEach(createHandler, this);
+    &lt;/script&gt;
+    &lt;template&gt;
+        &lt;svg ...&gt;
+            &lt;g id=&quot;worldShapes&quot;&gt; ... &lt;/g&gt;
+            &lt;g id=&quot;timezoneShapes&quot;&gt;
+                &lt;path id=&quot;PST&quot; ...&gt;
+                &lt;path id=&quot;CST&quot; ...&gt;
+            &lt;/g&gt;
+            ...
+        &lt;/svg&gt;
+    &lt;/template&gt;
+&lt;/decorator&gt;
+</code></pre>
+</body>
+</html>
