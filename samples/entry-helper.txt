@@ -5,28 +5,53 @@
                 if (this.type != 'text')
                     return;
                 this._options = shadowRoot.querySelector('ul');
-                this.addEventListemer('keydown', this._handleKeyDownEvent);
                 this.setAttribute('autocomplete', 'off');
+                document.addEventListemer('keydown', this._handleKeyDownEvent);
+                document.addEventListener('mouseup', this._handleMouseUpEvent);
             }
         });
 
         var Helper = this.generatedConstructor;
         Helper.prototype._handleKeyDownEvent = function(evt)
         {
-            this.open();
+            if (evt.currentTarget.parentNode == this._options) {
+                this._selectOption(evt.currentTarget);
+            } else if (evt.currentTarget == this) {
+                if (!this._open)
+                    this.open();
+                this.populate();
+            // ...
+            } else {
+                this.close();
+            }
+        }
+
+        Helper.prototype._handleMouseUpEvent = function(evt)
+        {
+            if (evt.currentTarget == this) {
+            // ...
+            } else {
+                this.close();
+            }
         }
 
         Helper.prototype._settingsChanged = function()
         {
             if (!this._open)
                 return;
-            /* .. */
-            
+
+            this.populate();
+        }
+
+        Helper.prototype.clear = function()
+        {
+            // clear helper window's contents.
         }
 
         Helper.prototype.populate = function()
         {
-            
+            this.clear();
+            // populate helper window using current settings.
         }
 
         Helper.prototype.open = function()
@@ -40,12 +65,17 @@
             // ..
 
             this._open = true;
-            this.dispatchEvent(new Event('open'));
+            this.dispatchEvent(new Event('helperopen'));
+        }
+
+        Helper.prototype.close = function()
+        {
+            // close entry helper.
         }
 
         this.reflectAttribute('x-highlight-matches', 'highlightMatches', Helper.prototype._settingsChanged);
         this.reflectAttribute('list', 'list', Helper.prototype._settingsChanged);
-        this.setupEvent('helperopen')
+        this.setupEvent('helperopen');
     </script>
     <template>
         <style scoped>
