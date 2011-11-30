@@ -36,43 +36,27 @@ span.lowest-common-boundary {
 
 <h2>Status</h2>
 
-<p class="warning">This is a work-in-progress!</p>
+<p class="warning">This is a work in progress!</p>
 
 <p>TODO: status summary</p>
 
-<h2>Shadow DOM</h2>
-
 <h2><a name="overview">Overview</a></h2>
 
-<p>
-The component model aims to allow authors to define richly structured widgets that can simply be dropped into web pages. In order for them to be usable however, their internal structure should be hidden from the normal
+<p>The component model aims to allow authors to define richly structured widgets that can simply be dropped into web pages. In order for them to be usable however, their internal structure should be hidden from the normal
 DOM tree. In other words, a component should look and behave exactly like a built-in HTML element would.
-</p>
-<p>
-The <dfn id="shadowdom" title="shadow DOM">shadow DOM</dfn> is the mechanism by which the internal structure of a component is hidden.
-It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
-</p>
-<p>
-A parent class <code><a href="#treescope">TreeScope</a></code> encapsulates the commonality between
-<code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes and
-<code><a href="#shadowroot">ShadowRoot</a></code> nodes.
-</p>
+
+<p>The <dfn id="shadowdom" title="shadow DOM">shadow DOM</dfn> is the mechanism by which the internal structure of a component is hidden. It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
+
+<p>A parent class <code><a href="#treescope">TreeScope</a></code> encapsulates the commonality between <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes and <code><a href="#shadowroot">ShadowRoot</a></code> nodes.
 
 <object data="../../assets/images/shadowdom.svg" width=500 height=200></object>
 
 <h3 id="treescope">TreeScope</h3>
 
-<p>
-Similar to <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes,
-a <code><a href="#shadowroot">ShadowRoot</a></code> node needs to govern the nodes it contains.
-For example, because components are replicated wherever they are instantiated every shadow DOM needs to register the IDs of elements in the tree separately.
-The same goes for scripts that run within a component.
-</p>
-<p>
-For a clean interface, those functionalities are moved to a sperate class <code><a href="#treescope">TreeScope</a></code>,
-which acts as base class for <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code>
-and <code><a href="#shadowroot">ShadowRoot</a></code>:
-</p>
+<p>Similar to <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes, a <code><a href="#shadowroot">ShadowRoot</a></code> node needs to govern the nodes it contains. For example, because components are replicated wherever they are instantiated every shadow DOM needs to register the IDs of elements in the tree separately. The same goes for scripts that run within a component.
+
+<p>For a clean interface, those functionalities are moved to a sperate class <code><a href="#treescope">TreeScope</a></code>, which acts as base class for <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> and <code><a href="#shadowroot">ShadowRoot</a></code>:
+
 
 <pre><code>
 interface <a href="#treescope">TreeScope</a> {
@@ -92,26 +76,17 @@ interface <a href="#treescope">TreeScope</a> {
 }
 </code></pre>
 
-<p class="issue">
-It would be nice to also add <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-getelementsbyname">getElementsByName</a></code>,
-but this is located within the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#htmldocument">HTMLDocument</a></code> interface.
-Note that also <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents-in-the-dom">the HTML5 spec</a> defines <code>HTMLDocument</code> to no longer be derived from document.
-</p>
+<p class="issue">It would be nice to also add <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-getelementsbyname">getElementsByName</a></code>, but this is located within the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#htmldocument">HTMLDocument</a></code> interface. Note that also <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents-in-the-dom">the HTML5 spec</a> defines <code>HTMLDocument</code> to no longer be derived from document.
 
-<p>
-<dfn id="treescope.parenttreescope" title="parentTreeScope">parentTreeScope</dfn>: returns the <code><a href="#treescope">TreeScope</a></code> that contains this <code><a href="#treescope">TreeScope</a></code>.
-</p>
-<p>
+<p><dfn id="treescope.parenttreescope" title="parentTreeScope">parentTreeScope</dfn>: returns the <code><a href="#treescope">TreeScope</a></code> that contains this <code><a href="#treescope">TreeScope</a></code>.
 
-<p class="issue">
-<code><a href="#treescope.parenttreescope">parentTreeScope</a></code> is a natural part of a <code><a href="#treescope">TreeScope</a></code>.
+<p class="issue"><code><a href="#treescope.parenttreescope">parentTreeScope</a></code> is a natural part of a <code><a href="#treescope">TreeScope</a></code>.
 
 <h3>ShadowRoot</h3>
 
 <p>The root of a shadow DOM is represented by the <code><a href="#shadowroot">ShadowRoot</a></code> object:
 
-<pre><code>
-<a href="#shadowroot">[Constructor(in HTMLElement element) raises(DOMException)]</a>
+<pre><code><a href="#shadowroot">[Constructor(in HTMLElement element) raises(DOMException)]</a>
 
 interface <a href="#shadowroot">ShadowRoot</a> : <a href="#treescope">TreeScope</a> {
     <del>attribute bool <a href="#shadowroot.applyauthorsheets">applyAuthorSheets</a>; </del>
@@ -119,24 +94,14 @@ interface <a href="#shadowroot">ShadowRoot</a> : <a href="#treescope">TreeScope<
 }
 </code></pre>
 
-<p>
-The <code>element</code> parameter in the <a href="#shadow-root-constructor">ShadowRoot constructor</a> is an <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> that will be hosting this instance.
-If the element is already hosting a <span class=ref>shadow DOM subtree</span>, a <a href="http://www.w3.org/TR/domcore/#dom-domexception-no_modification_allowed_err">NO_MODIFICATION_ALLOWED_ERR</a> DOM Exception is raised.
-</p>
+<p>The <code>element</code> parameter in the <a href="#shadow-root-constructor">ShadowRoot constructor</a> is an <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> that will be hosting this instance. If the element is already hosting a <span class=ref>shadow DOM subtree</span>, a <a href="http://www.w3.org/TR/domcore/#dom-domexception-no_modification_allowed_err">NO_MODIFICATION_ALLOWED_ERR</a> DOM Exception is raised.
 
-<p>
-<del>
-The <dfn id="shadowroot.applyauthorsheets" title="shadowroot.applyauthorsheets">applyAuthorSheets</dfn> attribute indicates whether or not rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a>
-associated with the element's document apply to the <span class=def>shadow DOM subtree</a>.
-</del>
-</p>
+<p>The <dfn id="shadowroot.applyauthorsheets" title="shadowroot.applyauthorsheets">applyAuthorSheets</dfn> attribute indicates whether or not rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a> associated with the element's document apply to the <span class=def>shadow DOM subtree</a>.
 
-<p>
-The <dfn id="shadowroot.shadowhost" title="shadow-host-attribute">shadowHost</dfn> attribute refers back to the element that is hosting this <span class=ref>shadow root</span>.
-</p>
+<p>The <dfn id="shadowroot.shadowhost" title="shadow-host-attribute">shadowHost</dfn> attribute refers back to the element that is hosting this <span class=ref>shadow root</span>.
 
-<p class="issue">
-<code><a href="#shadowroot.shadowhost">shadowHost</a></code> is a natural part of a <code><a href="#shadowroot">ShadowRoot</a></code>.</p>
+
+<p class="issue"><code><a href="#shadowroot.shadowhost">shadowHost</a></code> is a natural part of a <code><a href="#shadowroot">ShadowRoot</a></code>.
 
 <!--
 <p>
@@ -167,13 +132,13 @@ For example: <code>active</code>, <code>after</code>, <code>before</code>, <code
 </p>
 -->
 
-<h4><code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element">style</a></code> elements</h4>
+<h4>style elements</h4>
 
 <p>
 The <code>ShadowRoot</code> is a legal parent for a <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element">style</a></code> element.
 </p>
 
-<h2>Events in the Component Model</h2>
+<h2>Events</h2>
 
 <p class="issue">boundless ancestor</span> -- need better term.</li>
 
@@ -428,7 +393,7 @@ For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#pla
 &lt;/div&gt;
 </code></pre>
 
-<h2>CSS in the Component Model</h2>
+<h2>CSS</h2>
 
 <h3>Inheritance Across Boundaries</h3>
 
@@ -452,7 +417,7 @@ inherit their style as if they were direct children of the <code>content</code> 
 <p>All of the above also applies to selectors used in certain JavaScript APIs,
 such as the <code><a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">querySelector()</a></code> and <code><a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">querySelectorAll()</a></code> functions.
 
-<h2>Rendering of the Component Model</h2>
+<h2>Rendering</h2>
 
 <h3>Host element</h3>
 <p>The <span>host element</span> is rendered as normal, including all applicable styles for the element.</p>
