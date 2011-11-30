@@ -1,6 +1,8 @@
 <html lang="en">
 <head>
-<title>Component Model</title>
+<title>Shadow DOM</title>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/base.css" type="text/css">
 <style>
 span.shadow-boundary {
     color: Gray;
@@ -28,7 +30,7 @@ span.lowest-common-boundary {
 
 <header>
 
-<h1>Component Model</h1>
+<h1>Shadow DOM</h1>
 <p>Draft Version</p>
 
 </header>
@@ -73,7 +75,7 @@ which acts as base class for <code><a href="http://www.whatwg.org/specs/web-apps
 and <code><a href="#shadowroot">ShadowRoot</a></code>:
 </p>
 
-<pre class="idl">
+<pre><code>
 interface <a href="#treescope">TreeScope</a> {
     readonly attribute <a href="#TreeScope">TreeScope</a>?  <a href="#treescope.parenttreescope">parentTreeScope</a>;
 <!--
@@ -89,7 +91,7 @@ interface <a href="#treescope">TreeScope</a> {
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a>        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">getElementsByTagName</a>(in DOMString className);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a>        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
 }
-</pre>
+</code></pre>
 
 <p class="issue">
 It would be nice to also add <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-getelementsbyname">getElementsByName</a></code>,
@@ -109,14 +111,14 @@ Note that also <a href="http://www.whatwg.org/specs/web-apps/current-work/multip
 
 <p>The root of a shadow DOM is represented by the <code><a href="#shadowroot">ShadowRoot</a></code> object:
 
-<pre class="idl">
+<pre><code>
 <a href="#shadowroot">[Constructor(in HTMLElement element) raises(DOMException)]</a>
 
 interface <a href="#shadowroot">ShadowRoot</a> : <a href="#treescope">TreeScope</a> {
     <del>attribute bool <a href="#shadowroot.applyauthorsheets">applyAuthorSheets</a>; </del>
     readonly attribute Element <a href="#shadow-host-attribute">shadowHost</a>;
 }
-</pre>
+</code></pre>
 
 <p>
 The <code>element</code> parameter in the <a href="#shadow-root-constructor">ShadowRoot constructor</a> is an <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> that will be hosting this instance.
@@ -142,12 +144,12 @@ The <dfn id="shadowroot.shadowhost" title="shadow-host-attribute">shadowHost</df
 The component model extends the <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> as follows:
 </p>
 
-<pre class="idl">
+<pre><code>
 [Supplemental]
 interface Element {
     attribute String <a href="#pseudo-attribute">pseudo</a>;
 }
-</pre>
+</code></pre>
 
 <p>
 The <dfn id="pseudo-attribute" title="pseudo-attribute">pseudo</dfn> attribute allows setting a <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-element-selectors">CSS pseudo-element value</a> on an element and roughly corresponds to functionality of the <a href="http://dev.w3.org/2006/xbl2/#the-pseudo-attribute">XBL2 pseudo attribute</a>.
@@ -286,7 +288,7 @@ Mutation events and <code>selectstart</code> event are always stopped at the nea
 <p>
 Suppose we have a user interface for a media controller, built with several components, represented by this <span class=ref>shadow-aware DOM tree</span>:
 </p>
-<pre class="example html">
+<pre class="example html"><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
         &lt;div pseudo=&quot;controls&quot;&gt;
@@ -306,7 +308,7 @@ Suppose we have a user interface for a media controller, built with several comp
         &lt;/div&gt;
     <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
-</pre>
+</code></pre>
 
 <p>
 Let's have a user position their pointing device over the volume slider's thumb (<code>#player::volume-slider::slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.
@@ -325,7 +327,7 @@ Just before the event is dispatched, we perform <span class=ref>retargeting</spa
     <li>Finally we walk up to the player element (<code>#player</code>) and set its relative target to itself.</li>
 </ol>
 
-<pre class="example html">
+<pre class="example html"><code>
 <span class=event-ancestor>&lt;div id=&quot;player&quot;&gt; <em>7</em></span>
     <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>6</em></span>
         <span class=event-ancestor>&lt;div pseudo=&quot;controls&quot;&gt; <em>5</em></span>
@@ -345,7 +347,7 @@ Just before the event is dispatched, we perform <span class=ref>retargeting</spa
         &lt;/div&gt;
     <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
-</pre>
+</code></pre>
 
 <p>
 At the end of this process, we should have the following set of ancestors and relative targets:
@@ -405,7 +407,7 @@ For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#pla
 </ol>
 </div>
 
-<pre class="example html">
+<pre class="example html"><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class="shadow-boundary lowest-common-boundary">&lt;shadow-boundary&gt;<em> &mdash; lowest common boundary</em></span>
         &lt;div pseudo=&quot;controls&quot;&gt;
@@ -425,7 +427,7 @@ For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#pla
         &lt;/div&gt;
     <span class="shadow-boundary lowest-common-boundary">&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
-</pre>
+</code></pre>
 
 <h2>CSS in the Component Model</h2>
 
@@ -477,7 +479,7 @@ such as the <code><a href="http://dev.w3.org/2006/webapi/selectors-api/#nodesele
 For example, to replicate the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element">details</a></code> element, the following shadow tree might be used:
 </p>
 
-<pre class="html">
+<pre class="html"><code>
 #ShadowRoot
     &lt;div style="display: inline-block;"&gt;
         &lt;div id="summary-line"&gt;
@@ -487,11 +489,11 @@ For example, to replicate the <code><a href="http://www.whatwg.org/specs/web-app
             &lt;content/&gt;
         &lt;/div&gt;
     &lt;/div&gt;
-</pre>
+</code></pre>
 
 The following HTML:
 
-<pre class="html">
+<pre class="html"><code>
 &lt;details&gt;
     Initial text
     &lt;summary&gt;Frobnoz&lt;/summary&gt;
@@ -501,11 +503,11 @@ The following HTML:
     &lt;summary&gt;Mxyzptlk&lt;/summary&gt;
     Exitus
 &lt;/details&gt;
-</pre>
+</code></pre>
 
 would result in the following equivalent tree for rendering:
 
-<pre class="html">
+<pre class="html"><code>
 &lt;details&gt;
     <span style="color: #604">&lt;div style="display: inline-block;"&gt;</span>
         <span style="color: #604">&lt;div id="summary-line"&gt;</span>
@@ -521,7 +523,7 @@ would result in the following equivalent tree for rendering:
         <span style="color: #604">&lt;/div&gt;</span>
     <span style="color: #604">&lt;/div&gt;</span>
 &lt;/details&gt;
-</pre>
+</code></pre>
 
 <h2>The content Element</h2>
 
@@ -533,11 +535,11 @@ would result in the following equivalent tree for rendering:
 
 <p>The <code>content</code></dfn> element</p>
 
-<pre class="idl">
+<pre class="idl"><code>
 interface HTMLContentELement : HTMLElement {
     attribute DOMString     <a href="#content.select">select</a>;
 }
-</pre>
+</code></pre>
 
 
 <p>
@@ -605,7 +607,7 @@ which is rendered in the case the <code><a href="#content">content</a></code> el
 
 <div class="example">This is an example.</div>
 
-<pre class="example">This is a code example.</pre>
+<pre class="example"><code>This is a code example.</code></pre>
 
 <p class="question">This is an unanswered open question.</p>
 
