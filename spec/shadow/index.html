@@ -42,10 +42,9 @@ span.lowest-common-boundary {
 
 <h2><a name="overview">Overview</a></h2>
 
-<p>The component model aims to allow authors to define richly structured widgets that can simply be dropped into web pages. In order for them to be usable however, their internal structure should be hidden from the normal
-DOM tree. In other words, a component should look and behave exactly like a built-in HTML element would.
+<p>The <dfn id="shadowdom" title="shadow DOM">shadow DOM</dfn> refers to ability to render DOM subtrees without having to add them to the document DOM.
 
-<p>The <dfn id="shadowdom" title="shadow DOM">shadow DOM</dfn> is the mechanism by which the internal structure of a component is hidden. It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
+<p>It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
 
 <p>A parent class <code><a href="#treescope">TreeScope</a></code> encapsulates the commonality between <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes and <code><a href="#shadowroot">ShadowRoot</a></code> nodes.
 
@@ -53,7 +52,7 @@ DOM tree. In other words, a component should look and behave exactly like a buil
 
 <h3 id="treescope">TreeScope</h3>
 
-<p>Similar to <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes, a <code><a href="#shadowroot">ShadowRoot</a></code> node needs to govern the nodes it contains. For example, because components are replicated wherever they are instantiated every shadow DOM needs to register the IDs of elements in the tree separately. The same goes for scripts that run within a component.
+<p>Similar to <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes, a <code><a href="#shadowroot">ShadowRoot</a></code> node needs to govern the nodes it contains. Because each shadow DOM subtree is kept separate from the document tree, it needs to keep track of the IDs of elements in the tree separately.
 
 <p>For a clean interface, those functionalities are moved to a sperate class <code><a href="#treescope">TreeScope</a></code>, which acts as base class for <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> and <code><a href="#shadowroot">ShadowRoot</a></code>:
 
@@ -105,7 +104,7 @@ interface <a href="#shadowroot">ShadowRoot</a> : <a href="#treescope">TreeScope<
 
 <!--
 <p>
-The component model extends the <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> as follows:
+The shadow DOM extends the <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> as follows:
 </p>
 
 <pre><code>
@@ -250,7 +249,7 @@ Mutation events and <code>selectstart</code> event are always stopped at the nea
 <h3>Example</h3>
 
 <p>
-Suppose we have a user interface for a media controller, built with several components, represented by this <span class=ref>shadow-aware DOM tree</span>:
+Suppose we have a user interface for a media controller, represented by this <span class=ref>shadow-aware DOM tree</span>:
 </p>
 <pre class="example html"><code>
 &lt;div id=&quot;player&quot;&gt;
@@ -493,7 +492,7 @@ would result in the following equivalent tree for rendering:
 
 <h3>Overview</h3>
 
-<p>For some use cases it may be useful if the host element is allowed to have children of its own, that then become part of the rendered component. Those children could either be regular HTML content (e.g., for a laying out a component), or components of their own that work hand-in-hand with their parent. To this end, the shadow DOM may contain one or more content elements that define where those children are to be rendered.</p>
+<p>For some use cases it may be useful if the host element is allowed to have children of its own, that then become part of the rendered document. To this end, the shadow DOM may contain one or more content elements that define where those children are to be rendered.</p>
 
 <h3>Definition</h3>
 
@@ -527,19 +526,19 @@ The following pseudo-classes require special treatment:
 </p>
 <dl>
     <dt>:link
-    <dd>This pseudo-class MUST NOT be honored if the component is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
     <dt>:visited
-    <dd>This pseudo-class MUST NOT be honored if the component is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
     <dt>:hover
     <dd>The user agent MAY honor this pseudo-class, but moving an element that is hovered may likely cause it end up no longer being hovered, likely making this not a useful functionality.
-        If the component is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
+        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
     <dt>:active
     <dd>The user agent MAY honor this pseudo-class, moving an element that is being activated is likely not a useful functionality.
-        If the component is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
+        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
     <dt>:focus
-    <dd>This pseudo-class MUST NOT be honored if the component is <em>confined</em>, and selector sequences containing it are disregarded.
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
     <dt>:target
-    <dd>This pseudo-class MUST NOT be honored if the component is <em>confined</em>, and selector sequences containing it are disregarded.
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
 </dl>
 
 <p>
