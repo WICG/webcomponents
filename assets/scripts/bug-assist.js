@@ -15,8 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var submit = form.appendChild(document.createElement('input'));
     submit.type = 'submit';
+    submit.accessKey = 'f';
     submit.style.cssText = 'font-family:Tahoma,sans-serif;font-size:10px';
-    submit.value = 'file a bug';
+    var label = 'file a bug';
+    if (submit.accessKeyLabel)
+        label += ' (' + submit.accessKeyLabel + ')';
+    submit.value = label;
 
     Object.keys(inputs).forEach(function(name) {
         var input = form.appendChild(document.createElement('input'));
