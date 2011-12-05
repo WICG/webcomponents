@@ -2,27 +2,7 @@
 <head>
 <title>Shadow DOM</title>
 <link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/base.css" type="text/css">
-<style>
-span.shadow-boundary {
-    color: Gray;
-}
-
-span.event-ancestor, span.first-divergent-boundary {
-    color: DarkRed;
-}
-
-span.event-ancestor > em {
-    background-color: DarkRed;
-    color: White;
-    font-style: normal;
-    border-radius: 1em;
-    padding: 0 0.35em;
-}
-
-span.lowest-common-boundary {
-    color: Green;
-}
-</style>
+<link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
 </head>
 
 <body class="draft">
@@ -40,7 +20,19 @@ span.lowest-common-boundary {
 
 <p>TODO: status summary</p>
 
-<h2><a name="overview">Overview</a></h2>
+<h2>Introduction</h2>
+
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>) and assumptions about these fragments operating independently.</p>
+
+<p>For example, a Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each being a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
+
+<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15065" class=fixme>Add illustration</a></p>
+
+<p>This need for discovering and understanding of functional <dfn id="dfn-boundary">boundaries</dfn> in a document tree is even larger when a widget is <dfn id="dfn-dom-operation">operated</dfn> on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer possesses the entire knowledge of how the widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical solution to this problem has been providing alternative means of operation, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+
+<p>This specification describes a formal method of establishing and maintaining boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better encapsulation of DOM structures.</p>
+
+<h2>Overview</h2>
 
 <p>The <dfn id="shadowdom" title="shadow DOM">shadow DOM</dfn> refers to ability to render DOM subtrees without having to add them to the document DOM.
 
