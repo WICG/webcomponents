@@ -50,13 +50,32 @@
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15065" class=fixme>Add illustration</a></p>
 
-<p>This need for observing the functional <dfn id="dfn-boundary">boundaries</dfn> in a document tree is even larger when a widget is <dfn id="dfn-dom-operation">operated</dfn> on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical solution to this problem has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+<p>This need for observing the functional <dfn id="dfn-boundary">boundaries</dfn> in a document tree is even larger when a widget is <dfn id="dfn-dom-operation">operated</dfn> on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
-<p>This address this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn idf="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation boundaries while retaining the standard DOM composability semantics.</p>
+<p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn idf="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation boundaries while retaining the standard DOM composability semantics.</p>
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15066" class=fixme>Add illustration</a></p>
 
-<h2>Some stuff that hasn't been integrated yet</h2>
+<p>The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="dfn-shadow-root">shadow roots</dfn>.
+
+<p>When rendered, the shadow DOM subtree is shown in place of the host element.</p>
+
+<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15067" class=fixme>Add illustration</a></p>
+
+<p>To facilitate composition of host element's children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the host element's children are transposed when rendering.</p>
+
+<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15068" class=fixme>Add illustration</a></p>
+
+<p>Thus, the encapsulation of a shadow DOM subtree can be viewed as two-fold problem:
+<ol>
+	<li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and
+	<li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.
+</ol>
+
+<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15068" class=fixme>Add illustration</a></p>
+
+<p>THE END</p>
+<h1>Stuff that hasn't been integrated yet</h1>
 
 <p>It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
 
