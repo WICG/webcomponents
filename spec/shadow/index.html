@@ -29,17 +29,17 @@
 <h2>Terminology</h2>
 
 <dl>
-	<dt>DOM</dt>
-	<dt>DOM tree</dt>
-	<dt>document</dt>
-	<dt>element</dt>
+    <dt>DOM</dt>
+    <dt>DOM tree</dt>
+    <dt>document</dt>
+    <dt>element</dt>
 </dl>
 
 <h2>Dependencies</h2>
 
 <ul>
-	<li>DOM Core specification
-	<li>HTML specification
+    <li>DOM Core specification
+    <li>HTML specification
 </ul>
 
 <h2>Introduction</h2>
@@ -56,7 +56,7 @@
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15066" class=fixme>Add illustration</a></p>
 
-<p>The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="dfn-shadow-root">shadow roots</dfn>.
+<p>The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="api-shadow-root">shadow roots</dfn>.
 
 <p>When rendered, the shadow DOM subtree is shown in place of the host element.</p>
 
@@ -68,72 +68,93 @@
 
 <p>Thus, the encapsulation of a shadow DOM subtree can be viewed as two-fold problem:
 <ol>
-	<li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and
-	<li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.
+    <li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and
+    <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.
 </ol>
 
-<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15068" class=fixme>Add illustration</a></p>
+<h2><code>ShadowRoot</code> Object</h2>
+
+<p>The <dfn id="api-shadow-root-object"><code>ShadowRoot</code></dfn> object represents the <a href="#api-shadow-root">shadow root</a>.</p>
+
+<object data="../../assets/images/shadowdom.svg" width=500 height=200></object>
+
+<p>To maintain encapsulation boundaries, a <code>ShadowRoot</code> governs the nodes it contains. For instance, it needs to keep track of the element IDs separately, so that the elements in the shadow DOM subtree aren't accessible from the document tree, and vise versa.</p>
+    
+<pre><code>[Constructor(in HTMLElement element) raises (DOMException)]
+interface ShadowRoot : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
+    <a href="http://www.w3.org/TR/domcore/#element">Element</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
+    attribute bool <a href="#api-shadow-root-apply-author-sheets">applyAuthorSheets</a>;
+    readonly attribute Element <a href="#api-shadow-root-host">host</a>;
+}
+ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
+</code></pre>
+
+<h3><code>ShadowRoot</code> Attributes</h3>
+
+<dl>
+<dt id="api-shadow-root-apply-author-sheets"><code>applyAuthorSheets</code> of type <code>bool</code></dt>
+<dd>ondicates whether or not rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a> associated with the element's document apply to the shadow DOM subtree.</dd>
+<dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
+<dd>refers back to the shadow host</dd>
+</dl>
+
+<h3><code>ShadowRoot</code> Methods</h3>
+
+<dl>
+<dt><code>constructor</code></dt>
+<dd>
+    Creates new shadow root and associates it with the shadow host.
+    <table>
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Nullable</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+            <tr>
+                <td><dfn id="api-shadow-root-constructor-element"><code>element</code></dfn></td>
+                <td><a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a></td>
+                <td>No</td>
+                <td>No</td>
+                <td>Element that will be hosting this instance of the shadow DOM subtree.</td>
+            </tr>
+        <tbody>
+        </tbody>
+    </table>
+    <div>
+        <em>Exceptions:</em>
+        <dl>
+            <dt><a href="http://www.w3.org/TR/domcore/#dom-domexception-hierarchy_request_err"><code>HIERARCHY_REQUEST_ERR</code></a></dt>
+            <dd>Thrown when the <code>element</code> parameter is not a valid <a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a>.
+        </dl>
+    </div>
+    <div>
+        <em>Returns: a new <code>ShadowRoot</code> instance.</em>
+    </div>
+</dd>
+<dt id="api-shadow-root-get-element-by-id"><code>getElementById</code></dt>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dt id="api-shadow-root-get-elements-by-class-name"><code>getElementsByClassName</code></dt>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dt id="api-shadow-root-get-elements-by-tag-name"><code>getElementsByTagName</code></dt>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dt id="api-shadow-root-get-elements-by-tag-name-ns"><code>getElementsByTagNameNS</code></dt>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#scoping">scoped</a> to the shadow DOM subtree.</dd>
+</dl>
+
+<h3 id="scoping">Scoping</h3>
+
+<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15074">Explain how DOM scoping works, ids, maps, names, form elements, etc.<a/></p>
 
 <p>THE END</p>
 <h1>Stuff that hasn't been integrated yet</h1>
 
-<p>It is a separate tree attached to the <dfn id="hostelement" title="host element">host element</dfn>, rooted by a <code><a href="#shadowroot">ShadowRoot</a></code> node.
-
-<p>A parent class <code><a href="#treescope">TreeScope</a></code> encapsulates the commonality between <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes and <code><a href="#shadowroot">ShadowRoot</a></code> nodes.
-
-<object data="../../assets/images/shadowdom.svg" width=500 height=200></object>
-
-<h3 id="treescope">TreeScope</h3>
-
-<p>Similar to <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> nodes, a <code><a href="#shadowroot">ShadowRoot</a></code> node needs to govern the nodes it contains. Because each shadow DOM subtree is kept separate from the document tree, it needs to keep track of the IDs of elements in the tree separately.
-
-<p>For a clean interface, those functionalities are moved to a sperate class <code><a href="#treescope">TreeScope</a></code>, which acts as base class for <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents">Document</a></code> and <code><a href="#shadowroot">ShadowRoot</a></code>:
-
-
-<pre><code>
-interface <a href="#treescope">TreeScope</a> {
-    readonly attribute <a href="#TreeScope">TreeScope</a>?  <a href="#treescope.parenttreescope">parentTreeScope</a>;
-<!--
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-images">images</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-embeds">embeds</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-plugins">plugins</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-links">links</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-forms">forms</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#htmlcollection">HTMLCollection</a>   <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-scripts">scripts</a>;
--->
-    <a href="http://www.w3.org/TR/domcore/#element">Element</a>?        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">getElementById</a>(in DOMString elementId);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a>        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">getElementsByClassName</a>(in DOMString tagName);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a>        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">getElementsByTagName</a>(in DOMString className);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a>        <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
-}
-</code></pre>
-
-<p class="issue">It would be nice to also add <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-getelementsbyname">getElementsByName</a></code>, but this is located within the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#htmldocument">HTMLDocument</a></code> interface. Note that also <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#documents-in-the-dom">the HTML5 spec</a> defines <code>HTMLDocument</code> to no longer be derived from document.
-
-<p><dfn id="treescope.parenttreescope" title="parentTreeScope">parentTreeScope</dfn>: returns the <code><a href="#treescope">TreeScope</a></code> that contains this <code><a href="#treescope">TreeScope</a></code>.
-
-<p class="issue"><code><a href="#treescope.parenttreescope">parentTreeScope</a></code> is a natural part of a <code><a href="#treescope">TreeScope</a></code>.
-
-<h3>ShadowRoot</h3>
-
-<p>The root of a shadow DOM is represented by the <code><a href="#shadowroot">ShadowRoot</a></code> object:
-
-<pre><code><a href="#shadowroot">[Constructor(in HTMLElement element) raises(DOMException)]</a>
-
-interface <a href="#shadowroot">ShadowRoot</a> : <a href="#treescope">TreeScope</a> {
-    <del>attribute bool <a href="#shadowroot.applyauthorsheets">applyAuthorSheets</a>; </del>
-    readonly attribute Element <a href="#shadow-host-attribute">shadowHost</a>;
-}
-</code></pre>
-
-<p>The <code>element</code> parameter in the <a href="#shadow-root-constructor">ShadowRoot constructor</a> is an <a href="http://www.w3.org/TR/domcore/#element" title="DOM Core Element object">Element</a> that will be hosting this instance. If the element is already hosting a <span class=ref>shadow DOM subtree</span>, a <a href="http://www.w3.org/TR/domcore/#dom-domexception-no_modification_allowed_err">NO_MODIFICATION_ALLOWED_ERR</a> DOM Exception is raised.
-
-<p>The <dfn id="shadowroot.applyauthorsheets" title="shadowroot.applyauthorsheets">applyAuthorSheets</dfn> attribute indicates whether or not rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a> associated with the element's document apply to the <span class=def>shadow DOM subtree</a>.
-
-<p>The <dfn id="shadowroot.shadowhost" title="shadow-host-attribute">shadowHost</dfn> attribute refers back to the element that is hosting this <span class=ref>shadow root</span>.
-
-
-<p class="issue"><code><a href="#shadowroot.shadowhost">shadowHost</a></code> is a natural part of a <code><a href="#shadowroot">ShadowRoot</a></code>.
 
 <!--
 <p>
@@ -163,12 +184,6 @@ For example: <code>active</code>, <code>after</code>, <code>before</code>, <code
 <code>not</code>, <code>nth-child</code>, <code>nth-last-child</code>, <code>nth-last-of-type</code>, <code>nth-of-type</code>, <code>only-child</code>, <code>only-of-type</code>, <code>root</code>, <code>target</code>, <code>visited</code>.
 </p>
 -->
-
-<h4>style elements</h4>
-
-<p>
-The <code>ShadowRoot</code> is a legal parent for a <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element">style</a></code> element.
-</p>
 
 <h2>Events</h2>
 
