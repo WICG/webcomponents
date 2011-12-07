@@ -168,7 +168,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the host element's children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd>
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#set-of-space-separated-tokens">set of space-separated tokens</a></dt>
     <dd>
-        defines which children of the host element are to be displayed in position of the <code>content</code> element. A valid token is a <a href="#simple-selector-fragment">simple selector fragment</a>.
+        defines which children of the host element are to be displayed in position of the <code>content</code> element. Each token must be a valid <a href="#simple-selector-fragment">simple selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
     </dd>
     </dl>
 </dd>
@@ -229,9 +229,9 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 <h3 id="simple-selector-fragment">Simple Selector Fragment</h3>
 
-<p>The distribution of the <a href="#dfn-shadow-host">shadow host</a>'s explicit children is defined by <dfn id="dfn-simple-selector-fragment">simple selector fragments</dfn>. They are indeed fragments in the selector: <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-simple-selector-fragment">simple selector fragment</a>.</p>
+<p>The distribution of the <a href="#dfn-shadow-host">shadow host</a>'s explicit children is defined by the simple selector fragments. A <dfn id="dfn-simple-selector-fragment">simple selector fragment</dfn> is indeed a fragment in the selector: <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-simple-selector-fragment">simple selector fragment</a>.</p>
 
-<p>The fragment may contain:</p>
+<p>A valid simple selector fragment fragment may contain:</p>
 
 <ul>
     <li><a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a> or <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
