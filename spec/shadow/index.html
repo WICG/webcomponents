@@ -52,7 +52,7 @@
 
 <p>This need for observing the functional <dfn id="dfn-boundary">boundaries</dfn> in a document tree is even larger when a widget is <dfn id="dfn-dom-operation">operated</dfn> on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
-<p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn idf="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation boundaries while retaining the standard DOM composability semantics.</p>
+<p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation boundaries while retaining the standard DOM composability semantics.</p>
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15066" class=fixme>Add illustration</a></p>
 
@@ -81,11 +81,11 @@
 <p>To maintain encapsulation boundaries, a <code>ShadowRoot</code> governs the nodes it contains. For instance, it needs to keep track of the element IDs separately, so that the elements in the shadow DOM subtree aren't accessible from the document tree, and vise versa.</p>
     
 <pre><code>[Constructor(in HTMLElement element) raises (DOMException)]
-interface ShadowRoot : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
+interface <dfn id="api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
     <a href="http://www.w3.org/TR/domcore/#element">Element</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
     attribute bool <a href="#api-shadow-root-apply-author-sheets">applyAuthorSheets</a>;
     readonly attribute Element <a href="#api-shadow-root-host">host</a>;
 }
@@ -96,9 +96,9 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 <dl>
 <dt id="api-shadow-root-apply-author-sheets"><code>applyAuthorSheets</code> of type <code>bool</code></dt>
-<dd>ondicates whether or not rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a> associated with the element's document apply to the shadow DOM subtree.</dd>
+<dd>indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author style sheets</a> associated with the element's document apply to the shadow DOM subtree. If <code>false</code> (default value), the author style sheets are applied to the shadow DOM subtree. If <code>true</code>, they do not.</dd>
 <dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
-<dd>refers back to the shadow host</dd>
+<dd>refers back to the shadow host. This value is never <code>null</code>.</dd>
 </dl>
 
 <h3><code>ShadowRoot</code> Methods</h3>
@@ -148,9 +148,104 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dom-scoping">scoped</a> to the shadow DOM subtree.</dd>
 </dl>
 
+
+<h2>The <code>content</code> element</h2>
+
+<p>The <dfn id="dfn-content-element"><code>content</code></dfn> element allows authors to specify an <a href="#dfn-insertion-point">insertion point</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+
+<dl>
+<dt>Context</dt>
+<dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
+<dt>Content model</dt>
+<dd><a href="http://dev.w3.org/html5/spec/Overview.html#metadata-content">Metadata content</a></dd>
+<dt>Content attributes</dt>
+<dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
+<dd>
+    <dl>
+    <dt id="markup-content-apply-shadow-styles"><code>apply-shadow-styles</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean attribute</a></dt>
+    <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the host element's children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd>
+    <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#set-of-space-separated-tokens">set of space-separated tokens</a></dt>
+    <dd>
+        defines which children of the host element are to be displayed in position of the <code>content</code> element. A valid token is a <a href="#simple-selector-fragment">simple selector fragment</a>.
+    </dd>
+    </dl>
+</dd>
+<dt>DOM Interface</dt>
+<dd>
+    <pre><code>interface <dfn id="api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
+    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>;
+    attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/2d8624c7ec02/dom-core.html#interface-domtokenlist">DOMTokenList</a> <a href="#api-html-content-element-select">select</a>;
+}
+    </code></pre>
+    <dl>
+    <dt>Attributes</dt>
+    <dl>
+        <dt id="api-html-content-element-apply-shadow-styles"><code>applyShadowStyles</code> of type <code>bool</code></dt>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd>
+        <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMTokenList</code></dt>
+        <dd>
+            <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
+        </dd>
+    </dd>
+    </dl>
+    </dl>
+</dl>
+
+
 <h2 id="dom-scoping">DOM Scoping</h2>
 
 <p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15074">Explain how DOM scoping works, ids, maps, names, form elements, etc.<a/></p>
+
+<h2>Content Selection</h2>
+
+<h3 id="simple-selector-fragment">Simple Selector Fragment</h3>
+
+<p>Every such sequence may contain:
+
+<ul>
+    <li><a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a> or <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
+    <li><a href="http://www.w3.org/TR/css3-selectors/#class-html">class selector(s)</a></li>
+    <li><a href="http://www.w3.org/TR/css3-selectors/#id-selectors">ID selector(s)</a></li>
+    <li><a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector(s)</a></li>
+    <li><a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector(s)</a>, with certain exceptions (see below)</li>
+</ul>
+
+<p>
+It MUST NOT contain pseudo-element selectors. If present such a <span>selector sequence</span> is disregarded in its entirety.
+</p>
+
+<p>
+The following pseudo-classes require special treatment:
+</p>
+<dl>
+    <dt>:link
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
+    <dt>:visited
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
+    <dt>:hover
+    <dd>The user agent MAY honor this pseudo-class, but moving an element that is hovered may likely cause it end up no longer being hovered, likely making this not a useful functionality.
+        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
+    <dt>:active
+    <dd>The user agent MAY honor this pseudo-class, moving an element that is being activated is likely not a useful functionality.
+        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
+    <dt>:focus
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
+    <dt>:target
+    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
+</dl>
+
+<p>
+A <code>content</code> element without a <code><a href="#content.select">select</a></code> attribute selects all children
+that are not selected by any other <code><a href="#content">content</a></code> element.
+A given shadow tree MUST contain only at most a single <code><a href="#content">content</a></code> element without a <code>select</code> attribute.
+In case there are more than one such <code><a href="#content">content</a></code> elements, only the first such content element selects any children.
+</p>
+
+<p>
+A <code><a href="#content">content</a></code> element may have content of its own,
+which is rendered in the case the <code><a href="#content">content</a></code> element doesn't select any children of the host element.
+</p>
+
 
 <p>THE END</p>
 <h1>Stuff that hasn't been integrated yet</h1>
@@ -535,72 +630,6 @@ would result in the following equivalent tree for rendering:
     <span style="color: #604">&lt;/div&gt;</span>
 &lt;/details&gt;
 </code></pre>
-
-<h2>The content Element</h2>
-
-<h3>Overview</h3>
-
-<p>For some use cases it may be useful if the host element is allowed to have children of its own, that then become part of the rendered document. To this end, the shadow DOM may contain one or more content elements that define where those children are to be rendered.</p>
-
-<h3>Definition</h3>
-
-<p>The <code>content</code></dfn> element</p>
-
-<pre class="idl"><code>
-interface HTMLContentELement : HTMLElement {
-    attribute DOMString     <a href="#content.select">select</a>;
-}
-</code></pre>
-
-
-<p>
-<code><dfn id="content.select" title="select">select</dfn></code> defines which children of the host element are to be displayed in position of the <code>content</code> element.
-It contains a space-separated list of <span>simple selector sequences</span>. Every such sequence may contain:
-
-<ul>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a> or <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#class-html">class selector(s)</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#id-selectors">ID selector(s)</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector(s)</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector(s)</a>, with certain exceptions (see below)</li>
-</ul>
-
-<p>
-It MUST NOT contain pseudo-element selectors. If present such a <span>selector sequence</span> is disregarded in its entirety.
-</p>
-
-<p>
-The following pseudo-classes require special treatment:
-</p>
-<dl>
-    <dt>:link
-    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
-    <dt>:visited
-    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, in order to avoid leaking browsing history. If present, the whole selector sequence is disregarded in its entirety.
-    <dt>:hover
-    <dd>The user agent MAY honor this pseudo-class, but moving an element that is hovered may likely cause it end up no longer being hovered, likely making this not a useful functionality.
-        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
-    <dt>:active
-    <dd>The user agent MAY honor this pseudo-class, moving an element that is being activated is likely not a useful functionality.
-        If the shadow DOM subtree is <em>confined</em>, this pseudo-class MUST NOT be honored, and selector sequences containing it are disregarded.
-    <dt>:focus
-    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
-    <dt>:target
-    <dd>This pseudo-class MUST NOT be honored if the shadow DOM subtree is <em>confined</em>, and selector sequences containing it are disregarded.
-</dl>
-
-<p>
-A <code>content</code> element without a <code><a href="#content.select">select</a></code> attribute selects all children
-that are not selected by any other <code><a href="#content">content</a></code> element.
-A given shadow tree MUST contain only at most a single <code><a href="#content">content</a></code> element without a <code>select</code> attribute.
-In case there are more than one such <code><a href="#content">content</a></code> elements, only the first such content element selects any children.
-</p>
-
-<p>
-A <code><a href="#content">content</a></code> element may have content of its own,
-which is rendered in the case the <code><a href="#content">content</a></code> element doesn't select any children of the host element.
-</p>
-
 
 <h2>Related specs</h2>
 
