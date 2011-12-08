@@ -72,6 +72,8 @@
     <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.
 </ol>
 
+
+
 <h2><code>ShadowRoot</code> Object</h2>
 
 <p>The <dfn id="api-shadow-root-object"><code>ShadowRoot</code></dfn> object represents the <a href="#api-shadow-root">shadow root</a>.</p>
@@ -215,6 +217,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     </dl>
 </dl>
 
+
 <h2>Multiple Shadow DOM Subtrees</h2>
 
 <p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15105">Define <dfn id="dfn-older-tree">older tree</dfn> and younger tree</a></p>
@@ -225,13 +228,17 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 <h2>Content Selection</h2>
 
+<p>To achieve <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, the conforming UAs must distribute the <a href="#dfn-shadow-host">shadow host</a>'s explicit children by this <dfn id="dfn-selection-algorithm">selection algorithm</dfn>.</p>
+
+<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15107">Specify content selection algorithm</a></p>
+
 <h3 id="insertion-point-fallack-content">Insertion Point Fallback Content</h3>
 
 <p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that is representing the insertion point.</p>
 
 <h3 id="selector-fragment">Selector Fragment</h3>
 
-<p>The distribution of the <a href="#dfn-shadow-host">shadow host</a>'s explicit children is defined by the selector fragments. A <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
+<p>A <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
 
 <p>A valid selector fragment fragment may contain:</p>
 
