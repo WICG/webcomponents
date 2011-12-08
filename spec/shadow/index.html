@@ -33,6 +33,8 @@
     <dt>DOM tree</dt>
     <dt>document</dt>
     <dt>element</dt>
+    <dt><dfn id="dfn-explicit-children">explicit children</dfn></dt>
+    <dd>The explicit children of a node are all nodes whose parent is the said node.</dd>
 </dl>
 
 <h2>Dependencies</h2>
@@ -226,11 +228,25 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 <p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15074">Explain how DOM scoping works, ids, maps, names, form elements, etc.<a/></p>
 
-<h2>Content Selection</h2>
+<h2>Content Distribution</h2>
 
-<p>To achieve <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, the conforming UAs must distribute the <a href="#dfn-shadow-host">shadow host</a>'s explicit children by this <dfn id="dfn-selection-algorithm">selection algorithm</dfn>.</p>
+<p>To maintain <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, the conforming UAs must distribute the <a href="#dfn-shadow-host">shadow host</a>'s <a href="#dfn-explicit-children">explicit children</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> by applying a <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn>, whose outcome must equal exactly to the results of processing these steps:</p>
 
-<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15107">Specify content selection algorithm</a></p>
+<ol>
+    <li>For each explicit child of the shadow host:
+    <ol>
+        <li>For each <a href="#dfn-content-element"><code>content</code></a> element in shadow host's <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
+            <ol>
+                <li>If the explicit child:
+                    <ul>
+                        <li><a href="#dfn-content-matching">matches</a> any of the <a href="#dfn-selector-fragment">selector fragments</a> specified by the <a href="#markup-content-select"><code>select</code></a> attribute of the <code>content</code> element and the <code>select</code> attribute value is valid; or</li>
+                        <li>the select attribute element is empty or not present,</li>
+                    </ul>
+                    the explicit child is distributed to the <a href="#dfn-insertion-point">insertion point</a>, represented by the <code>content</code> element.</li>
+                <li>Otherwise, the explicit child remains available for further distribution.
+            </ol></li>
+    </ol></li>
+</ol>
 
 <h3 id="insertion-point-fallack-content">Insertion Point Fallback Content</h3>
 
@@ -270,6 +286,12 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </ul>
 
 <p>If any other types of selectors are present the <a href="dfn-selector-fragment">selector fragment</a>, the fragment must be considered invalid.</p>
+
+<p>A conforming UAs must consider a node as <dfn id="dfn-content-matching">matching</a> a selector fragment, if:
+<ol>
+    <li>it is an <a href="#dfn-explicit-child">explicit child</a> of the associated <a href="#dfn-shadow-host">shadow host</a>; and</li>
+    <li>it matches the specified selector fragment.</li>
+</ol>
 
 <p>THE END</p>
 <h1>Stuff that hasn't been integrated yet</h1>
