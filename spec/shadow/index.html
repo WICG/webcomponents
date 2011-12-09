@@ -44,7 +44,7 @@
 
 <h2>Introduction</h2>
 
-<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>) and assumptions about these fragments operating independently.</p>
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently.</p>
 
 <p>For example, a Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each being a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
 
@@ -117,13 +117,15 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
-<h3>Event Retargeting</h3>
-
 <p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, bubble, or default phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
 
-<p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
+<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjust in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary-encapsulation</a>.
 
-<p>In the cases where event escapes the shadow tree, the event is retargeted to ensure that the original target-related information on the event object does not reveal information about the <a href="shadow-dom-subtree">shadow DOM subtree</a> beyond the boundary. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing a <em>relative target</em> for each ancestor of the node at which the event is dispatched.</p>
+<h3>Event Retargeting</h3>
+
+<p>Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing a <em>relative target</em> for each ancestor of the node at which the event is dispatched.</p>
+
+<p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
 
 <p>The following <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> must be used to determine relative targets:</p>
 
@@ -150,7 +152,7 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 
 <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a node that's not the event's target, but is related to the event.</p>
 
-<p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the node from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must not leak its actual value outside of this subtree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must <em>stop</em> events a the <a href="#dfn-shadow-boundary">shadow boundary</a> to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
+<p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the node from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must not leak its actual value outside of this subtree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must <em>stop</em> events at the <a href="#dfn-shadow-boundary">shadow boundary</a> to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
 
 <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must to be adjusted. In general:</p>
 <ol>
@@ -413,7 +415,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the host element's children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd>
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#set-of-space-separated-tokens">set of space-separated tokens</a></dt>
     <dd>
-        defines which children of the host element are to be displayed in position of the <code>content</code> element. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
+        defines the <a href="#dfn-matching-criteria">matching criteria</a> for distributing child nodes of the <a href="#dfn-host-element">host element</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
     </dd>
     </dl>
 </dd>
