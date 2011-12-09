@@ -95,6 +95,7 @@
     <li>The distribution only affects the rendering. The state of the document DOM tree or shadow DOM subtrees is not affected.</li>
     <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point.</li>
     <li>The distribution is a result of executing a stable algorithm.</li>
+    <li>The distribution reoccurs whenever any variable affecting it is changed.</li>
 </ul>
 
 The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <strong>exactly equal</strong> to the outcome of processing these steps:</p>
@@ -112,6 +113,10 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 </ol>
 
 <p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point.</p>
+
+<h3>Hosting Multiple Shadow Subtrees</h3>
+
+<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
 <h2>Events</h2>
 
@@ -462,10 +467,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     </dl>
 </dl>
 
-
-<h2>Multiple Shadow DOM Subtrees</h2>
-
-<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15105">Define <dfn id="dfn-older-tree">older tree</dfn> and younger tree</a></p>
+<h2>Rendering and Styles</h2>
 
 <h3 id="selector-fragment">Selector Fragment</h3>
 
