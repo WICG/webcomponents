@@ -110,19 +110,18 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     <li>For each <a href="#dfn-insertion-point">insertion point</a> in shadow host's <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
     <ol>
         <li>Let <var>POINT</var> be the current insertion point
-        <li>For each node in <var>POOL</var>:
+        <li><dfn id="algo-distribution-repeat">Repeat</dfn> for each node in <var>POOL</var>:
         <ol>
             <li>Let <var>NODE</var> be the current node
             <li>If the <var>NODE</var> matches <var>POINT</var>'s <a href="#dfn-matching-criteria">matching criteria</a>:
                 <ol>
-                    <li>Designate the <var>NODE</var> to be distributed to <var>POINT</var></li>
+                    <li>Distribute the <var>NODE</var> to <var>POINT</var></li>
                     <li>Remove <var>NODE</var> from the <var>POOL</var></li>
                 </ol></li>
-            <li>Otherwise, continue</li>
+            <li>Otherwise, continue to <a href="#algo-distribution-repeat">repeat</a></li>
         </ol></li>
     </ol></li>
 </ol>
-
 
 <p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point.</p>
 
@@ -130,18 +129,16 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
-<dfn id="dfn-shadow-insertion-point" class="fixme">Define shadow insertion point</dfn>
+<p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted.</p>
 
-<h3>Rendering Shadow DOM Subtrees</h3>
-
-<p>The <dfn id="dfn-tree-composition">tree composition algorithm</dfn> is used to render the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> of a <a href="#dfn-shadow-host">shadow host</a>, and must be <strong>equivalent</strong> processing the following steps:
+<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <strong>equivalent</strong> processing the following steps:
 
 <ol>
     <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <a href="#dfn-tree-stack">tree stack</a>
     <li>Let <var>POOL</var> be the list of nodes</li>
     <li>Populate <var>POOL</var> with child nodes of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>Let <var>POINT</var> be the first encountered <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
-    <li>Repeat while <var>TREE</var> exists:</li>
+    <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:</li>
     <ol>
         <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a> on the <var>TREE</var>, supplying <var>POOL</var> as input</li>
         <li>If <var>POINT</var> exists:
@@ -151,8 +148,9 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
                 <li>If there is no older tree, <strong>stop</strong>.</li>
                 <li>Otherwise:
                 <ol>
-                    <li>Designate it to be rendered in place of the <var>POINT</var></li>
-                    <li>Let <var>TREE</var> be this older tree, and continue</li>
+                    <li>Let <var>TREE</var> be this older tree</li>
+                    <li>Distribute <var>TREE</var> to the <var>POINT</var></li>
+                    <li>Continue to <a href="#algo-composition-repeat">repeat</a></li>
                 </ol></li>
             </ol></li>
         </ol></li>
