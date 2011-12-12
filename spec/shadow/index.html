@@ -95,28 +95,71 @@
     <li>The distribution only affects the rendering. The state of the document DOM tree or shadow DOM subtrees is not affected.</li>
     <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point.</li>
     <li>The distribution is a result of executing a stable algorithm.</li>
+    <li>The distribution itself does not change the variables affecting the distribution.</li>
     <li>The distribution reoccurs whenever any variable affecting it is changed.</li>
 </ul>
 
-The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <strong>exactly equal</strong> to the outcome of processing these steps:</p>
+The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <strong>equivalent</strong> of the outcome of processing these steps:</p>
+
+<dl>
+<dt>Input</dt>
+<dd><var>POOL</var>, which is a list of DOM nodes.
+</dl>
 
 <ol>
-    <li>For each child node of the shadow host:
+    <li>For each <a href="#dfn-insertion-point">insertion point</a> in shadow host's <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
     <ol>
-        <li>For each <a href="#dfn-insertion-point">insertion point</a> in shadow host's <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
-            <ol>
-                <li>If the child node:
-                    the child is distributed to the <a href="#dfn-insertion-point">insertion point</a>, represented by the <code>content</code> element.</li>
-                <li>Otherwise, the child remains available for distribution.</li>
-            </ol></li>
+        <li>Let <var>POINT</var> be the current insertion point
+        <li>For each node in <var>POOL</var>:
+        <ol>
+            <li>Let <var>NODE</var> be the current node
+            <li>If the <var>NODE</var> matches <var>POINT</var>'s <a href="#dfn-matching-criteria">matching criteria</a>:
+                <ol>
+                    <li>Designate the <var>NODE</var> to be distributed to <var>POINT</var></li>
+                    <li>Remove <var>NODE</var> from the <var>POOL</var></li>
+                </ol></li>
+            <li>Otherwise, continue</li>
+        </ol></li>
     </ol></li>
 </ol>
+
 
 <p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point.</p>
 
 <h3>Hosting Multiple Shadow Subtrees</h3>
 
-<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
+<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
+
+<dfn id="dfn-shadow-insertion-point" class="fixme">Define shadow insertion point</dfn>
+
+<h3>Rendering Shadow DOM Subtrees</h3>
+
+<p>The <dfn id="dfn-tree-composition">tree composition algorithm</dfn> is used to render the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> of a <a href="#dfn-shadow-host">shadow host</a>, and must be <strong>equivalent</strong> processing the following steps:
+
+<ol>
+    <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <a href="#dfn-tree-stack">tree stack</a>
+    <li>Let <var>POOL</var> be the list of nodes</li>
+    <li>Populate <var>POOL</var> with child nodes of the <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>Let <var>POINT</var> be the first encountered <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
+    <li>Repeat while <var>TREE</var> exists:</li>
+    <ol>
+        <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a> on the <var>TREE</var>, supplying <var>POOL</var> as input</li>
+        <li>If <var>POINT</var> exists:
+        <ol>
+            <li>Find the next older tree, relative to <var>TREE</var> in the <a href="#dfn-tree-stack">tree stack</a>
+            <ol>
+                <li>If there is no older tree, <strong>stop</strong>.</li>
+                <li>Otherwise:
+                <ol>
+                    <li>Designate it to be rendered in place of the <var>POINT</var></li>
+                    <li>Let <var>TREE</var> be this older tree, and continue</li>
+                </ol></li>
+            </ol></li>
+        </ol></li>
+        <li>Otherwise, <strong>stop</strong>.
+    </ol></li>
+</ol>
+
 
 <h2>Events</h2>
 
