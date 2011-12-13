@@ -92,7 +92,7 @@
 
 <p>To maintain the lower-boundary encapsulation, the distribution of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
 <ul>
-    <li>The distribution only affects the rendering. The state of the document DOM tree or shadow DOM subtrees is not affected.</li>
+    <li>The distribution does not affect the state of the document DOM tree or shadow DOM subtrees.</li>
     <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point.</li>
     <li>The distribution is a result of executing a stable algorithm.</li>
     <li>The distribution itself does not change the variables affecting the distribution.</li>
@@ -128,7 +128,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <h3>Hosting Multiple Shadow Subtrees</h3>
 
-<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
+<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
 <p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted.</p>
 
@@ -150,7 +150,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
                 <li>Otherwise:
                 <ol>
                     <li>Let <var>TREE</var> be this older tree</li>
-                    <li>Distribute <var>TREE</var> to the <var>POINT</var></li>
+                    <li>Assign <var>TREE</var> to the <var>POINT</var></li>
                     <li>Continue to <a href="#algo-composition-repeat">repeat</a></li>
                 </ol></li>
             </ol></li>
@@ -159,6 +159,18 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
 </ol>
 
+<h3>Rendering Shadow DOM Subtrees</h3>
+
+<p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
+
+<ol>
+    <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>In place of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following exceptions:
+    <ul>
+        <li>In place of each <a href="#dfn-insertion-point">insertion point</a>, render <a href="#dfn-shadow-host">shadow host</a>'s child nodes as <strong>any DOM subtree</strong> in the order they were distributed to the insertion point</li>
+        <li>In place of each <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, render the <a href="#dfn-older-tree">older tree</a> in <a href="#dfn-shadow-host">shadow host</a>'s <a href="#dfn-tree-stack">tree stack</a> as <strong>any DOM subtree</strong>, but with these same exceptions.</li>
+    </ul></li>
+</ol>
 
 <h2>Events</h2>
 
