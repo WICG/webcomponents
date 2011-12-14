@@ -172,7 +172,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ul></li>
 </ol>
 
-<p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as-rendered</dfn>" is used to refer to this structure.</p>
+<p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
 
 <h3>Shadow DOM Tree Rendering Example</h3>
 
@@ -184,7 +184,31 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 
 <p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, bubble, or default phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
 
-<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjust in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary-encapsulation</a>.
+<p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <strong>equivalent</strong> to processing the following steps:</p>
+
+<dl>
+<dt>Input</dt>
+<dd><var>NODE</var>, a DOM node.</dd>
+<dt>Output</dt>
+<dd><var>PARENT</var>, a DOM node's <a href="#dfn-adjusted-parent">adjusted parent</a>.</dd>
+</dl>
+<ol>
+    <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
+    <ol>
+        <li>Let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is distributed to</li>
+    </ol></li>
+    <li>If <var>NODE</var> is a <a href="#dfn-shadow-root">shadow root</a>:
+    <ol>
+        <li>If <var>NODE</var> is currently assigned to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+        <ol>
+            <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is assigned to</li>
+        </ol></li>
+        <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
+    </ol></li>
+    <li>Otherwise, let <var>PARENT</var> be the node's parent node.</li>
+</ol>
+
+<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
 <h3>Event Retargeting</h3>
 
@@ -381,29 +405,6 @@ At the end of this process, we should have the following set of ancestors and re
     <span class="shadow-boundary lowest-common-boundary">&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
 </code></pre>
-
-<h3>Events and Insertion Points</h3>
-
-<p>All events that are fired on nodes that have been distributed with the <a href="#dfn-distribution-algorithm">distribution algorithm</a> or the <a href="#dfn-composition-algorithm">composition algorithm</a> must cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> <em>into</em> the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, traversing the <a href="#dfn-as-rendered">as-rendered</a> structure.</p>
-
-<p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in adjusting the list of ancestors of the target node. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the adjusted parent of any given and build the list of ancestor for event dispatch. This algorithm must be <strong>equivalent</strong> to processing the following steps:</p>
-
-<dl>
-<dt>Input</dt>
-<dd><var>NODE</var>, a DOM node.</dd>
-<dt>Output</dt>
-<dd><var>PARENT</var>, a DOM node's adjusted parent.</dd>
-</dl>
-<ol>
-    <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
-    <ol>
-        <li>Let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the node is distributed to.</li>
-    </ol></li>
-    <li>Otherwise, 
-    <ol>
-        <li>Let <var>PARENT</var> be the node's parent node.</li>
-    </ol></li>
-</ol>
 
 <h2>Elements and DOM Objects</h2>
 
