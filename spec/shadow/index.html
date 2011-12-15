@@ -80,10 +80,10 @@
 
 <p id="dom-scoping">To maintain the upper-boundary encapsulation, the nodes in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must be share the following characteristics:</p>
 <ul>
-    <li>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a>;</li>
-    <li>The nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a>;</li>
-    <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods.</li>
-    <li>
+    <li>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>The nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a></li>
+    <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods</li>
+    <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a></li>
 </ul>
 <p>For convenience, the <a href="dfn-shadow-root">shadow root</a> provides its own set of DOM tree accessor methods. No nodes other than <a href="dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</p>
 
@@ -93,11 +93,11 @@
 
 <p>To maintain the lower-boundary encapsulation, the distribution of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
 <ul>
-    <li>The distribution does not affect the state of the document DOM tree or shadow DOM subtrees.</li>
-    <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point.</li>
-    <li>The distribution is a result of executing a stable algorithm.</li>
-    <li>The distribution itself does not change the variables affecting the distribution.</li>
-    <li>The distribution reoccurs whenever any variable affecting it is changed.</li>
+    <li>The distribution does not affect the state of the document DOM tree or shadow DOM subtrees</li>
+    <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point</li>
+    <li>The distribution is a result of executing a stable algorithm</li>
+    <li>The distribution itself does not change the variables affecting the distribution</li>
+    <li>The distribution reoccurs whenever any variable affecting it is changed</li>
 </ul>
 
 The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <strong>equivalent</strong> of the outcome of processing these steps:</p>
@@ -415,20 +415,34 @@ At the end of this process, we should have the following set of ancestors and re
 &lt;/div&gt;
 </code></pre>
 
-<h2>CSS</h2>
+<h3>Styles</h3>
 
-<p>Nodes in the shadow tree inherit styles from the host element as if they were direct children.</p>
+<p>To enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document do not apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
-<p>Children of the host element that are rendered through a <code>content</code> element inherit their style as if they were direct children of the <code>content</code> element. </p>
+<p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM subtree in a document, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
-<h3>Selectors</h3>
+<dl>
+<dt>Input</dt>
+<dd><var>RULE</var>, a CSS rule whose type is being determined</dd>
+<dd><var>TREE</var>, a DOM tree in whose context the determination is being made, where <var>TREE</var> is either the document tree or a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
+<dt>Output</dt>
+<dd>Whether <var>RULE</var> must be applied to <var>TREE</var></a>.
+</dl>
+<ol>
+    <li>If <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
+    <ol>
+        <li>If <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
+        <ol>
+            <li>Let <var>STYLE</var> be this style element</li>
+            <li>If <var>STYLE</var> has a <code>scoped</code> attribute and <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>must</strong> be applied to <var>TREE</var></li>
+            <li>Otherwise, <var>RULE</var> <strong>must not</strong> be applied to <var>TREE</var>
+        </ol></li>
+    </ol>
+    <li>Otherwise, the rule <strong>must</strong> be applied to <var>TREE</var>
+</ol>
 
-<p>CSS Selectors <strong>never</strong> cross the boundary from host to the shadow tree, nor from <code>content</code> elements back to the host or its children.
+<p>CSS properties are inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>.</p>
 
-<p>CSS Rules declared outside the shadow tree do <strong>not</strong> apply to nodes inside it. Conversely, style rules declared inside the shadow tree also do <strong>not</strong> apply to nodes outside.
-
-<p>All of the above also applies to selectors used in certain JavaScript APIs,
-such as the <code><a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">querySelector()</a></code> and <code><a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">querySelectorAll()</a></code> functions.
 
 <h3 id="selector-fragment">Selector Fragment</h3>
 
