@@ -446,8 +446,12 @@ At the end of this process, we should have the following set of ancestors and re
     <li>Otherwise, the rule <strong>must</strong> be applied to <var>NODE</var>
 </ol>
 
-<p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>.</p>
-
+<p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
+<ul>
+    <li>the styles of the <a href="#dfn-shadow-host">shadow host</a> are inherited by the children of the <a href="#dfn-shadow-root">shadow root</a></li>
+    <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> node are inherited by those child nodes of the <a href="#dfn-shadow-host">shadow host</a> that are distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> node are inherited by the child nodes of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, assigned to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
+</ul>
 
 <h3 id="selector-fragment">Selector Fragment</h3>
 
