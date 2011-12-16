@@ -23,7 +23,7 @@
 
 <h2>Abstract</h2>
 
-<p>This specification describes a method of establishing and maintaining boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better encapsulation within DOM.</p>
+<p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
 
 
 <h2>Terminology</h2>
@@ -44,19 +44,24 @@
 
 <h2>Introduction</h2>
 
-<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently.</p>
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
-<p>For example, a Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each being a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
+<p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
+
+<h3>Functional Encapsulation Example</h3>
+<em>This section is non-normative.</em>
+
+<p>A Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each being a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15065" class=fixme>Add illustration</a></p>
 
-<p>This need for observing the functional <dfn id="dfn-boundary">boundaries</dfn> in a document tree is even larger when a widget is <dfn id="dfn-dom-operation">operated</dfn> on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
 <h2>Shadow DOM Subtrees</h2>
 
-<p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation boundaries while retaining the standard DOM composability semantics.</p>
+<p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
 
-<p>The encapsulation boundaries between shadow DOM subtrees are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>.</p>
+<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between shadow DOM subtrees are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>.</p>
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15066" class=fixme>Add illustration</a></p>
 
