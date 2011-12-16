@@ -424,30 +424,35 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>To enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document do not apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
+<p>Conversely, to enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply to the nodes, distributed to the <a href="#dfn-insertion-point">insertion points</a>.
+
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM node, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
 <dl>
 <dt>Input</dt>
 <dd><var>RULE</var>, a CSS rule whose applicability is being determined</dd>
-<dd><var>NODE</var>, a node</dd>
+<dd><var>NODE</var>, a DOM node</dd>
 <dt>Output</dt>
 <dd>Whether <var>RULE</var> must be applied to <var>NODE</var></a>.
 </dl>
 <ol>
-    <li>If <var>RULES</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>must</strong> be applied to <var>NODE</var>. Otherwise</li>
-    <li>Let <var>TREE</var> be the DOM subtree to which <var>NODE</var> belongs. The <var>TREE</var> is then the document tree, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or some disconnected tree</li>
-    <li>If <var>TREE</var> is a disconnected tree, the rule <strong>must not</strong> be applied to <var>NODE</var></li>
-    <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
+    <li>If <var>RULES</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable to <var>NODE</var>.</li>
+    <li>Otherwise:
     <ol>
-        <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>, <var>RULE</var> <strong>must</strong> apply to <var>NODE</var>.</li>
-        <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
+        <li>Let <var>TREE</var> be the DOM subtree to which <var>NODE</var> belongs. The <var>TREE</var> is then the document tree, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or some disconnected tree</li>
+        <li>If <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var></li>
+        <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
         <ol>
-            <li>Let <var>STYLE</var> be this style element</li>
-            <li>If <var>STYLE</var> has a <code>scoped</code> attribute and <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>must</strong> be applied to <var>NODE</var></li>
-            <li>Otherwise, <var>RULE</var> <strong>must not</strong> be applied to <var>NODE</var>
-        </ol></li>
-    </ol>
-    <li>Otherwise, the rule <strong>must</strong> be applied to <var>NODE</var>
+            <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var></li>
+            <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
+            <ol>
+                <li>Let <var>STYLE</var> be this style element</li>
+                <li>If <var>STYLE</var> has a <code>scoped</code> attribute and <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var></li>
+                <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>
+            </ol></li>
+        </ol>
+        <li>Otherwise, the rule <strong>is</strong> applicable to <var>NODE</var>
+    </ol></li>
 </ol>
 
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
@@ -592,8 +597,8 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
 <dd>
     <dl>
-    <dt id="markup-content-apply-shadow-styles"><code>apply-shadow-styles</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean attribute</a></dt>
-    <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the host element's children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd>
+<!--    <dt id="markup-content-apply-shadow-styles"><code>apply-shadow-styles</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean attribute</a></dt>
+    <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the host element's children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd> -->
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#set-of-space-separated-tokens">set of space-separated tokens</a></dt>
     <dd>
         defines the <a href="#dfn-matching-criteria">matching criteria</a> for distributing child nodes of the <a href="#dfn-host-element">host element</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
@@ -602,16 +607,15 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dd>
 <dt>DOM Interface</dt>
 <dd>
-    <pre><code>interface <dfn id="api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>;
+    <pre><code>interface <dfn id="api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {<!--    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>; -->
     attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/2d8624c7ec02/dom-core.html#interface-domtokenlist">DOMTokenList</a> <a href="#api-html-content-element-select">select</a>;
 }
     </code></pre>
     <dl>
     <dt>Attributes</dt>
     <dl>
-        <dt id="api-html-content-element-apply-shadow-styles"><code>applyShadowStyles</code> of type <code>bool</code></dt>
-        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd>
+<!--        <dt id="api-html-content-element-apply-shadow-styles"><code>applyShadowStyles</code> of type <code>bool</code></dt>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd> -->
         <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMTokenList</code></dt>
         <dd>
             <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
