@@ -165,6 +165,10 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
 </ol>
 
+<h3>Nested Shadow Subtrees</h3>
+
+<p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+
 <h3>Rendering Shadow DOM Subtrees</h3>
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
@@ -173,9 +177,15 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
-        <li>In place of each <a href="#dfn-insertion-point">insertion point</a>:
+        <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> must be <a href="#dfn-rendering">rendered</dfn> accordingly</li>
+        <li>In place of each <a href="#dfn-insertion-point">insertion point</a>, process the following <dfn id="dfn-insertion-point-rendering">insertion point rendering</dfn> steps:
         <ol>
-            <li>If there are child nodes <a href="#dfn-distribution-algorithm">distributed</a> to this insertion point, render <a href="#dfn-shadow-host">shadow host</a>'s child nodes as <strong>any DOM subtree</strong> in the order they were distributed</li>
+            <li>If there are child nodes <a href="#dfn-distribution-algorithm">distributed</a> to this insertion point, for each child node and in the order they were distributed:
+            <ol>
+                <li>Let <var>CHILD</var> be the child node being rendered</li>
+                <li>If <var>CHILD</var> is itself an <a href="#dfn-insertion-point">insertion point</a>, and the tree being rendered is <a href="#dfn-nested-subtree">nested</a>, render them using <a href="#dfn-insertion-point-rendering">insertion point rendering</a> steps</li>
+                <li>Otherwise, render <var>CHILD</var> as <strong>any DOM subtree</strong>
+            </ol></li>
             <li>Otherwise, render <a href="#dfn-fallback-content">fallback content</a> as <strong>any DOM subtree</strong></li>
         </ol></li>
         <li>In place of each <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
