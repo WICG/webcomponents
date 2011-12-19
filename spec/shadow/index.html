@@ -30,6 +30,17 @@
 
 <p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
 
+<h2>About this Document</h2>
+
+<p>This document is structured into three main parts:
+<ol>
+    <li>setting up the stage for the specification,</li>
+    <li>explaining of the conceptual model and algorithms behind it, and</li>
+    <li>expressing this model with DOM interfaces and HTML elements.</li>
+</ol>
+<p>In a sense, these parts can be viewed as <em>math</em>, which sets up the reasoning environment for the modeling, <em>physics</em>, which is the theoretical reasoning about the concept, and <em>mechanics</em>, which is the is the practical application of this reasoning. This arrangement helps create layering and prevents circular dependencies between various parts of the specification.</p>
+
+<p>All points, at which a conforming UA has to make decisions about the state or reaction to the state of the conceptual model, are captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithms</a>. These algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and specified algorithm to be exactly the same for all inputs.</p>
 
 <h2>Terminology</h2>
 
@@ -38,6 +49,7 @@
     <dt>DOM tree</dt>
     <dt>document</dt>
     <dt>element</dt>
+    <dt>conforming UA</dt>
 </dl>
 
 <h2>Dependencies</h2>
@@ -110,7 +122,7 @@
     <li>The distribution reoccurs whenever any variable affecting it is changed</li>
 </ul>
 
-The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <strong>equivalent</strong> of the outcome of processing these steps:</p>
+The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <a href="#dfn-processing-equivalence">equivalent</a> of the outcome of processing these steps:</p>
 
 <dl>
 <dt>Input</dt>
@@ -143,7 +155,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted.</p>
 
-<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <strong>equivalent</strong> to processing the following steps:
+<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
 
 <ol>
     <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <a href="#dfn-tree-stack">tree stack</a>
@@ -213,7 +225,7 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 
 <p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, bubble, or default phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
 
-<p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <strong>equivalent</strong> to processing the following steps:</p>
+<p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <dl>
 <dt>Input</dt>
