@@ -28,6 +28,8 @@
 </dl>
 </header>
 
+<section>
+
 <h2>Abstract</h2>
 
 <p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
@@ -65,6 +67,10 @@
     <li>HTML specification
 </ul>
 
+</section>
+
+<section>
+
 <h2>Introduction</h2>
 
 <p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals limiting information flow based on trust and ensuring security of data and state within an application.</p>
@@ -88,7 +94,9 @@
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15066" class=fixme>Add illustration</a></p>
 
-<p>The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="api-shadow-root">shadow roots</dfn>.
+<p>The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="api-shadow-root">shadow roots</dfn>.</p>
+
+<object data="../../assets/images/shadowdom.svg" width=500 height=200></object>
 
 <p>When rendered, the shadow DOM subtree is shown in place of the host element.</p>
 
@@ -536,15 +544,15 @@ At the end of this process, we should have the following set of ancestors and re
     <li>matches the specified selector fragment.</li>
 </ol>
 
+</section>
+
+<section>
+
 <h2>Elements and DOM Objects</h2>
 
 <h3><code>ShadowRoot</code> Object</h3>
 
 <p>The <dfn id="api-shadow-root-object"><code>ShadowRoot</code></dfn> object represents the <a href="#api-shadow-root">shadow root</a>.</p>
-
-<object data="../../assets/images/shadowdom.svg" width=500 height=200></object>
-
-<p>To maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, all descendants of the <code>ShadowRoot</code> are <a href="#dom-scoping">scoped</a> within it.</p>
     
 <pre><code>[Constructor(in HTMLElement element) raises (DOMException)]
 interface <dfn id="api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
@@ -679,6 +687,8 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     </code></pre>
     </dl>
 </dl>
+
+</section>
 
 <h2>Acknowledgements</h2>
 
