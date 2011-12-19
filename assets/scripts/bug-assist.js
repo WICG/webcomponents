@@ -10,8 +10,7 @@ To configure, use meta tags as follows:
 
 Sample use and configuration:
 
-<script src="../assets/scripts/bug-assist.js"></script>
-<script src="../assets/scripts/prettify.js"></script>
+<script src="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/assets/scripts/bug-assist.js"></script>
 <meta name="bug.blocked" content="14949">
 <meta name="bug.short_desc" content="[Explainer]: ">
 <meta name="bug.product" content="WebAppsWG">
