@@ -28,13 +28,60 @@
 </dl>
 </header>
 
+<section class="toc">
+<h2>Table of Contents</h2>
+<ol>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#about">About this Document</a></li>
+    <li><a href="#dependencies">Dependencies</a></li>
+    <li><a href="#terminology">Terminology</a></li>
+    <li><a href="#introduction">Introduction</a>
+    <ol>
+        <li><a href="#functional-encapsulation-example">Functional Encapsulation Example</a></li>
+    </ol></li>
+    <li><a href="#shadow-dom-subtrees">Shadow DOM Subtrees</a>
+    <ol>
+        <li><a href="#upper-boundary-encapsulation">Upper-boundary Encapsulation</a></li>
+        <li><a href="#lower-boundary-encapsulation">Lower-boundary Encapsulation</a></li>
+        <li><a href="#multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</a></li>
+        <li><a href="#nested-shadow-subtrees">Nested Shadow Subtrees</a></li>
+        <li><a href="#rendering-shadow-subtrees">Rendering Shadow Subtrees</a></li>
+        <li><a href="#shadow-dom-tree-rendering-example">Shadow DOM Tree Rendering Example</a></li>
+    </ol></li>
+    <li><a href="#events">Events</a>
+    <ol>
+        <li><a href="#event-retargeting">Event Retargeting</a></li>
+        <li><a href="#retargeting-related-target">Retargeting <code>relatedTarget</code></a></li>
+        <li><a href="#retargeting-focus-events">Retargeting Focus Events</a></li>
+        <li><a href="#events-that-are-always-stopped">Events that are Always Stopped</a></li>
+        <li><a href="#event-retargeting-example">Event Retargeting Example</a></li>
+    </ol></li>
+    <li><a href="#styles">Styles</a>
+    <ol>
+        <li><a href="#selector-fragment">Selector Fragment</a></li>
+    </ol></li>
+    <li><a href="#elements-and-dom-objects">Elements and DOM Objects</a>
+    <ol>
+        <li><a href="#shadow-root-object"><code>ShadowRoot</code> Object</a>
+        <ol>
+            <li><a href="#shadow-root-attributes"><code>ShadowRoot</code> Attributes</a></li>
+            <li><a href="#shadow-root-methods"><code>ShadowRoot</code> Methods</a></li>
+        </ol></li>
+        <li><a href="#content-element">The <code>content</code> element</a></li>
+        <li><a href="#shadow-element">The <code>shadow</code> element</a></li>
+    </ol></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+</ol>
+
+</section>
+
 <section class="math">
 
-<h2>Abstract</h2>
+<h2 id="abstract">Abstract</h2>
 
 <p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
 
-<h2>About this Document</h2>
+<h2 id="about">About this Document</h2>
 
 <p>All diagrams, examples, notes, are non-normative, as well as sections explicitly marked as non-normative. Everything else in this specification is normative.</p>
 
@@ -50,7 +97,7 @@
 
 <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
 
-<h2>Dependencies</h2>
+<h2 id="dependencies">Dependencies</h2>
 
 <p>This document relies on the following specifications:</p>
 
@@ -63,7 +110,7 @@
     <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
 </ul>
 
-<h2>Terminology</h2>
+<h2 id="terminology">Terminology</h2>
 
 <p>The following terms are used throughout the specification:
 
@@ -86,13 +133,13 @@
 
 <section class="physics">
 
-<h2>Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 
 <p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
 <p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
 
-<h3>Functional Encapsulation Example</h3>
+<h3 id="functional-encapsulation-example">Functional Encapsulation Example</h3>
 
 <p>A Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each being a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
 
@@ -100,7 +147,7 @@
 
 <p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
-<h2>Shadow DOM Subtrees</h2>
+<h2 id="shadow-dom-subtrees">Shadow DOM Subtrees</h2>
 
 <p>This solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
 
@@ -126,7 +173,7 @@
     <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
 </ol>
 
-<h3>Upper-boundary Encapsulation</h3>
+<h3 id="upper-boundary-encapsulation">Upper-boundary Encapsulation</h3>
 
 <p id="dom-scoping">To maintain the upper-boundary encapsulation, the nodes in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must be share the following characteristics:</p>
 <ul>
@@ -139,7 +186,7 @@
 
 <p>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentnode"><code>parentNode</code></a> and <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentelement"><code>parentElement</code></a> attributes of the <a href="dfn-shadow-root">shadow root</a> object must always return <code>null</code>.</p>
 
-<h3>Lower-boundary Encapsulation</h3>
+<h3 id="lower-boundary-encapsulation">Lower-boundary Encapsulation</h3>
 
 <p>To maintain the lower-boundary encapsulation, the distribution of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
 <ul>
@@ -177,7 +224,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point.</p>
 
-<h3>Hosting Multiple Shadow Subtrees</h3>
+<h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
@@ -210,11 +257,11 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
 </ol>
 
-<h3>Nested Shadow Subtrees</h3>
+<h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
 <p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<h3>Rendering Shadow DOM Subtrees</h3>
+<h3 id="rendering-shadow-subtrees">Rendering Shadow DOM Subtrees</h3>
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
 
@@ -243,11 +290,11 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
 
-<h3>Shadow DOM Tree Rendering Example</h3>
+<h3 id="shadow-dom-tree-rendering-example">Shadow DOM Tree Rendering Example</h3>
 
 <p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15173">Add example</a></p>
 
-<h2>Events</h2>
+<h2 id="events">Events</h2>
 
 In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
@@ -279,7 +326,7 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 
 <p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
-<h3>Event Retargeting</h3>
+<h3 id="event-retargeting">Event Retargeting</h3>
 
 <p>Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing a <em>relative target</em> for each ancestor of the node at which the event is dispatched.</p>
 
@@ -306,7 +353,7 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 
 <p>Upon completion of the event dispatch, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> are set to the highest ancestor's <a href="#dfn-relative-target">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the nodes in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<h3>Retargeting <code>relatedTarget</code></h3>
+<h3 id="retargeting-related-target">Retargeting <code>relatedTarget</code></h3>
 
 <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a node that's not the event's target, but is related to the event.</p>
 
@@ -334,15 +381,15 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
     <li>Set <code>relatedTarget</code> to the parent of the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.
 </ol>
 
-<h3>Retargeting Focus Events</h3>
+<h3 id="retargeting-focus-events">Retargeting Focus Events</h3>
 
 <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events must be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding node that is losing focus as a result of <code>target</code> gaining focus or the node that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
 
-<h3>Events That Are Always Stopped</h3>
+<h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
 
 <p>Mutation events and <code>selectstart</code> event are always stopped at the nearest <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
 
-<h3>Event Retargeting Example</h3>
+<h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
 <p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shaow-dom-subtree">shadow DOM subtrees</a>:</p>
 <pre class="example html"><code>
@@ -475,7 +522,7 @@ At the end of this process, we should have the following set of ancestors and re
 &lt;/div&gt;
 </code></pre>
 
-<h2>Styles</h2>
+<h2 id="styles">Styles</h2>
 
 <p>To enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document do not apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
@@ -562,9 +609,9 @@ At the end of this process, we should have the following set of ancestors and re
 
 <section class="mechanics">
 
-<h2>Elements and DOM Objects</h2>
+<h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
-<h3><code>ShadowRoot</code> Object</h3>
+<h3 id="shadow-root-object"><code>ShadowRoot</code> Object</h3>
 
 <p>The <dfn id="api-shadow-root-object"><code>ShadowRoot</code></dfn> object represents the <a href="#api-shadow-root">shadow root</a>.</p>
     
@@ -580,7 +627,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/
 ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
 
-<h4><code>ShadowRoot</code> Attributes</h4>
+<h4 id="shadow-root-attributes"><code>ShadowRoot</code> Attributes</h4>
 
 <dl>
 <dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
@@ -589,7 +636,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd>refers back to the shadow host. This value is never <code>null</code>.</dd>
 </dl>
 
-<h4><code>ShadowRoot</code> Methods</h4>
+<h4 id="shadow-root-methods"><code>ShadowRoot</code> Methods</h4>
 
 <dl>
 <dt><code>constructor</code></dt>
@@ -637,7 +684,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dl>
 
 
-<h3>The <code>content</code> element</h3>
+<h3 id="content-element">The <code>content</code> element</h3>
 
 <p>The <dfn id="dfn-content-element"><code>content</code></dfn> element represents an <a href="#dfn-insertion-point">insertion point</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -681,7 +728,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dl>
 
 
-<h3>The <code>shadow</code> element</h3>
+<h3 id="shadow-element">The <code>shadow</code> element</h3>
 
 <p>The <dfn id="dfn-shadow-element"><code>shadow</code></dfn> element represents an <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -704,7 +751,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 </section>
 
-<h2>Acknowledgements</h2>
+<h2 id="acknowledgements">Acknowledgements</h2>
 
 <p>David Hyatt developed <a href="http://dev.w3.org/2006/xbl2/">XBL 1.0</a>, and Ian Hickson co-wrote <a href="http://dev.w3.org/2006/xbl2/">XBL 2.0</a>. These documents provided tremendous insight into the problem of functional encapsulation and greatly influenced this specification.</p>
 
