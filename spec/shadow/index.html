@@ -46,7 +46,6 @@
         <li><a href="#multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</a></li>
         <li><a href="#nested-shadow-subtrees">Nested Shadow Subtrees</a></li>
         <li><a href="#rendering-shadow-subtrees">Rendering Shadow Subtrees</a></li>
-        <li><a href="#shadow-dom-tree-rendering-example">Shadow DOM Tree Rendering Example</a></li>
     </ol></li>
     <li><a href="#events">Events</a>
     <ol>
@@ -69,6 +68,7 @@
         </ol></li>
         <li><a href="#content-element">The <code>content</code> element</a></li>
         <li><a href="#shadow-element">The <code>shadow</code> element</a></li>
+<!--        <li><a href="#shadow-dom-tree-rendering-example">Shadow DOM Example</a></li> -->
     </ol></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -285,10 +285,6 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 </ol>
 
 <p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
-
-<h3 id="shadow-dom-tree-rendering-example">Shadow DOM Tree Rendering Example</h3>
-
-<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15173">Add example</a></p>
 
 <h2 id="events">Events</h2>
 
@@ -745,7 +741,47 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     </dl>
 </dl>
 
+<!--
+
+<h3 id="shadow-dom-example">Shadow DOM Example</h3>
+
+<p>Let's imagine we need to implement a news story widget, which takes a simple list of links and turns it into a list of items, organized into two categories: breaking news and just news. The starting markup would be:
+
+<pre><code>
+
+<ul>
+    <li><a href="example.com/stories/1">A story</a></li>
+    <li><a href="example.com/stories/2">Another story</a></li>
+    <li class="breaking"><a href="example.com/stories/3">Also a story</a></li>
+    <li><a href="example.com/stories/4">Yet another story</a></li>
+    <li><a href="example.com/stories/4">Awesome story</a></li>
+    <li class="breaking"><a href="example.com/stories/5">Horrible story</a></li>
+</ul>
+
+</code></pre>
+
+<p>To organize the stories, we associate the following shadow DOM subtree with the <code>li</code> element:
+
+<pre><code>
+
+<div class="breaking">
+<h3>Breaking News</h3>
+<ul>
+    <content select="li.breaking"></content>
+</ul>
+</div>
+<div class="other">
+<ul>
+    <content></content>
+</ul>
+
+</code></pre>
+
+<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15173">Add example</a></p>
+
 </section>
+
+-->
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
