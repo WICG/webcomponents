@@ -198,11 +198,14 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <dl>
 <dt>Input</dt>
-<dd><var>POOL</var>, which is a list of DOM nodes.
+    <dd><var>TREE</var>, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
+    <dd><var>POOL</var>, a list of DOM nodes</dd>
+<dt>Output</dt>
+    <dd>The nodes in <var>POOL</var> are distributed among <a href="#dfn-insertion-point">insertion points</a> in <var>TREE</var>.</dd>
 </dl>
 
 <ol>
-    <li><dfn id="#algo-distribution-repeat-outer">Repeat</dfn> for each <a href="#dfn-insertion-point">insertion point</a> in shadow host's <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
+    <li><dfn id="#algo-distribution-repeat-outer">Repeat</dfn> for each <a href="#dfn-insertion-point">insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>:
     <ol>
         <li>Let <var>POINT</var> be the current insertion point</li>
         <li><dfn id="algo-distribution-repeat">Repeat</dfn> for each node in <var>POOL</var>:</li>
@@ -241,7 +244,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:</li>
     <ol>
         <li>Let <var>POINT</var> be the first encountered <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
-        <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a> on the <var>TREE</var>, supplying <var>POOL</var> as input</li>
+        <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a>, supplying <var>POOL</var> and <var>TREE</var> as input</li>
         <li>If <var>POINT</var> exists:
         <ol>
             <li>Find the next older tree, relative to <var>TREE</var> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
@@ -315,9 +318,9 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <dl>
 <dt>Input</dt>
-<dd><var>NODE</var>, a DOM node.</dd>
+    <dd><var>NODE</var>, a DOM node</dd>
 <dt>Output</dt>
-<dd><var>PARENT</var>, a DOM node's <a href="#dfn-adjusted-parent">adjusted parent</a>.</dd>
+    <dd><var>PARENT</var>, a DOM node's <a href="#dfn-adjusted-parent">adjusted parent</a></dd>
 </dl>
 <ol>
     <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
@@ -343,7 +346,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
 
-<p>The following <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> must be used to determine relative targets:</p>
+<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> must be used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <ol>
     <li>Set the relative target of the node at which event is fired to the node itself.</li>
