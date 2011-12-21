@@ -172,7 +172,7 @@
 
 <h3 id="upper-boundary-encapsulation">Upper-boundary Encapsulation</h3>
 
-<p id="dom-scoping">To maintain the upper-boundary encapsulation, the nodes in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must be share the following characteristics:</p>
+<p id="dom-scoping">To maintain the upper-boundary encapsulation, the nodes in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must share the following characteristics:</p>
 <ul>
     <li>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>The nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a></li>
@@ -221,7 +221,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
 
-<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
+<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
 <p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted.</p>
 
