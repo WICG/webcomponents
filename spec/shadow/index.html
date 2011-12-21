@@ -229,23 +229,30 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
 
+<dl>
+<dt>Input</dt>
+    <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
+<dt>Output</dt>
+    <dd>All <a href="#dfn-insertion-point">insertion points</a> and <a href="#dfn-shadow-insertion-point">shadow insertion points</a> are populated.</dd>
+</dl>
+
 <ol>
-    <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <a href="#dfn-tree-stack">tree stack</a>
+    <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
     <li>Let <var>POOL</var> be the list of nodes</li>
-    <li>Populate <var>POOL</var> with child nodes of the <a href="#dfn-shadow-host">shadow host</a></li>
-    <li>Let <var>POINT</var> be the first encountered <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
+    <li>Populate <var>POOL</var> with child nodes of the <var>HOST</var></li>
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:</li>
     <ol>
+        <li>Let <var>POINT</var> be the first encountered <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
         <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a> on the <var>TREE</var>, supplying <var>POOL</var> as input</li>
         <li>If <var>POINT</var> exists:
         <ol>
-            <li>Find the next older tree, relative to <var>TREE</var> in the <a href="#dfn-tree-stack">tree stack</a>
+            <li>Find the next older tree, relative to <var>TREE</var> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
             <ol>
                 <li>If there is no older tree, <strong>stop</strong>.</li>
                 <li>Otherwise:
                 <ol>
-                    <li>Let <var>TREE</var> be this older tree</li>
-                    <li>Assign <var>TREE</var> to the <var>POINT</var></li>
+                    <li>Set <var>TREE</var> to be this older tree</li>
+                    <li><dfn id="dfn-assign-older-tree">Assign</dfn> <var>TREE</var> to the <var>POINT</var></li>
                     <li>Continue to <a href="#algo-composition-repeat">repeat</a></li>
                 </ol></li>
             </ol></li>
@@ -261,6 +268,13 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 <h3 id="rendering-shadow-subtrees">Rendering Shadow DOM Subtrees</h3>
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
+
+<dl>
+<dt>Input</dt>
+    <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
+<dt>Output</dt>
+    <dd>Rendering of the <var>HOST</var>, including its <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a></dd>
+</dl>
 
 <ol>
     <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
@@ -279,7 +293,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         </ol></li>
         <li>In place of each <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
         <ol>
-            <li>If there is the <a href="#dfn-older-tree">older tree</a> in <a href="#dfn-shadow-host">shadow host</a>'s <a href="#dfn-tree-stack">tree stack</a>, render it as as <strong>any DOM subtree</strong>, but with the same <a href="#dfn-shadow-rendering">shadow rendering</a> exceptions.</li>
+            <li>If there is an <a href="#dfn-older-tree">older tree</a>, <a href="#dfn-assign-older-tree">assigned</a> to this shadow insertion point, render it as as <strong>any DOM subtree</strong>, but with the same <a href="#dfn-shadow-rendering">shadow rendering</a> exceptions.</li>
             <li>Otherwise, render <a href="#dfn-fallback-content">fallback content</a> as <strong>any DOM subtree</strong></li>
         </ol></li>
     </ul></li>
@@ -308,9 +322,9 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
     <li>If <var>NODE</var> is a <a href="#dfn-shadow-root">shadow root</a>:
     <ol>
-        <li>If <var>NODE</var> is currently assigned to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+        <li>If <var>NODE</var> is currently <a href="#dfn-assign-older-tree">assigned</a> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
         <ol>
-            <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is assigned to</li>
+            <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is <a href="#dfn-assign-older-tree">assigned</a> to</li>
         </ol></li>
         <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
     </ol></li>
@@ -551,8 +565,8 @@ At the end of this process, we should have the following set of ancestors and re
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
     <li>the styles of the <a href="#dfn-shadow-host">shadow host</a> are inherited by the children of the <a href="#dfn-shadow-root">shadow root</a></li>
-    <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> node are inherited by those child nodes of the <a href="#dfn-shadow-host">shadow host</a> that are distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> node are inherited by the child nodes of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, assigned to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
+    <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> node are inherited by those child nodes of the <a href="#dfn-shadow-host">shadow host</a> that are <a href="#dfn-assign-older-tree">assigned</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> node are inherited by the child nodes of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, distributed to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
 </ul>
 
 <h3 id="selector-fragment">Selector Fragment</h3>
