@@ -382,21 +382,21 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
-<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>:</p>
+<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the elements. Also, we will invent a fictional <code>shadow-boundary</code> element to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a>:</p>
 <pre><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-        &lt;div pseudo=&quot;controls&quot;&gt;
-            &lt;button pseudo=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; pseudo=&quot;timeline&quot;&gt;
+        &lt;div class=&quot;controls&quot;&gt;
+            &lt;button class=&quot;play-button&quot;&gt;
+            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
                 <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
                 <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            &lt;div pseudo=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; pseudo=&quot;volume-slider&quot;&gt;
+            &lt;div class=&quot;volume-slider-container&quot;&gt;
+                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
                     <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
                     <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
@@ -405,15 +405,15 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 &lt;/div&gt;
 </code></pre>
 
-<p>Let's have a user position their pointing device over the volume slider's thumb (<code>#player::volume-slider::slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
+<p>Let's have a user position their pointing device over the volume slider's thumb (<code>#player .volume-slider .slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
 
 <p>Just before the event is dispatched, we perform <a href="#dfn-retargeting">retargeting</a>:</p>
 <ol>
     <li>We set the <a href="#dfn-relative-target">relative target</a> of the thumb node to itself.</li>
     <li>Walking <a href="#dfn-travseral-up">up</a>, we find a <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
-    <li>Next up is an input (<code>#player::volume-slider</code>), and we set its relative target to itself, since the previous ancestor was a shadow boundary.</li>
-    <li>We then walk up to the containing div (<code>#player::volume-slider-container</code>), and use previous ancestor's target -- the input element.</li>
-    <li>Walking up one more, we reach the controls panel (<code>#player::controls</code>), and again use input element as relative target per <a href="#dfn-retargeting-algorithm">retargeting algorithm</a>.</li>
+    <li>Next up is an input (<code>#player .volume-slider</code>), and we set its relative target to itself, since the previous ancestor was a shadow boundary.</li>
+    <li>We then walk up to the containing div (<code>#player .volume-slider-container</code>), and use previous ancestor's target -- the input element.</li>
+    <li>Walking up one more, we reach the controls panel (<code>#player .controls</code>), and again use input element as relative target per <a href="#dfn-retargeting-algorithm">retargeting algorithm</a>.</li>
     <li>Next, we reach another <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
     <li>Finally we walk up to the player element (<code>#player</code>) and set its relative target to itself.</li>
 </ol>
@@ -421,17 +421,17 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 <pre class="example html"><code>
 <span class=event-ancestor>&lt;div id=&quot;player&quot;&gt; <em>7</em></span>
     <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>6</em></span>
-        <span class=event-ancestor>&lt;div pseudo=&quot;controls&quot;&gt; <em>5</em></span>
-            &lt;button pseudo=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; pseudo=&quot;timeline&quot;&gt;
+        <span class=event-ancestor>&lt;div class=&quot;controls&quot;&gt; <em>5</em></span>
+            &lt;button class=&quot;play-button&quot;&gt;
+            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
                 <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
                 <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            <span class=event-ancestor>&lt;div pseudo=&quot;volume-slider-container&quot;&gt; <em>4</em></span>
-                <span class=event-ancestor>&lt;input type=&quot;range&quot; pseudo=&quot;volume-slider&quot;&gt; <em>3</em></span>
+            <span class=event-ancestor>&lt;div class=&quot;volume-slider-container&quot;&gt; <em>4</em></span>
+                <span class=event-ancestor>&lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt; <em>3</em></span>
                     <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>2</em></span>
-                        <span class=event-ancestor>&lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt; <em>1</em></span>
+                        <span class=event-ancestor>&lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt; <em>1</em></span>
                     <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
@@ -460,51 +460,51 @@ At the end of this process, we should have the following set of ancestors and re
     <td><code><strong>div#player</strong></code></td>
 </tr>
 <tr>
-    <td><code>div#player::controls</code></td>
-    <td><code>div#player::controls::volume-slider</code></td>
+    <td><code>div#player .controls</code></td>
+    <td><code>div#player .controls .volume-slider</code></td>
 </tr>
 <tr>
-    <td><code>div#player::volume-slider-container</code></td>
-    <td><code>div#player::controls::volume-slider</code></td>
+    <td><code>div#player .volume-slider-container</code></td>
+    <td><code>div#player .controls .volume-slider</code></td>
 </tr>
 <tr>
-    <td><code>div#player::controls::volume-slider</code></td>
-    <td><code><strong>div#player::controls::volume-slider</strong></code></td>
+    <td><code>div#player .controls .volume-slider</code></td>
+    <td><code><strong>div#player .controls .volume-slider</strong></code></td>
 </tr>
 <tr>
-    <td><code>div#player::controls::volume-slider::slider-thumb</code></td>
-    <td><code><strong>div#player::controls::volume-slider::slider-thumb</strong></code></td>
+    <td><code>div#player .controls .volume-slider .slider-thumb</code></td>
+    <td><code><strong>div#player .controls .volume-slider .slider-thumb</strong></code></td>
 </tr>
 </tbody>
 </table>
 
 <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
-(<code>#player::timeline::slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
+(<code>#player .timeline .slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event escapes out of the player. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player::timeline::slider-thumb</code>).</p>
+<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event escapes out of the player. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>).</p>
 
 <ol>
-    <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player::controls</code>).</li>
+    <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player .controls</code>).</li>
     <li>Walking <a href="#dfn-traversal-up">up</a>, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the lowest common boundary.</li>
     <li>Given that the lowest common boundary exists, we limit event dispatch to the descendants of this boundary.</li>
-    <li>Starting from the lowest common boundary, we walk <a href="#dfn-traversal-down">down</a> the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player::timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
-    <li>We adjust <code>relatedTarget</code> to be the parent of the first divergent boundary, the timeline (<code>#player::timeline</code>). We are now ready to dispatch this event.</li>
+    <li>Starting from the lowest common boundary, we walk <a href="#dfn-traversal-down">down</a> the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
+    <li>We adjust <code>relatedTarget</code> to be the parent of the first divergent boundary, the timeline (<code>#player .timeline</code>). We are now ready to dispatch this event.</li>
 </ol>
 
 <pre class="example html"><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class="shadow-boundary lowest-common-boundary">&lt;shadow-boundary&gt;<em> &mdash; lowest common boundary</em></span>
-        &lt;div pseudo=&quot;controls&quot;&gt;
-            &lt;button pseudo=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; pseudo=&quot;timeline&quot;&gt;
+        &lt;div class=&quot;controls&quot;&gt;
+            &lt;button class=&quot;play-button&quot;&gt;
+            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
                 <span class="shadow-boundary first-divergent-boundary">&lt;shadow-boundary&gt;<em>  &mdash; first divergent boundary</em></span>
-                    &lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
                 <span class="shadow-boundary first-divergent-boundary">&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            &lt;div pseudo=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; pseudo=&quot;volume-slider&quot;&gt;
+            &lt;div class=&quot;volume-slider-container&quot;&gt;
+                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
                     <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div pseudo=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
                     <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
@@ -793,7 +793,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
