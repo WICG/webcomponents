@@ -248,7 +248,11 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         <ol>
             <li>Find the next older tree, relative to <var>TREE</var> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
             <ol>
-                <li>If there is no older tree, <strong>stop</strong>.</li>
+                <li>If there is no older tree:
+                <ol>
+                    <li>Distribute remaining nodes in <var>POOL</var>, if any, to <var>POINT</var></li>
+                    <li><strong>stop</strong>.</li>
+                </ol></li>
                 <li>Otherwise:
                 <ol>
                     <li>Set <var>TREE</var> to be this older tree</li>
