@@ -291,7 +291,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
-<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, bubble, or default phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
+<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
 
 <p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -341,8 +341,6 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 <p>The retargeting process must occur prior to dispatch of an event.</p>
 
 <p>At the time of event dispatch, for <a href="http://www.w3.org/TR/domcore/#dom-event-capturing_phase">CAPTURING_PHASE</a>, <a href="http://www.w3.org/TR/domcore/#dom-event-at_target">AT_TARGET</a>, and <a href="http://www.w3.org/TR/domcore/#dom-event-bubbling_phase">BUBBLING_PHASE</a>, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> must attributes be set to the <a href="#dfn-relative-target">relative target</a> that was computed for the node along the capturing and bubbling flow.</p>
-
-<p>The event must not be retargeted during the default phase of event dispatch.</p>
 
 <p>Upon completion of the event dispatch, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> are set to the highest ancestor's <a href="#dfn-relative-target">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the nodes in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
@@ -795,7 +793,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
