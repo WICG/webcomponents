@@ -219,8 +219,6 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
 </ol>
 
-<p>When the <a href="dfn-insertion-point">insertion point</a> has no content that is inserted in its place, the fallback content must be used instead. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point.</p>
-
 <h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order of they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
@@ -264,6 +262,8 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         <li>Otherwise, <strong>stop</strong>.
     </ol></li>
 </ol>
+
+<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assign-older-tree">assigned</a> or <a href="#dfn-distribution-algorithm">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must not participate in <a href="#dfn-composition-algorithm">composition</a>.</p>
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
