@@ -769,9 +769,8 @@ dictionary ListenInit {
     EventHandler handler;
 }
 
-interface HTMLContentElement : HTMLElement {
-    attribute bool applyShadowStyles;
-    attribute DOMString select;
+interface <a href="../spec/shadow/index.html#api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
+    attribute DOMString <a href="../spec/shadow/index.html#api-html-content-element-select">select</a>;
 }
 
 interface HTMLElementElement : HTMLElement {
@@ -798,11 +797,19 @@ interface ChangeCallback {
     void handleEvent(DOMString name, DOMString newValue, DOMString oldValue);
 }
 
-[Constructor(in HTMLElement element) raises(DOMException)]
-interface ShadowRoot : Element {
-    attribute bool applyAuthorStyles;
-    readonly attribute Element host;
+interface <a href="../spec/shadow/index.html#api-html-shadow-element">HTMLShadowElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
 }
+
+[Constructor(in HTMLElement element) raises (DOMException)]
+interface <a href="../spec/shadow/index.html#api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
+    <a href="http://www.w3.org/TR/domcore/#element">Element</a> <a href="../spec/shadow/index.html#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
+    attribute bool <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
+    readonly attribute Element <a href="../spec/shadow/index.html#api-shadow-root-host">host</a>;
+}
+ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
 
 <h2>Appendix B. HTML Elements</h2>
