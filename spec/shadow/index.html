@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <title>Shadow DOM</title>
-<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/base.css" type="text/css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
+<link rel="stylesheet" href="../../assets/styles/main.css" type="text/css">
 <link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
 <script src="../../assets/scripts/bug-assist.js"></script>
 <meta name="bug.blocked" content="14978">
@@ -11,7 +12,7 @@
 <meta name="bug.component" content="Component Model">
 </head>
 
-<body class="draft">
+<body>
 
 <header>
 <h1>Shadow DOM</h1>
@@ -288,7 +289,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <h2 id="events">Events</h2>
 
-In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
+<p>In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
 <p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, bubble, or default phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
 
@@ -384,7 +385,7 @@ In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http:
 <h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
 <p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>:</p>
-<pre class="example html"><code>
+<pre><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
         &lt;div pseudo=&quot;controls&quot;&gt;
@@ -607,8 +608,9 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>The <dfn id="api-shadow-root-object"><code>ShadowRoot</code></dfn> object represents the <a href="#api-shadow-root">shadow root</a>.</p>
     
-<pre><code>[Constructor(in HTMLElement element) raises (DOMException)]
-interface <dfn id="api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
+<pre><code>
+[Constructor(in HTMLElement element) raises (DOMException)]
+interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.org/TR/domcore/#node">Node</a> {
     <a href="http://www.w3.org/TR/domcore/#element">Element</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
@@ -701,7 +703,8 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dd>
 <dt>DOM Interface</dt>
 <dd>
-    <pre><code>interface <dfn id="api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {<!--    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>; -->
+    <pre><code>
+interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {<!--    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>; -->
     attribute <a href="http://dvcs.w3.org/hg/domcore/raw-file/2d8624c7ec02/dom-core.html#interface-domtokenlist">DOMTokenList</a> <a href="#api-html-content-element-select">select</a>;
 }
     </code></pre>
@@ -735,7 +738,8 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
 <dt>DOM Interface</dt>
 <dd>
-    <pre><code>interface <dfn id="api-html-shadow-element">HTMLShadowElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
+    <pre><code>
+interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
 }
     </code></pre>
     </dl>
