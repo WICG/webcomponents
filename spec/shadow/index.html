@@ -102,6 +102,7 @@
 
 <ul>
     <li><a href="http://www.w3.org/TR/CSS2/">CSS Level 2 Revision 1</a></li>
+    <li><a href="http://dev.w3.org/csswg/cssom/">CSSOM</a></li>
     <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
@@ -174,6 +175,7 @@
 <ul>
     <li>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>The nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a></li>
+    <li>The stylesheets, represented by the nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> document's <a href="http://dev.w3.org/csswg/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
     <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods</li>
     <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a></li>
 </ul>
@@ -607,21 +609,27 @@ At the end of this process, we should have the following set of ancestors and re
     <li>Otherwise:
     <ol>
         <li>Let <var>TREE</var> be the DOM subtree to which <var>NODE</var> belongs. The <var>TREE</var> is then the document tree, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or some disconnected tree</li>
-        <li>If <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var>.</li>
-        <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
+        <li>In the case <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var>.</li>
+        <li>In the case <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
         <ol>
             <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
             <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
             <ol>
                 <li>Let <var>STYLE</var> be this style element</li>
                 <li>If <var>STYLE</var> has a <code>scoped</code> attribute and <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
-                <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
             </ol></li>
+            <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
         </ol>
-        <li>Otherwise, the rule <strong>is</strong> applicable to <var>NODE</var>.</li>
+        <li>In the case <var>TREE</var> is a document tree:
+        <ol>
+            <li>If <var>RULE</var> is declared in <var>TREE</var>, the rule <strong>is</strong> applicable to <var>NODE</var>.</li>
+            <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
+        </ol></li>
     </ol></li>
 </ol>
 </div>
+
+<p>The effect of this algorithm is that any unscoped styles, declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, are applied <strong>neither</strong> to document <strong>nor</strong> the subtree in which they are declared.</p>
 
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
@@ -827,7 +835,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
