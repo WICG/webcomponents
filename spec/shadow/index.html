@@ -196,6 +196,7 @@
 
 The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <a href="#dfn-processing-equivalence">equivalent</a> of the outcome of processing these steps:</p>
 
+<div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>TREE</var>, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
@@ -221,6 +222,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         <li>Continue to <a href="#algo-distribution-repeat-outer">repeat</a></li>
     </ol></li>
 </ol>
+</div>
 
 <h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
 
@@ -230,6 +232,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
 
+<div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
@@ -265,6 +268,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         <li>Otherwise, <strong>stop</strong>.
     </ol></li>
 </ol>
+</div>
 
 <p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assign-older-tree">assigned</a> or <a href="#dfn-distribution-algorithm">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must not participate in <a href="#dfn-tree-composition">composition</a>.</p>
 
@@ -276,6 +280,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
 
+<div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
@@ -305,6 +310,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
         </ol></li>
     </ul></li>
 </ol>
+</div>
 
 <p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
 
@@ -316,6 +322,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
+<div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>NODE</var>, a DOM node</dd>
@@ -337,6 +344,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </ol></li>
     <li>Otherwise, let <var>PARENT</var> be the node's parent node.</li>
 </ol>
+</div>
 
 <p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
@@ -542,6 +550,7 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM node, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
+<div class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>RULE</var>, a CSS rule whose applicability is being determined</dd>
@@ -568,6 +577,7 @@ At the end of this process, we should have the following set of ancestors and re
         <li>Otherwise, the rule <strong>is</strong> applicable to <var>NODE</var>
     </ol></li>
 </ol>
+</div>
 
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
