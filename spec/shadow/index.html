@@ -5,7 +5,9 @@
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
 <link rel="stylesheet" href="../../assets/styles/main.css" type="text/css">
 <link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
+<link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css" />
 <script src="../../assets/scripts/bug-assist.js"></script>
+<script src="../../assets/scripts/prettify.js"></script>
 <meta name="bug.blocked" content="14978">
 <meta name="bug.short_desc" content="[Shadow]: ">
 <meta name="bug.product" content="WebAppsWG">
@@ -785,47 +787,119 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
     </dl>
 </dl>
 
-<!--
-
 <h3 id="shadow-dom-example">Shadow DOM Example</h3>
 
-<p>Let's imagine we need to implement a news story widget, which takes a simple list of links and turns it into a list of items, organized into two categories: breaking news and just news. The starting markup would be:
-
-<pre><code>
-
-<ul>
-    <li><a href="example.com/stories/1">A story</a></li>
-    <li><a href="example.com/stories/2">Another story</a></li>
-    <li class="breaking"><a href="example.com/stories/3">Also a story</a></li>
-    <li><a href="example.com/stories/4">Yet another story</a></li>
-    <li><a href="example.com/stories/4">Awesome story</a></li>
-    <li class="breaking"><a href="example.com/stories/5">Horrible story</a></li>
-</ul>
-
+<p>Bob was were asked to turn a simple list of links into a News Widget, which has links organized into two categories: breaking news and just news. The current document markup for the stories looks like this:</p>
+<pre class="prettyprint"><code>
+&lt;ul class=&quot;stories&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;example.com/stories/1&quot;&gt;A story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;example.com/stories/2&quot;&gt;Another story&lt;/a&gt;&lt;/li&gt;
+    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;example.com/stories/3&quot;&gt;Also a story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;example.com/stories/4&quot;&gt;Yet another story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;example.com/stories/4&quot;&gt;Awesome story&lt;/a&gt;&lt;/li&gt;
+    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;example.com/stories/5&quot;&gt;Horrible story&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </code></pre>
 
-<p>To organize the stories, we associate the following shadow DOM subtree with the <code>li</code> element:
+<p>To organize the stories, Bob decides to use <strong>shadow DOM</strong>. Doing so will allow Bob to keep the document markup uncluttered, and harnessing the power of insertion point makes sorting stories by class name a very simple task. After getting another cup of <a href="http://en.wikipedia.org/wiki/List_of_coffee_beverages#Green_Eye">Green Eye</a>, he quickly mocks up the following shadow DOM subtree, to be hosted by the <code>ul</code> element:</p>
+<pre class="prettyprint"><code>
+&lt;div class=&quot;breaking&quot;&gt;
+    &lt;ul&gt;
+        &lt;content select=&quot;.breaking&quot;&gt;&lt;/content&gt; &lt;!-- insertion point for breaking news --&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;other&quot;&gt;
+    &lt;ul&gt;
+        &lt;content&gt;&lt;/content&gt; &lt;!-- insertion point for the rest of the news --&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Bob then styles the newborn widget according to comps from the designer by adding this to the shadow DOM subtree mockup:</p>
+<pre class="prettyprint"><code>
+&lt;style scoped&gt;
+    div.breaking {
+        color: Red;
+        font-size: 20px;
+        border: 1px dashed Purple;
+    }
+    div.other {
+        padding: 2px 0 0 0;
+        border: 1px solid Cyan;
+    }
+&lt;/style&gt;
+</code></pre>
+<p>While pondering if his company should start looking for a new designer, Bob converts the mockup to code:</p>
+<pre class="prettyprint"><code>
+function createStoryGroup(className, contentSelector)
+{
+    var group = document.createElement('div');
+    group.className = className;
+    // Empty string in select attribute or absence thereof work the same, so no need for special handling.
+    group.innerHTML = '&lt;ul&gt;&lt;content select=&quot;' + contentSelector + '&quot;&gt;&lt;/content&gt;&lt;/ul&gt';
+    return group;
+}
 
-<pre><code>
+function createStyle()
+{
+    var style = document.createElement('style');
+    style.scoped = true;
+    style.textContent = 'div.breaking { color: Red;font-size: 20px; border: 1px dashed Purple; }' +
+        'div.other { padding: 2px 0 0 0; border: 1px solid Cyan; }';
+    return style;
+}
 
-<div class="breaking">
-<h3>Breaking News</h3>
-<ul>
-    <content select="li.breaking"></content>
-</ul>
-</div>
-<div class="other">
-<ul>
-    <content></content>
-</ul>
+function makeShadowSubtree(storyList)
+{
+    var root = new ShadowRoot(storyList);
+    root.appendChild(createStyle());
+    root.appendChild(createStoryGroup('breaking', '.breaking'));
+    root.appendChild(createStoryGroup('other', ''));
+}
 
+document.addEventListener('DOMContentLoaded', function {
+    [].forEach.call(document.querySelectorAll('ul.stories'), makeShadowSubtree);
+});
 </code></pre>
 
-<p><a class="fixme" href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15173">Add example</a></p>
+<p>Well done, Bob! With the cup of coffee still half-full, the work is complete. Recognizing his awesomeness, Bob returns to teaching n00bs the ways of <a href="http://en.wikipedia.org/wiki/World_of_Warcraft">WoW</a>.</p>
+
+<p>A few months pass.</p>
+
+<p>It's election time. With Bob at his annual conference, Alice is charged with adding <strong>another</strong>, temporary box to the news widget, filled with election-related stories. Alice studies Bob's code, reads up on the shadow DOM spec and realizes that, thanks to multiple shadow DOM subtree support, she doesn't have to touch his code. As usual, her solution is elegant and simple, fitting neatly right under Bob's code:</p>
+<pre class="prettyprint"><code>
+// TODO(alice): BEGIN -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
+var ELECTION_BOX_REMOVAL_DEADLINE = ...;
+
+function createElectionStyle()
+{
+    var style = document.createElement('style');
+    style.scoped = true;
+    // TODO(alice): Check if designer had been tested for substance abuse.
+    style.textContent = 'div.election { color: Magenta;font-size: 24px; border: 2px dotted Fuchsia; }';
+    return style;
+}
+
+function makeElectionShadowSubtree(storyList)
+{
+    var root = new ShadowRoot(storyList);
+    // Add and style election story box.
+    root.appendChild(createElectionStyle());
+    root.appendChild(createStoryGroup('election', '.election'));
+    // Insert Bob's shadow tree under the election story box.
+    root.appendChild(document.createElement('shadow'));
+}
+
+if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
+    document.addEventListener('DOMContentLoaded', function {
+        [].forEach.call(document.querySelectorAll('ul.stories'), makeElectionShadowSubtree);
+    });
+}
+// TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
+</code></pre>
+<p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers&mdash;without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow DOM subtree composition in such a cool way.</p>
 
 </section>
 
--->
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
