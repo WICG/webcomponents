@@ -366,7 +366,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
-<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="shadow-boundary">shadow boundary</a>.</p>
+<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
 
 <p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -394,26 +394,40 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 </ol>
 </div>
 
-<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
-
 <h3 id="event-retargeting">Event Retargeting</h3>
 
-<p>Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing a <em>relative target</em> for each ancestor of the node at which the event is dispatched.</p>
+<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the node at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a DOM node that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
-<p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
+<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
-<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> must be used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
-
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>NODE</var>, a DOM node</dd>
+<dt>Output</dt>
+    <dd><var>TARGETS</var>, a list of tuples, each containing <var>NODE</var>'s ancestor and its relative target</dd>
+</dl>
 <ol>
-    <li>Set the relative target of the node at which event is fired to the node itself.</li>
-    <li>For each ancestor walking <a href="#dfn-travsere-up">up</a> starting with the node's parent, compute its <dfn id="dfn-relative-target">relative target</dfn>:</li>
+<ol>
+    <li>Let <var>BOUNDARY</var> be a flag, initialized to <strong>false</strong></li>
+    <li>Let <var>TARGET</var> be <var>NODE</var>
+    <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
+    <li><dfn id="algo-reatargeting-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
+    <ol>
+        <li>If <var>ANCESTOR</var> <strong>is</strong> a <a href="#dfn-shadow-root">shadow root</a>, set <var>BOUNDARY</var> to <strong>true</strong></li>
+        <li>Otherwise:
         <ol>
-            <li>If the node is a <a href="#dfn-shadow-boundary">shadow boundary</a>, Skip it.</li>
-            <li>If the previous node was a <a href="#dfn-shadow-boundary">shadow boundary</a>, make the node its own <a href="#dfn-relative-target">relative target</a>.</li>
-            <li>Otherwise: use the previous node's <a href="#dfn-relative-target">relative target</a>.</li>
-        </ol>
-    </li>
+            <li>If <var>BOUNDARY</var> is set to <strong>true</strong>
+            <ol>
+                <li>Set <var>TARGET</var> to <var>ANCESTOR</var></li>
+                <li>Set <var>BOUNDARY</var> to <strong>false</strong> state</li>
+            </ol></li>
+            <li>Add (<var>TARGET</var>, <var>ANCESTOR</var>) tuple to <var>TARGETS</var></li>
+        </ol></li>
+        <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
+    </ol></li>
 </ol>
+</div>
 
 <p>The retargeting process must occur prior to dispatch of an event.</p>
 
@@ -427,13 +441,15 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the node from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must not leak its actual value outside of this subtree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must <em>stop</em> events at the <a href="#dfn-shadow-boundary">shadow boundary</a> to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
 
-<p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must to be adjusted. In general:</p>
+<p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
 <ol>
     <li>If <code>relatedTarget</code> and <code>target</code> are enclosed by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree.</li>
     <li>If <code>relatedTarget</code> is separated from <code>target</code> by one or more <a href="#dfn-shadow-boundary">shadow boundaries</a>, it must be retargeted to the boundary that's closest to <code>target</code>.</li>
 </ol>
 
 <object data="../../assets/images/related-target-and-shadow-dom.svg" width=400 height=400></object>
+
+<p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
 
 <p id="related-target-algorithm">The following algorithm must be used:</p>
 <ol>
