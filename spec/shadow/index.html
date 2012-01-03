@@ -443,27 +443,46 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
 <ol>
-    <li>If <code>relatedTarget</code> and <code>target</code> are enclosed by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree.</li>
-    <li>If <code>relatedTarget</code> is separated from <code>target</code> by one or more <a href="#dfn-shadow-boundary">shadow boundaries</a>, it must be retargeted to the boundary that's closest to <code>target</code>.</li>
+    <li>If <code>relatedTarget</code> and <code>target</code> are enclosed by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree. This boundary is called <dfn id="dfn-lowest-common-boundary">lowest common boundary</dfn></li>
+    <li>If <code>relatedTarget</code> is separated from <code>target</code> by one or more <a href="#dfn-shadow-boundary">shadow boundaries</a>, it must be retargeted to the boundary that's closest to <code>target</code>. This boundary is called <dfn id="dfn-first-divergent-boundary">first divergent boundary</dfn>.</li>
 </ol>
 
 <object data="../../assets/images/related-target-and-shadow-dom.svg" width=400 height=400></object>
 
-<p>To help with algorithm description, let's define the direction walking the ancestors of a node as <dfn id="dfn-travsere-up">up</dfn> when traversing from child to parent, and <dfn id="dfn-travsere-down">down</dfn> when traversing from parent to child. In the context of events-related algorithms, all ancestor traversal crosses <a href="#dfn-shadow-boundary">shadow boundaries</a>.</p>
+<p>The <dfn id="dfn-related-target-algorithm">related target resolution</dfn> algorithm is used to determine dispatch behavior of events with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
-<p id="related-target-algorithm">The following algorithm must be used:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>TARGET</var>, the target DOM node of the event</dd>
+    <dd><var>RELATED</var>, the related target DOM node of the event</dd>
+<dt>Output</dt>
+    <dd><var>LIMIT</var>, the ancestor DOM node of <var>TARGET</var>, at which the event dispatch must be stopped (not including <var>LIMIT</var> itself)</dd>
+    <dd><var>ADJUSTED</var>, adjusted related target DOM node</dd>
+</dl>
 <ol>
-    <li>Find the <dfn>lowest common ancestor</dfn> of <code>target</code> and <code>relatedTarget</code>.</li>
-    <li>If there is none, skip to step 7 in the algorithm.</li>
-    <li>If the <a href="#dfn-lowest-common-ancestor">lowest common ancestor</a> is <code>relatedTarget</code>, and it's a <a href="#dfn-shadow-host">shadow  host</a>, make this tree's boundary the <dfn>lowest common boundary</dfn>, and go to step 6 in the algorithm.</li>
-    <li>Looking at the ancestors of the <a href="#dfn-lowest-common-ancestor">lowest common ancestor</a>, starting at its parent and walking <a href="#dfn-traversal-up">up</a>, find a <a href="#dfn-shadow-boundary">shadow boundary</a>. This is the <dfn id="dfn-lowest-common-boundary">lowest common boundary</dfn>, the boundary of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that encloses both <code>target</code> and <code>relatedTarget</code>.
-    <li>If the <a href="#dfn-lowest-common-boundary">lowest common boundary</a> is not found, skip to step 7 in the algorithm.</li>
-    <li>Limit event dispatch to the descendants of the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>.</li>
-    <li>If the <a href="#dfn-lowest-common-boundary">lowest common boundary</a> is still undetermined at this point, set it to be the farthest ancestor of the <code>relatedTarget</code>.</li>
-    <li>Starting from <a href="#dfn-lowest-common-boundary">lowest common boundary</a> and walking <a href="#dfn-traversal-down">down</a> ancestors of the <code>relatedTarget</code>, find a <a href="#dfn-shadow-boundary">shadow boundary</a>. This is the <dfn id="dfn-first-divergent-boundary">first divergent boundary</dfn>.</li>
-    <li>If <a href="#dfn-first-divergent-boundary">first divergent boundary</a> is not found, stop.</li>
-    <li>Set <code>relatedTarget</code> to the parent of the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.
+    <li>Let <var>COMMON</var> be <strong>undefined</strong></li>
+    <li>Let <var>ANCESTOR</var> be the <a href="http://en.wikipedia.org/wiki/Lowest_common_ancestor">lowest common ancestor</a> of <var>TARGET</var> and <var>RELATED</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
+    <li>If <var>ANCESTOR</var> exists:
+    <ol>
+        <li>If <var>ANCESTOR</var> is <var>RELATED</var> and is a <a href="#dfn-shadow-host">shadow  host</a>:
+        <ol>
+            <li>Set <var>LIMIT</var> to <var>ANCESTOR</var></li>
+            <li>Set <var>ADJUSTED</var> to <var>RELATED</var></li>
+            <li>Stop.</li>
+        </ol></li>
+        <li>Otherwise:
+        <ol>
+            <li>Let <var>ROOT</var> be the nearest ancestor <a href="#dfn-shadow-root">shadow root</a> of <var>ANCESTOR</var></li>
+            <li>If <var>ROOT</var> exists, set <var>COMMON</var> and <var>LIMIT</var> to <var>ROOT</var>'s <a href="#dfn-shadow-host">shadow host</a></li>
+        </ol></li>
+    </ol></li>
+    <li>If <var>COMMON</var> is still <strong>undefined</strong>, set <var>COMMON</var> to the farthest ancestor of <var>RELATED</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
+    <li>Let <var>HOST</var> be the farthest <a href="#dfn-shadow-host">shadow  host</a> ancestor of <var>RELATED</var> that is also a descendant of <var>COMMON</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
+    <li>If <var>HOST</var> exists, set <var>ADJUSTED</var> to <var>HOST</var></li>
+    <li>Otherwise, set <var>ADJUSTED</var> to <var>RELATED</var></li>
 </ol>
+</div>
 
 <h3 id="retargeting-focus-events">Retargeting Focus Events</h3>
 
@@ -503,7 +522,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 <p>Just before the event is dispatched, we perform <a href="#dfn-retargeting">retargeting</a>:</p>
 <ol>
     <li>We set the <a href="#dfn-relative-target">relative target</a> of the thumb node to itself.</li>
-    <li>Walking <a href="#dfn-travseral-up">up</a>, we find a <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
+    <li>Walking up, we find a <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
     <li>Next up is an input (<code>#player .volume-slider</code>), and we set its relative target to itself, since the previous ancestor was a shadow boundary.</li>
     <li>We then walk up to the containing div (<code>#player .volume-slider-container</code>), and use previous ancestor's target -- the input element.</li>
     <li>Walking up one more, we reach the controls panel (<code>#player .controls</code>), and again use input element as relative target per <a href="#dfn-retargeting-algorithm">retargeting algorithm</a>.</li>
@@ -578,9 +597,9 @@ At the end of this process, we should have the following set of ancestors and re
 
 <ol>
     <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player .controls</code>).</li>
-    <li>Walking <a href="#dfn-traversal-up">up</a>, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the lowest common boundary.</li>
+    <li>Walking up, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>.</li>
     <li>Given that the lowest common boundary exists, we limit event dispatch to the descendants of this boundary.</li>
-    <li>Starting from the lowest common boundary, we walk <a href="#dfn-traversal-down">down</a> the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
+    <li>Starting from the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>, we walk down the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
     <li>We adjust <code>relatedTarget</code> to be the parent of the first divergent boundary, the timeline (<code>#player .timeline</code>). We are now ready to dispatch this event.</li>
 </ol>
 
