@@ -60,6 +60,11 @@
         <li><a href="#event-retargeting-example">Event Retargeting Example</a></li>
     </ol></li>
     <li><a href="#styles">Styles</a></li>
+    <li><a href="#html-elements">HTML Elements in Shadow DOM Subtrees</a>
+    <ol>
+        <li><a href="#inert-html-elements">Inert HTML Elements</a></li>
+        <li><a href="#html-forms">HTML Forms</a></li>
+    </ol></li>
     <li><a href="#elements-and-dom-objects">Elements and DOM Objects</a>
     <ol>
         <li><a href="#shadow-root-object"><code>ShadowRoot</code> Object</a>
@@ -173,12 +178,14 @@
 
 <h3 id="upper-boundary-encapsulation">Upper-boundary Encapsulation</h3>
 
-<p id="dom-scoping">To maintain the upper-boundary encapsulation, the nodes in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must share the following characteristics:</p>
+<p>To maintain the upper-boundary encapsulation, the following <a href="#dfn-scoping-constraints">scoping constraints</a> must apply to all nodes in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
 <ul>
-    <li>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
-    <li>The nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a></li>
+    <li>The <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>The nodes and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a></li>
+    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> addressable from any attributes of elements in <a href="#dfn-shadow-host">shadow host</a>'s document</li>
     <li>The stylesheets, represented by the nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> document's <a href="http://dev.w3.org/csswg/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
     <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods</li>
+    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are</strong> addressable from any attributes of elements in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
     <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a></li>
 </ul>
 <p>For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of DOM tree accessor methods. No nodes other than <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</p>
@@ -678,6 +685,27 @@ At the end of this process, we should have the following set of ancestors and re
 </section>
 
 <section class="mechanics">
+    
+<h2 id="html-elements">HTML Elements in Shadow DOM Subtrees</h2>
+
+<p>Comparatively, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be seen as somewhere between <em>just a DOM subtree in a document</em> and a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a shadow DOM subtree aims to retain the traits of a typical DOM subtree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document DOM tree. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, with a few exceptions.</p>
+
+<h3 id="inert-html-elements">Inert HTML Elements</h3>
+
+<p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> behaves as <dfn id="dfn-inert">inert</dfn>, or not part of the document tree. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These elements are:</p>
+<ul>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-base-element"><code>base</code></a></li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a></li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a></li>
+</ul>
+
+<p>All other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> behave as if they were part of the document tree, though <a href="#dfn-scoping-constraints">scoped</a> to their subtrees.</p>
+
+<h3 id="html-forms">HTML Forms</h3>
+
+<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the document level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the document <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. Per <a href="#dfn-scoping-constraints">scoping constraints</a>, this excludes elements in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
+
+<p>Instead, each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> scopes its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s document, the form submission works <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
@@ -745,13 +773,13 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     </div>
 </dd>
 <dt id="api-shadow-root-get-element-by-id"><code>getElementById</code></dt>
-<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dom-scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
 <dt id="api-shadow-root-get-elements-by-class-name"><code>getElementsByClassName</code></dt>
-<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dom-scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
 <dt id="api-shadow-root-get-elements-by-tag-name"><code>getElementsByTagName</code></dt>
-<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dom-scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
 <dt id="api-shadow-root-get-elements-by-tag-name-ns"><code>getElementsByTagNameNS</code></dt>
-<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dom-scoping">scoped</a> to the shadow DOM subtree.</dd>
+<dd>Behaves exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
 </dl>
 
 
