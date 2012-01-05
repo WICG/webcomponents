@@ -692,54 +692,15 @@ At the end of this process, we should have the following set of ancestors and re
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="#http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> is determined using the <a href="#dfn-as-rendered">as-rendered</a> structure.</p>
+<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="#http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> must be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
 
-
-<p>If the element is a <a href="#dfn-shadow-host">shadow host</a>, and, <a href="#dfn-as-rendered">as rendered</a>, contains <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> elements, the element is called a <dfn id="dfn-focusable-shadow-host">focusable shadow host</dfn>. Even if the focusable shadow host is not itself a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> element, it must take a position in the <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>, as if it were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position</a>.</p>
-
-<!--
-
-<p>When <a href="#dfn-focusable-shadow-host">focusable shadow host</a> is being focused, the following <dfn id="dfn-shadow-dom-focusing">shadow DOM focusing</dfn> steps are applied to the "<a href="#dfn-as-rendered">as rendered</a>" structure, instead of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusing-steps">steps</a>, specified in HTML:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input<dt>
-    <dd><var>HOST</var>, the <a href="#dfn-focusable-shadow-host">focusable shadow host</a> that's being focused</dd>
-    <dd><var>ACTIVE</var>, currently focused element in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#top-level-browsing-context">top-level browsing context</a></dd>
-    <dd><var>FOCUSED</var>, actual currently focused element</dd>
-<dt>Output</dt>
-    <dd><var>ACTIVE</var>, newly focused element in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#top-level-browsing-context">top-level browsing context</a></dd>
-    <dd><var>FOCUSED</var>, actual newly focused DOM node</dd>
-</dl>
+<p>For <a href="#http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence must be inserted into the document <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
 <ol>
-    <li>If <var>HOST</var> is <var>ACTIVE</var>:
-    <ol>
-        <li>If <var>FOCUSED</var> is <var>HOST</var>
-    </ol></li>
-    <li>If <var>HOST</var> is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> element 
+    <li>immediately after the <a href="#dfn-shadow-host">shadow host</a>, if the shadow host is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
+    <li>in place of the <a href="#dfn-shadow-host">shadow host</a> as if the shadow host were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position</a>.</li>
 </ol>
-</div>
 
-If the shadow host is a focusable element, it's focused first
-
-
-If focusing the element will remove focus from another element, run the unfocusing steps for that element
-
-Make the shadow host the currently focused element in its top-level browsing context
-
-In navigation order, find the next focusable element within the shadow DOM subtrees composition as rendered
-
-Fire a simple event named focus at this element
-
-Once the focus is in a shadow DOM subtree, the following focusing steps apply:
-
-
-Define:
-sequential focus navigation
-directional focus navigation
-navigation order
-
--->
+<p>For <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the document <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 
 </section>
 
