@@ -696,6 +696,10 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property are not propagated from <a href="#dfn-shadow-host">shadow hosts</a> to <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
+</section>
+
+<section class="mechanics">
+
 <h2 id="user-interaction">User Interaction</h2>
 
 <h3 id="ranges-and-selection">Ranges and Selections</h3>
@@ -716,14 +720,14 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>For <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the document <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 
+<h3 id="editing">Editing</h3>
+
+<p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable"><code>contenteditable</code></a> attribute must not propagate from <a href="#dfn-shadow-host">shadow host</a> to its <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
+
 <h3 id="assistive-technology">Assistive Technology</h3>
 
 <p>User agents with assistive technology traverse the document tree <a href="#dfn-as-rendered">as rendered</a>, and thus enable full use of of <a href="http://www.w3.org/WAI/PF/aria/">WAI-ARIA</a> semantics in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-</section>
-
-<section class="mechanics">
-    
 <h2 id="html-elements">HTML Elements in Shadow DOM Subtrees</h2>
 
 <p>Comparatively, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be seen as somewhere between <em>just a DOM subtree in a document</em> and a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a shadow DOM subtree aims to retain the traits of a typical DOM subtree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document DOM tree. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, with a few exceptions.</p>
