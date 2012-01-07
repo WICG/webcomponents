@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Shadow DOM Example: Replay Extension</title>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
+<link rel="stylesheet" href="../assets/styles/main.css" type="text/css">
+<link rel="stylesheet" href="../assets/styles/prettify.css" type="text/css" />
+<script src="../assets/scripts/bug-assist.js"></script>
+<script src="../assets/scripts/prettify.js"></script>
+<meta name="bug.blocked" content="14956">
+<meta name="bug.short_desc" content="[Samples]: ">
+<meta name="bug.product" content="WebAppsWG">
+<meta name="bug.component" content="Component Model">
+</head>
+<body>
+<h1>DOM Replay Extension</h1>
+<p>Suppose we want to build a browser extension that monitors all DOM modifications using the new <a href="http://www.w3.org/TR/domcore/#mutation-observers">mutation observers</a> hotness, records them, and then allows the user to undo and re-apply all changes interactively.</p>
+
+<p>When the extension is active on a page, there is a slider at the top of the page and, next to it, a couple of buttons to start, reset, stop recording mutation events. The slider represents the timeline of all DOM changes on the page. The user can use the slider to move about the timeline.
+    
+<p>We'll leave the logistics of hooking up the listening, queueing and then manipulation mutation queue as an exercise to the reader, but take the user interface of the extension as the challenge for this example. To keep the document structure untouched, we are going to use <a href="../spec/shadow/index.html">shadow DOM</a> to render extension controls as a DOM subtree that's not part of the document. Creating this subtree is easy:</p>
+
+<pre class="prettyprint"><code>
+var root = new <a href="../spec/shadow/index.html#shadow-root-object">ShadowRoot</a>(document.body);
+var controls = buildUIControls();
+root.appendChild(buildUIControls());
+</code></pre>
+
+<p>Note that we now created a <a href="../spec/shadow/index.html#dfn-shadow-root">shadow root</a> with document's body as the <a href="../spec/shadow/index.html#dfn-shadow-host">shadow host</a>. Well, that doesn't seem right... <a href="../spec/shadow/index.html#dfn-rendering">As specified</a>, all content of the <code>body</code> element is replaced with the contents of the <a href="../spec/shadow/index.html#dfn-shadow-root">shadow root</a>. Instead of content, we now have just the extension controls showing up on the page.</p>
+
+<p>What we need is an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> for the <code>body</code>'s children, which indicates out their new location <em>inside</em> of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The children will still stay in their usual places in DOM, but when rendering, they will be magically teleported and shown in place of that <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>. A logical place for this magical location is at the bottom of controls, and <a href="../spec/shadow/index.html#content-element"><code>content</code></a> element represents the <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>:</p>
+
+<pre class="prettyprint"><code>
+var controls = new <a href="../spec/shadow/index.html#shadow-root-object">ShadowRoot</a>(document.body);
+var controls = buildUIControls();
+root.appendChild(buildUIControls());
+controls.appendChild(document.createElement('content'));
+</code></pre>
+
+<p>Mission accomplished! The browser will now display a document with a set of controls at the top.</p>
+
+<p>This technique is not only useful for extensions. Shadow DOM provides a pretty easy way to add chunks of DOM to a document DOM tree out of band. Use this recipe whenever the document structure is difficult to change, either due to syndication constraints, legacy code, or stubborn colleagues. Okay, maybe not the last one.</p>
+
+</body>
+</html>
