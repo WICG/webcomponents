@@ -23,17 +23,17 @@
 <pre class="prettyprint"><code>
 var root = new <a href="../spec/shadow/index.html#shadow-root-object">ShadowRoot</a>(document.body);
 var controls = buildUIControls();
-root.appendChild(buildUIControls());
+root.appendChild(controls);
 </code></pre>
 
 <p>Note that we now created a <a href="../spec/shadow/index.html#dfn-shadow-root">shadow root</a> with document's body as the <a href="../spec/shadow/index.html#dfn-shadow-host">shadow host</a>. Well, that doesn't seem right... <a href="../spec/shadow/index.html#dfn-rendering">As specified</a>, all content of the <code>body</code> element is replaced with the contents of the <a href="../spec/shadow/index.html#dfn-shadow-root">shadow root</a>. Instead of content, we now have just the extension controls showing up on the page.</p>
 
-<p>What we need is an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> for the <code>body</code>'s children, which indicates out their new location <em>inside</em> of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The children will still stay in their usual places in DOM, but when rendering, they will be magically teleported and shown in place of that <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>. A logical place for this magical location is at the bottom of controls, and <a href="../spec/shadow/index.html#content-element"><code>content</code></a> element represents the <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>:</p>
+<p>What we need is an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> for the <code>body</code>'s children, which indicates their new location <em>inside</em> of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The children will still stay in their usual places in DOM, but when rendering, they will be magically teleported and shown in place of that <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>. A logical place for this magical location is at the bottom of controls, and <a href="../spec/shadow/index.html#content-element"><code>content</code></a> element represents the <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a>:</p>
 
 <pre class="prettyprint"><code>
-var controls = new <a href="../spec/shadow/index.html#shadow-root-object">ShadowRoot</a>(document.body);
+var root = new <a href="../spec/shadow/index.html#shadow-root-object">ShadowRoot</a>(document.body);
 var controls = buildUIControls();
-root.appendChild(buildUIControls());
+root.appendChild(controls);
 root.appendChild(document.createElement('content'));
 </code></pre>
 
