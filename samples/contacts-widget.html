@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contacts Widget: Shadow DOM Example</title>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
+<link rel="stylesheet" href="../assets/styles/main.css" type="text/css">
+<link rel="stylesheet" href="../assets/styles/prettify.css" type="text/css" />
+<script src="../assets/scripts/bug-assist.js"></script>
+<script src="../assets/scripts/prettify.js"></script>
+<meta name="bug.blocked" content="14956">
+<meta name="bug.short_desc" content="[Samples]: ">
+<meta name="bug.product" content="WebAppsWG">
+<meta name="bug.component" content="Component Model">
+</head>
+<body>
+<header>
+<ul>
+    <li><a href="../samples/index.html">Samples</a></li>
+    <li><a href="../explainer/index.html">Explainer</a></li>
+    <li><a href="../spec/shadow/index.html">Shadow DOM Spec</a></li>
+</ul>
+<h1>Contacts Widget</h1>
+</header>
+<p>Rajesh is sad. It's the third time this month that he had to fix the continuous build of their company's flagship product, the <em>Socia1eet</em>, and all for the same reason: the spurious tweaking of the contacts widget. It certainly appears that some of his coworkers are unable to learn a simple rule: <strong>don't change the DOM of the contacts widget outside of the widget's code</strong>.</p>
+<p>Never mind the unit tests. Never mind constant nagging. Whenever Rajesh, whether fixing a bug or adding a feature, pushes an update for the widget, things break. Last time it was Howard, who&mdash;in his theming code&mdash;thought he could add an extra class on each userpic in the widget. Before then it was Amy, who decided to grab contents of a label in the widget by traversing DOM (!) in the initialization code (!!). Whosoever it is, touching the widget DOM structure is somewhat like opening a box of chocolate. <q>Except instead of chocolate, it's landmines</q>, remarks Rajesh bitterly. <q>Tiny, chocolate-covered landmines</q>.</p>
+<p>&hellip; And then he remembers reading something about the <a href="../spec/shadow/index.html">Shadow DOM</a>, the Web platform capability that enables functional encapsulation. Rajesh races forward with the idea. He realizes that, in fact, his widget is really a self-contained unit of DOM, and treating it as a single element would be a much saner point of view for his colleagues. Moreover, since only the widget code can construct this unit of DOM, making changes to the widget's structure would <em>require</em> them to be done from the widget code. <q>This is going to be fun</q>, thinks Raj.</p>
+<p>The current code in <code>/src/ui/widgets/contacts.js</code> looks like this (some parts skipped for clarity):</p>
+
+<pre class="prettyprint"><code>
+var ui = ui || {};
+ui.widgets = ui.widgets || {};
+
+(function() {
+    var MAX_USERS = 8;
+
+    function Contacts()
+    {
+        this.element = document.createElement('div');
+        this.element.className = 'contacts widget';
+        var users = this.element.appendChild(document.createElement('ul'));
+        this.loadUsers(MAX_USERS, function(user) {
+            var li = document.createElement('li');
+            // Populate [li] with data from the [user] object.
+            // &hellip;
+        });
+    }
+
+    // &hellip;
+
+    // Asynchronously loads users from server and invokes [callback] for each user loaded
+    Contacts.prototype.loadUsers = function(callback)
+    {
+        // &hellip;
+    }
+
+    // &hellip;
+
+    ui.widgets.Contacts = Contacts;
+
+})();
+</code></pre>
+
+<p>At runtime, the widget is instantiated as <code>new ui.widgets.Contacts()</code>, and produces the following DOM structure, shown here as HTML markup:
+
+<pre class="prettyprint"><code>
+&lt;div class=&quot;contacts widget&quot;&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&hellip;&lt;/li&gt;
+        &hellip;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>What Rajesh wants is a clear line between the <code class="prettyprint">&lt;div class=&quot;contacts widget&quot;&gt;</code> and the <code class="prettyprint">&lt;ul&gt;</code>, which stops Amys and Howards from mucking with the enclosed structure outside of <code>/src/ui/widgets/contacts.js</code>:</p>
+
+<pre class="prettyprint"><code>
+&lt;div class=&quot;contacts widget&quot;&gt;
+    &lt;#they-shall-not-pass&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&hellip;&lt;/li&gt;
+            &hellip;
+        &lt;/ul&gt;
+    &lt;#they-shall-not-pass&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Here, Rajesh recognizes a near-perfect description of the <a href="../spec/shadow/index.html">shadow DOM subtree</a>. <q>So, all I need to do is create a <code>ShadowRoot</code> with <code>this.element</code> as its host and append UI elements to it, instead of <code>this.element</code></q>, he summarizes, fingers dancing on the keyboard. The actual change is just a handful of characters:</p>
+
+<pre class="prettyprint"><code>
+
+function Contacts()
+{
+    this.element = document.createElement('div');
+    this.element.className = 'contacts widget';
+    <ins>var shadow = new ShadowRoot(this.element);</ins>
+    var users = <del>this.element</del><ins>shadow</ins>.appendChild(document.createElement('ul'));
+    this.loadUsers(MAX_USERS, function(user) {
+        var li = document.createElement('li');
+        // Populate [li] with data from the [user] object.
+        // &hellip;
+    });
+}
+</code></pre>
+
+<p>To keep theme engine's stylesheets working, Raj flips the <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a> flag, thus letting the document stylesheets apply in the shadow DOM:</p>
+
+<pre class="prettyprint"><code>
+
+    this.element.className = 'contacts widget';
+    var shadow = new ShadowRoot(this.element);
+    <ins>shadow.applyAuthorStyles = true;</ins>
+    var users = shadow.appendChild(document.createElement('ul'));
+
+</code></pre>
+
+<p>Checking the DOM tree reveals that <em>now</em> the contacts widget looks and acts as a single DOM element in a document tree:</p>
+
+<pre class="prettyprint"><code>
+&lt;div class=&quot;contacts widget&quot;&gt;&lt;/div&gt;
+</code></pre>
+
+<p>The widget UI code is safely tucked away in a shadow DOM subtree, making it brittle no more. You can create and add the widget, you can move it around, but to make changes to widget DOM structure, you <em>have to</em> make them in <code>/src/ui/widgets/contacts.js</code>. And, thanks to the new code owners management tooling, any code changes to that file will need Raj's nod before landing.</p>
+
+<p>Sensing undeniable win, Rajesh decides to join his friends for dinner. It's Pizza Thursday, and nothing punctuates a win better than a slice of italian pie.</p>
+
+
+</body>
+</html>
