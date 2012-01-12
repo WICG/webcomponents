@@ -125,6 +125,7 @@
     <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
+    <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
     <li><a href="http://www.w3.org/TR/selectors/">Selectors Level 3</a></li>
     <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
 </ul>
@@ -770,6 +771,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     readonly attribute Element <a href="#api-shadow-root-host">host</a>;
+    attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
 }
 ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
@@ -780,7 +782,9 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
 <dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the element's document apply to the shadow DOM subtree. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the shadow DOM subtree. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
 <dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
-<dd>refers back to the shadow host. This value is never <code>null</code>.</dd>
+<dd>refers back to the <a href="#dfn-shadow-host">shadow host</a>. This value is never <code>null</code>.</dd>
+<dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
+<dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents, and operates <a href="http://html5.org/specs/dom-parsing.html#dom-element-innerhtml">as specified</a>, given <a href="#api-shadow-root"><code>ShadowRoot</code></a> as the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a>.</dd>
 </dl>
 
 <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance must return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance must return <code>"#document-fragment"</code>.</p>
