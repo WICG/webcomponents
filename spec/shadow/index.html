@@ -155,17 +155,17 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals limiting information flow based on trust and ensuring security of data and state within an application.</p>
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
 <p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
 
 <h3 id="functional-encapsulation-example">Functional Encapsulation Example</h3>
 
-<p>A Web application user interface is commonly composed with several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
+<p>A Web application user interface is commonly composed of several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
 
 <object data="../../assets/images/functional-encapsulation-example.svg" width="800" height="500"></object>
 
-<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how a widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
 <h2 id="shadow-dom-subtrees">Shadow DOM Subtrees</h2>
 
@@ -183,7 +183,7 @@
 
 <object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
 
-<p>Thus, the encapsulation of a shadow DOM subtree can be viewed as two-fold problem:
+<p>Thus, the encapsulation of a shadow DOM subtree can be viewed as a two-fold problem:
 <ol>
     <li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
     <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
@@ -1028,7 +1028,7 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Sam Dutton</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
