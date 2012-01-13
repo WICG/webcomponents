@@ -59,6 +59,7 @@
         <li><a href="#retargeting-related-target">Retargeting <code>relatedTarget</code></a></li>
         <li><a href="#retargeting-focus-events">Retargeting Focus Events</a></li>
         <li><a href="#events-that-are-always-stopped">Events that are Always Stopped</a></li>
+        <li><a href="#event-dispatch">Event Dispatch</a></li>
         <li><a href="#event-retargeting-example">Event Retargeting Example</a></li>
     </ol></li>
     <li><a href="#styles">Styles</a>
@@ -453,10 +454,6 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>The retargeting process must occur prior to dispatch of an event.</p>
 
-<p>At the time of event dispatch, for <a href="http://www.w3.org/TR/domcore/#dom-event-capturing_phase">CAPTURING_PHASE</a>, <a href="http://www.w3.org/TR/domcore/#dom-event-at_target">AT_TARGET</a>, and <a href="http://www.w3.org/TR/domcore/#dom-event-bubbling_phase">BUBBLING_PHASE</a>, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> must attributes be set to the <a href="#dfn-relative-target">relative target</a> that was computed for the node along the capturing and bubbling flow.</p>
-
-<p>Upon completion of the event dispatch, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> are set to the highest ancestor's <a href="#dfn-relative-target">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the nodes in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
-
 <h3 id="retargeting-related-target">Retargeting <code>relatedTarget</code></h3>
 
 <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a node that's not the event's target, but is related to the event.</p>
@@ -480,7 +477,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     <dd><var>RELATED</var>, the related target DOM node of the event</dd>
 <dt>Output</dt>
     <dd><var>LIMIT</var>, the ancestor DOM node of <var>TARGET</var>, at which the event dispatch must be stopped (not including <var>LIMIT</var> itself)</dd>
-    <dd><var>ADJUSTED</var>, adjusted related target DOM node</dd>
+    <dd><var>ADJUSTED</var>, the <dfn id="dfn-adjusted-related-target">adjusted related target</dfn> DOM node</dd>
 </dl>
 <ol>
     <li>Let <var>COMMON</var> be <strong>undefined</strong></li>
@@ -513,6 +510,18 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 <h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
 
 <p>Mutation events and <code>selectstart</code> event are always stopped at the nearest <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
+
+<h3 id="event-dispatch">Event Dispatch</h3>
+
+<p>At the time of event dispatch:</p>
+<ul>
+    <li>The <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> attributes <strong>must</strong> return the <a href="#dfn-relative-target">relative target</a> for the node on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a></li>
+    <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-UIEvent"><code>UIEvent</code></a> <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target">adjusted related target</a></li>
+    <li>When processing step 3 of the <a href="http://www.w3.org/TR/domcore/#dispatching-events">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a> on a node it is the same as its <a href="#dfn-relative-target">relative target</a>
+    <li>When processing step 6 of the <a href="http://www.w3.org/TR/domcore/#dispatching-events">event dispatch algorithm</a>, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> <a href="http://www.w3.org/TR/domcore/#dom-event-eventphase">eventPhase</a> attribute <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-event-at_target">AT_TARGET</a> whenever the <a href="#dfn-relative-target">relative target</a> is same as the node on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a>.</p>
+</ul>
+
+<p>Upon completion of the event dispatch, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> <strong>must</strong> be to the highest ancestor's <a href="#dfn-relative-target">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the nodes in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
 <h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
