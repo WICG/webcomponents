@@ -255,7 +255,7 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
 
 <p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
 
-<p>A valid selector fragment fragment may contain:</p>
+<p>A <dfn id="dfn-valid-selector-fragment">valid selector fragment</dfn> may contain:</p>
 
 <ul>
     <li>A <a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a> or a <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
@@ -284,12 +284,13 @@ The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produ
     </li>
 </ul>
 
-<p>If any other types of selectors are present the <a href="dfn-selector-fragment">selector fragment</a>, the fragment must be considered invalid.</p>
+<p>If any other types of selectors are present the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment must be considered invalid.</p>
 
-<p>A conforming UAs must consider a node as <dfn id="dfn-content-matching">matching</dfn> a set of selector fragments in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
+<p>A conforming UAs must consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
 <ol>
     <li>is a child node of the shadow host; and</li>
-    <li>matches at least one selector fragment in the set or the set is empty.</li>
+    <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
+    <li>child node matches at least one selector fragment in the set or the set is empty.</li>
 </ol>
 
 
