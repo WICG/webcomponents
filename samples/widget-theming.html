@@ -60,7 +60,7 @@
 
 <p>Then, a separate stylesheet in the <code>/src/ui/themes/</code> directory is used to apply colors, backgrounds, and all those wonderful barnacles that typically comprise a theme. Despite strictly enforced naming conventions, the structure is somewhat brittle and, on occasion, one rule clobbers another, subtly breaking the beautiful house of cards, causing users grief&mdash;and throwing Howard into panic mode. Panic mode gets old quickly.</p>
 
-<p>Moving widget layout styles to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-style-scoped">scoped stylesheets</a> next to respective widgets goes a long way to make layout less brittle. Further, putting these scoped styles <em>inside</em> each widget's shadow DOM subtree ensures that the these styles are <strong>contained</strong> to the widgets. Sure, it's a bit of a refactoring, but that beats arguing with mom. Howard goes to work. An hour later, the <code>/src/ui/layout/widgets.css</code> stylesheet is drained and all widgets look like this ()<code>/src/ui/widgets/contacts.js</code>, for example):</p>
+<p>Moving widget layout styles to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-style-scoped">scoped stylesheets</a> next to respective widgets goes a long way to make layout less brittle. Further, putting these scoped styles <em>inside</em> each widget's shadow DOM subtree ensures that the these styles are <strong>contained</strong> to the widgets. Sure, it's a bit of a refactoring, but that beats arguing with mom. Howard goes to work. An hour later, the <code>/src/ui/layout/widgets.css</code> stylesheet is drained and all widgets look like this (<code>/src/ui/widgets/contacts.js</code>, for example):</p>
 
 <pre class="prettyprint"><code>
 var ui = ui || {};
@@ -86,7 +86,7 @@ ui.widgets = ui.widgets || {};
     // &hellip;
 
     // Asynchronously loads users from server and invokes [callback] for each user loaded
-    Contacts.prototype.loadUsers = function(callback)
+    Contacts.prototype.loadUsers = function(userCount, callback)
     {
         // &hellip;
     }
