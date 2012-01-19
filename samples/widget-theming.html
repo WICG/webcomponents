@@ -20,7 +20,7 @@
     <li><a href="../spec/shadow/index.html">Shadow DOM Spec</a></li>
     <li><a href="../spec/templates/index.html">HTML Templates</a></li>
 </ul>
-<h1>Contacts Widget</h1>
+<h1>Widget Theming</h1>
 </header>
 
 <p>After Raj's <a href="contacts-widget.html">discovery of Shadow DOM</a> triggered company-wide conversion to properly incapsulated widgets, Howard&mdash;not to be outdone&mdash;gleans another great opportunity in this change. He realizes that with the help of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-style-scoped">scoped stylesheets</a> and <a href="../spec/shadow/index.html">shadow DOM</a>, he can separate the general framing of the widgets from the theming code. For years now, it's been bugging him that whenever the widget's author wanted to tweak the general layout of their widgets, they would have edit the <code>/src/ui/layout/widgets.css</code> stylesheet and muck with their gubbins of code there, creating a waterfall of lines that looks like this:<p>
@@ -75,6 +75,9 @@ ui.widgets = ui.widgets || {};
         this.element.className = 'contacts widget';
         var shadow = new ShadowRoot(this.element);
         shadow.applyAuthorStyles = true;
+        <ins>var style = document.createElement('style');</ins>
+        <ins>style.scoped = true;</ins>
+        <ins>style.textContent = this.scopedStyleText;</ins>
         var users = shadow.appendChild(document.createElement('ul'));
         this.loadUsers(MAX_USERS, function(user) {
             var li = document.createElement('li');
@@ -85,11 +88,17 @@ ui.widgets = ui.widgets || {};
 
     // &hellip;
 
-    // Asynchronously loads users from server and invokes [callback] for each user loaded
-    Contacts.prototype.loadUsers = function(userCount, callback)
-    {
-        // &hellip;
-    }
+    <ins>// Styles moved from /src/ui/layout/widgets.css, minus ".contacts.widget" selector.</ins>
+    <ins>// Quasi-literals are awesome! (<a href="http://wiki.ecmascript.org/doku.php?id=harmony:quasis">http://wiki.ecmascript.org/doku.php?id=harmony:quasis</a>)</ins>
+    <ins>Contacts.prototype.scopedStyleText = `ul {</ins>
+        <ins>margin: 0;</ins>
+        <ins>list-style: none;</ins>
+        <ins>&hellip;</ins>
+        <ins>}</ins>
+        <ins>ul li { &hellip; }</ins>
+        <ins>ul li img.photo { &hellip; }</ins>
+        <ins>ul li span.n { &hellip; }</ins>
+        <ins>&hellip;`;</ins>
 
     // &hellip;
 
@@ -98,33 +107,70 @@ ui.widgets = ui.widgets || {};
 })();
 </code></pre>
 
+<p>Whoa!&mdash;Howard sees another way to improve robustness of the layout system. The <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a> flag (which is <code>false</code> by default) controls whether document stylesheets apply in the shadow DOM subtrees. Thus removing a line of code ensures that the widget's styles are never messed with:</p>
+
+<pre class="prettyprint"><code>
+this.element.className = 'contacts widget';
+var shadow = new ShadowRoot(this.element);
+<del>shadow.applyAuthorStyles = true;</del>
+var users = shadow.appendChild(document.createElement('ul'));
+</code></pre>
+
+<p>The celebration is cut short as Howard notices that the stylesheets from <code>/src/ui/themes/</code> directory were <em>also</em> part of the document stylesheet. As it stands, there is no way to apply theming styles to the widgets&hellip;</p>
+
+<p>Or maybe there is. <a href="http://dev.w3.org/csswg/css-variables/">CSS Variables</a> to the rescue! Upon reading the spec, Howard does a little dance. Not only they allow widget theming, the <em>method</em> is such that you can specify <strong>precise</strong> and <strong>named</strong> points where theming is allowed. Digging into the Contacts widget, Howard documents the following theming points:</p>
+<ul>
+    <li><strong>font</strong> -- font and size of text</li>
+    <li><strong>color</strong> -- color, used for text and border of the user pic</li>
+    <li><strong>background</strong> -- style of the widget background</li>
+</ul>
+<p>Howard mixes the variables into the <code>scopedStyleText</code> string:</p>
+
+<pre class="prettyprint"><code>
+// Styles moved from /src/ui/layout/widgets.css, minus ".contacts.widget" selector.
+// Quasi-literals are awesome! (<a href="http://wiki.ecmascript.org/doku.php?id=harmony:quasis">http://wiki.ecmascript.org/doku.php?id=harmony:quasis</a>)
+Contacts.prototype.scopedStyleText = `ul {
+    margin: 0;
+    list-style: none;
+    <ins>font: data(font);</ins>
+    <ins>color: data(color);</ins>
+    <ins>background: data(background);</ins>
+    &hellip;
+    }
+    ul li {  &hellip; }
+    ul li img.photo {
+    border: 1px solid<ins> data(color)</ins>;
+    &hellip;';
+
+</code></pre>
+
+<p>Now to tweak the actual themes, starting with <code>/src/ui/themes/purple-and-black.css</code>:</p>
+
+<pre class="prettyprint"><code>
+
+&hellip;
+
+/* Contacts Widget Theme  */
+
+<del>.contacts.widget ul {</del>
+    <del>color: black;</del>
+    <del>background: purple;</del>
+<del>}</del>
+
+<del>.contacts.widget ul li img.photo {</del>
+    <del>border-color: black;</del>
+<del>}</del>
+
+<ins>.contacts.widget {</ins>
+    <ins>data-color: black;</ins>
+    <ins>data-background: purple;</ins>
+<ins>}</ins>
+
+&hellip;
+
+</code></pre>
+
+<p>Whoohoo! No more reaching into widgets to style them! No more breakages when widget authors change their widgets and forget to update the theme! After all themes are converted, the <em>Socia1eet</em> looks and works same as before. But on the inside, the brittle layout and theming system has been replaced with a flexible, elegant, and robust solution.</p>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
