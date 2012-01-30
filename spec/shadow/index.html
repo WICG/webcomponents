@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <title>Shadow DOM</title>
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
-<link rel="stylesheet" href="../../assets/styles/main.css" type="text/css">
+<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
 <link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
-<link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css" />
+<link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/W3C-ED">
 <script src="../../assets/scripts/bug-assist.js"></script>
 <script src="../../assets/scripts/prettify.js"></script>
 <meta name="bug.blocked" content="14978">
@@ -16,27 +16,47 @@
 
 <body>
 
-<header>
+<div class="head">
+
+<a href="http://www.w3.org/" class="logo"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+
 <h1>Shadow DOM</h1>
+<h2 id="editors-draft">W3C Editor's Draft</h2>
 <dl>
-<dt>This Version</dt>
+<dt>This version</dt>
     <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+<dt>Latest editor's draft</dt>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+<dt>Previous version</dt>
+    <dd>none</dd>
 <dt>Revision history</dt>
     <dd><a href="http://dvcs.w3.org/hg/webcomponents/log/tip/spec/shadow/index.html">http://dvcs.w3.org/hg/webcomponents/log/tip/spec/shadow/index.html</a></dd>
 <dt>Participate</dt>
     <dd>Discuss on <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webaps@w3.org</a> (<a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a>)</dd>
     <dd><a href="https://www.w3.org/Bugs/Public/enter_bug.cgi?comment=&amp;blocked=14978&amp;short_desc=%5BShadow%5D%3A%20&amp;product=WebAppsWG&amp;component=Component%20Model">File bugs</a> (w3.org's <a href="https://www.w3.org/Bugs/Public/">Bugzilla</a>)</dd>
-<dt>Status</dt>
-    <dd>Living Draft</d>
 <dt>Editor</dt>
     <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
 </dl>
-</header>
+
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> &copy; 2012 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>&copy;</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+
+<h2 id="abstract">Abstract</h2>
+
+<p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
+
+<h2 id="status">Status of This Document</h2>
+
+<p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p>
+
+<p>This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>). All feedback is welcome.</p><p>Publication as an Editor's Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
+
+<p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/45559/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p>
+
+</div>
 
 <section class="toc">
 <h2>Table of Contents</h2>
 <ol>
-    <li><a href="#abstract">Abstract</a></li>
     <li><a href="#about">About this Document</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
     <li><a href="#terminology">Terminology</a></li>
@@ -97,10 +117,6 @@
 </section>
 
 <section class="math">
-
-<h2 id="abstract">Abstract</h2>
-
-<p>This specification describes a method of establishing and maintaining functional boundaries between DOM subtrees and how these subtrees interact with each other within a document tree, thus enabling better functional encapsulation within DOM.</p>
 
 <h2 id="about">About this Document</h2>
 
@@ -1042,6 +1058,14 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 <p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Sam Dutton</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
+
+<script>
+    var title = document.querySelector('h2#editors-draft');
+    if (title) {
+        var date = new Date();
+        title.appendChild(document.createTextNode(' ' + date.getDate() + ' ' + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][date.getMonth()] + ' ' + date.getFullYear()));
+    }
+</script>
 
 </body>
 </html>
