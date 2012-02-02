@@ -105,11 +105,26 @@
 <section class="physics">
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15652" id="dfn-template" class="fixme">Define template</a></p>
+<p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15857" id="dfn-template-contents" class="fixme">Define template contents</a></p>
 
 </section>
 
 <section class="mechanics">
 
+<h2 id="parsing">Parsing HTML Templates</h2>
+
+<p>The parsing of the HTML Templates is defined as a set of additions to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing algorithm</a>:</p>
+<ul>
+    <li>A new set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#tokenization">tokenization states</a>, describing the processing of the <a href="#dfn-template-content">template contents</a></li>
+    <li>New clauses to handle <code>template</code> start tag for the following insertion modes:
+    <ul>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a></li>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a></li>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inselect">"in select"</a></li>
+    </ul>
+    </li>
+    <li>A new "template contents" insertion mode</li>
+</ul>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
@@ -123,7 +138,7 @@
 <dt>Content Model</dt>
     <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#metadata-content-0">Metadata</a> content</dd>
 <dt>Children</dt>
-    <dd>Anything as content of the <a href="#dfn-template">template</a></dd>
+    <dd>Anything as <a href="#dfn-template-contents">template contents</a></dd>
 <dt>Content attributes</dt>
     <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#global-attributes">Global attributes</a></dd>
 <dt>DOM Interface</dt>
@@ -137,7 +152,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
         <dt>Attributes</dt>
         <dl>
             <dt id="api-html-template-element-content"><code>content</code> of type <a href="http://www.w3.org/TR/domcore/#interface-documentfragment"><code>DocumentFragment</code></a>, read-only</dt>
-            <dd>Provides access to <a href="#dfn-template">template</a> content</dd>
+            <dd>Provides access to <a href="#dfn-template-contents">template contents</a></dd>
         </dd>
         </dl>
     </dd>
