@@ -126,6 +126,99 @@
     <li>A new "template contents" insertion mode</li>
 </ul>
 
+<h3>Additional Tokenization States</h3>
+
+<p>The additional tokenization states are similar to the RAWTEXT tokenization states in the parsing algorithm, but add an extra counter for allowing nested <a href="#dfn-template-element"><code>template</code></a> elements.</p>
+
+<h4 id="template-contents-state">Template contents state</h4>
+
+<p>Consume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#next-input-character">next input character</a>:</p>
+<dl>
+<dt>U+003C LESS-THAN SIGN (&lt;)</dt>
+    <dd>Switch to the <a href="#template-contents-less-than-sign-state">template contents less-than sign state</a>.</dd>
+
+<dt>U+0000 NULL</dt>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parse-error">Parse error</a>. Emit a <strong>U+FFFD REPLACEMENT CHARACTER</strong> character token.</dd>
+
+<dt>EOF</dt>
+    <dd>Emit an end-of-file token.</dd>
+
+<dt>Anything else</dt>
+    <dd>Emit the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a> as a character token.</dd>
+</dl>
+
+<h4 id="template-contents-less-than-sign-state">Template contents less-than sign state</h4>
+
+<p>Consume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#next-input-character">next input character</a>:</p>
+
+<dl>
+<dt>U+002F SOLIDUS (/)</dt>
+    <dd>Set the <a href="#temporary-buffer">temporary buffer</a> to the empty string. Switch to the <a href="#template-contents-end-tag-open-state">template contents end tag open state</a>.</dd>
+
+<dt>U+0064 LATIN CAPITAL LETTER T or U+0074 LATIN SMALL LETTER T</dt>
+    <dd>Set the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.htm#temporary-buffer">temporary buffer</a> to the lowercase version of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a>, then switch to the <a href="#tempalte-contents-tag-name-state">template contents tag name state</a>. Emit <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a> as a character token.</dd>
+
+<dt>Anything else</dt>
+   <dd>Switch to the <a href="#template-contents-state">template contents state</a>. Emit a U+003C LESS-THAN SIGN character token. Reconsume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a>.</dd>
+</dl>
+
+<h4 id="tempalte-contents-tag-name-state">Template contents tag name state</h4>
+
+<p>Consume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#next-input-character">next input character</a>:</p>
+
+<dl>
+<dt>U+0009 CHARACTER TABULATION (tab)</dt>
+<dt>U+000A LINE FEED (LF)</dt>
+<dt>U+000C FORM FEED (FF)</dt>
+<dt>U+0020 SPACE</dt>
+   <dd>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.htm#temporary-buffer">temporary buffer</a> is a string "<code>template</code>", then increment the <a href="#dfn-nesting-level-counter">nesting level counter</a> and <span class="fixme">&hellip;</span>.</dd>
+
+
+<h4 id="template-contents-end-tag-open-state">Template contents end tag open state</h4>
+
+<p>Consume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#next-input-character">next input character</a>:</p>
+
+<dl>
+<dt>U+0041 LATIN CAPITAL LETTER A through to U+005A LATIN CAPITAL LETTER Z</dt>
+    <dd>Create a new end tag token, and set its tag name to the lowercase version of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a> (add 0x0020 to the character's code point). Append the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a> to the <a href="#temporary-buffer">temporary buffer</a>. Finally, switch to the <a href="#template-contents-end-tag-name-state">template contents end tag name state</a>. (Don't emit the token yet; further details will be filled in before it is   emitted.)</dd>
+
+<dt>U+0061 LATIN SMALL LETTER A through to U+007A LATIN SMALL LETTER Z</dt>
+   <dd>Create a new end tag token, and set its tag name to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a>. Append the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-input-character">current input character</a> to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#temporary-buffer">temporary buffer</a>. Finally, switch to the <a href="#template-contents-end-tag-name-state">template contents end tag name state</a>. (Don't emit the token yet; further details will be filled in before it is emitted.)</dd>
+
+<dt>Anything else</dt>
+   <dd>Switch to the <a href="#template-contents-state">template contents state</a>. Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS character token. Reconsume the <a href="parsing.html#current-input-character">current input character</a>.</dd>
+
+</dl>
+
+<h4 id="template-contents-end-tag-name-state">Template contents end tag name state</h4>
+
+<p>Consume the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#next-input-character">next input character</a>:</p>
+
+<dl>
+<dt>U+0009 CHARACTER TABULATION (tab)</dt>
+<dt>U+000A LINE FEED (LF)</dt>
+<dt>U+000C FORM FEED (FF)</dt>
+<dt>U+0020 SPACE</dt>
+   <dd>If the current end tag token is an <a href="#appropriate-end-tag-token">appropriate end tag token</a>, then switch to the <a href="#before-attribute-name-state">before attribute name state</a>. Otherwise, treat it as per the "anything else" entry below.</dd>
+
+<dt>U+002F SOLIDUS (/)</dt>
+   <dd>If the current end tag token is an <a href="#appropriate-end-tag-token">appropriate end tag token</a>, then switch to the <a href="#self-closing-start-tag-state">self-closing start tag state</a>. Otherwise, treat it as per the "anything else" entry  below.</dd>
+
+<dt>U+003E GREATER-THAN SIGN (&gt;)</dt>
+   <dd>If the current end tag token is an <a href="#appropriate-end-tag-token">appropriate end tag token</a>, then switch to the <a href="#data-state">data state</a> and emit the current tag token. Otherwise, treat it as per the "anything else" entry below.</dd>
+
+<dt>U+0041 LATIN CAPITAL LETTER A through to U+005A LATIN CAPITAL LETTER Z</dt>
+   <dd>Append the lowercase version of the <a href="parsing.html#current-input-character">current input character</a> (add 0x0020 to the character's code point) to the current tag token's tag name. Append the <a href="parsing.html#current-input-character">current input character</a> to the <a href="#temporary-buffer">temporary buffer</a>.</dd>
+
+<dt>U+0061 LATIN SMALL LETTER A through to U+007A LATIN SMALL LETTER Z</dt>
+   <dd>Append the <a href="parsing.html#current-input-character">current input character</a> to the current tag token's tag name. Append the <a href="parsing.html#current-input-character">current input character</a> to the <a href="#temporary-buffer">temporary buffer</a>.</dd>
+
+<dt>Anything else</dt>
+   <dd>Switch to the <a href="#rawtext-state">RAWTEXT state</a>. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character token,
+   and a character token for each of the characters in the <a href="#temporary-buffer">temporary buffer</a> (in the order they were added to the
+   buffer). Reconsume the <a href="parsing.html#current-input-character">current input character</a>.</dd>
+</dl>
+
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
 <h3>The <code>template</code> element</h3>
