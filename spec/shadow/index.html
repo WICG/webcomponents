@@ -105,16 +105,17 @@
         <li><a href="#inert-html-elements"><span class="section">9.1</span> Inert HTML Elements</a></li>
         <li><a href="#html-forms"><span class="section">9.2</span> HTML Forms</a></li>
     </ol></li>
-    <li><a href="#elements-and-dom-objects"><span class="section">10</span> Elements and DOM Objects</a>
+    <li><a href="#html-elements-and-their-shadow-dom-subtrees"><span class="section">10</span> HTML Elements and Their Shadow DOM subtrees</a>
+    <li><a href="#elements-and-dom-objects"><span class="section">11</span> Elements and DOM Objects</a>
     <ol>
-        <li><a href="#shadow-root-object"><span class="section">10.1</span> <code>ShadowRoot</code> Object</a>
+        <li><a href="#shadow-root-object"><span class="section">11.1</span> <code>ShadowRoot</code> Object</a>
         <ol>
-            <li><a href="#shadow-root-attributes"><span class="section">10.1.1</span> <code>ShadowRoot</code> Attributes</a></li>
-            <li><a href="#shadow-root-methods"><span class="section">10.1.2</span> <code>ShadowRoot</code> Methods</a></li>
+            <li><a href="#shadow-root-attributes"><span class="section">11.1.1</span> <code>ShadowRoot</code> Attributes</a></li>
+            <li><a href="#shadow-root-methods"><span class="section">11.1.2</span> <code>ShadowRoot</code> Methods</a></li>
         </ol></li>
-        <li><a href="#content-element"><span class="section">10.2</span> The <code>content</code> element</a></li>
-        <li><a href="#shadow-element"><span class="section">10.3</span> The <code>shadow</code> element</a></li>
-        <li><a href="#shadow-dom-example"><span class="section">10.4</span> Shadow DOM Example</a></li>
+        <li><a href="#content-element"><span class="section">11.2</span> The <code>content</code> element</a></li>
+        <li><a href="#shadow-element"><span class="section">11.3</span> The <code>shadow</code> element</a></li>
+        <li><a href="#shadow-dom-example"><span class="section">11.4</span> Shadow DOM Example</a></li>
     </ol></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -814,6 +815,47 @@ At the end of this process, we should have the following set of ancestors and re
 <p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the document level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the document <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. Per <a href="#dfn-scoping-constraints">scoping constraints</a>, this excludes elements in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
 <p>Instead, each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> scopes its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s document, the form submission works <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
+
+<h2 id="html-elements-and-their-shadow-dom-subtrees">HTML Elements and Their Shadow DOM Subtrees</h2>
+
+<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the shadow DOM <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that is created and populated at the time of element instantiation. It is up to a user agent to define the content of these subtrees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+
+<table>
+<thead>
+    <tr>
+        <th style="width: 30%">HTML Element</th>
+        <th>Shadow DOM Subtree Requirements</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element"><code>iframe</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element"><code>embed</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element"><code>object</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element"><code>video</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element"><code>audio</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element"><code>canvas</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element"><code>map</code></a>. <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element"><code>input</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element"><code>textarea</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element"><code>progress</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element"><code>meter</code></a></td>
+        <td>Contains no <a href="#dfn-insertion-point">insertion points</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-fieldset-element"><code>fieldset</code></a></td>
+        <td>Contains two <a href="#dfn-insertion-point">insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
+        <ol>
+            <li><code>legend:first-of-type</code></li>
+            <li><a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
+        </ol>
+        </td>
+    </tr>
+    <tr>
+        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element"><code>details</code></a></td>
+        <td>Contains two <a href="#dfn-insertion-point">insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
+        <ol>
+            <li><code>summary:first-of-type</code></li>
+            <li><a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
+        </ol>
+        </td>
+    </tr>
+    <tr>
+        <td>All other elements</td>
+        <td>Contains one <a href="#dfn-insertion-point">insertion point</a> with the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> as the <a href="#dfn-matching-criteria">matching criteria</a></td>
+    </tr>
+</tbody>
+</table>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
