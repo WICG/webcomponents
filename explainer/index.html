@@ -223,15 +223,15 @@ details[open] {
 &lt;/decorator&gt;
 
 &lt;decorator id=&quot;details-open&quot;&gt;
+    &lt;script&gt;
+        this.listen({
+            selector: &quot;#summary&quot;, type: &quot;click&quot;,
+            handler: function (event) {
+                event.currentTarget.open = false;
+            }
+        });
+    &lt;/script&gt;
     &lt;template&gt;
-        &lt;script&gt;
-            this.listen({
-                selector: &quot;#summary&quot;, type: &quot;click&quot;,
-                handler: function (event) {
-                    event.currentTarget.open = false;
-                }
-            });
-        &lt;/script&gt;
         &lt;a id=&quot;summary&quot;&gt;
             V &lt;content select=&quot;summary:first-of-type&quot;&gt;&lt;/content&gt;
         &lt;/a&gt;
