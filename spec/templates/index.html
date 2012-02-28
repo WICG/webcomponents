@@ -68,7 +68,9 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#elements-and-dom-objects"><span class="section">4</span> Elements and DOM Objects</a></li>
+    <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
+    <li><a href="#parsing"><span class="section">5</span> Parsing HTML Templates</a></li>
+    <li><a href="#elements-and-dom-objects"><span class="section">6</span> Elements and DOM Objects</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -126,6 +128,28 @@
 </section>
 
 <section class="physics">
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This section is non-normative</p>
+<p>Commonly, Web developers find thsemselves needing to create tree of DOM elements that they could later insert into the document. The typical approach is to build such a tree using DOM APIs.</p>
+
+<code><pre class="prettyprint">
+
+var tree = document.createDocumentFragment();
+// add tree nodes imperatively...
+var div = tree.appendChild(document.createElement('div'));
+// .. and/or use innerHTML and markup.
+div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
+
+</pre></code>
+
+<p>However, if the developer attempts to add certain HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a>, these elements often begin functioning&mdash;such as fetching network resources&mdash;as soon as they are initialized. In such cases, a developer may want to prevent them from becoming functional until they are added to the document tree.</p>
+
+<!--
+<p>The element is considered <dfn id="dfn-inert">inert</dfn> when setting its attributes does not cause any effects other than changing the internal state of the element.</p>
+
+-->
 
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15652" id="dfn-template" class="fixme">Define template</a></p>
 <p><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15857" id="dfn-template-contents" class="fixme">Define template contents</a></p>
