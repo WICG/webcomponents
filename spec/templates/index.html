@@ -139,7 +139,7 @@
 
 <p>One reason for creating such DOM tree is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
 
-<p>Then, a typical flow of processing steps involves using this DOM tree and its clonse as an intermediary to populate the document:</p>
+<p>Then, a typical flow of processing steps involves using this DOM tree and its clones as an intermediaries to populate the document:</p>
 <ol>
     <li>Create a DOM tree of elements to serve as a template</li>
     <li>Clone the DOM tree of elements to create a new instance</li>
@@ -150,7 +150,7 @@
     <li>&hellip;</li>
 </ol>
 
-<p>In these steps, developers typically assume that modifying these intermediary DOM trees does not have any external effects. In other words, changes to elements or structure of an intermediary DOM tree is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
+<p>In these steps, developers typically assume that modifying these intermediate DOM trees does not have any external effects. In other words, changes to elements or structure of an intermediate DOM tree is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
 
 <p>For example, if developers wish automate the process of populating a newly cloned instance in the processing steps above, they would opt to use some specially-marked placeholders as attribute or text node values in the DOM tree that serves as a template:</p>
 
@@ -161,9 +161,9 @@
 &lt;/div&gt;
 </pre></code>
 
-<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
+<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
 
-<p>Therefore, to enforce developers' assumption on external effects, a slightly stricter rule is necessary. What the developers want is <em>inert</em> elements. An element is considered <dfn id="dfn-inert">inert</dfn> when modifying its attributes or contents does not trigger any effects that can be perceived outside of the tree, to which the element belongs.</p>
+<p>Therefore, to enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. What the developers want is <em>inert</em> elements. An element is considered <dfn id="dfn-inert">inert</dfn> when modifying its attributes or contents does not trigger any effects that can be perceived outside of the tree, to which the element belongs.</p>
 
 <code><pre class="prettyprint">
 
