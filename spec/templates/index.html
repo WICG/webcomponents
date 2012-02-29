@@ -69,8 +69,9 @@
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
     <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
-    <li><a href="#parsing"><span class="section">5</span> Parsing HTML Templates</a></li>
-    <li><a href="#elements-and-dom-objects"><span class="section">6</span> Elements and DOM Objects</a></li>
+    <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
+    <li><a href="#parsing"><span class="section">6</span> Parsing HTML Templates</a></li>
+    <li><a href="#elements-and-dom-objects"><span class="section">7</span> Elements and DOM Objects</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -134,7 +135,35 @@
 <h2 id="introduction">Introduction</h2>
 
 <p>This section is non-normative</p>
-<p>Commonly, Web developers find thsemselves needing to create tree of DOM elements that they could later insert into the document. The typical approach is to build such a tree using DOM APIs.</p>
+<p>Commonly, Web developers find thsemselves needing to create a tree of elements that they could later insert into the document. The typical approach is to build such a tree using DOM APIs.</p>
+
+<p>One reason for creating such DOM tree is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
+
+<p>Then, a typical flow of processing steps involves using this DOM tree and its clonse as an intermediary to populate the document:</p>
+<ol>
+    <li>Create a DOM tree of elements to serve as a template</li>
+    <li>Clone the DOM tree of elements to create a new instance</li>
+    <li>Poplate the template DOM tree with data for this instance</li>
+    <li>Append the newly created instance to the document</li>
+    <li>Clone the DOM tree of elements to create a new instance</li>
+    <li>Populate the template DOM tree with data for that instance</li>
+    <li>&hellip;</li>
+</ol>
+
+<p>In these steps, developers typically assume that modifying these intermediary DOM trees does not have any external effects. In other words, changes to elements or structure of an intermediary DOM tree is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
+
+<p>For example, if developers wish automate the process of populating a newly cloned instance in the processing steps above, they would opt to use some specially-marked placeholders as attribute or text node values in the DOM tree that serves as a template:</p>
+
+<code><pre class="prettyprint">
+&lt;div class="comment"&gt;
+    &lt;img src="<span class="nocode" style="color:blue;">${avatar}</span>"&gt;
+    &lt;div class="text"&gt;<span class="nocode" style="color:blue;">${text}</span>&lt;/div&gt;
+&lt;/div&gt;
+</pre></code>
+
+<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
+
+<p>Therefore, to enforce developers' assumption on external effects, a slightly stricter rule is necessary. What the developers want is <em>inert</em> elements. An element is considered <dfn id="dfn-inert">inert</dfn> when modifying its attributes or contents does not trigger any effects that can be perceived outside of the tree, to which the element belongs.</p>
 
 <code><pre class="prettyprint">
 
@@ -146,16 +175,18 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 </pre></code>
 
-<p>However, if the developer attempts to add certain HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a>, these elements often begin functioning&mdash;such as fetching network resources&mdash;as soon as they are initialized. In such cases, a developer may want to prevent them from becoming functional until they are added to the document tree.</p>
 
 <!--
-<p>The element is considered <dfn id="dfn-inert">inert</dfn> when setting its attributes does not cause any effects other than changing the internal state of the element.</p>
+
+<p>.</p>
 
 -->
 
-<p>A <dfn id="dfn-template">template</dfn> provides a method for declare document fragments using <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a>.</p>
+<h2 id="definitions">Definitions</h2>
 
-<p>The document fragment that is declared by a <a href="#dfn-template">template</a> is called <dfn id="dfn-template-contents">template contents</dfn>.</p>
+<p>A <dfn id="dfn-template">template</dfn> provides a method for declaring document fragments in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a>. The document fragment that is declared by a <a href="#dfn-template">template</a> is called <dfn id="dfn-template-contents">template contents</dfn>.</p>
+
+<p>To prevent unintentional effects&mdash;such as fetching network resources&mdash;when manipulating the <a href="#dfn-template-contents">template contents</a>, this document fragment <strong>must</strong> be owned by a document without a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</p>
 
 </section>
 
@@ -163,7 +194,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
-<p>The parsing of the HTML Templates is defined as a set of additions to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing algorithm</a>:</p>
+<p>The parsing of the <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing algorithm</a>:</p>
 <ul>
     <li>New rules to handle the <code>template</code> start tag for the following insertion modes:
     <ul>
