@@ -68,7 +68,14 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
+    <li><a href="#introduction"><span class="section">4</span> Introduction</a>
+    <ol>
+        <li><a href="#declarative-syntax"><span class="section">4.1</span> Declarative Syntax</a></li>
+        <li><a href="#dwim-declaration"><span class="section">4.2</span> "Do-what-I-mean" Declaration</a></li>
+        <li><a href="#in-place-declaration"><span class="section">4.3</span> In-place Declaration</a></li>
+        <li><a href="#limiting-external-effects"><span class="section">4.4</span> Limiting External Effects</a></li>
+    </ol>
+    </li>
     <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
     <li><a href="#parsing"><span class="section">6</span> Parsing HTML Templates</a></li>
     <li><a href="#elements-and-dom-objects"><span class="section">7</span> Elements and DOM Objects</a></li>
@@ -134,8 +141,49 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>This section is non-normative</p>
-<p>Commonly, Web developers find thsemselves needing to create a tree of elements that they could later insert into the document. The typical approach is to build such a tree using DOM APIs.</p>
+<p><em>This section is non-normative.</em></p>
+<p>Commonly, Web developers find thsemselves needing to create a tree of elements that they could later insert into the document. This tree could be a part of temporary structure that is used to quickly populate various places in the document DOM as a reaction to some trigger, such as timer or user action. Similarly, it could be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
+
+
+<p>This specification aims to provide Web developers with a platform abstraction for accomplishing these tasks, based on these motivations:</li>
+
+<ul>
+    <li>Declarative syntax</li>
+    <li>"Do-what-I-mean" declaration</li>
+    <li>In-place declaration</li>
+    <li>Limiting external effects</li>
+</ul>
+
+<!-- FIXME: Position subsections as motivations for templates --> 
+
+<h3 id="declarative-syntax">Declarative Syntax</h3>
+
+<p>A typical approach for creating temporary or intermediate DOM tress is to build them with DOM APIs:</p>
+
+<code><pre class="prettyprint">
+
+var tree = document.createDocumentFragment();
+// add tree nodes imperatively &hellip;
+var div = tree.appendChild(document.createElement('div'));
+// &hellip; and/or use strings and innerHTML.
+div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
+// &hellip;
+
+</pre></code>
+
+<p>While achieving its objective, such code views the elements either as purely DOM objects or strings. Both of the views are removed from the document's markup flow, with the DOM objects view being imperative and verbose, thus difficult to reason about without first executing code, and the strings view being a poor-man's bootstrap into the HTML parser.</p>
+
+<p>Subsequently, a more elegant solutions is highly sought after: something that allows developers declare arbitrary DOM subtrees <em>in</em> the document markup. Empirically, all widely used Web frameworks and toolkits attempt to solve this problem, whether by using <code>script</code> element with a custom type or with the help of use specially-named attributes.</p>
+
+<h3 id="dwim-declaration">"Do-what-I-mean" Declaration</li>
+
+<p><em class="fixme">Discuss the problem of parsing inside of the template element.</em></p>
+
+<h3 id="in-place-declaration">In-place Declaration</h3>
+
+<p><em class="fixme">Discuss the problem of encountering a template element at arbitrary locations.</em></p>
+
+<h3 id="limiting-external-effects">Limiting External Effects</h3>
 
 <p>One reason for creating such DOM tree is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
 
@@ -163,17 +211,7 @@
 
 <p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
 
-<p>Therefore, to enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. What the developers want is <em>inert</em> elements.</p>
-
-<code><pre class="prettyprint">
-
-var tree = document.createDocumentFragment();
-// add tree nodes imperatively...
-var div = tree.appendChild(document.createElement('div'));
-// .. and/or use innerHTML and markup.
-div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
-
-</pre></code>
+<p>To enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. These restrictions would make the elements in the intermediate trees appear <em>inert</em>, or lacking any externals effects that are perceptible outside of the intermediate trees.</p>
 
 <h2 id="definitions">Definitions</h2>
 
