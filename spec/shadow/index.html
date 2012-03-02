@@ -752,7 +752,9 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>Since a DOM node in a document tree and a DOM node in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> never have the same <a href="http://www.w3.org/TR/domcore/#concept-tree-root">root</a>, there may never exist a valid <a href="http://www.w3.org/TR/domcore/#range">DOM range</a> that spans either both a document tree and a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or multiple <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<p>Accordingly, <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selections</a> may only exist within one tree, because they are defined by a single <a href="http://www.w3.org/TR/domcore/#range">range</a>. To maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>, the selection, returned by the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection"><code>window.getSelection()</code></a> method must never return a selection within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>Accordingly, <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selections</a> may only exist within one tree, because they are defined by a single <a href="http://www.w3.org/TR/domcore/#range">range</a>. To maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>, the selection, returned by the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection"><code>window.getSelection()</code></a> method <strong>must</strong> never return a selection within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+
+<p>The <code>selection</code> property of the <a href="#dfn-shadow-root">shadow root</a> object <strong>must</strong> return the current <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
@@ -876,6 +878,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     readonly attribute Element <a href="#api-shadow-root-host">host</a>;
     readonly attribute Element <a href="#api-shadow-root-active-element">activeElement</a>;
+    readonly attribute <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a> <a href="#api-shadow-root-selection">selection</a>;
     attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
 }
 ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
@@ -889,7 +892,9 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
 <dd>refers back to the <a href="#dfn-shadow-host">shadow host</a>. This value is never <code>null</code>.</dd>
 <dt id="api-shadow-root-active-element"><code>activeElement</code> of type <code>Element</code>, readonly</dt>
-<dd>returns the currently focuse element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
+<dd>returns the currently focused element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
+<dt id="api-shadow-root-selection"><code>selection</code> of type <code>Selection</code>, readonly</dt>
+<dd>returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
 <dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents, and operates <a href="http://html5.org/specs/dom-parsing.html#dom-element-innerhtml">as specified</a>, given <a href="#api-shadow-root"><code>ShadowRoot</code></a> as the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a>.</dd>
 </dl>
