@@ -416,7 +416,7 @@
 
 <p>In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
 
-<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
+<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
 
 <p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -537,7 +537,7 @@
 
 <h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
 
-<p>Mutation events and <code>selectstart</code> event are always stopped at the nearest <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
+<p>The <code>selectstart</code> event is always stopped at the nearest <a href="#dfn-shadow-boundary">shadow boundary</a>.</p>
 
 <h3 id="event-dispatch">Event Dispatch</h3>
 
