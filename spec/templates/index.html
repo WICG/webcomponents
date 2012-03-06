@@ -150,7 +150,7 @@
 
 <h3 id="declarative-syntax">Declarative Syntax</h3>
 
-<p>A typical approach for creating temporary or intermediate DOM tress is to build them with DOM APIs:</p>
+<p>A typical approach for creating temporary or intermediate DOM trees is to build them with DOM APIs:</p>
 
 <code><pre class="prettyprint">
 
@@ -163,32 +163,32 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 </pre></code>
 
-<p>While achieving its objective, such code views the elements either as purely DOM objects or strings. Both of the views are removed from the document's markup flow, with the DOM objects view being imperative and verbose, thus difficult to reason about without first executing code, and the strings view being a poor-man's bootstrap into the HTML parser.</p>
+<p>While achieving its objective, such code views the elements either as purely DOM objects or strings. Both of the perspectives are removed from the document's markup flow, with the DOM objects perspective being imperative and verbose, thus difficult to reason about without first executing code, and the strings perspective being a poor-man's bootstrap into the HTML parser.</p>
 
-<p>Subsequently, a more elegant solution is highly sought after: something that allows developers declare arbitrary DOM subtrees <em>in</em> the document markup. Empirically, all widely used Web frameworks and toolkits attempt to solve this problem, whether by using <code>script</code> element with a custom type or with the help of use specially-named attributes.</p>
+<p>Subsequently, a more elegant solution is necessary: something that allows developers declare arbitrary DOM subtrees <em>in</em> the document markup. Empirically, all widely used Web frameworks and toolkits attempt to solve this problem, whether by using the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element with a custom type or with the help of specially-named attributes.</p>
 
 <h3 id="document-fragments-not-strings">Document Fragments, not Strings</h3>
 
 <p>There are two approaches to parsing the document fragment declarations:</p>
 <ul>
-    <li>treat <strong>declaration as string</strong> of characters.</li>
-    <li>treat <strong>declaration as tokens</strong> that represent DOM elements.</li>
+    <li>treat <strong>declaration as string</strong> of characters</li>
+    <li>treat <strong>declaration as tokens</strong> that represent DOM elements</li>
 </ul>
 
-<p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turns, this opens opportunity for easy string matching to substitute placeholders with the actual data. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
+<p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turn, this opens opportunity for easy string matching to substitute placeholders with the actual data. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
 
-<p>Additionally, should the Web developer require nesting of the declaration&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start quickly falling apart. One must either contemplate a drastic new HTML parsing tokenization mode, which keeps track of the nesting level in the declaration. Alternatively, a distinctly new syntax for nested declarations could be introduced to differentiate first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
+<p>Additionally, should the Web developer require for declarations to nest&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start falling apart quickly. To address this, one must contemplate drastic additions to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#tokenization">HTML tokenization</a> to keeps track of the nesting level in the declaration. Alternatively, a distinctly new syntax for nested declarations could be introduced to differentiate first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
 
-<p>These undesirable properties force us to consider the "declaration-as-tokens" approach. This approach, while still requiring some changes to HTML parsing, handles nested templates more gracefully, and ensures that construction of the declared document fragment happens while parsing the document.</p>
+<p>These undesirable consequences force us to consider the "declaration-as-tokens" approach. This approach, while still requiring some changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing</a>, handles nested templates more gracefully, and ensures that construction of the declared document fragment happens while parsing the document.</p>
 
 <h3 id="dwim-declaration">"Do-what-I-mean" Declaration</h3>
 
-<p>Attempting to declare arbitrary DOM subrees quickly runs into the limitations on the context of the element, imposed by the HTML parser. For example, in order for a <code>tr</code> element to succeed in being inserted into a tree while parsing, its parent has to be either <code>table</code>, <code>thead</code>, <code>tbody</code>, or <code>tfoot</code>. Since the developers are creating these tree outside of a document, they have to work around these limitations by either:<p>
+<p>Attempting to declare arbitrary document fragments runs into the limitations on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">context</a> of the element, imposed by the HTML parser. For example, in order for a <code>tr</code> element to succeed in being inserted into a tree while parsing, its parent has to be either <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-table-element"><code>table</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-thead-element"><code>thead</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-tbody-element"><code>tbody</code></a>, or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-tfoot-element"><code>tfoot</code></a>. Since the developers are creating these tree outside of a document, they have to work around these limitations by either:<p>
 <ul>
     <li>providing an ersatz context element structure at the top of the tree, or</li>
     <li>using DOM APIs to build the tree.</li>
 </ul>
-<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML parsing rules to allow context-free element insertion in certain cases.</p>
+<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> rules to allow context-free element insertion in certain cases.</p>
 
 <h3 id="in-place-declaration">In-place Declaration</h3>
 
@@ -216,7 +216,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 &lt;/select&gt;
 </pre></code>
 
-<p>According to HTML parsing rules, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing HTML parser rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
+<p>According to HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> algorithm, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing the HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
 
 <h3 id="limiting-external-effects">Limiting External Effects</h3>
 
