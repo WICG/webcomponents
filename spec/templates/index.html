@@ -220,22 +220,22 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <h3 id="limit-external-effects">Limit External Effects</h3>
 
-<p>One reason for creating such DOM tree is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
+<p>One reason for creating a document fragment is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
 
 <p>Then, a typical flow of processing steps involves using this DOM tree and its clones as an intermediaries to populate the document:</p>
 <ol>
-    <li>Create a DOM tree of elements to serve as a template</li>
-    <li>Clone the DOM tree of elements to create a new instance</li>
-    <li>Poplate the template DOM tree with data for this instance</li>
-    <li>Append the newly created instance to the document</li>
-    <li>Clone the DOM tree of elements to create a new instance</li>
-    <li>Populate the template DOM tree with data for that instance</li>
+    <li>Create a document fragment to serve as a template</li>
+    <li>Clone the fragment to create a template document fragment</li>
+    <li>Poplate the template document fragment with data for this fragment</li>
+    <li>Append the template document fragment to the document</li>
+    <li>Clone the document fragment to create a template document fragment</li>
+    <li>Populate the template document fragment with data for that fragment</li>
     <li>&hellip;</li>
 </ol>
 
-<p>In these steps, developers typically assume that modifying these intermediate DOM trees does not have any external effects. In other words, changes to elements or structure of an intermediate DOM tree is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
+<p>In these steps, developers typically assume that modifying these intermediate document fragments does not have any external effects. In other words, changes to elements or structure of a document fragment is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
 
-<p>For example, if developers wish automate the process of populating a newly cloned instance in the processing steps above, they would opt to use some specially-marked placeholders as attribute or text node values in the DOM tree that serves as a template:</p>
+<p>For example, if developers wish automate the process of populating a newly cloned template in the processing steps above, they would opt to use some specially-marked placeholders as attribute or text node values in the document fragment:</p>
 
 <code><pre class="prettyprint">
 &lt;div class="comment"&gt;
@@ -244,7 +244,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 &lt;/div&gt;
 </pre></code>
 
-<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#attr-img-src"><code>src</code></a> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
+<p>Then, when populating the newly cloned template document fragment, the placeholders are replaced with the actual values. Unfortunately, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#attr-img-src"><code>src</code></a> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first document fragment, and then all other instances that are cloned from it.</p>
 
 <p>To enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. These restrictions would make the elements in the intermediate trees appear <em>inert</em>, or lacking any externals effects that are perceptible outside of the intermediate trees.</p>
 
