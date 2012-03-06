@@ -143,19 +143,7 @@
 <h2 id="introduction">Introduction</h2>
 
 <p><em>This section is non-normative.</em></p>
-<p>Commonly, Web developers need to create a tree of elements that they could later insert into the document. This tree could be a part of temporary structure that is used to quickly siwtch in and out parts of the document DOM as a reaction to some trigger, such as timer or user action. It could also be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
-
-<p>This specification aims to provide Web developers with a platform abstraction for accomplishing these tasks, based on these motivations:</li>
-
-<ul>
-    <li>Extend HTML to provide a declarative syntax for these DOM trees</li>
-    <li>Relax HTML parsing to allow:
-    <ul>
-        <li>Declaring any element as child of these DOM trees</li>
-        <li>Allow declaring these DOM trees anywhere in the document</li>
-    </ul></li>
-    <li>Prevent elements in these DOM trees from affecting anything outside of their DOM tree</li>
-</ul>
+<p>Web developers commonly need to create a tree of elements that they could later insert into the document. This tree could be a part of temporary structure that is used to quickly siwtch in and out parts of the document DOM as a reaction to some trigger, such as timer or user action. It could also be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
 
 <!-- FIXME: Position subsections as motivations for templates --> 
 
@@ -180,9 +168,40 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <h3 id="dwim-declaration">"Do-what-I-mean" Declaration</h3>
 
-<p><em class="fixme">Discuss the problem of parsing inside of the template element.</em></p>
+<p>Attempting to declare arbitrary DOM subrees quickly runs into the limitations on the context of the element, imposed by the HTML parser. For example, in order for a <code>tr</code> element to succeed in being inserted into a tree, it's parent has to be either <code>table</code>, <code>thead</code>, <code>tbody</code>, or <code>tfoot</code>. Since the developers are creating these tree outside of a document, they have to work around these limitations by either:<p>
+<ul>
+    <li>providing an ersatz context element structure at the top of the tree, or</li>
+    <li>using DOM APIs to build the tree.</li>
+</ul>
+<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML parsing rules to allow context-free element insertion in certain cases.</p>
 
 <h3 id="in-place-declaration">In-place Declaration</h3>
+
+<p>Whenever developers declare a document fragment, they may decide to place it close to the site of its instantiation. <span class=fixme>EXPLAIN?!</span>. For instance, if the tree is used as a template for repeating elements, it would make sense to place it at the insertion site for the repeating elements:</p>
+
+<code><pre class="prettyprint">
+
+&lt;!-- uses fictional syntax --&gt;
+&lt;ul&gt;
+    &lt;stuff-to-repeat&gt;
+        &lt;li class=&quot;<span class="nocode" style="color:blue">${importance}</span>&quot;&gt;&lt;a href=&quot;<span class="nocode" style="color:blue">${link}</span>&quot;&gt;<span class="nocode" style="color:blue">${title}</span>&lt;/a&gt;&lt;/li&gt;
+    &lt;/stuff-to-repeat&gt;
+&lt;/ul&gt;
+</pre></code>
+
+<p>Once again, the developers run into HTML parser limitations. Consider this, slightly modified example:</p>
+
+<code><pre class="prettyprint">
+
+&lt;!-- uses fictional syntax --&gt;
+&lt;select&gt;
+    &lt;stuff-to-repeat&gt;
+        &lt;option class=&quot;<span class="nocode" style="color:blue">${importance}</span>&quot;&gt;<span class="nocode" style="color:blue">${title}</span>&lt;/option&gt;
+    &lt;/stuff-to-repeat&gt;
+&lt;/select&gt;
+</pre></code>
+
+<p>According to HTML parsing rules, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing HTML parser rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
 
 <p><em class="fixme">Discuss the problem of encountering a template element at arbitrary locations.</em></p>
 
@@ -215,6 +234,28 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 <p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
 
 <p>To enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. These restrictions would make the elements in the intermediate trees appear <em>inert</em>, or lacking any externals effects that are perceptible outside of the intermediate trees.</p>
+
+<h3>Not a string of characters <span class="fixme">Needs better title</span></h3>
+
+<p><span class="fixme">Explain why having these are DOM nodes, rather than strings is good</span>.</p>
+
+
+<h3>Motivations</h3>
+
+<p><span class="fixme">Formulate desired properties described above as motivations</span>.</p>
+
+<p>This specification aims to provide Web developers with a platform abstraction for accomplishing these tasks, based on these motivations:</li>
+
+<ul>
+    <li>Extend HTML to provide a declarative syntax for these DOM trees</li>
+    <li>Relax HTML parsing to allow:
+    <ul>
+        <li>Declaring any element as child of these DOM trees</li>
+        <li>Allow declaring these DOM trees anywhere in the document</li>
+    </ul></li>
+    <li>Prevent elements in these DOM trees from affecting anything outside of their DOM tree</li>
+</ul>
+
 
 <h2 id="definitions">Definitions</h2>
 
