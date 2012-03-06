@@ -70,11 +70,11 @@
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
     <li><a href="#introduction"><span class="section">4</span> Introduction</a>
     <ol>
-        <li><a href="#declarative-syntax"><span class="section">4.1</span> Declarative Syntax</a></li>
-        <li><a href="#document-fragments-not-strings"><span class="section">4.2</span> Document Fragments, not Strings</a></li>
-        <li><a href="#dwim-declaration"><span class="section">4.3</span> "Do-what-I-mean" Declaration</a></li>
-        <li><a href="#in-place-declaration"><span class="section">4.4</span> In-place Declaration</a></li>
-        <li><a href="#limiting-external-effects"><span class="section">4.5</span> Limiting External Effects</a></li>
+        <li><a href="#declare-as-markup"><span class="section">4.1</span> Declare as Markup</a></li>
+        <li><a href="#document-fragments-not-strings"><span class="section">4.2</span> Declare Document Fragments, not Strings</a></li>
+        <li><a href="#declare-anything"><span class="section">4.3</span> Declare Anything</a></li>
+        <li><a href="#declare-anywhere"><span class="section">4.4</span> Declare Anywhere</a></li>
+        <li><a href="#limit-external-effects"><span class="section">4.5</span> Limit External Effects</a></li>
     </ol>
     </li>
     <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
@@ -144,11 +144,11 @@
 <h2 id="introduction">Introduction</h2>
 
 <p><em>This section is non-normative.</em></p>
-<p>Web developers commonly need to create a tree of elements that they could later insert into the document. This tree could be a part of temporary structure that is used to quickly siwtch in and out parts of the document DOM as a reaction to some trigger, such as timer or user action. It could also be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
+<p>Web developers commonly need to create a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#documentfragment">document fragment</a> that they could later insert into the document. This document fragment could be a part of temporary structure that is used to quickly siwtch in and out parts of the document DOM as a reaction to some trigger, such as timer or user action. It could also be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
 
-<!-- FIXME: Position subsections as motivations for templates --> 
+<p>Let's examine the desired properties of declaring document fragments and challenges of acquiring these properties.</p>
 
-<h3 id="declarative-syntax">Declarative Syntax</h3>
+<h3 id="declare-as-markup">Declare As Markup</h3>
 
 <p>A typical approach for creating temporary or intermediate DOM trees is to build them with DOM APIs:</p>
 
@@ -167,7 +167,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>Subsequently, a more elegant solution is necessary: something that allows developers declare arbitrary DOM subtrees <em>in</em> the document markup. Empirically, all widely used Web frameworks and toolkits attempt to solve this problem, whether by using the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element with a custom type or with the help of specially-named attributes.</p>
 
-<h3 id="document-fragments-not-strings">Document Fragments, not Strings</h3>
+<h3 id="document-fragments-not-strings">Declare Document Fragments, not Strings</h3>
 
 <p>There are two approaches to parsing the document fragment declarations:</p>
 <ul>
@@ -175,13 +175,13 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li>treat <strong>declaration as tokens</strong> that represent DOM elements</li>
 </ul>
 
-<p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turn, this opens opportunity for easy string matching to substitute placeholders with the actual data. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
+<p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turn, this opens opportunity for easy string matching to substitute some specially marked placeholders with the actual data when templating. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
 
 <p>Additionally, should the Web developer require for declarations to nest&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start falling apart quickly. To address this, one must contemplate drastic additions to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#tokenization">HTML tokenization</a> to keeps track of the nesting level in the declaration. Alternatively, a distinctly new syntax for nested declarations could be introduced to differentiate first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
 
 <p>These undesirable consequences force us to consider the "declaration-as-tokens" approach. This approach, while still requiring some changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing</a>, handles nested templates more gracefully, and ensures that construction of the declared document fragment happens while parsing the document.</p>
 
-<h3 id="dwim-declaration">"Do-what-I-mean" Declaration</h3>
+<h3 id="declare-anything">Declare Anything</h3>
 
 <p>Attempting to declare arbitrary document fragments runs into the limitations on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">context</a> of the element, imposed by the HTML parser. For example, in order for a <code>tr</code> element to succeed in being inserted into a tree while parsing, its parent has to be either <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-table-element"><code>table</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-thead-element"><code>thead</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-tbody-element"><code>tbody</code></a>, or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tabular-data.html#the-tfoot-element"><code>tfoot</code></a>. Since the developers are creating these tree outside of a document, they have to work around these limitations by either:<p>
 <ul>
@@ -190,7 +190,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 </ul>
 <p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> rules to allow context-free element insertion in certain cases.</p>
 
-<h3 id="in-place-declaration">In-place Declaration</h3>
+<h3 id="declare-anywhere">Declare Anywhere</h3>
 
 <p>Whenever developers declare a document fragment, they may decide to place it close to the site of its instantiation. For instance, if the tree is used as a template for repeating elements, it would make sense to place it at the insertion site for the repeating elements:</p>
 
@@ -218,7 +218,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>According to HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> algorithm, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing the HTML <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
 
-<h3 id="limiting-external-effects">Limiting External Effects</h3>
+<h3 id="limit-external-effects">Limit External Effects</h3>
 
 <p>One reason for creating such DOM tree is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
 
@@ -244,26 +244,9 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 &lt;/div&gt;
 </pre></code>
 
-<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <code>img</code> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <code>src</code> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
+<p>Then, when populating the newly cloned instance, the placeholders are replaced with the actual values. Unfortunately, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a> element will likely attempt to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#attr-img-src"><code>src</code></a> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first the DOM tree that is used as a template, and then each instance that's cloned from it.</p>
 
 <p>To enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. These restrictions would make the elements in the intermediate trees appear <em>inert</em>, or lacking any externals effects that are perceptible outside of the intermediate trees.</p>
-
-<h3>Motivations</h3>
-
-<p><span class="fixme">Formulate desired properties described above as motivations</span>.</p>
-
-<p>This specification aims to provide Web developers with a platform abstraction for accomplishing these tasks, based on these motivations:</li>
-
-<ul>
-    <li>Extend HTML to provide a declarative syntax for these DOM trees</li>
-    <li>Relax HTML parsing to allow:
-    <ul>
-        <li>Declaring any element as child of these DOM trees</li>
-        <li>Allow declaring these DOM trees anywhere in the document</li>
-    </ul></li>
-    <li>Prevent elements in these DOM trees from affecting anything outside of their DOM tree</li>
-</ul>
-
 
 <h2 id="definitions">Definitions</h2>
 
