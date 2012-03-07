@@ -276,8 +276,8 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <dd><var>CONTENTS</var>, the <a href="#dfn-template-contents">template contents</a></dd>
 </dl>
 <ol>
-    <li>Let <var>DOCUMENT</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> node that does not have a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a></li>
-    <li>Mark <var>DOCUMENT</var> as an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-documents">HTML document</a></li>
+    <li>Let <var>DOCUMENT</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">Document</a> node that does not have a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a></li>
+    <li>Mark <var>DOCUMENT</var> as an <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#html-document">HTML document</a></li>
     <li>Let <var>CONTENTS</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> object whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is <var>DOCUMENT</var></li>
 </ol>
 </div>
@@ -302,7 +302,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li>A new "template contents" insertion mode</li>
 </ul>
 
-<p>When parsing, the <a href="#dfn-template">template</a> HTML element is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</a>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
+<p>When parsing, the <a href="#dfn-template">template</a> HTML element is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
@@ -313,7 +313,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 </dl>
 <ol>
     <dd>Let <var>NODE</var> be the the top item in <var>STACK</var></dd>
-    <li>Let <var>TEMPLATE</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">Creating element</a> for the <var>TOKEN</var></li>
+    <li>Let <var>TEMPLATE</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">Creating an element</a> for the <var>TOKEN</var></li>
     <li>Let <var>CONTENTS</var> be the result of <a href="#dfn-template-contents-initialization">initializing template contents</a> of the <var>TEMPLATE</var></a></li>
     <li>Append <var>TEMPLATE</var> to <var>NODE</var></li>
     <li>Push <var>CONTENTS</var> onto the <var>STACK</var></li>
