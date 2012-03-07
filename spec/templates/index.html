@@ -337,7 +337,18 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <ol>
         <li>Insert a marker at the end of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#list-of-active-formatting-elements">list of active formatting elements</a></li>
         <li><a href="#dfn-template-insertion-algorithm">Insert new template HTML element</a></li>
-        <li>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a>.
+        <li>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a>
+    </ol>
+    </dd>
+<dt>An end tag whose name is "template"</dt>
+    <dd>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#has-an-element-in-scope">have an element in scope</a> with the same tag name as that of the token, then this is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parse-error">parse error</a>; ignore the token.</dd>
+    <dd>Otherwise, run these steps:
+    <ol>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#generate-implied-end-tags">Generate implied end tags</a></li>
+        <li>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parse-error">parse error</a></li>
+        <li>Pop elements from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
     </ol>
     </dd>
 </dl>
@@ -347,15 +358,33 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
-    <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode.</dd>
+    <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode</dd>
 </dl>
+
+<h3 id="in-cell-addition">Addition to the "in cell" insertion mode</h3>
+
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
+<dl>
+<dt>An end tag whose tag name is "template"</dt>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#close-the-cell">Close the cell</a> and reprocess the current token</dd>
+</dl>
+
+
 
 <h3 id="in-table-addition">Addition to the "in select" insertion mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
-    <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode.</dd>
+    <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode</dd>
+<dt>An end tag whose name is "template"</dt>
+    <dd>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#has-an-element-in-select-scope">have an element in select scope</a> with the same tag name as the token, this is a parse error.</dd>
+    <dd>Run these steps:
+    <ol>
+        <li>Pop elements from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a> until a <code>template</code> element has been popped from the stack.</li>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
+    </ol>
+    </dd>
 </dl>
 
 <h3 id="template-contents-insertion-mode">"Template contents" insertion mode</h3>
@@ -363,17 +392,32 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 <p>When the user is to apply the rules for the "template contents" <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
 <dl>
 <dt>A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE</dt>
-    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#insert-a-character">Insert the character</a> into the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a>.</dd>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#insert-a-character">Insert the character</a> into the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a></dd>
 <dt>A comment token</dt>
-    <dd>Append a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#comment-0">Comment</a> node to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> with the <code>data</code> attribute set to the data given in the comment token.</dd>
+    <dd>Append a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#comment-0">Comment</a> node to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> with the <code>data</code> attribute set to the data given in the comment token</dd>
 <dt>A start tag whose name is one of: "caption", "col", "colgroup", "tbody", "tfoot", thead"</dt>
-    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> and reprocess the current token.</dd>
+    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
-    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intbody">"in table body"</a> and reprocess the current token.</dd>
+    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "td", "th"</dt>
-    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intr">"in row"</a> and reprocess the current token.</dd>
+    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
+<dt>An end tag whose name is "template"</dt>
+    <dd>
+    <ol>
+        <li>Pop the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> off the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></li>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
+    </ol>
+    </dd>
+<dt>An end-of-file token</dt>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parse-error">Parse error</a></dd>
+    <dd>Run these steps:
+    <ol>
+        <li>Pop the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> off the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></li>
+        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a> and reprocess the token</li>
+    </ol>
+    </dd>
 <dt>Anything else</dt>
-    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> and reprocess the current token.</dd>
+    <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 </dl>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
