@@ -302,6 +302,24 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li>A new "template contents" insertion mode</li>
 </ul>
 
+<p>When parsing, the <a href="#dfn-template">template</a> HTML element is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</a>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>TOKEN</var>, the <a href="#dfn-template">template</a> start tag token</dd>
+    <dd><var>STACK</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></dd>
+<dt>Output</dd>
+    <dd>None</dd>
+</dl>
+<ol>
+    <dd>Let <var>NODE</var> be the the top item in <var>STACK</var></dd>
+    <li>Let <var>TEMPLATE</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">Creating element</a> for the <var>TOKEN</var></li>
+    <li>Let <var>CONTENTS</var> be the result of <a href="#dfn-template-contents-initialization">initializing template contents</a> of the <var>TEMPLATE</var></a></li>
+    <li>Append <var>TEMPLATE</var> to <var>NODE</var></li>
+    <li>Push <var>CONTENTS</var> onto the <var>STACK</var></li>
+</ol>
+</div>
+
 <h3 id="clear-stack-in-table-context-addition">Clearing context stack additions</h3>
 
 <p>If <a href="">current node</a> is a <a href="#dfn-template-element"><code>template</code></a> element, the process of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-context">clearing the stack back to a table context</a> <strong>must</strong> stop.</p>
@@ -332,6 +350,12 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
+    <dd>Run these steps:
+    <ol>
+        <li>Insert a marker at the end of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#list-of-active-formatting-elements">list of active formatting elements</a></li>
+        <li><a href="#dfn-template-insertion-algorithm">Insert new template HTML element</a></li>
+    </ol>
+    </dd>
     <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode.</dd>
 </dl>
 
