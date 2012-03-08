@@ -79,7 +79,16 @@
     </li>
     <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
     <li><a href="#rendering-html-templates"><span class="section">6</span> Rendering HTML Templates</a></li>
-    <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a></li>
+    <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
+    <ol>
+        <li><a href="#clear-stack-adjustments"><span class="section">7.1</span> Clearing of the Stack Adjustments</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.2</span> Addition to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.3</span> Addition to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.4</span> Addition to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.5</span> Addition to the "in select" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.6</span> Template contents" Insertion Mode</a></li>
+    </ol>
+    </li>
     <li><a href="#elements-and-dom-objects"><span class="section">8</span> Elements and DOM Objects</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -319,7 +328,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 </ol>
 </div>
 
-<h3 id="clear-stack-adjustments">Clearing of the stack adjustments</h3>
+<h3 id="clear-stack-adjustments">Clearing of the Stack Adjustments</h3>
 
 <p>When popping elements from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
 <ol>
@@ -328,7 +337,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
 </ol>
 
-<h3 id="in-body-addition">Addition to "in body" insertion mode</h3>
+<h3 id="in-body-addition">Addition to the "in body" Insertion Mode</h3>
 
 <p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
 <dl>
@@ -353,7 +362,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     </dd>
 </dl>
 
-<h3 id="in-table-addition">Addition to the "in table" insertion mode</h3>
+<h3 id="in-table-addition">Addition to the "in table" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
@@ -361,7 +370,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <dd>Process the token <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode</dd>
 </dl>
 
-<h3 id="in-cell-addition">Addition to the "in cell" insertion mode</h3>
+<h3 id="in-cell-addition">Addition to the "in cell" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
@@ -369,9 +378,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#close-the-cell">Close the cell</a> and reprocess the current token</dd>
 </dl>
 
-
-
-<h3 id="in-table-addition">Addition to the "in select" insertion mode</h3>
+<h3 id="in-select-addition">Addition to the "in select" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 <dl>
@@ -387,7 +394,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     </dd>
 </dl>
 
-<h3 id="template-contents-insertion-mode">"Template contents" insertion mode</h3>
+<h3 id="template-contents-insertion-mode">"Template contents" Insertion Mode</h3>
 
 <p>When the user is to apply the rules for the "template contents" <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
 <dl>
