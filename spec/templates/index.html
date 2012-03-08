@@ -78,19 +78,19 @@
     </ol>
     </li>
     <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
-    <li><a href="#parsing"><span class="section">6</span> Parsing HTML Templates</a>
+    <li><a href="#template-element"><span class="section">6</span> The <code>template</code> element</a></li>
+    <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
     <ol>
-        <li><a href="#clear-stack-adjustments"><span class="section">6.1</span> Clearing of the Stack Adjustments</a></li>
-        <li><a href="#in-body-addition"><span class="section">6.2</span> Addition to the "in body" Insertion Mode</a></li>
-        <li><a href="#in-table-addition"><span class="section">6.3</span> Addition to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-cell-addition"><span class="section">6.4</span> Addition to the "in cell" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">6.5</span> Addition to the "in select" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">6.6</span> Template contents" Insertion Mode</a></li>
+        <li><a href="#clear-stack-adjustments"><span class="section">7.1</span> Clearing of the Stack Adjustments</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.2</span> Addition to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.3</span> Addition to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.4</span> Addition to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.5</span> Addition to the "in select" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.6</span> Template contents" Insertion Mode</a></li>
     </ol>
     </li>
-    <li><a href="#serializing-html-templates"><span class="section">7</span> Serializing HTML Templates</a></li>
-    <li><a href="#rendering-html-templates"><span class="section">8</span> Rendering HTML Templates</a></li>
-    <li><a href="#elements-and-dom-objects"><span class="section">9</span> Elements and DOM Objects</a></li>
+    <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
+    <li><a href="#rendering-html-templates"><span class="section">9</span> Rendering HTML Templates</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -266,13 +266,39 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>Conversely, serializing a <a href="#dfn-template">template</a> <strong>must</strong> result in the <a href="#dfn-template-contents">template contents</a> serialized as part of the HTML document.</p>
 
-<p>To prevent unintentional effects&mdash;such as fetching network resources&mdash;when manipulating the <a href="#dfn-template-contents">template contents</a>, this document fragment <strong>must</strong> be owned by a document without a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</p>
-
 </section>
 
 <section class="mechanics">
 
-<h3>Initializing template contents</h3>
+<h2 id="template-element">The <code>template</code> element</h2>
+
+<p>The <dfn id="dfn-template-element"><code>template</code></dfn> element represents a <a href="#dfn-template">template</a>.</p>
+
+<dl>
+<dt>Context</dt>
+    <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected</dd>
+<dt>Content Model</dt>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#metadata-content-0">Metadata</a> content</dd>
+<dt>Children</dt>
+    <dd>Anything as <a href="#dfn-template-contents">template contents</a></dd>
+<dt>Content attributes</dt>
+    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#global-attributes">Global attributes</a></dd>
+<dt>DOM Interface</dt>
+    <dd>
+        <pre><code>
+interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> {
+    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
+}
+        </code></pre>
+        <dl>
+        <dt>Attributes</dt>
+        <dl>
+            <dt id="api-html-template-element-content"><code>content</code> of type <a href="http://www.w3.org/TR/domcore/#interface-documentfragment"><code>DocumentFragment</code></a>, read-only</dt>
+            <dd>Provides access to <a href="#dfn-template-contents">template contents</a></dd>
+        </dd>
+        </dl>
+    </dd>
+</dl>
 
 <p>The <a href="#dfn-template-contents">template contents</a> <strong>must</strong> be <dfn id="dfn-template-contents-initialization">initialized</dfn> in a way that is <a href="#dfn-processing-equivalence">equivalent</a> to processing these steps:</p>
 
@@ -436,38 +462,6 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 <h2 id="rendering-html-templates">Rendering HTML Templates</h2>
 
 <p>The <a href="#dfn-template">template</a> element is not rendered by default. Since they are not part of the document, the <a href="#dfn-template-contents">template contents</a> <strong>must not</strong> not rendered. The <a href="#dfn-template">template</a> element <strong>must</strong> behave as if it is hosting a <a href="../shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> with no <a href="../shadow/index.html#dfn-insertion-point">insertion points</a>.</p>
-
-<h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
-
-<h3>The <code>template</code> element</h3>
-
-<p>The <dfn id="dfn-template-element"><code>template</code></dfn> template element represents a <a href="#dfn-template">template</a>.</p>
-
-<dl>
-<dt>Context</dt>
-    <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected</dd>
-<dt>Content Model</dt>
-    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#metadata-content-0">Metadata</a> content</dd>
-<dt>Children</dt>
-    <dd>Anything as <a href="#dfn-template-contents">template contents</a></dd>
-<dt>Content attributes</dt>
-    <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#global-attributes">Global attributes</a></dd>
-<dt>DOM Interface</dt>
-    <dd>
-        <pre><code>
-interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> {
-    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
-}
-        </code></pre>
-        <dl>
-        <dt>Attributes</dt>
-        <dl>
-            <dt id="api-html-template-element-content"><code>content</code> of type <a href="http://www.w3.org/TR/domcore/#interface-documentfragment"><code>DocumentFragment</code></a>, read-only</dt>
-            <dd>Provides access to <a href="#dfn-template-contents">template contents</a></dd>
-        </dd>
-        </dl>
-    </dd>
-</dl>
 
 </section>
 
