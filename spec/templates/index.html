@@ -89,7 +89,8 @@
         <li><a href="#template-contents-insertion-mode"><span class="section">7.6</span> Template contents" Insertion Mode</a></li>
     </ol>
     </li>
-    <li><a href="#elements-and-dom-objects"><span class="section">8</span> Elements and DOM Objects</a></li>
+    <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
+    <li><a href="#elements-and-dom-objects"><span class="section">9</span> Elements and DOM Objects</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -423,6 +424,17 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     </dd>
 <dt>Anything else</dt>
     <dd>Switch the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#insertion-mode">insertion mode</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
+</dl>
+
+<h2 id="serializing-html-templates">Serializing HTML Templates</h2>
+
+<p>The serialization of HTML Templates is defined this addition to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a>:</p>
+
+<p>In the rule "If current node is an Element", just before the step of recursing into the algorithm, add this step</p>
+
+<dl>
+<dt>If current nodes in an Element</dt>
+    <dd>If <em>current node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then set <em>current node</em> to <a href="#dfn-template-contents">template contents</a>.</dd>
 </dl>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
