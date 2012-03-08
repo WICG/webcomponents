@@ -288,10 +288,9 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
-<p>The <a href="#dfn-template-element"><code>template</code></a> node is in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#special">special</a> category.</p>
-
-<p>The parsing of the <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing algorithm</a>:</p>
+<p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing algorithm</a>:</p>
 <ul>
+    <li>The meaning of clearing of the stack is adjusted for some insertion modes</li>
     <li>New rules to handle the <code>template</code> start tag for the following insertion modes:
     <ul>
             <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-inbody">"in body"</a></li>
@@ -302,7 +301,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li>A new "template contents" insertion mode</li>
 </ul>
 
-<p>When parsing, the <a href="#dfn-template">template</a> HTML element is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
+<p>When parsing, the <a href="#dfn-template">template</a> node is in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#special">special</a> category and is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
@@ -320,13 +319,14 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 </ol>
 </div>
 
-<h3 id="clear-stack-in-table-context-addition">Clearing context stack additions</h3>
+<h3 id="clear-stack-adjustments">Clearing of the stack adjustments</h3>
 
-<p>If <a href="">current node</a> is a <a href="#dfn-template-element"><code>template</code></a> element, the process of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-context">clearing the stack back to a table context</a> <strong>must</strong> stop.</p>
-
-<p>If <a href="">current node</a> is a <a href="#dfn-template-element"><code>template</code></a> element, the process of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-body-context">clearing the stack back to a table body context</a> <strong>must</strong> stop.</p>
-
-<p>If <a href="">current node</a> is a <a href="#dfn-template-element"><code>template</code></a> element, the process of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-row-context">clearing the stack back to a table row context</a> <strong>must</strong> stop.</p>
+<p>When popping elements from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
+<ol>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
+</ol>
 
 <h3 id="in-body-addition">Addition to "in body" insertion mode</h3>
 
