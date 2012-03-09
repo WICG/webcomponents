@@ -298,7 +298,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     </dd>
 </dl>
 
-<p>The <a href="#dfn-template-contents">template contents</a> <strong>must</strong> be <dfn id="dfn-template-contents-initialization">initialized</dfn> in a way that is <a href="#dfn-processing-equivalence">equivalent</a> to processing these steps:</p>
+<p>Prior to first access, the <a href="#api-html-template-element-content"><code>code</code></a> property <strong>must</strong> be <dfn id="dfn-template-contents-initialization">initialized</dfn> in a way that is <a href="#dfn-processing-equivalence">equivalent</a> to processing these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -313,6 +313,8 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <li>Let <var>CONTENTS</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> object whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is <var>DOCUMENT</var></li>
 </ol>
 </div>
+
+<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/#concept-node-clone-ext">cloning steps</a> for the <a href="#dfn-template-element"><code>template</code></a> template element <strong>must</strong> include the cloning of <a href="#dfn-template-contents">template contents</a>.</p>
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
