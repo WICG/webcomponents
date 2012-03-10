@@ -91,6 +91,7 @@
     <ol>
         <li><a href="#css-variables"><span class="section">7.1</span> CSS Variables</a></li>
         <li><a href="#text-decoration-property"><span class="section">7.2</span> <code>text-decoration</code> Property</a></li>
+        <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">7.3</span> Selecting Nodes, Distributed To Insertion Points</a></li>
     </ol></li>
     <li><a href="#user-interaction"><span class="section">8</span> User Interaction</a>
     <ol>
@@ -742,7 +743,15 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property are not propagated from <a href="#dfn-shadow-host">shadow hosts</a> to <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-</section>
+<h3 id="selecting-nodes-distributed-to-insertion-points">Selecting Nodes, Distributed To Insertion Points</h3>
+
+<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, the following conditions <strong>must</strong> apply:</p>
+<ul>
+    <li>The combinator value must be <code>select</code></li>
+    <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The second compound selector must match an element, distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
+</ul>
+<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been distributed to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
 
 <section class="mechanics">
 
