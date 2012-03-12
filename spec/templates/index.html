@@ -183,7 +183,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turn, this opens opportunity for easy string matching to substitute some specially marked placeholders with the actual data when templating. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
 
-<p>Additionally, should the Web developer require for declarations to nest&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start falling apart quickly. To address this, one must contemplate drastic additions to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#tokenization">HTML tokenization</a> to keeps track of the nesting level in the declaration. Alternatively, a distinctly new syntax for nested declarations could be introduced to differentiate first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
+<p>Additionally, should the Web developer require for declarations to nest&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start falling apart quickly. To address this, one must contemplate drastic additions to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html#tokenization">HTML tokenization</a> to keep track of the nesting level in the declaration. Alternatively, a distinct syntax for nested declarations could be introduced to differentiate the first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
 
 <p>These undesirable consequences force us to consider the "declaration-as-tokens" approach. This approach, while still requiring some changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML parsing</a>, handles nested templates more gracefully, and ensures that construction of the declared document fragment happens while parsing the document.</p>
 
@@ -198,7 +198,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <h3 id="declare-anywhere">Declare Anywhere</h3>
 
-<p>Whenever developers declare a document fragment, they may decide to place it close to the site of its instantiation. For instance, if the tree is used as a template for repeating elements, it would make sense to place it at the insertion site for the repeating elements:</p>
+<p>Whenever developers declare a document fragment, they may need to place it at to the site of its instantiation. For instance, if the tree is used as a template for repeating elements, it would make sense to place it at the insertion site for the repeating elements:</p>
 
 <code><pre class="prettyprint">
 
@@ -230,11 +230,11 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>Then, a typical flow of processing steps involves using this DOM tree and its clones as intermediaries to populate the document:</p>
 <ol>
-    <li>Create a document fragment to serve as a template</li>
-    <li>Clone the fragment to create a template document fragment</li>
+    <li>Create a prototype: a document fragment to serve as a template</li>
+    <li>Instantiate the prototype: clone the fragment to create a template document fragment</li>
     <li>Poplate the template document fragment with data for this fragment</li>
     <li>Append the template document fragment to the document</li>
-    <li>Clone the document fragment to create a template document fragment</li>
+    <li>Instantiate the prototype: clone the document fragment to create a template document fragment</li>
     <li>Populate the template document fragment with data for that fragment</li>
     <li>&hellip;</li>
 </ol>
