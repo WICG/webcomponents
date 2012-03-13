@@ -375,6 +375,8 @@
 
 <p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
+<p>A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="#dfn-enclosed-subtree">enclosed</dfn> by another <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> when the enclosing subtree nests the enclosed subtree through one or more levels of nesting.</p>
+
 <h3 id="rendering-shadow-subtrees">Rendering Shadow DOM Subtrees</h3>
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
@@ -492,7 +494,7 @@
 
 <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
 <ol>
-    <li>If <code>relatedTarget</code> and <code>target</code> are enclosed by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree. This boundary is called <dfn id="dfn-lowest-common-boundary">lowest common boundary</dfn></li>
+    <li>If <code>relatedTarget</code> and <code>target</code> are <a href="#dfn-enclosed-subtree">enclosed</a> by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree. This boundary is called <dfn id="dfn-lowest-common-boundary">lowest common boundary</dfn></li>
     <li>If <code>relatedTarget</code> is separated from <code>target</code> by one or more <a href="#dfn-shadow-boundary">shadow boundaries</a>, it must be retargeted to the boundary that's closest to <code>target</code>. This boundary is called <dfn id="dfn-first-divergent-boundary">first divergent boundary</dfn>.</li>
 </ol>
 
@@ -727,7 +729,11 @@ At the end of this process, we should have the following set of ancestors and re
         <li>In the case <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var>.</li>
         <li>In the case <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
         <ol>
-            <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
+            <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>:
+            <ol>
+                <li>If <var>RULE</var> is declared the document tree or a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that <a href="#dfn-enclosed-subtre">encloses</a> <var>TREE</var>, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
+                <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
+            </ol></li>
             <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
             <ol>
                 <li>Let <var>STYLE</var> be this style element</li>
