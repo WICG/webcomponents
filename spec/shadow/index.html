@@ -425,14 +425,11 @@
 <dl>
 <dt>Input</dt>
     <dd><var>NODE</var>, a DOM node</dd>
+    <dd><var>IGNORE UPPER BOUNDARY</var>, a flag, initialized to <strong>false</strong></dd>
 <dt>Output</dt>
     <dd><var>PARENT</var>, a DOM node's <a href="#dfn-adjusted-parent">adjusted parent</a></dd>
 </dl>
 <ol>
-    <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
-    <ol>
-        <li>Let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is distributed to</li>
-    </ol></li>
     <li>If <var>NODE</var> is a <a href="#dfn-shadow-root">shadow root</a>:
     <ol>
         <li>If <var>NODE</var> is currently <a href="#dfn-assign-older-tree">assigned</a> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
@@ -440,6 +437,10 @@
             <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is <a href="#dfn-assign-older-tree">assigned</a> to</li>
         </ol></li>
         <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
+    </ol></li>
+    <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <strong>and</strong> the <var>IGNORE UPPER BOUNDARY</var> flag is set to <strong>false</strong>
+    <ol>
+        <li>Let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is distributed to</li>
     </ol></li>
     <li>Otherwise, let <var>PARENT</var> be the node's parent node.</li>
 </ol>
@@ -510,7 +511,11 @@
 </dl>
 <ol>
     <li>Let <var>COMMON</var> be <strong>undefined</strong></li>
-    <li>Let <var>ANCESTOR</var> be the <a href="http://en.wikipedia.org/wiki/Lowest_common_ancestor">lowest common ancestor</a> of <var>TARGET</var> and <var>RELATED</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
+    <li>Let <var>ANCESTOR</var> be the <a href="http://en.wikipedia.org/wiki/Lowest_common_ancestor">lowest common ancestor</a> of <var>TARGET</var> and <var>RELATED</var>. When determining ancestry:
+    <ul>
+        <li>the ancestors of <var>TARGET</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> and</li>
+        <li>the ancestors of <var>RELATED</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
+    </ul></li>
     <li>If <var>ANCESTOR</var> exists:
     <ol>
         <li>If <var>ANCESTOR</var> is <var>RELATED</var> and is a <a href="#dfn-shadow-host">shadow  host</a>:
@@ -525,8 +530,12 @@
             <li>If <var>ROOT</var> exists, set <var>COMMON</var> and <var>LIMIT</var> to <var>ROOT</var>'s <a href="#dfn-shadow-host">shadow host</a></li>
         </ol></li>
     </ol></li>
-    <li>If <var>COMMON</var> is still <strong>undefined</strong>, set <var>COMMON</var> to the farthest ancestor of <var>RELATED</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
-    <li>Let <var>HOST</var> be the farthest <a href="#dfn-shadow-host">shadow  host</a> ancestor of <var>RELATED</var> that is also a descendant of <var>COMMON</var>, computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> when determining ancestry</li>
+    <li>If <var>COMMON</var> is still <strong>undefined</strong>, set <var>COMMON</var> to the farthest ancestor of <var>RELATED</var>. When determining ancestry, the anscestor <strong>must</strong> be computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
+    <li>Let <var>HOST</var> be the farthest <a href="#dfn-shadow-host">shadow  host</a> ancestor of <var>RELATED</var> that is also a descendant of <var>COMMON</var>. When determining ancestry:
+    <ul>
+        <li>the ancestors of <var>COMMON</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> and</li>
+        <li>the ancestors of <var>RELATED</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
+    </ul></li>
     <li>If <var>HOST</var> exists, set <var>ADJUSTED</var> to <var>HOST</var></li>
     <li>Otherwise, set <var>ADJUSTED</var> to <var>RELATED</var></li>
 </ol>
