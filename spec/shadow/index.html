@@ -711,46 +711,38 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply to the nodes, distributed to the <a href="#dfn-insertion-point">insertion points</a>.
 
-<p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM node, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+<p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>RULE</var>, a CSS rule whose applicability is being determined</dd>
-<dd><var>NODE</var>, a DOM node</dd>
+<dd><var>TREE</var>, the document tree or <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
 <dt>Output</dt>
-<dd>Whether <var>RULE</var> must be applied to <var>NODE</var></a>.
+<dd>Whether <var>RULE</var> is applicable in <var>TREE</var></a>.
 </dl>
 <ol>
-    <li>If <var>RULE</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable to <var>NODE</var>.</li>
-    <li>Otherwise:
+    <li>If <var>RULE</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
+    <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
     <ol>
-        <li>Let <var>TREE</var> be the DOM subtree to which <var>NODE</var> belongs. The <var>TREE</var> is then the document tree, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or some disconnected tree</li>
-        <li>In the case <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var>.</li>
-        <li>In the case <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
+        <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in the document tree, <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
+        <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
         <ol>
-            <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in the document tree, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
-            <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
+            <li>Let <var>STYLE</var> be this style element</li>
+            <li>If <var>STYLE</var> has a <code>scoped</code> attribute:
             <ol>
-                <li>Let <var>STYLE</var> be this style element</li>
-                <li>If <var>STYLE</var> has a <code>scoped</code> attribute:
+                <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
+                <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
                 <ol>
-                    <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
-                    <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
-                    <ol>
-                        <li>Let <var>TOP</var> be this tree</li>
-                        <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
-                    </ol></li>
+                    <li>Let <var>TOP</var> be this tree</li>
+                    <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
                 </ol></li>
             </ol></li>
-            <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
-        </ol>
-        <li>In the case <var>TREE</var> is a document tree:
-        <ol>
-            <li>If <var>RULE</var> is declared in <var>TREE</var>, the rule <strong>is</strong> applicable to <var>NODE</var>.</li>
-            <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
         </ol></li>
+        <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
     </ol></li>
+    <li>Otherwise, if <var>TREE</var> is a document tree and <var>RULE</var> is declared in <var>TREE</var>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
+    <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
 </ol>
 </div>
 
