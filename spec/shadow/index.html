@@ -729,15 +729,19 @@ At the end of this process, we should have the following set of ancestors and re
         <li>In the case <var>TREE</var> is a disconnected tree, the rule <strong>is not</strong> applicable to <var>NODE</var>.</li>
         <li>In the case <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
         <ol>
-            <li>If <var>TREE</var> has the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag is set for <var>TREE</var>:
-            <ol>
-                <li>If <var>RULE</var> is declared in the document tree or a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var>, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
-                <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
-            </ol></li>
+            <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in the document tree, <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
             <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
             <ol>
                 <li>Let <var>STYLE</var> be this style element</li>
-                <li>If <var>STYLE</var> has a <code>scoped</code> attribute and <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
+                <li>If <var>STYLE</var> has a <code>scoped</code> attribute:
+                <ol>
+                    <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
+                    <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
+                    <ol>
+                        <li>Let <var>TOP</var> be this tree</li>
+                        <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable to <var>NODE</var>.</li>
+                    </ol></li>
+                </ol></li>
             </ol></li>
             <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable to <var>NODE</var>.</li>
         </ol>
