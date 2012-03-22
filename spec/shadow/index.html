@@ -74,9 +74,10 @@
         <li><a href="#upper-boundary-encapsulation"><span class="section">5.1</span> Upper-boundary Encapsulation</a></li>
         <li><a href="#lower-boundary-encapsulation"><span class="section">5.2</span> Lower-boundary Encapsulation</a></li>
         <li><a href="#matching-insertion-points"><span class="section">5.3</span> Matching Insertion Points</a></li>
-        <li><a href="#multiple-shadow-subtrees"><span class="section">5.4</span> Hosting Multiple Shadow Subtrees</a></li>
-        <li><a href="#nested-shadow-subtrees"><span class="section">5.5</span> Nested Shadow Subtrees</a></li>
-        <li><a href="#rendering-shadow-subtrees"><span class="section">5.6</span> Rendering Shadow Subtrees</a></li>
+        <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">5.4</span> Matching Host and Children, Distributed To Insertion Points</a></li>
+        <li><a href="#multiple-shadow-subtrees"><span class="section">5.5</span> Hosting Multiple Shadow Subtrees</a></li>
+        <li><a href="#nested-shadow-subtrees"><span class="section">5.6</span> Nested Shadow Subtrees</a></li>
+        <li><a href="#rendering-shadow-subtrees"><span class="section">5.7</span> Rendering Shadow Subtrees</a></li>
     </ol></li>
     <li><a href="#events"><span class="section">6</span> Events</a>
     <ol>
@@ -91,7 +92,6 @@
     <ol>
         <li><a href="#css-variables"><span class="section">7.1</span> CSS Variables</a></li>
         <li><a href="#text-decoration-property"><span class="section">7.2</span> <code>text-decoration</code> Property</a></li>
-        <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">7.3</span> Selecting Nodes, Distributed To Insertion Points</a></li>
     </ol></li>
     <li><a href="#user-interaction"><span class="section">8</span> User Interaction</a>
     <ol>
@@ -319,6 +319,26 @@
     <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
     <li>child node matches at least one selector fragment in the set or the set is empty.</li>
 </ol>
+
+<h3 id="selecting-nodes-distributed-to-insertion-points">Matching Host and Children, Distributed To Insertion Points</h3>
+
+<p>Two kinds of <a href="http://www.w3.org/TR/selectors/">selectors</a>, declared in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> <strong>must</strong> match elements outside of the tree in which they are declared:</p>
+<ul>
+    <li>The <code>:host</code> pseudoclass, which matches the <a href="#dfn-shadow-host">shadow host</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+    <li>The <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinator</a>, which matches the nodes, currently distributed to an <a href="#dfn-insertion-point">insertion point</a>
+</ul>
+
+<p>The <code>:host</code> pseudoclass represents the <a href="#dfn-shadow-host">shadow host</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If the <a href="http://www.w3.org/TR/selectors4/#contextual-reference-element-set">contextual reference element set</a> is empty or includes elements outside of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <code>:host</code> matches northing.</p>
+
+<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
+<ul>
+    <li>The combinator value must be <code>select</code></li>
+    <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The second compound selector must match an element, distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
+</ul>
+<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been distributed to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
+
+<p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> to the tree of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
 
 <h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
@@ -762,18 +782,6 @@ At the end of this process, we should have the following set of ancestors and re
 <h3 id="text-decoration-property"><code>text-decoration</code> Property</h3>
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property are not propagated from <a href="#dfn-shadow-host">shadow hosts</a> to <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
-
-<h3 id="selecting-nodes-distributed-to-insertion-points">Selecting Nodes, Distributed To Insertion Points</h3>
-
-<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
-<ul>
-    <li>The combinator value must be <code>select</code></li>
-    <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>The second compound selector must match an element, distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
-</ul>
-<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been distributed to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
-
-<p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> to the tree of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
 <section class="mechanics">
 
