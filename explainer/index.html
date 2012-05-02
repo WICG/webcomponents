@@ -137,7 +137,7 @@ someElement.appendChild(t.content.cloneNode());
 
 <p>The markup that generates the presentation is limited to be purely presentational: it may never run script (including inline event hanlders) and it cannot be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#editing-0">editable</a>.
 
-<h3>Events</h3>
+<h3 id="events-in-decorators">Events in Decorators</h3>
 
 <p>Decorators can also attach event handlers to implement interactivity. Because the decorators are transient, it is not useful for the decorator to attach event listeners to the nodes in the template or rely on any state, since it perishes any time decorator is applied or unapplied.
 
@@ -194,7 +194,7 @@ Foo[Bar]
 
 <p>The decorators have no way to change the state of the decorating DOM tree, other than triggering application of a different decorator.
 
-<h3>Example</h3>
+<h3 id="decorators-example">Decorators Example</h3>
 
 <p>Here is an example of how decorators could be used to implement a simple variant of the details element:
 
@@ -266,7 +266,7 @@ details[open] {
 
 <p>When there isn't a HTML element that is semantically close to their custom element authors should extend a semantically neutral element like span.
 
-<h3>Presentation</h3>
+<h3 id="presentation">Presentation</h3>
 
 <p>A custom element may optionally include a template:
 
@@ -292,7 +292,7 @@ details[open] {
 
 <p>If a custom element includes a template, a copy of the template content is inserted into the custom element's shadow DOM by the generated constructor. Shadow DOM is described below.
 
-<h3>Using Custom Elements from Markup</h3>
+<h3 id="using-custom-elements-in-markup">Using Custom Elements in Markup</h3>
 
 <p>Because custom elements use existing HTML tag names&mdash;<code>div</code>, <code>button</code>, <code>option</code>, and so on&mdash;we need to use an attribute to specify when an author intends to use a custom element. The attribute name is <code>is</code>, and its value is the name of a custom element. For example:
 
@@ -308,7 +308,7 @@ details[open] {
 &lt;/button&gt;
 </code></pre>
 
-<h3>Using Custom Elements from Script</h3>
+<h3 id="using-custom-elements-in-script">Using Custom Elements in Script</h3>
 
 <p>You can instantiate a custom element from script using the standard <code>document.createElement</code> facility:
 
@@ -403,7 +403,7 @@ alert(div.is); // displays null
 alert(div.outerHTML); // displays &lt;div&gt;&lt;/div&gt;
 </code></pre>
 
-<h3>Element Upgrade</h3>
+<h3 id="element-upgrade">Element Upgrade</h3>
 
 <p>As the definition of a custom element is loaded, each element with the <code>is</code> attribute set to the name of that custom element is upgraded to the custom element. The upgrade process should be perceptually equivalent to removal of the element from the document and its replacement by the custom element instance.
 
@@ -432,7 +432,7 @@ function showTime(b) {
 
 <p>Authors who want to avoid the flash of unstyled content can use CSS to change the presentation of the ordinary element until the custom element is loaded.
 
-<h3>Lifecycle Methods</h3>
+<h3 id="lifecycle-methods">Lifecycle Methods</h3>
 
 <p>A custom element can optionally subscribe to these four lifecycle callbacks:
 <ul>
@@ -463,7 +463,7 @@ function showTime(b) {
 &lt;/element&gt;
 </code></pre>
 
-<h3>Extending Custom Elements</h3>
+<h3 id="extending-custom-elements">Extending Custom Elements</h3>
 
 <p>In addition to HTML elements, you can also extend a custom element by specifying the custom element's name as the value of the extends attribute in the <code>&lt;element&gt;</code> element:
 
@@ -473,7 +473,7 @@ function showTime(b) {
 &lt;/element&gt;
 </code></pre>
 
-<h3>Error Handling</h3>
+<h3 id="error-handling">Error Handling</h3>
 
 <p>There are several opportunities for error when setting up custom elements:
 <ul>
@@ -494,7 +494,7 @@ function showTime(b) {
 
 <object data="../assets/images/shadow-rendering.svg" width="450" height="400"></object>
 
-<h3>Content and Shadow Elements</h3>
+<h3 id="content-and-shadow-elements">Content and Shadow Elements</h3>
 
 <p>Any shadow DOM subtree can specify insertion points for element's children by using a <code>&lt;content&gt;</code> element:
 
@@ -523,7 +523,7 @@ function showTime(b) {
 &lt;/div&gt;
 </code></pre>
 
-<h3>Multiple Shadow Subtrees</h3>
+<h3 id="multiple-shadow-subtrees">Multiple Shadow Subtrees</h3>
 
 <p>Any element can have more than one shadow DOM subtree. Don't look so puzzled! Suppose you are extending a DOM element that already has a shadow DOM subtree. What happens to that poor old tree? We could just ditch it for the new arboreal hotness, but what if you don't want to? What if you want reuse it?
 
@@ -561,7 +561,7 @@ function showTime(b) {
     <li>Cycle repeats until either the current shadow DOM subtree has no <code>&lt;shadow&gt;</code> element, or we've processed the oldest DOM subtree for this element.
 </ul>
 
-<h3>CSS and Shadow DOM</h3>
+<h3 id="css-and-shadow-dom">CSS and Shadow DOM</h3>
 
 <p>When building a custom element, you often want to prevent document styles from interfering with what you've painstakingly crafted.
 
@@ -590,7 +590,7 @@ function showTime(b) {
 
 <p>If the component authors wish to allow some styling of the shadow DOM subtree by the component users, they can do so with CSS variables. The variable definitions specified on the shadow DOM host element are also resolved inside of the shadow DOM subtree.
 
-<h3>Events</h3>
+<h3 id="events">Events</h3>
 
 <p>To ensure that the elements of the shadow DOM subtree are not exposed outside of the subtree, there's a fair bit of work that happens while dispatching an event from inside of the subtree.
 
@@ -600,7 +600,7 @@ function showTime(b) {
 
 <p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting (what? the element just reported that the mouse just left it to itself?!)
 
-<h3>Making More Shadows</h3>
+<h3 id="making-more-shadows">Making More Shadows</h3>
 
 <p>As implied before, you can always add a shadow DOM subtree to any DOM element in one line of code:
 
@@ -616,7 +616,7 @@ var shadow = new ShadowRoot(anyElement);
 
 <p>The important thing to remember is that while you can add new shadow DOM subtrees this way, you can never remove them: they just keep stacking up.
 
-<h3>Decorators vs. Custom Elements</h3>
+<h3 id="decorators-vs-custom-elements">Decorators vs. Custom Elements</h3>
 
 <p>Decorator shadows are never accessible with DOM. When the decorator is created, the shadow DOM subtree is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this shadow DOM subtree is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.
 
@@ -624,7 +624,7 @@ var shadow = new ShadowRoot(anyElement);
 
 <p>On the other hand, the custom element shadow (or any shadow DOM subtree created using script) is a real DOM tree that you as the custom element author can change as you please.
 
-<h3>External Custom Elements and Decorators</h3>
+<h3 id="external-custom-elements-and-decorators">External Custom Elements and Decorators</h3>
 
 <p>Custom elements and decorators can be loaded from external files using the link tag:
 
@@ -634,7 +634,7 @@ var shadow = new ShadowRoot(anyElement);
 
 <p>Only <code>decorator</code> elements, <code>element</code> elements and <code>script</code> elements are interpreted by the UA. The DOM of this document is not available to script. The origin of the embedding document is used as the origin of the embedded document. Script runs as though it was async defer. The custom element definitions and decorators are not made available until the scripts have run. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.
 
-<h3>Isolation, Confinement and Encapsulation</h3>
+<h3 id="isolation-confinement-and-encapsulation">Isolation, Confinement and Encapsulation</h3>
 
 <p><dfn id="component-isolation-definition">Component isolation</dfn> can be viewed as combination of two parts:
 <ul>
