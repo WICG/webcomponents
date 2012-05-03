@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>Web Components Explained</title>
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
-<link rel="stylesheet" href="../assets/styles/main.css" type="text/css">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<link rel="stylesheet" href="../assets/styles/spec.css" type="text/css">
 <link rel="stylesheet" href="../assets/styles/prettify.css" type="text/css" />
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-ED" type="text/css" >
 <script src="../assets/scripts/bug-assist.js"></script>
+<script src="../assets/scripts/spec-assist.js"></script>
 <script src="../assets/scripts/prettify.js"></script>
 <meta name="bug.blocked" content="14949">
 <meta name="bug.short_desc" content="[Explainer]: ">
@@ -13,24 +15,66 @@
 <meta name="bug.component" content="Component Model">
 </head>
 <body>
-<header>
-<ul>
-    <li><a href="../samples/index.html">Samples</a></li>
-    <li><a href="../explainer/index.html">Explainer</a></li>
-    <li><a href="../spec/shadow/index.html">Shadow DOM Spec</a></li>
-    <li><a href="../spec/templates/index.html">HTML Templates</a></li>
-</ul>
+
+<div class="head">
+
+
+<div class="logo">
+    <a href="http://www.w3.org/"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+</div>
+
 <h1>Web Components Explained</h1>
-<address>
+<h2 id="editors-draft">W3C Editor's Draft</h2>
 <dl>
-<dt>Status:</dt>
-<dd>Extremely early draft</dd>
-<dt>Authors:</dt>
-<dd class="vcard"><span class="fn">Dominic Cooney</span>, <span class="org">Google</span>, <span class="email">dominicc@google.com</span></dd>
-<dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, <span class="email">dglazkov@chromium.org</span></dd>
+<dt>This version</dt>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+<dt>Latest editor's draft</dt>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+<dt>Previous version</dt>
+    <dd>none</dd>
+<dt>Revision history</dt>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/log/tip/spec/shadow/index.html</a></dd>
+<dt>Participate</dt>
+    <dd>Discuss on <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps@w3.org</a> (<a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a>)</dd>
+    <dd><a href="https://www.w3.org/Bugs/Public/enter_bug.cgi?comment=&amp;blocked=14949&amp;short_desc=%5BExplainer%5D%3A%20&amp;product=WebAppsWG&amp;component=Component%20Model">File bugs</a> (w3.org's <a href="https://www.w3.org/Bugs/Public/">Bugzilla</a>)</dd>
+<dt>Editors</dt>
+    <dd class="vcard"><span class="fn">Dominic Cooney</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dominicc@google.com</a>&gt;</dd>
+    <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
 </dl>
-</address>
-</header>
+
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> &copy; 2012 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>&copy;</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+
+<hr>
+
+<h2 id="abstract">Abstract</h2>
+
+<p>This document is a non-normative reference, which aims to provide an overview of how Web Components work. It summarizes the normative information in the respective specifications in an easy-to-digest prose and illustration.</p>
+
+
+<h2 id="status">Status of this Document</h2>
+
+<p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p>
+
+<p>This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>). All feedback is welcome.</p><p>Publication as an Editor's Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
+
+<p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/45559/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p>
+
+</div>
+
+<section class="toc">
+<h2 id="toc">Table of Contents</h2>
+<ol>
+    <li><a href="#introduction"><span class="section">1</span> Introduction</a></li>
+    <li><a href="#template-section"><span class="section">2</span> Templates</a></li>
+    <li><a href="#decorator-section"><span class="section">3</span> Decorators</a></li>
+    <li><a href="#custom-element-section"><span class="section">4</span> Custom Elements</a></li>
+    <li><a href="#shadow-dom-section"><span class="section">5</span> Shadow DOM</a></li>
+</ol>
+
+</section>
+
+<h2 id="introduction">Introduction</h2>
+
 
 <p>The component model for the Web (aka Web Components) consists of four pieces designed to be used together to let web application authors define widgets with a level of visual richness not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.
 
