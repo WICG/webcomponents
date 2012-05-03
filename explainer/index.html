@@ -622,11 +622,13 @@ var shadow = new ShadowRoot(anyElement);
 
 <h3 id="decorators-vs-custom-elements">Decorators vs. Custom Elements</h3>
 
-<p>Decorator shadows are never accessible with DOM. When the decorator is created, the shadow DOM subtree is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this shadow DOM subtree is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.
+<p>Decorator shadows are never accessible with DOM. When the decorator is created, the shadow DOM subtree is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this shadow DOM subtree is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.</p>
 
-<p>An easy way to think of the decorator shadow is as a projection. You can see it, but never can actually touch it.
+<p>An easy way to think of the decorator shadow is a projection. You can see it, but never can actually touch it.</p>
 
-<p>On the other hand, the custom element shadow (or any shadow DOM subtree created using script) is a real DOM tree that you as the custom element author can change as you please.
+<p>On the other hand, the custom element shadow (or any shadow DOM subtree created using script) is a real DOM tree that you as the custom element author can change as you please.</p>
+
+<p>Another important difference between the two is the fact that you can <em>unapply</em> a decorator. On the other hand, once you've instantiated a custom element, its qualities&mdash;including its shadow DOM subtree&mdash;are inherent part of element's identity.</p>
 
 <h3 id="external-custom-elements-and-decorators">External Custom Elements and Decorators</h3>
 
