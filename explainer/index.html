@@ -27,13 +27,13 @@
 <h2 id="editors-draft">W3C Editor's Draft</h2>
 <dl>
 <dt>This version</dt>
-    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html</a></dd>
 <dt>Latest editor's draft</dt>
-    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html</a></dd>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html</a></dd>
 <dt>Previous version</dt>
     <dd>none</dd>
 <dt>Revision history</dt>
-    <dd><a href="http://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/log/tip/spec/shadow/index.html</a></dd>
+    <dd><a href="http://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html">http://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html</a></dd>
 <dt>Participate</dt>
     <dd>Discuss on <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps@w3.org</a> (<a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a>)</dd>
     <dd><a href="https://www.w3.org/Bugs/Public/enter_bug.cgi?comment=&amp;blocked=14949&amp;short_desc=%5BExplainer%5D%3A%20&amp;product=WebAppsWG&amp;component=Component%20Model">File bugs</a> (w3.org's <a href="https://www.w3.org/Bugs/Public/">Bugzilla</a>)</dd>
@@ -66,9 +66,36 @@
 <ol>
     <li><a href="#introduction"><span class="section">1</span> Introduction</a></li>
     <li><a href="#template-section"><span class="section">2</span> Templates</a></li>
-    <li><a href="#decorator-section"><span class="section">3</span> Decorators</a></li>
-    <li><a href="#custom-element-section"><span class="section">4</span> Custom Elements</a></li>
-    <li><a href="#shadow-dom-section"><span class="section">5</span> Shadow DOM</a></li>
+    <li><a href="#decorator-section"><span class="section">3</span> Decorators</a>
+    <ol>
+        <li><a href="#events-in-decorators"><span class="section">3.1</span> Events in Decorators</a></li>
+        <li><a href="#decorators-example"><span class="section">3.2</span> Decorators Example</a></li>
+    </ol></li>
+    <li><a href="#custom-element-section"><span class="section">4</span> Custom Elements</a>
+    <ol>
+        <li><a href="#presentation"><span class="section">4.1</span> Presentation</a></li>
+        <li><a href="#using-custom-elements-in-markup"><span class="section">4.2</span> Using Custom Elements in Markup</a></li>
+        <li><a href="#using-custom-elements-in-script"><span class="section">4.3</span> Using Custom Elements in Script</a></li>
+        <li><a href="#element-upgrade"><span class="section">4.4</span> Element Upgrade</a></li>
+        <li><a href="#lifecycle-methods"><span class="section">4.5</span> Lifecycle Methods</a></li>
+        <li><a href="#extending-custom-elements"><span class="section">4.6</span> Extending Custom Elements</a></li>
+    </ol></li>
+    <li><a href="#shadow-dom-section"><span class="section">5</span> Shadow DOM</a>
+    <ol>
+        <li><a href="#content-and-shadow-elements"><span class="section">5.1</span> Content and Shadow Elements</a></li>
+        <li><a href="#multiple-shadow-subtrees"><span class="section">5.2</span> Multiple Shadow Subtrees</a></li>
+        <li><a href="#css-and-shadow-dom"><span class="section">5.3</span> CSS and Shadow DOM</a></li>
+        <li><a href="#events"><span class="section">5.4</span> Events</a></li>
+        <li><a href="#making-more-shadows"><span class="section">5.5</span> Making More Shadows</a></li>
+        <li><a href="#decorators-vs-custom-elements"><span class="section">5.6</span> Decorators vs. Custom Elements</a></li>
+        <li><a href="#external-custom-elements-and-decorators"><span class="section">5.7</span> External Custom Elements and Decorators</a></li>
+        <li><a href="#isolation-confinement-and-encapsulation"><span class="section">5.8</span> Isolation, Confinement and Encapsulation</a></li>
+    </ol></li>
+    <li><a href="#example"><span class="section">6</span> Example</a></li>
+    <li><a href="#appendix-a-interfaces"><span class="section">7</span> Appendix A. Interfaces</a></li>
+    <li><a href="#appendix-b-html-elements"><span class="section">8</span> Appendix B. HTML Elements</a></li>
+    <li><a href="#appendix-c-custom-element-constructor-properties"><span class="section">9</span> Appendix C. Custom Element Constructor Properties</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
 </section>
@@ -76,11 +103,11 @@
 <h2 id="introduction">Introduction</h2>
 
 
-<p>The component model for the Web (aka Web Components) consists of four pieces designed to be used together to let web application authors define widgets with a level of visual richness not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.
+<p>The component model for the Web (aka Web Components) consists of four pieces designed to be used together to let web application authors define widgets with a level of visual richness not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.</p>
 
 <p>These pieces are:
 <ul>
-    <li><a href="#template-section">templates</a>, which define chunks of markup that are inert but can be activated for use later;
+    <li><a href="#template-section">templates</a>, which define chunks of markup that are inert but can be activated for use later;</li>
     <li><a href="#decorator-section">decorators</a>, which apply templates to let CSS affect rich visual and behavioral changes to documents;
     <li><a href="#custom-element-section">custom elements</a>, which let authors define their own elements, including new presentation and API, that can be used in HTML documents; and
     <li><a href="#shadow-dom-section">shadow DOM</a> which defines how presentation and behavior of decorators and custom elements fit together in the DOM tree.
@@ -714,7 +741,7 @@ var shadow = new ShadowRoot(anyElement);
 &lt;/element&gt;
 </code></pre>
 
-<h2>Example</h2>
+<h2 id="example">Example</h2>
 
 <p>Suppose we we want to display a clickable map of timezones instead of a select element. Here's how one could implement this using decorators:
 
@@ -810,7 +837,7 @@ select.timezones {
 
 <p>For more examples, take a look at the <a href="../samples/index.html">Web Components Samples</a>.</p>
 
-<h2>Appendix A. Interfaces</h2>
+<h2 id="appendix-a-interfaces">Appendix A. Interfaces</h2>
 
 <pre class="prettyprint"><code>
 partial interface HTMLElement {
@@ -874,7 +901,7 @@ interface <a href="../spec/shadow/index.html#api-shadow-root">ShadowRoot</a> : <
 ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
 
-<h2>Appendix B. HTML Elements</h2>
+<h2 id="appendix-b-html-elements">Appendix B. HTML Elements</h2>
 
 <dl>
 <dt><code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;<a/></code></dt>
@@ -919,9 +946,9 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dd>
 </dl>
 
-<h2>Appendix C. Custom Element Constructor Properties</h2>
+<h2 id="appendix-c-custom-element-constructor-properties">Appendix C. Custom Element Constructor Properties</h2>
 
-<p>Here are some more properties of the generated constructor and FancyButton instances:
+<p>Here are some more properties of the generated constructor and FancyButton instances:</p>
 
 <pre class="prettyprint"><code>
 typeof FancyButton &rArr; &quot;function&quot;
@@ -936,9 +963,9 @@ b instanceof FancyButton &rArr; true
 b instanceof HTMLButtonElement &rArr; true
 </code></pre>
 
-<h2>Acknowledgements</h2>
+<h2 id="acknowledgements">Acknowledgements</h2>
 
-<p>Thanks to Alex Komoroske, Alex Russell, Darin Fisher, Dirk Pranke, Divya Manian, Erik Arvidsson, Hayato Ito, Hajime Morita, Ian Hickson, Jonas Sicking, Rafael Weinstein, Roland Steiner, and Tab Atkins for their comments and contributions to this document.
+<p>Thanks to <span class="vcard">Alex Komoroske</span>, <span class="vcard">Alex Russell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Dirk Pranke</span>, <span class="vcard">Divya Manian</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Hajime Morita</span>, <span class="vcard">Ian Hickson</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Roland Steiner</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this document.</p>
 
 </body>
 </html>
