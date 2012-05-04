@@ -681,11 +681,11 @@ function showTime(b) {
 
 <p>To ensure that the elements of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> are not exposed outside of the subtree, there's a fair bit of work that happens while dispatching an event from inside of the subtree.</p>
 
-<p>First, some events (like mutation and selectstart events) are just plain prevented from escaping out of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>&mdash;they are never heard from the outside.</p>
+<p>First, some events (like mutation and selectstart events) are just plain <a href="../spec/shadow/index.html#events-that-are-always-stopped">prevented</a> from escaping out of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>&mdash;they are never heard from the outside.</p>
 
-<p>Those events that do cross the shadow DOM boundary are retargeted&mdash;their target and relatedTarget values are modified to point to the element that hosts the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>Those events that do cross the shadow DOM <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> are <a href="../spec/shadow/index.html#event-retargeting">retargeted</a>&mdash;their <code>target</code> and <code>relatedTarget</code> values are modified to point to the element that <a href="../spec/shadow/index.html#dfn-shadow-host">hosts</a> the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting (what? the element just reported that the mouse just left it to itself?!)</p>
+<p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting (what? the element just reported that the mouse just moved from itself back to itself?!)</p>
 
 <h3 id="making-more-shadows">Making More Shadows</h3>
 
