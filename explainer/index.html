@@ -182,7 +182,7 @@ someElement.appendChild(t.content.cloneNode());
 &lt;/decorator&gt;
 </code></pre>
 
-<p>The <code>&lt;content&gt;</code> element is the point where the content of the decorated element (element's children) should be inserted.</p>
+<p>The <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element is the point where the content of the decorated element (element's children) should be inserted.</p>
 
 <p>Decorators are applied using the <code>decorator</code> CSS property:</p>
 
@@ -628,14 +628,14 @@ function showTime(b) {
     <li>shadow DOM of the element sub-sub-class</li>
     <li>&hellip;</li>
     <li>some shadow DOM added using script</li>
-    <li>decorator shadow (applied and removed with CSS rules&mdash;not technically a shadow DOM, but can, too, have <code>&lt;content&gt;</code> and <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> elements)</li>
+    <li>decorator shadow (applied and removed with CSS rules&mdash;not technically a shadow DOM, but can, too, have <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> and <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> elements)</li>
 </ol>
 
-<p>Next, we take this <a href="../spec/shadow/index.html#dfn-tree-stack">stack</a> of <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtrees</a> and traverse it backwards, starting with the last-applied (or <a href="../spec/shadow/index.html#dfn-youngest-tree">youngest</a>) subtree. Each <code>&lt;content&gt;</code> instance, encountered in tree order, grabs the element's children that it needs as usual.</p>
+<p>Next, we take this <a href="../spec/shadow/index.html#dfn-tree-stack">stack</a> of <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtrees</a> and traverse it backwards, starting with the last-applied (or <a href="../spec/shadow/index.html#dfn-youngest-tree">youngest</a>) subtree. Each <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> instance, encountered in tree order, grabs the element's children that it needs as usual.</p>
 
 <p>This is where things get interesting. Once we're done shuffling the children into their right places to render, we check and see if we have a <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element. If we don't, we're done.</p>
 
-<p>If we do, we plop the next shadow subtree in our list in place of the <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, and rinse-repeat first replacing <code>&lt;content&gt;</code> <a href="../spec/shadow/index.html#dfn-insertion-point">insertion points</a>, then <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> until we reach the start of the list.</p>
+<p>If we do, we plop the next shadow subtree in our list in place of the <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, and rinse-repeat first replacing <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> <a href="../spec/shadow/index.html#dfn-insertion-point">insertion points</a>, then <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> until we reach the start of the list.</p>
 
 <p>And then&mdash;ta-da!&mdash;we have our wondrous shadow DOM Yggdrasil, ready for rendering.</p>
 
@@ -643,7 +643,7 @@ function showTime(b) {
 
 <p>Here's an easy way to remember how this works:</p>
 <ul>
-    <li>The most recently applied <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> has the best shot of getting fresh children for its <code>&lt;content&gt;</code> <a href="../spec/shadow/index.html#dfn-insertion-point">insertion points</a> (unfair, I know!)</li>
+    <li>The most recently applied <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> has the best shot of getting fresh children for its <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> <a href="../spec/shadow/index.html#dfn-insertion-point">insertion points</a> (unfair, I know!)</li>
     <li>Once it's had its way, the next most recent <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>&mdash;if even allowed to&mdash;can rummage through the remaining children.</li>
     <li>Cycle repeats until either the current <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> has no <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, or we've processed the oldest DOM subtree for this element.</li>
 </ul>
@@ -656,11 +656,11 @@ function showTime(b) {
 
 <p>You can relax this <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> with the <code>apply-author-styles</code> attribute on the <code>&lt;template&gt;</code> element. With the attribute present, document's author styles start applying in the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>There is a similar <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> between the <code>&lt;content&gt;</code> element and element's children, rendered in its place. The styles from the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply to the element's children.</p>
+<p>There is a similar <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> between the <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element and element's children, rendered in its place. The styles from the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply to the element's children.</p>
 
 <!-- <p>And you can control that too, using <code>apply-shadow-styles</code> attribute on the <code>&lt;content&gt;</code> element. -->
 
-<p>The magic style boundary also prevents selectors from reaching into the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>, skipping it altogether. For example, if <code>&lt;div id=&quot;foo&quot;&gt;</code> had this <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
+<p>The magic <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> also prevents selectors from reaching into the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>, skipping it altogether. For example, if <code>&lt;div id=&quot;foo&quot;&gt;</code> had this <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
 
 <pre class="prettyprint"><code>
 &lt;a href=&quot;http://example.com&quot;&gt;shadow link&lt;/a&gt;
@@ -675,7 +675,7 @@ function showTime(b) {
 
 <p>both <code>div#foo>a</code> and <code>div#foo a</code> will select the child (light link), not the anchor in the shadow DOM (shadow link).</p>
 
-<p>If the component authors wish to allow some styling of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> by the component users, they can do so with CSS variables. The variable definitions specified on the shadow DOM host element are also resolved inside of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>If the component authors wish to allow some styling of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> by the component users, they can do so with <a href="../spec/shadow/index.html#css-variables">CSS variables</a>. The variable definitions specified on the shadow DOM host element are also resolved inside of the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <h3 id="events">Events in Shadow DOM</h3>
 
@@ -921,7 +921,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dl>
 <dt><code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;<a/></code></dt>
 <dd>
-    <p>Represents an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in a <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> is replaced with the elements' children at rendering time. The <code>&lt;content&gt;</code> element itself is never rendered.</p>
+    <p>Represents an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in a <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> is replaced with the elements' children at rendering time. The <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element itself is never rendered.</p>
     <p>Context: Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</p>
     <p>Children: anything (fallback content)</p>
     <p>Attributes:</p>
