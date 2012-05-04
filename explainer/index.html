@@ -652,11 +652,14 @@ function showTime(b) {
 
 <p>When building a custom element, you often want to prevent document styles from interfering with what you've painstakingly crafted.</p>
 
-<p>Lucky for you, the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, only letting the user agent styles apply by default. The inheritance still works as usual.</p>
+<p>Lucky for you, the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, only letting the user agent styles apply by default. The inheritance still works as usual&mdash;more on that later.</p>
 
 <p>You can relax this <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> with the <code>apply-author-styles</code> attribute on the <code>&lt;template&gt;</code> element. With the attribute present, document's author styles start applying in the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
+<p>Conversely, you can make the <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> even stronger by setting the <code>reset-style-inherifance</code> attribute on the <code>&lt;template&gt;</code> element. With the attribute present, <em>all</em> styles are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the <a href="../spec/shadow/index.html#dfn-shadow-boundary">shadow boundary</a>. No more need for lengthy reset stylesheets! Just set the attribute and start with a clean slate.</p>
+
 <p>There is a similar <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> between the <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element and element's children, rendered in its place. The styles from the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply to the element's children.</p>
+
 
 <!-- <p>And you can control that too, using <code>apply-shadow-styles</code> attribute on the <code>&lt;content&gt;</code> element. -->
 
