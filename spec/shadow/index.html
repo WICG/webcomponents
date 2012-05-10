@@ -485,19 +485,19 @@
 <ol>
 <ol>
     <li>Let <var>BOUNDARY</var> be a flag, initialized to <strong>false</strong></li>
-    <li>Let <var>TARGET</var> be <var>NODE</var>
+    <li>Let <var>STACK</var> be a stack of DOM nodes</li>
     <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
     <li><dfn id="algo-reatargeting-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
         <li>If <var>ANCESTOR</var> <strong>is</strong> a <a href="#dfn-shadow-root">shadow root</a>, set <var>BOUNDARY</var> to <strong>true</strong></li>
-        <li>Otherwise:
+        <li>If <var>ANCESTOR</var> <strong>is</strong> as an <a href="#dfn-insertion-point">insertion point</a>, push <var>ANCESTOR</var> into <var>STACK</var></li>
+        <li>If <var>BOUNDARY</var> is set to <strong>true</strong>
         <ol>
-            <li>If <var>BOUNDARY</var> is set to <strong>true</strong>
-            <ol>
-                <li>Set <var>TARGET</var> to <var>ANCESTOR</var></li>
-                <li>Set <var>BOUNDARY</var> to <strong>false</strong> state</li>
-            </ol></li>
+            <li>Pop <var>STACK</var> if <var>STACK</var> is not empty</li>
+            <li>Set <var>BOUNDARY</var> to <strong>false</strong> state</li>
         </ol></li>
+        <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
+        <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
         <li>Add (<var>TARGET</var>, <var>ANCESTOR</var>) tuple to <var>TARGETS</var></li>
         <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
     </ol></li>
