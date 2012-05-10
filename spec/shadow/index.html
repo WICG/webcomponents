@@ -514,8 +514,8 @@
 
 <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
 <ol>
-    <li>If <code>relatedTarget</code> and <code>target</code> are <a href="#dfn-enclosed-subtree">enclosed</a> by a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the event dispatch must be stopped at the <a href="#dfn-shadow-boundary">shadow boundary</a> of this subtree. This boundary is called <dfn id="dfn-lowest-common-boundary">lowest common boundary</dfn></li>
-    <li>If <code>relatedTarget</code> is separated from <code>target</code> by one or more <a href="#dfn-shadow-boundary">shadow boundaries</a>, it must be retargeted to the boundary that's closest to <code>target</code>. This boundary is called <dfn id="dfn-first-divergent-boundary">first divergent boundary</dfn>.</li>
+    <li>For a given DOM node, the <code>relatedTarget</code> <strong>must</strong> be changed to its ancestor (or self) that is in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> as the node</li>
+    <li>Event listeners <strong>must not</strong> be invoked on a DOM node for which the <code>target</code> and <code>relatedTarget</code> are the same</li>
 </ol>
 
 <object data="../../assets/images/related-target-and-shadow-dom.svg" width="400" height="400"></object>
