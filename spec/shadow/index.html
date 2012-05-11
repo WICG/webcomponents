@@ -483,7 +483,6 @@
     <dd><var>TARGETS</var>, a list of tuples, each containing <var>NODE</var>'s ancestor and its relative target</dd>
 </dl>
 <ol>
-<ol>
     <li>Let <var>BOUNDARY</var> be a flag, initialized to <strong>false</strong></li>
     <li>Let <var>STACK</var> be a stack of DOM nodes</li>
     <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
@@ -515,51 +514,34 @@
 <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
 <ol>
     <li>For a given DOM node, the <code>relatedTarget</code> <strong>must</strong> be changed to its ancestor (or self) that is in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> as the node</li>
-    <li>Event listeners <strong>must not</strong> be invoked on a DOM node for which the <code>target</code> and <code>relatedTarget</code> are the same</li>
+    <li>Event listeners <strong>must not</strong> be invoked on a DOM node for which the <code>target</code> and <code>relatedTarget</code> are the same.</li>
 </ol>
-
-<object data="../../assets/images/related-target-and-shadow-dom.svg" width="400" height="400"></object>
 
 <p>The <dfn id="dfn-related-target-algorithm">related target resolution</dfn> algorithm is used to determine dispatch behavior of events with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>TARGET</var>, the target DOM node of the event</dd>
-    <dd><var>RELATED</var>, the related target DOM node of the event</dd>
+    <dd><var>NODE</var>, the DOM node on which event listeners would be invoked</dd>
+    <dd><var>RELATED</var>, the related target for the event</dd>
 <dt>Output</dt>
-    <dd><var>LIMIT</var>, the ancestor DOM node of <var>TARGET</var>, at which the event dispatch must be stopped (not including <var>LIMIT</var> itself)</dd>
-    <dd><var>ADJUSTED</var>, the <dfn id="dfn-adjusted-related-target">adjusted related target</dfn> DOM node</dd>
+    <dd><var>ADJUSTED</var>, the adjusted related target for <var>NODE</var></dd>
 </dl>
 <ol>
-    <li>Let <var>COMMON</var> be <strong>undefined</strong></li>
-    <li>Let <var>ANCESTOR</var> be the <a href="http://en.wikipedia.org/wiki/Lowest_common_ancestor">lowest common ancestor</a> of <var>TARGET</var> and <var>RELATED</var>. When determining ancestry:
-    <ul>
-        <li>the ancestors of <var>TARGET</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> and</li>
-        <li>the ancestors of <var>RELATED</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
-    </ul></li>
-    <li>If <var>ANCESTOR</var> exists:
+    <li>Let <var>CANDIDATES</var> be an empty list</li>
+    <li>Let <var>ANCESTOR</var> be <var>ADJUSTED</var></li>
+    <li><dfn id="algo-candidates-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
-        <li>If <var>ANCESTOR</var> is <var>RELATED</var> and is a <a href="#dfn-shadow-host">shadow  host</a>:
-        <ol>
-            <li>Set <var>LIMIT</var> to <var>ANCESTOR</var></li>
-            <li>Set <var>ADJUSTED</var> to <var>RELATED</var></li>
-            <li>Stop.</li>
-        </ol></li>
-        <li>Otherwise:
-        <ol>
-            <li>Let <var>ROOT</var> be the nearest ancestor <a href="#dfn-shadow-root">shadow root</a> of <var>ANCESTOR</var></li>
-            <li>If <var>ROOT</var> exists, set <var>COMMON</var> and <var>LIMIT</var> to <var>ROOT</var>'s <a href="#dfn-shadow-host">shadow host</a></li>
-        </ol></li>
+        <li>Add <var>ANCESTOR</var> to <var>CANDIDATES</var></li>
+        <li>Let <var>ANCESTOR</var> be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
     </ol></li>
-    <li>If <var>COMMON</var> is still <strong>undefined</strong>, set <var>COMMON</var> to the farthest ancestor of <var>RELATED</var>. When determining ancestry, the ancestor <strong>must</strong> be computed using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
-    <li>Let <var>HOST</var> be the farthest <a href="#dfn-shadow-host">shadow  host</a> ancestor of <var>RELATED</var> that is also a descendant of <var>COMMON</var>. When determining ancestry:
-    <ul>
-        <li>the ancestors of <var>COMMON</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> and</li>
-        <li>the ancestors of <var>RELATED</var> <strong>must</strong> be computed using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with the <var>IGNORE UPPER BOUNDARY</var> flag set to <strong>true</strong></li>
-    </ul></li>
-    <li>If <var>HOST</var> exists, set <var>ADJUSTED</var> to <var>HOST</var></li>
-    <li>Otherwise, set <var>ADJUSTED</var> to <var>RELATED</var></li>
+    <li>Let <var>TARGET</var> be <var>NODE</var></li>
+    <li>Let <var>ADJUSTED</var> be <strong>undefined</strong></li>
+    <li><dfn id="algo-related-repeat">Repeat</dfn> while <var>ADJUSTED</var> is <strong>undefined</strong>:
+    <ol>
+        <li>If there is a DOM node that is a member of <var>CANDIDATES</var> and is in the same subtree as <var>TARGET</var>,  let <var>ADJUSTED</var> be this DOM node</li>
+        <li>Otherwise, let <var>TARGET</var> be the result of running the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a> with <var>TARGET</var> as input</li>
+    </ol></li>
 </ol>
 </div>
 
@@ -586,6 +568,7 @@
 <ul>
     <li>The <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> attributes <strong>must</strong> return the <a href="#dfn-relative-target">relative target</a> for the node on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a></li>
     <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-UIEvent"><code>UIEvent</code></a> <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target">adjusted related target</a></li>
+    <li>If the <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked</li>
     <li>When <em>capturing</em>, which entails processing step 3 of the <a href="http://www.w3.org/TR/domcore/#dispatching-events">event dispatch algorithm</a>, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> <a href="http://www.w3.org/TR/domcore/#dom-event-eventphase">eventPhase</a> attribute <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-event-at_target">AT_TARGET</a> <strong>if</strong> the <a href="#dfn-relative-target">relative target</a> is same as the node on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a></li>
     <li>When <em>bubbling</em>, which entails processing step 6 of the <a href="http://www.w3.org/TR/domcore/#dispatching-events">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a> on a node <strong>if</strong> it is the same as its <a href="#dfn-relative-target">relative target</a></li>
 </ul>
