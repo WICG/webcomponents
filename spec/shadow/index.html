@@ -437,11 +437,9 @@
 
 <h2 id="events">Events</h2>
 
-<p>In <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the <a href="http://www.w3.org/TR/domcore/#events">DOM Events</a> are allowed to cross the <a href="#dfn-shadow-boundary">shadow boundaries</a> under some conditions.</p>
+<p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
 
-<p>When an event is fired in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it either <em>escapes</em> out of the shadow tree during the capture, target, or bubble phases or it <em>is stopped</em> at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
-
-<p>In terms of <a href="http://www.w3.org/TR/domcore/#dispatching-events">DOM event dispatch</a>, this manifests in populating the list of ancestors of the target node with <dfn id="dfn-adjusted-parent">adjusted parent</dfn> nodes, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+<p>For event path to cross the <a href="#dfn-shadow-boundary">shadow boundary</a>, it <strong>must</strong> be populated with <dfn id="dfn-adjusted-parent">adjusted parents</dfn>, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -470,7 +468,7 @@
 
 <h3 id="event-retargeting">Event Retargeting</h3>
 
-<p>In the cases where event escapes the shadow tree, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the node at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a DOM node that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
+<p>In the cases where events cross the <a href="#dfn-shadow-boundary">shadow boundaries</a>, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the node at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a DOM node that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
 <p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -685,7 +683,7 @@ At the end of this process, we should have the following set of ancestors and re
 <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
 (<code>#player .timeline .slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event escapes out of the player. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>).</p>
+<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event crosses the <a href="dfn-shadow-boundary">shadow boundary</a>. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>).</p>
 
 <ol>
     <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player .controls</code>).</li>
