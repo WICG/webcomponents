@@ -527,15 +527,11 @@
 </dl>
 <ol>
     <li>Let <var>CANDIDATES</var> be an empty list</li>
-    <li>Let <var>LAST</var> be <strong>undefined</strong></li>
     <li>Let <var>ANCESTOR</var> be <var>RELATED</var></li>
     <li><dfn id="algo-candidates-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
-        <li>If <var>ANCESTOR</var> is not in the same subtree as <var>LAST</var> <em>and</em> <var>ANCESTOR</var> is not an <a href="#dfn-insertion-point">insertion point</a>:
-        <ol>
-            <li>Add <var>ANCESTOR</var> to <var>CANDIDATES</var></li>
-            <li>Let <var>LAST</var> be <var>ANCESTOR</var></li>
-        </ol></li>
+        <li>If a node from the same subtree as <var>ANCESTOR</var> already exists in <var>CANDIDATES</var>, <a href="#algo-candidates-repeat">continue</a></li>
+        <li>Add <var>ANCESTOR</var> to <var>CANDIDATES</var></li>
         <li>Let <var>ANCESTOR</var> be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
     </ol></li>
     <li>Let <var>TARGET</var> be <var>NODE</var></li>
