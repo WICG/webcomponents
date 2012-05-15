@@ -476,7 +476,6 @@
 <dl>
 <dt>Input</dt>
     <dd><var>NODE</var>, a DOM node</dd>
-    <dd><var>
 <dt>Output</dt>
     <dd><var>TARGETS</var>, a list of tuples, each containing <var>NODE</var>'s ancestor and its relative target</dd>
 </dl>
@@ -725,7 +724,7 @@ At the end of this process, we should have the following set of ancestors and re
 <dd><var>RULE</var>, a CSS rule whose applicability is being determined</dd>
 <dd><var>TREE</var>, the document tree or <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
 <dt>Output</dt>
-<dd>Whether <var>RULE</var> is applicable in <var>TREE</var></a>.
+<dd>Whether <var>RULE</var> is applicable in <var>TREE</var>.</dd>
 </dl>
 <ol>
     <li>If <var>RULE</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
@@ -780,15 +779,15 @@ At the end of this process, we should have the following set of ancestors and re
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="#http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> must be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
+<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> must be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
 
-<p>For <a href="#http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence must be inserted into the document <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence must be inserted into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
 <ol>
     <li>immediately after the <a href="#dfn-shadow-host">shadow host</a>, if the shadow host is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
-    <li>in place of the <a href="#dfn-shadow-host">shadow host</a> as if the shadow host were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position</a>.</li>
+    <li>in place of the <a href="#dfn-shadow-host">shadow host</a> as if the shadow host were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
 </ol>
 
-<p>For <a href="#http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the document <a href="#http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 
 <h3 id="active-element">Active Element</h3>
 
@@ -1014,16 +1013,16 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
     </code></pre>
     <dl>
     <dt>Attributes</dt>
+    <dd>
     <dl>
 <!--        <dt id="api-html-content-element-apply-shadow-styles"><code>applyShadowStyles</code> of type <code>bool</code></dt>
         <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd> -->
         <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMString</code></dt>
-        <dd>
-            <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
-        </dd>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
+    </dl>
     </dd>
     </dl>
-    </dl>
+</dd>
 </dl>
 
 
@@ -1046,8 +1045,9 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
 }
     </code></pre>
-    </dl>
 </dl>
+
+</section>
 
 <h2 id="shadow-dom-example">Shadow DOM Example</h2>
 
@@ -1097,7 +1097,7 @@ function createStoryGroup(className, contentSelector)
     var group = document.createElement('div');
     group.className = className;
     // Empty string in select attribute or absence thereof work the same, so no need for special handling.
-    group.innerHTML = '&lt;ul&gt;&lt;content select=&quot;' + contentSelector + '&quot;&gt;&lt;/content&gt;&lt;/ul&gt';
+    group.innerHTML = '&lt;ul&gt;&lt;content select=&quot;' + contentSelector + '&quot;&gt;&lt;/content&gt;&lt;/ul&gt;';
     return group;
 }
 
