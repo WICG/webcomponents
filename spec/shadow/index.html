@@ -713,9 +713,9 @@ At the end of this process, we should have the following set of ancestors and re
 
 <h2 id="styles">Styles</h2>
 
-<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document do not apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
+<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
-<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> do not apply in the document tree.</p>
+<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must not</strong> apply in the document tree.</p>
 
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
@@ -735,14 +735,11 @@ At the end of this process, we should have the following set of ancestors and re
         <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
         <ol>
             <li>Let <var>STYLE</var> be this style element</li>
-            <li>If <var>STYLE</var> has a <code>scoped</code> attribute:
+            <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
+            <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
             <ol>
-                <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-                <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
-                <ol>
-                    <li>Let <var>TOP</var> be this tree</li>
-                    <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-                </ol></li>
+                <li>Let <var>TOP</var> be this tree</li>
+                <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
             </ol></li>
         </ol></li>
         <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
@@ -751,8 +748,6 @@ At the end of this process, we should have the following set of ancestors and re
     <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
 </ol>
 </div>
-
-<p>The effect of this algorithm is that any unscoped styles, declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, are applied <strong>neither</strong> to document <strong>nor</strong> the subtree in which they are declared.</p>
 
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
