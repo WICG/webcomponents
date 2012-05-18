@@ -65,7 +65,11 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#introduction"><span class="section">4</span> Introduction</a>
+    <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
+    <li><a href="#elements-and-dom-interfaces"><span class="section">5</span> Elements and DOM Interfaces</a>
+    <ol>
+        <li><a href="#the-element-element"><span class="section">5.1</span> The <code>element</code> HTML element</a></li>
+    </ol></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -133,6 +137,48 @@
 </section>
 
 <section class="mechanics">
+
+<h2 id="elements-and-dom-interfaces">Elements and DOM Intefaces</h2>
+
+<h3 id="the-element-element">The <code>element</code> HTML element</h3>
+
+<dl>
+<dt>Context</dt>
+<dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
+<dt>Content model</dt>
+<dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#metadata-content">Metadata content</a></dd>
+<dt>Children</dt>
+<dd><code>script</code></dd>
+<dd><code>template</code></dd>
+<dt>Content attributes</dt>
+<dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
+<dd>
+    <dl>
+    <dt id="markup-element-extends"><code>extends</code>, a string</dt>
+    <dd>
+        tag name of the element or a defined custom element constructor name that the new custom element extends.
+    </dd>
+    </dl>
+</dd>
+<dt>DOM Interface</dt>
+<dd>
+    <pre><code>
+interface <dfn id="api-html-element-element">HTMLElementElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
+    attribute DOMString <a href="#api-html-element-element-extends">extends</a>;
+}
+    </code></pre>
+    <dl>
+    <dt>Attributes</dt>
+    <dd>
+    <dl>
+        <dt id="api-html-element-element-extends"><code>extends</code> of type <code>DOMString</code></dt>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-element-extends">extends</a> attribute.</dd>
+    </dl>
+    </dd>
+    </dl>
+</dd>
+</dl>
+
 
 </section>
 
