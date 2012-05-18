@@ -144,6 +144,27 @@
 
 <p>Define <dfn class="fixme" id="dfn-custom-element-constructor">custom element constructor</dfn></p>
 
+<p>When a new instance of a <a href="#dfn-custom-dom-element">custom DOM element</a> is created, the conforming user agent <strong>must</strong> run these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>PROTOTYPE</var>, the custom element prototype</dd>
+    <dd><var>BASE</var>, the base DOM element</dd>
+    <dd><var>TEMPLATE</var>, the custom element template, optional</dd>
+<dt>Output</dt>
+    <dd><var>ELEMENT</var>, the DOM element</dd>
+</dl>
+<ol>
+    <li>Create a DOM element, which <a href="#dfn-extend-dom-element">extends</a> <var>BASE</var> and has <var>PROTOTYPE</var> as top-most item in its prototype chain. <span class="fixme">what does top-most mean?</span></li>
+    <li>Let <var>ELEMENT</var> be this DOM element</li>
+    <li>Create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> with <var>ELEMENT</var> as its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">host</a></li>
+    <li>If <var>TEMPLATE</var> was provided:
+    <ol>
+        <li>Create a document fragment from <var>TEMPLATE</var> and set it as contents of this <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a></li>
+    </ol></li>
+</ol>
+</div>
+
 </section>
 
 <section class="mechanics">
