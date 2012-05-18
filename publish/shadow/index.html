@@ -324,7 +324,7 @@
 
 <p>The <code>:host</code> pseudoclass represents the <a href="#dfn-shadow-host">shadow host</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If the <a href="http://www.w3.org/TR/selectors4/#contextual-reference-element-set">contextual reference element set</a> is empty or includes elements outside of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <code>:host</code> matches northing.</p>
 
-<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
+<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-point">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
 <ul>
     <li>The combinator value must be <code>select</code></li>
     <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
@@ -404,7 +404,7 @@
 </dl>
 
 <ol>
-    <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>Run <a href="#dfn-tree-composition">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
         <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> must be <a href="#dfn-rendering">rendered</a> accordingly</li>
@@ -516,7 +516,7 @@
     <dd><var>NODE</var>, the DOM node on which event listeners would be invoked</dd>
     <dd><var>RELATED</var>, the related target for the event</dd>
 <dt>Output</dt>
-    <dd><var>ADJUSTED</var>, the adjusted related target for <var>NODE</var></dd>
+    <dd><var>ADJUSTED</var>, the <dfn id="dfn-adjusted-releated-target">adjusted related target</dfn> for <var>NODE</var></dd>
 </dl>
 <ol>
     <li>Let <var>CANDIDATES</var> be an empty list</li>
@@ -672,13 +672,13 @@ At the end of this process, we should have the following set of ancestors and re
 <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
 (<code>#player .timeline .slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event crosses the <a href="dfn-shadow-boundary">shadow boundary</a>. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>).</p>
+<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether event crosses the <a href="#dfn-shadow-boundary">shadow boundary</a>. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>).</p>
 
 <ol>
     <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player .controls</code>).</li>
-    <li>Walking up, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>.</li>
+    <li>Walking up, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the lowest common boundary.</li>
     <li>Given that the lowest common boundary exists, we limit event dispatch to the descendants of this boundary.</li>
-    <li>Starting from the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>, we walk down the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
+    <li>Starting from the lowest common boundary, we walk down the ancestors of the timeline thumb, looking for a <a href="#dfn-shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the first divergent boundary.</li>
     <li>We adjust <code>relatedTarget</code> to be the parent of the first divergent boundary, the timeline (<code>#player .timeline</code>). We are now ready to dispatch this event.</li>
 </ol>
 
