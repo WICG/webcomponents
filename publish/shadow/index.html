@@ -1,18 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <title>Shadow DOM</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <link rel="stylesheet" href="spec.css" type="text/css">
 <link rel="stylesheet" href="prettify.css" type="text/css">
-<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-WD" type="text/css" >
-<script src="bug-assist.js"></script>
-<script src="spec-assist.js"></script>
-<script src="prettify.js"></script>
-<meta name="bug.blocked" content="14978">
-<meta name="bug.short_desc" content="[Shadow]: ">
-<meta name="bug.product" content="WebAppsWG">
-<meta name="bug.component" content="Component Model">
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-WD" type="text/css">
 </head>
 
 <body>
@@ -43,7 +35,7 @@
     <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
 </dl>
 
-<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> &copy; 2012 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>&copy;</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2012 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>©</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
 
 <hr>
 
@@ -110,7 +102,7 @@
         <li><a href="#html-forms"><span class="section">9.2</span> HTML Forms</a></li>
     </ol></li>
     <li><a href="#html-elements-and-their-shadow-dom-subtrees"><span class="section">10</span> HTML Elements and Their Shadow DOM subtrees</a>
-    <li><a href="#elements-and-dom-objects"><span class="section">11</span> Elements and DOM Objects</a>
+    </li><li><a href="#elements-and-dom-objects"><span class="section">11</span> Elements and DOM Objects</a>
     <ol>
         <li><a href="#shadow-root-object"><span class="section">11.1</span> <code>ShadowRoot</code> Object</a>
         <ol>
@@ -128,14 +120,14 @@
 
 <section class="math">
 
-<h2 id="about">About this Document</h2>
+<h2 id="about"><span class="section">1</span> About this Document</h2>
 
 <p>All diagrams, examples, notes, are non-normative, as well as sections explicitly marked as non-normative. Everything else in this specification is normative.</p>
 
 <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in the normative parts of this document are to be interpreted as described in <a href="http://dev.w3.org/2006/xbl2/#refsRFC2119">RFC2119</a>. For readability, these words do not appear in all uppercase letters in this specification.</p>
 
 <p>To help with layering and to avoid circular dependencies between various parts of specification, this document consists of three consecutive narratives:
-<ol>
+</p><ol>
     <li>setting up the stage for the specification,</li>
     <li>explaining of the conceptual model and algorithms behind it, and</li>
     <li>expressing this model with DOM interfaces and HTML elements.</li>
@@ -144,7 +136,7 @@
 
 <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
 
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies"><span class="section">2</span> Dependencies</h2>
 
 <p>This document relies on the following specifications:</p>
 
@@ -159,11 +151,11 @@
     <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
 </ul>
 
-<h2 id="terminology">Terminology</h2>
+<h2 id="terminology"><span class="section">3</span> Terminology</h2>
 
 <p>The following terms are used throughout the specification:
 
-<dl>
+</p><dl>
 <dt>DOM</dt>
     <dd>The <a href="http://www.w3.org/TR/domcore/">document object model</a></dd>
 <dt>document</dt>
@@ -182,21 +174,21 @@
 
 <section class="physics">
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction"><span class="section">4</span> Introduction</h2>
 
 <p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
 <p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
 
-<h3 id="functional-encapsulation-example">Functional Encapsulation Example</h3>
+<h3 id="functional-encapsulation-example"><span class="section">4.1</span> Functional Encapsulation Example</h3>
 
 <p>A Web application user interface is commonly composed of several user interface elements (or <dfn id="dfn-widget">widgets</dfn>), each a DOM subtree. In cases where a widget is tasked with hosting other widgets, the need arises for the widget to understand where its DOM subtree ends and another widget's DOM subtree begins.</p>
 
 <object data="functional-encapsulation-example.svg" width="800" height="500"></object>
 
-<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how a widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on—added, moved, or removed in the document tree—by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how a widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
-<h2 id="shadow-dom-subtrees">Shadow DOM Subtrees</h2>
+<h2 id="shadow-dom-subtrees"><span class="section">5</span> Shadow DOM Subtrees</h2>
 
 <p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
 
@@ -213,12 +205,12 @@
 <object data="insertion-points.svg" width="800" height="900"></object>
 
 <p>Thus, the encapsulation of a shadow DOM subtree can be viewed as a two-fold problem:
-<ol>
+</p><ol>
     <li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
     <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
 </ol>
 
-<h3 id="upper-boundary-encapsulation">Upper-boundary Encapsulation</h3>
+<h3 id="upper-boundary-encapsulation"><span class="section">5.1</span> Upper-boundary Encapsulation</h3>
 
 <p>To maintain the upper-boundary encapsulation, the following <dfn id="dfn-scoping-constraints">scoping constraints</dfn> must apply to all nodes in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
 <ul>
@@ -235,7 +227,7 @@
 
 <p>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentnode"><code>parentNode</code></a> and <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentelement"><code>parentElement</code></a> attributes of the <a href="#dfn-shadow-root">shadow root</a> object must always return <code>null</code>.</p>
 
-<h3 id="lower-boundary-encapsulation">Lower-boundary Encapsulation</h3>
+<h3 id="lower-boundary-encapsulation"><span class="section">5.2</span> Lower-boundary Encapsulation</h3>
 
 <p>To maintain the lower-boundary encapsulation, the distribution of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
 <ul>
@@ -280,9 +272,9 @@
 </ol>
 </div>
 
-<h3 id="matching-insertion-points">Matching Insertion Points</h3>
+<h3 id="matching-insertion-points"><span class="section">5.3</span> Matching Insertion Points</h3>
 
-<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
+<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)&gt;(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
 
 <p>A <dfn id="dfn-valid-selector-fragment">valid selector fragment</dfn> may contain:</p>
 
@@ -316,19 +308,19 @@
 <p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment must be considered invalid.</p>
 
 <p>A conforming UAs must consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
-<ol>
+</p><ol>
     <li>is a child node of the shadow host; and</li>
     <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
     <li>child node matches at least one selector fragment in the set or the set is empty.</li>
 </ol>
 
-<h3 id="selecting-nodes-distributed-to-insertion-points">Matching Host and Children, Distributed To Insertion Points</h3>
+<h3 id="selecting-nodes-distributed-to-insertion-points"><span class="section">5.4</span> Matching Host and Children, Distributed To Insertion Points</h3>
 
 <p>Two kinds of <a href="http://www.w3.org/TR/selectors/">selectors</a>, declared in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> <strong>must</strong> match elements outside of the tree in which they are declared:</p>
 <ul>
     <li>The <code>:host</code> pseudoclass, which matches the <a href="#dfn-shadow-host">shadow host</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
     <li>The <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinator</a>, which matches the nodes, currently distributed to an <a href="#dfn-insertion-point">insertion point</a>
-</ul>
+</li></ul>
 
 <p>The <code>:host</code> pseudoclass represents the <a href="#dfn-shadow-host">shadow host</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If the <a href="http://www.w3.org/TR/selectors4/#contextual-reference-element-set">contextual reference element set</a> is empty or includes elements outside of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <code>:host</code> matches northing.</p>
 
@@ -343,7 +335,7 @@
 <p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> to the tree of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
 
-<h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
+<h3 id="multiple-shadow-subtrees"><span class="section">5.5</span> Hosting Multiple Shadow Subtrees</h3>
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
@@ -353,7 +345,7 @@
 
 <p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
 
-<div class="algorithm">
+</p><div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
@@ -363,12 +355,12 @@
 
 <ol>
     <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
-    <li>Let <var>POOL</var> be the list of nodes</li>
+    </li><li>Let <var>POOL</var> be the list of nodes</li>
     <li>Populate <var>POOL</var> with child nodes of the <var>HOST</var></li>
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:
     <ol>
         <li>Let <var>POINT</var> be the first encountered <a href="#dfn-active-insertion-point">active</a> <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
-        <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a>, supplying <var>POOL</var> and <var>TREE</var> as input</li>
+        </li><li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a>, supplying <var>POOL</var> and <var>TREE</var> as input</li>
         <li>If <var>POINT</var> exists:
         <ol>
             <li>Find the next older tree, relative to <var>TREE</var> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
@@ -387,19 +379,19 @@
             </ol></li>
         </ol></li>
         <li>Otherwise, <strong>stop</strong>.
-    </ol></li>
+    </li></ol></li>
 </ol>
 </div>
 
 <p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assign-older-tree">assigned</a> or <a href="#dfn-distribution-algorithm">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
-<h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
+<h3 id="nested-shadow-subtrees"><span class="section">5.6</span> Nested Shadow Subtrees</h3>
 
 <p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <p>A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-enclosed-subtree">enclosed</dfn> by another <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> when the enclosing subtree nests the enclosed subtree through one or more levels of nesting.</p>
 
-<h3 id="rendering-shadow-subtrees">Rendering Shadow DOM Subtrees</h3>
+<h3 id="rendering-shadow-subtrees"><span class="section">5.7</span> Rendering Shadow DOM Subtrees</h3>
 
 <p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
 
@@ -423,7 +415,7 @@
                 <li>Let <var>CHILD</var> be the child node being rendered</li>
                 <li>If <var>CHILD</var> is itself an <a href="#dfn-insertion-point">insertion point</a>, and the tree being rendered is <a href="#dfn-nested-subtree">nested</a>, render them using <a href="#dfn-insertion-point-rendering">insertion point rendering</a> steps</li>
                 <li>Otherwise, render <var>CHILD</var> as <strong>any DOM subtree</strong>
-            </ol></li>
+            </li></ol></li>
             <li>Otherwise, render <a href="#dfn-fallback-content">fallback content</a> as <strong>any DOM subtree</strong></li>
         </ol></li>
         <li>In place of each <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
@@ -437,7 +429,7 @@
 
 <p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
 
-<h2 id="events">Events</h2>
+<h2 id="events"><span class="section">6</span> Events</h2>
 
 <p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
 
@@ -459,7 +451,7 @@
             <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is <a href="#dfn-assign-older-tree">assigned</a> to</li>
         </ol></li>
         <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
-    </ol></li>
+    </li></ol></li>
     <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <strong>and</strong> the <var>IGNORE UPPER BOUNDARY</var> flag is set to <strong>false</strong>
     <ol>
         <li>Let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is distributed to</li>
@@ -468,11 +460,11 @@
 </ol>
 </div>
 
-<h3 id="event-retargeting">Event Retargeting</h3>
+<h3 id="event-retargeting"><span class="section">6.1</span> Event Retargeting</h3>
 
 <p>In the cases where events cross the <a href="#dfn-shadow-boundary">shadow boundaries</a>, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the node at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a DOM node that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
-<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+</p><p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -504,7 +496,7 @@
 
 <p>The retargeting process must occur prior to dispatch of an event.</p>
 
-<h3 id="retargeting-related-target">Retargeting <code>relatedTarget</code></h3>
+<h3 id="retargeting-related-target"><span class="section">6.2</span> Retargeting <code>relatedTarget</code></h3>
 
 <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a node that's not the event's target, but is related to the event.</p>
 
@@ -549,11 +541,11 @@
 </ol>
 </div>
 
-<h3 id="retargeting-focus-events">Retargeting Focus Events</h3>
+<h3 id="retargeting-focus-events"><span class="section">6.3</span> Retargeting Focus Events</h3>
 
 <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events must be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding node that is losing focus as a result of <code>target</code> gaining focus or the node that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
 
-<h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
+<h3 id="events-that-are-always-stopped"><span class="section">6.4</span> Events that are Always Stopped</h3>
 
 <p>The following events <strong>must</strong> always be stopped at the nearest <a href="#dfn-shadow-boundary">shadow boundary</a>:</p>
 <ul>
@@ -566,7 +558,7 @@
     <li><code>selectstart</code></li>
 </ul>
 
-<h3 id="event-dispatch">Event Dispatch</h3>
+<h3 id="event-dispatch"><span class="section">6.5</span> Event Dispatch</h3>
 
 <p>At the time of event dispatch:</p>
 <ul>
@@ -579,28 +571,28 @@
 
 <p>Upon completion of the event dispatch, the <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> object's <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> <strong>must</strong> be to the highest ancestor's <a href="#dfn-relative-target">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the nodes in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<h3 id="event-retargeting-example">Event Retargeting Example</h3>
+<h3 id="event-retargeting-example"><span class="section">6.6</span> Event Retargeting Example</h3>
 
 <p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the elements. Also, we will invent a fictional <code>shadow-boundary</code> element to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a>:</p>
 <pre><code>
-&lt;div id=&quot;player&quot;&gt;
-    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-        &lt;div class=&quot;controls&quot;&gt;
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+&lt;div id="player"&gt;
+    <span class="shadow-boundary">&lt;shadow-boundary&gt;</span>
+        &lt;div class="controls"&gt;
+            &lt;button class="play-button"&gt;
+            &lt;input type="range" class="timeline"&gt;
+                <span class="shadow-boundary">&lt;shadow-boundary&gt;</span>
+                    &lt;div class="slider-thumb"&gt;&lt;/div&gt;
+                <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            &lt;div class=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
-                    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+            &lt;div class="volume-slider-container"&gt;
+                &lt;input type="range" class="volume-slider"&gt;
+                    <span class="shadow-boundary">&lt;shadow-boundary&gt;</span>
+                        &lt;div class="slider-thumb"&gt;&lt;/div&gt;
+                    <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+    <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
 </code></pre>
 
@@ -618,24 +610,24 @@
 </ol>
 
 <pre class="example html"><code>
-<span class=event-ancestor>&lt;div id=&quot;player&quot;&gt; <em>7</em></span>
+<span class="event-ancestor">&lt;div id="player"&gt; <em>7</em></span>
     <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>6</em></span>
-        <span class=event-ancestor>&lt;div class=&quot;controls&quot;&gt; <em>5</em></span>
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+        <span class="event-ancestor">&lt;div class="controls"&gt; <em>5</em></span>
+            &lt;button class="play-button"&gt;
+            &lt;input type="range" class="timeline"&gt;
+                <span class="shadow-boundary">&lt;shadow-boundary&gt;</span>
+                    &lt;div class="slider-thumb"&gt;&lt;/div&gt;
+                <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            <span class=event-ancestor>&lt;div class=&quot;volume-slider-container&quot;&gt; <em>4</em></span>
-                <span class=event-ancestor>&lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt; <em>3</em></span>
+            <span class="event-ancestor">&lt;div class="volume-slider-container"&gt; <em>4</em></span>
+                <span class="event-ancestor">&lt;input type="range" class="volume-slider"&gt; <em>3</em></span>
                     <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>2</em></span>
-                        <span class=event-ancestor>&lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt; <em>1</em></span>
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+                        <span class="event-ancestor">&lt;div class="slider-thumb"&gt;&lt;/div&gt; <em>1</em></span>
+                    <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+    <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
 &lt;/div&gt;
 </code></pre>
 
@@ -691,20 +683,20 @@ At the end of this process, we should have the following set of ancestors and re
 </ol>
 
 <pre class="example html"><code>
-&lt;div id=&quot;player&quot;&gt;
-    <span class="shadow-boundary lowest-common-boundary">&lt;shadow-boundary&gt;<em> &mdash; lowest common boundary</em></span>
-        &lt;div class=&quot;controls&quot;&gt;
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class="shadow-boundary first-divergent-boundary">&lt;shadow-boundary&gt;<em>  &mdash; first divergent boundary</em></span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
+&lt;div id="player"&gt;
+    <span class="shadow-boundary lowest-common-boundary">&lt;shadow-boundary&gt;<em> — lowest common boundary</em></span>
+        &lt;div class="controls"&gt;
+            &lt;button class="play-button"&gt;
+            &lt;input type="range" class="timeline"&gt;
+                <span class="shadow-boundary first-divergent-boundary">&lt;shadow-boundary&gt;<em>  — first divergent boundary</em></span>
+                    &lt;div class="slider-thumb"&gt;&lt;/div&gt;
                 <span class="shadow-boundary first-divergent-boundary">&lt;/shadow-boundary&gt;</span>
             &lt;/input&gt;
-            &lt;div class=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
-                    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+            &lt;div class="volume-slider-container"&gt;
+                &lt;input type="range" class="volume-slider"&gt;
+                    <span class="shadow-boundary">&lt;shadow-boundary&gt;</span>
+                        &lt;div class="slider-thumb"&gt;&lt;/div&gt;
+                    <span class="shadow-boundary">&lt;/shadow-boundary&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
         &lt;/div&gt;
@@ -712,11 +704,11 @@ At the end of this process, we should have the following set of ancestors and re
 &lt;/div&gt;
 </code></pre>
 
-<h2 id="styles">Styles</h2>
+<h2 id="styles"><span class="section">7</span> Styles</h2>
 
 <p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
-<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must not</strong> apply in the document tree.</p>
+</p><p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must not</strong> apply in the document tree.</p>
 
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
@@ -759,19 +751,19 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>If the <dfn id="dfn-reset-style-inheritance">reset-style-inheritance</dfn> flag is set for a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the upper boundary of the subtree.</p>
 
-<h3 id="css-variables">CSS Variables</h3>
+<h3 id="css-variables"><span class="section">7.1</span> CSS Variables</h3>
 
 <p>The <a href="#dfn-shadow-host">shadow host</a> styles being inherited by the children of the <a href="#dfn-shadow-root">shadow root</a> must also apply to <a href="http://dev.w3.org/csswg/css-variables/">CSS Variables</a>. This provides a way for document DOM tree styles to send signals into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, and for the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> to receive these signals with the use of the <a href="http://dev.w3.org/csswg/css-variables/#using-variables"><code>var()</code></a> function.</p>
 
-<h3 id="text-decoration-property"><code>text-decoration</code> Property</h3>
+<h3 id="text-decoration-property"><span class="section">7.2</span> <code>text-decoration</code> Property</h3>
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property <strong>must not</strong> be propagated from <a href="#dfn-shadow-host">shadow hosts</a> to <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
 <section class="mechanics">
 
-<h2 id="user-interaction">User Interaction</h2>
+<h2 id="user-interaction"><span class="section">8</span> User Interaction</h2>
 
-<h3 id="ranges-and-selection">Ranges and Selections</h3>
+<h3 id="ranges-and-selection"><span class="section">8.1</span> Ranges and Selections</h3>
 
 <p>Since a DOM node in a document tree and a DOM node in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> never have the same <a href="http://www.w3.org/TR/domcore/#concept-tree-root">root</a>, there may never exist a valid <a href="http://www.w3.org/TR/domcore/#range">DOM range</a> that spans either both a document tree and a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, or multiple <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
@@ -779,7 +771,7 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>The <code>getSelection()</code> method of the <a href="#dfn-shadow-root">shadow root</a> object <strong>must</strong> return the current <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<h3 id="focus-navigation">Focus Navigation</h3>
+<h3 id="focus-navigation"><span class="section">8.2</span> Focus Navigation</h3>
 
 <p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> must be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
 
@@ -791,7 +783,7 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 
-<h3 id="active-element">Active Element</h3>
+<h3 id="active-element"><span class="section">8.3</span> Active Element</h3>
 
 <p>To maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -816,19 +808,19 @@ At the end of this process, we should have the following set of ancestors and re
 </ol>
 </div>
 
-<h3 id="editing">Editing</h3>
+<h3 id="editing"><span class="section">8.4</span> Editing</h3>
 
 <p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable"><code>contenteditable</code></a> attribute must not propagate from <a href="#dfn-shadow-host">shadow host</a> to its <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<h3 id="assistive-technology">Assistive Technology</h3>
+<h3 id="assistive-technology"><span class="section">8.5</span> Assistive Technology</h3>
 
 <p>User agents with assistive technology traverse the document tree <a href="#dfn-as-rendered">as rendered</a>, and thus enable full use of of <a href="http://www.w3.org/WAI/PF/aria/">WAI-ARIA</a> semantics in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<h2 id="html-elements">HTML Elements in Shadow DOM Subtrees</h2>
+<h2 id="html-elements"><span class="section">9</span> HTML Elements in Shadow DOM Subtrees</h2>
 
 <p>Comparatively, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be seen as somewhere between <em>just a DOM subtree in a document</em> and a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a shadow DOM subtree aims to retain the traits of a typical DOM subtree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document DOM tree. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, with a few exceptions.</p>
 
-<h3 id="inert-html-elements">Inert HTML Elements</h3>
+<h3 id="inert-html-elements"><span class="section">9.1</span> Inert HTML Elements</h3>
 
 <p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave as <dfn id="dfn-inert">inert</dfn>, or not part of the document tree. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These elements are:</p>
 <ul>
@@ -838,13 +830,13 @@ At the end of this process, we should have the following set of ancestors and re
 
 <p>All other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> <strong>must</strong> behave as if they were part of the document tree, though <a href="#dfn-scoping-constraints">scoped</a> to their subtrees.</p>
 
-<h3 id="html-forms">HTML Forms</h3>
+<h3 id="html-forms"><span class="section">9.2</span> HTML Forms</h3>
 
 <p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the document level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the document <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. Per <a href="#dfn-scoping-constraints">scoping constraints</a>, this <strong>must</strong> exclude elements in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
 <p>Instead, each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> scope its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s document, the form submission <strong>must</strong> continue to work <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
 
-<h2 id="html-elements-and-their-shadow-dom-subtrees">HTML Elements and Their Shadow DOM Subtrees</h2>
+<h2 id="html-elements-and-their-shadow-dom-subtrees"><span class="section">10</span> HTML Elements and Their Shadow DOM Subtrees</h2>
 
 <p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the shadow DOM <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that is created and populated at the time of element instantiation. It is up to a user agent to define the content of these subtrees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
@@ -885,9 +877,9 @@ At the end of this process, we should have the following set of ancestors and re
 </tbody>
 </table>
 
-<h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
+<h2 id="elements-and-dom-objects"><span class="section">11</span> Elements and DOM Objects</h2>
 
-<h3 id="shadow-root-object"><code>ShadowRoot</code> Object</h3>
+<h3 id="shadow-root-object"><span class="section">11.1</span> <code>ShadowRoot</code> Object</h3>
 
 <p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root">shadow root</a>.</p>
     
@@ -907,7 +899,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
 
-<h4 id="shadow-root-attributes"><code>ShadowRoot</code> Attributes</h4>
+<h4 id="shadow-root-attributes"><span class="section">11.1.1</span> <code>ShadowRoot</code> Attributes</h4>
 
 <dl>
 <dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
@@ -928,7 +920,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 
 <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance must return <code>"#document-fragment"</code>.</p>
 
-<h4 id="shadow-root-methods"><code>ShadowRoot</code> Methods</h4>
+<h4 id="shadow-root-methods"><span class="section">11.1.2</span> <code>ShadowRoot</code> Methods</h4>
 
 <dl>
 <dt><code>constructor</code></dt>
@@ -943,14 +935,14 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
                 <th>Description</th>
             </tr>
         </thead>
-            <tr>
+            <tbody><tr>
                 <td><dfn id="api-shadow-root-constructor-element"><code>element</code></dfn></td>
                 <td><a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a></td>
                 <td>No</td>
                 <td>No</td>
                 <td>Element that will be the <a href="#dfn-shadow-host">shadow host</a> of the newly created <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</td>
             </tr>
-        <tbody>
+        </tbody><tbody>
         </tbody>
     </table>
     <div>
@@ -958,7 +950,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
         <dl>
             <dt><a href="http://www.w3.org/TR/domcore/#dom-domexception-hierarchy_request_err"><code>HIERARCHY_REQUEST_ERR</code></a></dt>
             <dd>This exception <strong>must</strong> be thrown when the <code>element</code> parameter is not a valid <a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a>.
-        </dl>
+        </dd></dl>
     </div>
     <p>When invoked, the <code>ShadowRoot()</code> constructor <strong>must</strong> run these steps:</p>
     <ol>
@@ -975,15 +967,15 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
 <dt id="api-shadow-root-get-elements-by-tag-name-ns"><code>getElementsByTagNameNS</code></dt>
 <dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
-<dt id="api-shadow-root-selection"><code>getSelection</code><dt>
-<dd>Returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
+<dt id="api-shadow-root-selection"><code>getSelection</code></dt><dt>
+</dt><dd>Returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dd>When invoked, it <strong>must</strong> return <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
 </dl>
 
 <p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
 
 
-<h3 id="content-element">The <code>content</code> HTML element</h3>
+<h3 id="content-element"><span class="section">11.2</span> The <code>content</code> HTML element</h3>
 
 <p>The <dfn id="dfn-content-element"><code>content</code></dfn> HTML element represents an <a href="#dfn-insertion-point">insertion point</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -1028,7 +1020,7 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 </dl>
 
 
-<h3 id="shadow-element">The <code>shadow</code> HTML element</h3>
+<h3 id="shadow-element"><span class="section">11.3</span> The <code>shadow</code> HTML element</h3>
 
 <p>The <dfn id="dfn-shadow-element"><code>shadow</code></dfn> HTML element represents an <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -1047,120 +1039,115 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
 }
     </code></pre>
-</dl>
+</dd></dl>
 
 </section>
 
-<h2 id="shadow-dom-example">Shadow DOM Example</h2>
+<h2 id="shadow-dom-example"><span class="section">12</span> Shadow DOM Example</h2>
 
 <p>Bob was asked to turn a simple list of links into a News Widget, which has links organized into two categories: breaking news and just news. The current document markup for the stories looks like this:</p>
-<pre class="prettyprint"><code>
-&lt;ul class=&quot;stories&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/1&quot;&gt;A story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/2&quot;&gt;Another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;//example.com/stories/3&quot;&gt;Also a story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/4&quot;&gt;Yet another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/4&quot;&gt;Awesome story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;//example.com/stories/5&quot;&gt;Horrible story&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;ul</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"stories"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/1"</span><span class="tag">&gt;</span><span class="pln">A story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/2"</span><span class="tag">&gt;</span><span class="pln">Another story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/3"</span><span class="tag">&gt;</span><span class="pln">Also a story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/4"</span><span class="tag">&gt;</span><span class="pln">Yet another story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/4"</span><span class="tag">&gt;</span><span class="pln">Awesome story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/5"</span><span class="tag">&gt;</span><span class="pln">Horrible story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+</span><span class="tag">&lt;/ul&gt;</span></code></pre>
 
 <p>To organize the stories, Bob decides to use <strong>shadow DOM</strong>. Doing so will allow Bob to keep the document markup uncluttered, and harnessing the power of insertion point makes sorting stories by class name a very simple task. After getting another cup of <a href="http://en.wikipedia.org/wiki/List_of_coffee_beverages#Green_Eye">Green Eye</a>, he quickly mocks up the following shadow DOM subtree, to be hosted by the <code>ul</code> element:</p>
-<pre class="prettyprint"><code>
-&lt;div class=&quot;breaking&quot;&gt;
-    &lt;ul&gt;
-        &lt;content select=&quot;.breaking&quot;&gt;&lt;/content&gt; &lt;!-- insertion point for breaking news --&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class=&quot;other&quot;&gt;
-    &lt;ul&gt;
-        &lt;content&gt;&lt;/content&gt; &lt;!-- insertion point for the rest of the news --&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;
-</code></pre>
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;ul&gt;</span><span class="pln">
+        </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln"> </span><span class="com">&lt;!-- insertion point for breaking news --&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/ul&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"other"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;ul&gt;</span><span class="pln">
+        </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln"> </span><span class="com">&lt;!-- insertion point for the rest of the news --&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/ul&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></code></pre>
 <p>Bob then styles the newborn widget according to comps from the designer by adding this to the shadow DOM subtree mockup:</p>
-<pre class="prettyprint"><code>
-&lt;style scoped&gt;
-    div.breaking {
-        color: Red;
-        font-size: 20px;
-        border: 1px dashed Purple;
-    }
-    div.other {
-        padding: 2px 0 0 0;
-        border: 1px solid Cyan;
-    }
-&lt;/style&gt;
-</code></pre>
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;style</span><span class="pln"> </span><span class="atn">scoped</span><span class="tag">&gt;</span><span class="pln">
+    div</span><span class="pun">.</span><span class="pln">breaking </span><span class="pun">{</span><span class="pln">
+        color</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Red</span><span class="pun">;</span><span class="pln">
+        font</span><span class="pun">-</span><span class="pln">size</span><span class="pun">:</span><span class="pln"> </span><span class="lit">20px</span><span class="pun">;</span><span class="pln">
+        border</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1px</span><span class="pln"> dashed </span><span class="typ">Purple</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    div</span><span class="pun">.</span><span class="pln">other </span><span class="pun">{</span><span class="pln">
+        padding</span><span class="pun">:</span><span class="pln"> </span><span class="lit">2px</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+        border</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1px</span><span class="pln"> solid </span><span class="typ">Cyan</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span></code></pre>
 <p>While pondering if his company should start looking for a new designer, Bob converts the mockup to code:</p>
-<pre class="prettyprint"><code>
-function createStoryGroup(className, contentSelector)
-{
-    var group = document.createElement('div');
-    group.className = className;
-    // Empty string in select attribute or absence thereof work the same, so no need for special handling.
-    group.innerHTML = '&lt;ul&gt;&lt;content select=&quot;' + contentSelector + '&quot;&gt;&lt;/content&gt;&lt;/ul&gt;';
-    return group;
-}
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="kwd">function</span><span class="pln"> createStoryGroup</span><span class="pun">(</span><span class="pln">className</span><span class="pun">,</span><span class="pln"> contentSelector</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> </span><span class="kwd">group</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'div'</span><span class="pun">);</span><span class="pln">
+    </span><span class="kwd">group</span><span class="pun">.</span><span class="pln">className </span><span class="pun">=</span><span class="pln"> className</span><span class="pun">;</span><span class="pln">
+    </span><span class="com">// Empty string in select attribute or absence thereof work the same, so no need for special handling.</span><span class="pln">
+    </span><span class="kwd">group</span><span class="pun">.</span><span class="pln">innerHTML </span><span class="pun">=</span><span class="pln"> </span><span class="str">'&lt;ul&gt;&lt;content select="'</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> contentSelector </span><span class="pun">+</span><span class="pln"> </span><span class="str">'"&gt;&lt;/content&gt;&lt;/ul&gt;'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">group</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
 
-function createStyle()
-{
-    var style = document.createElement('style');
-    style.scoped = true;
-    style.textContent = 'div.breaking { color: Red;font-size: 20px; border: 1px dashed Purple; }' +
-        'div.other { padding: 2px 0 0 0; border: 1px solid Cyan; }';
-    return style;
-}
+</span><span class="kwd">function</span><span class="pln"> createStyle</span><span class="pun">()</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> style </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'style'</span><span class="pun">);</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">scoped </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> </span><span class="str">'div.breaking { color: Red;font-size: 20px; border: 1px dashed Purple; }'</span><span class="pln"> </span><span class="pun">+</span><span class="pln">
+        </span><span class="str">'div.other { padding: 2px 0 0 0; border: 1px solid Cyan; }'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> style</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
 
-function makeShadowSubtree(storyList)
-{
-    var root = new ShadowRoot(storyList);
-    root.appendChild(createStyle());
-    root.appendChild(createStoryGroup('breaking', '.breaking'));
-    root.appendChild(createStoryGroup('other', ''));
-}
+</span><span class="kwd">function</span><span class="pln"> makeShadowSubtree</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> root </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">ShadowRoot</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">);</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStyle</span><span class="pun">());</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'breaking'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'.breaking'</span><span class="pun">));</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'other'</span><span class="pun">,</span><span class="pln"> </span><span class="str">''</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
 
-document.addEventListener('DOMContentLoaded', function() {
-    [].forEach.call(document.querySelectorAll('ul.stories'), makeShadowSubtree);
-});
-</code></pre>
+document</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'DOMContentLoaded'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="pun">[].</span><span class="pln">forEach</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">querySelectorAll</span><span class="pun">(</span><span class="str">'ul.stories'</span><span class="pun">),</span><span class="pln"> makeShadowSubtree</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
 
 <p>Well done, Bob! With the cup of coffee still half-full, the work is complete. Recognizing his awesomeness, Bob returns to teaching n00bs the ways of <a href="http://en.wikipedia.org/wiki/World_of_Warcraft">WoW</a>.</p>
 
 <p>A few months pass.</p>
 
 <p>It's election time. With Bob at his annual conference, Alice is charged with adding <strong>another</strong>, temporary box to the news widget, filled with election-related stories. Alice studies Bob's code, reads up on the shadow DOM spec and realizes that, thanks to multiple shadow DOM subtree support, she doesn't have to touch his code. As usual, her solution is elegant and simple, fitting neatly right under Bob's code:</p>
-<pre class="prettyprint"><code>
-// TODO(alice): BEGIN -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
-var ELECTION_BOX_REMOVAL_DEADLINE = ...;
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">// TODO(alice): BEGIN -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> ELECTION_BOX_REMOVAL_DEADLINE </span><span class="pun">=</span><span class="pln"> </span><span class="pun">...;</span><span class="pln">
 
-function createElectionStyle()
-{
-    var style = document.createElement('style');
-    style.scoped = true;
-    // TODO(alice): Check designer's desk for hallucinogens.
-    style.textContent = 'div.election { color: Magenta;font-size: 24px; border: 2px dotted Fuchsia; }';
-    return style;
-}
+</span><span class="kwd">function</span><span class="pln"> createElectionStyle</span><span class="pun">()</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> style </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'style'</span><span class="pun">);</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">scoped </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    </span><span class="com">// TODO(alice): Check designer's desk for hallucinogens.</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> </span><span class="str">'div.election { color: Magenta;font-size: 24px; border: 2px dotted Fuchsia; }'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> style</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
 
-function makeElectionShadowSubtree(storyList)
-{
-    var root = new ShadowRoot(storyList);
-    // Add and style election story box.
-    root.appendChild(createElectionStyle());
-    root.appendChild(createStoryGroup('election', '.election'));
-    // Insert Bob's shadow tree under the election story box.
-    root.appendChild(document.createElement('shadow'));
-}
+</span><span class="kwd">function</span><span class="pln"> makeElectionShadowSubtree</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> root </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">ShadowRoot</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">);</span><span class="pln">
+    </span><span class="com">// Add and style election story box.</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createElectionStyle</span><span class="pun">());</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'election'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'.election'</span><span class="pun">));</span><span class="pln">
+    </span><span class="com">// Insert Bob's shadow tree under the election story box.</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'shadow'</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
 
-if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
-    document.addEventListener('DOMContentLoaded', function() {
-        [].forEach.call(document.querySelectorAll('ul.stories'), makeElectionShadowSubtree);
-    });
-}
-// TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
-</code></pre>
-<p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers&mdash;without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow DOM subtree composition in such a cool way.</p>
+</span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Date</span><span class="pun">.</span><span class="pln">now</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> ELECTION_BOX_REMOVAL_DEADLINE</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    document</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'DOMContentLoaded'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">[].</span><span class="pln">forEach</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">querySelectorAll</span><span class="pun">(</span><span class="str">'ul.stories'</span><span class="pun">),</span><span class="pln"> makeElectionShadowSubtree</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="com">// TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.</span></code></pre>
+<p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers—without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow DOM subtree composition in such a cool way.</p>
 
 </section>
 
@@ -1175,7 +1162,8 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 
 <p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Deepak Sherveghar</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Oliver Nightingale</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Sam Dutton</span>, <span class="vcard">Shinya Kawanaka</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this specification.</p>
 
-<p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
+<p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs—and don't forget to ask the editor to add your name into this section.</p>
 
-</body>
-</html>
+
+
+</body></html>
