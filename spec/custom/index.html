@@ -143,8 +143,6 @@
 
 <p>Define <dfn class="fixme" id="dfn-custom-element-name">custom element name</dfn></p>
 
-<p>Define <dfn class="fixme" id="dfn-extend-dom-element">extend DOM element</dfn></p>
-
 <p>Define <dfn class="fixme" id="dfn-custom-element-constructor">custom element constructor</dfn></p>
 
 
@@ -152,19 +150,32 @@
 
 <p>The <a href="#dfn-element-prototype">element prototype</a> itself <strong>must</strong> implement the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface either directly or through its prototype chain.</p>
 
+<p>An <a href="#dfn-element-prototype">element prototype</a> <strong>must</strong> be created with the <dfn id="dfn-element-prototype-generation">element prototype generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>BASE</var>, a DOM element which implements the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface.</dd>
+<dt>Output</dt>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a></dd>
+</dl>
+<ol>
+    <li>Create a new JavaScript object with <var>BASE</var> as prototype</li>
+    <li>Let <var>PROTOTYPE</var> be this new object</li>
+</ol>
+</div>
+
 <p>A new instance of a <a href="#dfn-custom-dom-element">custom DOM element</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-instantiation">custom element instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>PROTOTYPE</var>, the custom element prototype</dd>
-    <dd><var>BASE</var>, the base DOM element</dd>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a></dd>
     <dd><var>TEMPLATE</var>, the custom element template, optional</dd>
 <dt>Output</dt>
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
 <ol>
-    <li>Create a DOM element, which <a href="#dfn-inheritance">inherits</a> from <var>BASE</var> and has <var>PROTOTYPE</var> as top-most item in its prototype chain. <span class="fixme">what does top-most mean?</span></li>
-    <li>Let <var>ELEMENT</var> be this DOM element</li>
+    <li>Create a new JavaScript object with <var>PROTOTYPE</var> as prototype</li>
+    <li>Let <var>ELEMENT</var> be this new object</li>
     <li>Create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> with <var>ELEMENT</var> as its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">host</a></li>
     <li>If <var>TEMPLATE</var> was provided:
     <ol>
@@ -172,6 +183,7 @@
     </ol></li>
 </ol>
 </div>
+<p>Some browser implementations treat DOM objects as <em>special</em>, hybrid entities. They exist in JavaScript environment only as thin wrappers that hide some monolothic implementation. In such browsers, the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> <strong>must</strong> also ensure that the resulting object is a valid DOM element with the proper wrapper in place.</p>
 
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom DOM Elements in HTML</h2>
 
