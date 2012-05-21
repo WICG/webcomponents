@@ -151,19 +151,7 @@
 
 <p>The <a href="#dfn-element-prototype">element prototype</a> itself <strong>must</strong> implement the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface either directly or through its prototype chain.</p>
 
-<p>An <a href="#dfn-element-prototype">element prototype</a> <strong>must</strong> be created with the <dfn id="dfn-element-prototype-generation">element prototype generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>BASE</var>, a DOM element which implements the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface.</dd>
-<dt>Output</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a></dd>
-</dl>
-<ol>
-    <li>Create a new JavaScript object with <var>BASE</var> as prototype</li>
-    <li>Let <var>PROTOTYPE</var> be this new object</li>
-</ol>
-</div>
+
 
 <p>A new instance of a <a href="#dfn-custom-dom-element">custom DOM element</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-instantiation">custom element instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -186,7 +174,26 @@
 </div>
 <p>Some browser implementations treat DOM objects as special, hybrid entities. They exist in JavaScript environment only as thin wrappers that hide some monolothic implementation of the object. In such browsers, the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> <strong>must</strong> also ensure that the output is a valid DOM element with the proper wrapper in place.</p>
 
-<p>The <a href="#dfn-custom-element-constructor">custom element constructor</a> <strong>must</strong> run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> and return the newly created object instance as a result.</p>
+<p>A <a href="#dfn-custom-element-constructor">custom element constructor</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>BASE</var>, a DOM element which implements the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface.</dd>
+<dt>Output</dt>
+    <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
+</dl>
+<ol>
+    <li>Create a new JavaScript object with <var>BASE</var> as prototype</li>
+    <li>Let <var>PROTOTYPE</var> be this new object</li>
+    <li>Generate a JavaScript function which, when executed:
+    <ol>
+        <li>Runs the <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a></li>
+        <li>Returns algorithm's output as result</li>
+    </ol></li>
+    <li>Let <var>CONSTRUCTOR</var> be that function</li>
+    <li>Set <var>PROTOTYPE</var> as the <code>prototype</code> property on <var>CONSTRUCTOR</var></li>
+</ol>
+</div>
 
 
 <h2 id="declaring-custom-elements">Declaring Custom DOM Elements</h2>
