@@ -177,19 +177,18 @@ Extensible DOM elements
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>BASE</var>, a DOM element which implements the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface.</dd>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>Create a new JavaScript object with <var>BASE</var> as prototype</li>
-    <li>Let <var>PROTOTYPE</var> be this new object</li>
-    <li>Generate a JavaScript function which, when executed:
+    <li>Generate a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a> which, when called:
     <ol>
         <li>Runs the <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as the only argument</li>
         <li>Returns algorithm's output as result</li>
     </ol></li>
-    <li>Let <var>CONSTRUCTOR</var> be that function</li>
+    <li>Let <var>CONSTRUCTOR</var> be that <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a></li>
+    <li>Set the <a href="http://es5.github.com/#x13.2.2"><code>[[Construct]]</code></a> internal method on <var>CONSTRUCTOR</var></li>
     <li>Set <var>PROTOTYPE</var> as the <code>prototype</code> property on <var>CONSTRUCTOR</var></li>
     <li>Set <var>CONSTRUCTOR</var> as the <code>constructor</code> property on <var>PROTOTYPE</var></li>
 </ol>
