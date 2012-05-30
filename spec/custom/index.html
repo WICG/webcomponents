@@ -188,6 +188,35 @@
 </ol>
 </div>
 
+<p>The <dfn id="dfn-prototype-construction-algorithm">prototype construction algorithm</a> <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>EXTENDS</var>, <a href="#dfn-custom-element-name">custom element name</a> or an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>.</dd>
+<dt>Output</dt>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
+</dl>
+<ol>
+    <li>If <var>NAME</var> begins with <code>x-</code>, let <var>BASE</var> be the <a href="#dfn-element-prototype">element prototype</a> of the <a href="#dfn-custom-dom-element">custom DOM element</a> with the <a href="#dfn-custom-element-name">custom element name</a> of <var>EXTENDS</var></li>
+    <li>Otherwise, let <var>BASE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>EXTENDS</var></li>
+    <li>Create a new object that implements <var>BASE</var></li>
+    <li>Let <var>PROTOTYPE</var> be this new object</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>BASE</var>, the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> of the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> that is being extended.</dd>
+<dt>Output</dt>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
+</dl>
+<ol>
+    <li>Create a new object that implements <var>BASE</var></li>
+    <li>Let <var>PROTOTYPE</var> be this new object</li>
+</ol>
+</div>
 
 <h2 id="declaring-custom-elements">Declaring Custom DOM Elements</h2>
 
