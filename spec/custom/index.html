@@ -111,6 +111,7 @@
     <li><a href="http://www.w3.org/TR/selectors/">Selectors Level 3</a></li>
     <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
     <li><a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a></li>
+    <li><a href="http://www.w3.org/TR/WebIDL/">Web IDL</a></li>
 </ul>
 
 <h2 id="terminology">Terminology</h2>
@@ -124,8 +125,6 @@
     <dd>The Document Object Model's underlying document</dd>
 <dt>node</dt>
     <dd>Any DOM object that <a href="http://www.w3.org/TR/domcore/#concept-tree-participate">participates in a tree</a></dd>
-<dt>element</dt>
-    <dd>A DOM object that implements the <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> interface</dd>
 <dt>DOM tree</dt>
     <dd>Any <a href="http://www.w3.org/TR/domcore/#trees">tree</a>, composed of DOM objects</dd>
 <dt>DOM structure</dt>
@@ -147,11 +146,11 @@
 <p>Define <dfn class="fixme" id="dfn-custom-element-constructor">custom element constructor</dfn></p>
 
 
-<p><dfn id="dfn-custom-dom-element">Custom DOM elements</dfn> are JavaScript objects that implement new kinds of DOM interfaces. These interfaces are called <dfn id="dfn-element-prototype">element prototypes</dfn> and are specified as JavaScript objects. Thus, a <a href="#dfn-custom-dom-element">custom DOM element</a> <strong>must</strong> be a JavaScript object whose prototype is an <a href="#dfn-element-prototype">element prototype</a>.</p>
+Extensible DOM elements
 
-<p>The <a href="#dfn-element-prototype">element prototype</a> itself <strong>must</strong> implement the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> interface either directly or through its prototype chain.</p>
+<p><dfn id="dfn-custom-dom-element">Custom DOM elements</dfn> are new types of <a href="http://www.w3.org/TR/domcore/#interface-element">elements</a>. The <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> for these elements <strong>must</strong> be defined as <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype objects</a>, called <dfn id="dfn-element-prototype">element prototypes</dfn>.</p>
 
-
+<p>The <a href="#dfn-element-prototype">element prototype</a> itself <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>.</p>
 
 <p>A new instance of a <a href="#dfn-custom-dom-element">custom DOM element</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-instantiation">custom element instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-equivalent">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -163,11 +162,11 @@
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
 <ol>
-    <li>Create a new JavaScript object with <var>PROTOTYPE</var> as prototype</li>
+    <li>Create a new object that implements <var>PROTOTYPE</var></li>
     <li>Let <var>ELEMENT</var> be this new object</li>
-    <li>Create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> with <var>ELEMENT</var> as its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">host</a></li>
     <li>If <var>TEMPLATE</var> was provided:
     <ol>
+        <li>Create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> with <var>ELEMENT</var> as its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">host</a></li>
         <li>Create a document fragment from <var>TEMPLATE</var> and set it as contents of this <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a></li>
     </ol></li>
 </ol>
