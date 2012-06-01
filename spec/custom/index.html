@@ -202,8 +202,12 @@
     <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
 </dl>
 <ol>
+    <li>If <var>EXTENDS</var> is an invalid <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>, throw an <a href="http://www.w3.org/TR/domcore/#invalidcharactererror"><code>InvalidCharacterError</code></a> exception.</li>
     <li>If <var>EXTENDS</var> is a <a href="#dfn-custom-element-name">custom element name</a> name, let <var>BASE</var> be the <a href="#dfn-element-prototype">element prototype</a> of the <a href="#dfn-custom-dom-element">custom DOM element</a> with the <a href="#dfn-custom-element-name">custom element name</a> of <var>EXTENDS</var></li>
-    <li>Otherwise, let <var>BASE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>EXTENDS</var></li>
+    <li>Otherwise:
+    <ol>
+        <li>If <var>BASE</var> is defined in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML specification</a> or other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, let <var>BASE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>EXTENDS</var></li>
+        <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#notsupportederror"><code>NotSupportedError</code></a> exception.</li>
     <li><a href="http://es5.github.com/#x15.2.3.5">Create</a> a new object that implements <var>BASE</var></li>
     <li>Let <var>PROTOTYPE</var> be this new object.</li>
     <li>If <var>PROPERTIES</var> is present and not <code>undefined</code>, <a href="http://es5.github.com/#x15.2.3.7">define properties</a> on <var>PROTOTYPE</var> using <var>PROPERTIES</var></li>
@@ -262,6 +266,8 @@ dictionary <dfn id="api-options">Options</dfn> {
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
+    <li>If <var>NAME</var> is an invalid <a href="#dfn-custom-element-name">custom element name</a>, throw an <a href="http://www.w3.org/TR/domcore/#invalidcharactererror"><code>InvalidCharacterError</code></a> exception.</li>
+    <li>If <var>EXTENDS</var> is missing, let <var>EXTENDS</var> be the string <code>span</code></li>
     <li>Run <a href="#dfn-prototype-construction-algorithm">prototype construction algorithm</a> with <var>EXTENDS</var> and <var>PROPERTIES</var> as arguments</li>
     <li>Let <var>PROTOTYPE</var> be the output of the previous step</li>
     <li>Let <var>DEFINITION</var> be the tuple of (<var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>NAME</var>)</li>
