@@ -71,7 +71,8 @@
     <li><a href="#declaring-custom-elements"><span class="section">7</span> Declaring Custom DOM Elements</li>
     <li><a href="#elements-and-dom-interfaces"><span class="section">8</span> Elements and DOM Interfaces</a>
     <ol>
-        <li><a href="#the-element-element"><span class="section">8.1</span> The <code>element</code> HTML element</a></li>
+        <li><a href="#extensions-to-document-interface"><span class="section">8.1</span> Extensions to <code>Document</code> interface</a></li>
+        <li><a href="#the-element-element"><span class="section">8.2</span> The <code>element</code> HTML element</a></li>
     </ol></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -155,7 +156,7 @@
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
 <ol>
-    <li>Create a new object that implements <var>PROTOTYPE</var></li>
+    <li><a href="http://es5.github.com/#x15.2.3.5">Create</a> a new object that implements <var>PROTOTYPE</var></li>
     <li>Let <var>ELEMENT</var> be this new object</li>
     <li>If <var>TEMPLATE</var> was provided:
     <ol>
@@ -230,6 +231,45 @@
 <section class="mechanics">
 
 <h2 id="elements-and-dom-interfaces">Elements and DOM Intefaces</h2>
+
+<h3 id="extensions-to-document-interface">Extensions to <code>Document</code> interface</h3>
+
+<pre><code>
+partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
+    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-name">name</a>, optional <a href="#api-options">Options</a> options);
+}
+
+dictionary <dfn id="api-options">Options</dfn> {
+    DOMString? <a href="#var-options-extends">extends</a>;
+    object? <a href="#var-option-properties">properties</a>;
+    <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#api-html-template-element">HTMLTemplateElement</a>? <a href="#var-option-template">template</a>;
+}
+</code></pre>
+
+<p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-dom-element">custom DOM element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
+
+<p>When called, the <a href="#dfn-document-register">register</a> method <strong>must</strong> run these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> on which the method is called</dd>
+    <dd><var id="var-document-register-name">NAME</var>, the <a href="#dfn-custom-element-name">custom element name</a> of the element being registered</dd>
+    <dd><var id="var-option-extends">EXTENDS</var>, an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>, optional</d>
+    <dd><var id="var-option-properties">PROPERTIES</var>, an object, optional</dd>
+    <dd><var>TEMPLATE</var>, the <a href="#dfn-custom-element-template">custom element template</a>, optional</dd>
+<dt>Output</dt>
+    <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
+</dl>
+<ol>
+    <li>Run <a href="#dfn-prototype-construction-algorithm">prototype construction algorithm</a> with <var>EXTENDS</var> and <var>PROPERTIES</var> as arguments</li>
+    <li>Let <var>PROTOTYPE</var> be the output of the previous step</li>
+    <li>Let <var>DEFINITION</var> be the tuple of (<var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>NAME</var>)</li>
+    <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
+    <li>Run <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE</var> as arguments</li>
+    <li>Return output of the previous step.</li>
+</ol>
+</div>
 
 <h3 id="the-element-element">The <code>element</code> HTML element</h3>
 
