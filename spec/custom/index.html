@@ -190,7 +190,7 @@
 
 <p>The <dfn id="dfn-custom-element-name">custom element name</dfn> is an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>, which is used to identify a <a href="#dfn-custom-dom-element">custom DOM element</a>. The <a href="#dfn-custom-element-name">custom element name</a> <strong>must</strong> start with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by <var>U+002D HYPHEN-MINUS</var>.</p>
 
-<p>The <dfn id="dfn-element-defintiion">element definition</dfn> is an association between an <a href="#dfn-element-prototype">element prototype</a>, a <a href="#dfn-custom-element-template">custom element template</a>, and a <a href="#dfn-custom-element-name">custom element name</a>.
+<p>The <dfn id="dfn-element-defintion">element definition</dfn> is an association between an <a href="#dfn-element-prototype">element prototype</a>, a <a href="#dfn-custom-element-template">custom element template</a>, and a <a href="#dfn-custom-element-name">custom element name</a>.
 
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definiton</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
 
@@ -222,6 +222,33 @@
 </div>
 
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom DOM Elements in HTML</h2>
+
+<p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a>, the UA <strong>must</strong> first check the tag has an attribute with the name <code>is</code>. If the attribute is present, the UA <strong>must</strong> run the following steps instead:
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> in which the element is being created</dd>
+    <dd><var>TOKEN</var>, the token</dd>
+    <dd><var>NAME</var>, the value of the <code>is</code> attribute</dd>
+<dt>Output</dt>
+    <dd><var>ELEMENT</var>, an element</dd>
+</dl>
+<ol>
+    <li>Let <var>DEFINITION</var> be the <a href="#dfn-element-defintion">element defintion</a> with the <a href="#dfn-custom-element-name">custom element name</a> of <var>NAME</var> that is <a href="#dfn-element-registration">registered</a> with <var>DOCUMENT</var></li>
+    <li>If <var>DEFINTION</var> is missing, let <var>ELEMENT</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for token</a>.</li>
+    <li>Otherwise:
+    <ol>
+        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-element-prototype">element prototype</a> in <var>DEFINITION</var></li>
+        <li>If <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>TOKEN</var>, let <var>ELEMENT</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for token</a>.</li>
+        <li>Otherwise:
+        <ol>
+            <li>Let <var>TEMPLATE</var> be the <a href="#dfn-custom-element-template">custom element template</a> in <var>DEFINITION</var></li>
+            <li>Let <var>ELEMENT</var> be the result of running the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE</var> as arguments.</li>
+        </ol></li>
+    </ol></li>
+</ol>
+</div>
 
 <p><span class="fixme">Specify how custom DOM elements are parsed and serialized</span></p>
 
