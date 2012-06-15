@@ -467,21 +467,24 @@
     <dd><var>TARGETS</var>, a list of tuples, each containing <var>NODE</var>'s ancestor and its relative target</dd>
 </dl>
 <ol>
-    <li>Let <var>BOUNDARY</var> be a flag, initialized to <strong>false</strong></li>
     <li>Let <var>STACK</var> be a stack of DOM nodes</li>
     <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
+    <li>Let <var>LAST</var> be <strong>undefined</strong></li>
     <li><dfn id="algo-reatargeting-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
-        <li>If <var>ANCESTOR</var> <strong>is</strong> a <a href="#dfn-shadow-root">shadow root</a>, set <var>BOUNDARY</var> to <strong>true</strong></li>
-        <li>If <var>ANCESTOR</var> <strong>is</strong> an <a href="#dfn-insertion-point">insertion point</a>, push <var>ANCESTOR</var> into <var>STACK</var></li>
-        <li>If <var>BOUNDARY</var> is set to <strong>true</strong>
-        <ol>
-            <li>Pop <var>STACK</var> if <var>STACK</var> is not empty</li>
-            <li>Set <var>BOUNDARY</var> to <strong>false</strong> state</li>
-        </ol></li>
         <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
+        <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
+        <ol>
+            <li>If <var>LAST</var> is distributed or assigned into <var>ANCESTOR</var>:
+            <ol>
+                <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
+                <li>Push <var>TARGET</var> into <var>STACK</var>
+            </ol></li>
+        </ol></li>
         <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
         <li>Add (<var>TARGET</var>, <var>ANCESTOR</var>) tuple to <var>TARGETS</var></li>
+        <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>, pop <var>STACK</var></li>
+        <li>Let <var>LAST</var> be <var>ANCESTOR</var></li>
         <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
     </ol></li>
 </ol>
@@ -512,24 +515,34 @@
     <dd><var>ADJUSTED</var>, the adjusted related target for <var>NODE</var></dd>
 </dl>
 <ol>
-    <li>Let <var>CANDIDATES</var> be an empty list</li>
-    <li>Let <var>ANCESTOR</var> be <var>RELATED</var></li>
-    <li><dfn id="algo-candidates-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
-    <ol>
-        <li>If a node from the same subtree as <var>ANCESTOR</var> already exists in <var>CANDIDATES</var>, <a href="#algo-candidates-repeat">continue</a></li>
-        <li>Add <var>ANCESTOR</var> to <var>CANDIDATES</var></li>
-        <li>Let <var>ANCESTOR</var> be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
-    </ol></li>
     <li>Let <var>TARGET</var> be <var>NODE</var></li>
-    <li>Let <var>ADJUSTED</var> be <strong>undefined</strong></li>
-    <li><dfn id="algo-related-repeat">Repeat</dfn> while <var>ADJUSTED</var> is <strong>undefined</strong>:
+    <li>Let <var>ADJSUTED</var> be <strong>undefined</strong></li>
+    <li><dfn id="algo-target-repeat">Repeat</dfn> while <var>TARGET</var> exists:
     <ol>
-        <li>If there is a DOM node that is a member of <var>CANDIDATES</var> and is in the same subtree as <var>TARGET</var>,  let <var>ADJUSTED</var> be this DOM node</li>
-        <li>Otherwise:
+        <li>Let <var>STACK</var> be an empty stack of DOM nodes</li>
+        <li>Let <var>ANCESTOR</var> be <var>RELATED</var></li>
+        <li>Let <var>LAST</var> be <strong>undefined</strong></li>
+        <li><dfn id="algo-ancestor-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
         <ol>
-            <li>If <var>TARGET</var> is a <a href="#dfn-shadow-root">shadow root</a>, let <var>TARGET</var> be the <a href="#dfn-shadow-host">shadow host</a> of <var>TARGET</var></li>
-            <li>Otherwise, let <var>TARGET</var> be <var>TARGET</var>'s parent node</li>
+            <li>IF <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
+            <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
+            <ol>
+                <li>If <var>LAST</var> is distributed or assigned into <var>ANCESTOR</var>:
+                <ol>
+                    <li>Let <var>HEAD</var> be the DOM node at the top of the <var>STACK</var></li>
+                    <li>Push <var>HEAD</var> into <var>STACK</var></li>
+                </ol></li>
+            </ol></li>
+            <li>If <var>ANCESTOR</var> and <var>TARGET</var> are in the same subtree:
+            <ol>
+                <li>Let <var>ADJUSTED</var> be the DOM node at the top of the stack</li>
+                <li><strong>Stop.</strong></li>
+            </ol></li>
+            <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>, pop <var>STACK</var></li>
+            <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
         </ol></li>
+        <li>If <var>TARGET</var> is a <a href="#dfn-shadow-root">shadow root</a>, let <var>TARGET</var> be the <a href="#dfn-shadow-host">shadow host</a> of <var>TARGET</var></li>
+        <li>Otherwise, let <var>TARGET</var> be <var>TARGET</var>'s parent node</li>
     </ol></li>
 </ol>
 </div>
