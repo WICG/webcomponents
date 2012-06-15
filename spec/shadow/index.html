@@ -90,6 +90,7 @@
     <ol>
         <li><a href="#css-variables"><span class="section">7.1</span> CSS Variables</a></li>
         <li><a href="#text-decoration-property"><span class="section">7.2</span> <code>text-decoration</code> Property</a></li>
+        <li><a href="#host-at-rule"><span class="section">7.3</span> <code>@host</code> @-rule</a></li>
     </ol></li>
     <li><a href="#user-interaction"><span class="section">8</span> User Interaction</a>
     <ol>
@@ -754,6 +755,26 @@ At the end of this process, we should have the following set of ancestors and re
 <h3 id="text-decoration-property"><code>text-decoration</code> Property</h3>
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property <strong>must not</strong> be propagated from <a href="#dfn-shadow-host">shadow hosts</a> to <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
+
+<h3 id="host-at-rule"><code>@host</code> @-rule</h3>
+
+<p>Within styles, specified in <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the author may use a <code>@host</code> @-rule. The syntax of this rule is defined as this addition to <a href="http://www.w3.org/TR/CSS21/grammar.html">CSS Grammar</a>:</p>
+
+<p>The following production is added to the <a href="http://www.w3.org/TR/CSS21/grammar.html#grammar">grammar</a>:</p>
+
+<pre><code>
+host
+    : HOST_SYM S* '{' S* declaration? [ ';' S* declaration? ]* '}' S*
+    ;
+</code></pre>
+
+<p>The following rule is added to the <a href="http://www.w3.org/TR/CSS21/grammar.html#scanner">tokenizer</a>:</p>
+
+<pre><code>
+@{H}{O}{S}{T}        {return HOST_SYM;}
+</code></pre>
+
+<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> in the <code>@host</code> @-rule <strong>must</strong> be applied to the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> in which the style is specified.</p>
 
 <section class="mechanics">
 
