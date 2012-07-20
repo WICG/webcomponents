@@ -469,22 +469,16 @@
 <ol>
     <li>Let <var>STACK</var> be a stack of DOM nodes</li>
     <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
-    <li>Let <var>LAST</var> be <strong>undefined</strong></li>
     <li><dfn id="algo-reatargeting-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
+        <li>If <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>, push <var>ANCESTOR</var> into <var>STACK</var></li>
         <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
-        <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
-        <ol>
-            <li>If <var>LAST</var> is distributed or assigned into <var>ANCESTOR</var>:
-            <ol>
-                <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
-                <li>Push <var>TARGET</var> into <var>STACK</var>
-            </ol></li>
-        </ol></li>
         <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
         <li>Add (<var>TARGET</var>, <var>ANCESTOR</var>) tuple to <var>TARGETS</var></li>
-        <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>, pop <var>STACK</var></li>
-        <li>Let <var>LAST</var> be <var>ANCESTOR</var></li>
+        <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>:
+        <ol>
+            <li>Pop <var>STACK</var>, if <var>STACK</var> is not empty</li>
+        </ol></li>
         <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
     </ol></li>
 </ol>
