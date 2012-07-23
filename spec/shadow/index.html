@@ -573,67 +573,46 @@
 
 <h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
-<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the elements. Also, we will invent a fictional <code>shadow-boundary</code> element to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a>:</p>
+<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the elements. Also, we will invent a fictional <code>shadow-root</code> element to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a> and represent <a href="#dfn-shadow-root">shadow roots</a>:</p>
 <pre><code>
 &lt;div id=&quot;player&quot;&gt;
-    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-        &lt;div class=&quot;controls&quot;&gt;
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+    <span class=shadow-boundary>&lt;shadow-root id=&quot;player-shadow-root&quot;&gt;</span>
+        &lt;div id=&quot;controls&quot;&gt;
+            &lt;button class=&quot;play-button&quot;&gt;PLAY&lt;/button&gt;
+            &lt;input type=&quot;range&quot; id=&quot;timeline&quot;&gt;
+                <span class=shadow-boundary>&lt;shadow-root id=&quot;timeline-shadow-root&quot;&gt;</span>
+                    &lt;div class=&quot;slider-thumb&quot; id=&quot;timeline-slider-thumb&quot;&gt;&lt;/div&gt;
+                <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
             &lt;/input&gt;
             &lt;div class=&quot;volume-slider-container&quot;&gt;
                 &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
-                    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+                    <span class=shadow-boundary>&lt;shadow-root id=&quot;volume-shadow-root&quot;&gt;</span>
+                        &lt;div class=&quot;slider-thumb&quot; id=&quot;volume-slider-thumb&quot;&gt;&lt;/div&gt;
+                    <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
+    <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
 &lt;/div&gt;
 </code></pre>
 
-<p>Let's have a user position their pointing device over the volume slider's thumb (<code>#player .volume-slider .slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
+<p>Let's have a user position their pointing device over the volume slider's thumb (<code>#volume-slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
 
 <p>Just before the event is dispatched, we perform <a href="#dfn-retargeting">retargeting</a>:</p>
 <ol>
-    <li>We set the <a href="#dfn-relative-target">relative target</a> of the thumb node to itself.</li>
-    <li>Walking up, we find a <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
-    <li>Next up is an input (<code>#player .volume-slider</code>), and we set its relative target to itself, since the previous ancestor was a shadow boundary.</li>
-    <li>We then walk up to the containing div (<code>#player .volume-slider-container</code>), and use previous ancestor's target -- the input element.</li>
-    <li>Walking up one more, we reach the controls panel (<code>#player .controls</code>), and again use input element as relative target per <a href="#dfn-retargeting-algorithm">retargeting algorithm</a>.</li>
-    <li>Next, we reach another <a href="#dfn-shadow-boundary">shadow boundary</a> and skip it.</li>
-    <li>Finally we walk up to the player element (<code>#player</code>) and set its relative target to itself.</li>
+    <li>Since <code>#volume-slider-thumb</code> is not an <a href="#dfn-insertion-point">insertion point</a>, we push it onto <var>STACK</var>, and add the first tuple to <var>TARGETS</var> as (<code>#volume-slider-thumb</code>, <code>#volume-slider-thumb</code>)</li>
+    <li>We then <a href="#dfn-parent-calculation-algorithm">calculate parent</a> as <code>#volume-shadow-root</code> and proceed to second iteration, adding (<code>#volume-slider-thumb</code>, <code>#volume-shadow-root</code>) tuple to <var>TARGETS</var></li>
+    <li>Because <code>#volume-shadow-root</code> is a <a href="#dfn-shadow-root">shadow root</a>, we pop <var>STACK</var>, thus emptying it</li>
+    <li>Next <a href="#dfn-parent-calculation-algorithm">parent calculation</a> yields <code>#volume-slider</code>, and so we begin the third iteration</li>
+    <li>Here, <var>STACK</var> is empty again, so we push <code>#volume-slider</code> into it and add (<code>#volume-slider</code>, <code>#volume-slider</code>) to <var>TARGETS</var></li>
+    <li>The <a href="#dfn-parent-calculation-algorithm">parent</a> of <code>#volume-slider</code> is <code>#volume-slider-container</code> not a <a href="#dfn-shadow-root">shadow root</a> and not an <a href="dfn-insertion-point">insertion point</a>, which dictates that we add (<code>#volume-slider</code>, <code>#volume-slider-container</code>) to <var>TARGETS</var></li>
+    <li>Next <a href="#dfn-parent-calculation-algorithm">up</a>, we see <code>#controls</code>, again neither a <a href="#dfn-shadow-root">shadow root</a> nor an <a href="dfn-insertion-point">insertion point</a>, which means we add (<code>##volume-slider</code>, <code>#controls</code>) to <var>TARGETS</var></li>
+    <li>The <a href="#dfn-parent-calculation-algorithm">next ancestor</a> is <code>#player-shadow-root</code>, a <a href="#dfn-shadow-root">shadow root</a>, and thus we add it (<code>#volume-slider</code>, <code>#player-shadow-root</code>) to <var>TARGETS</var>, then pop <var>STACK</var>, emptying it</li>
+    <li>Its <a href="#dfn-parent-calculation-algorithm">parent</a> is <code>#player</code>, neither <a href="#dfn-shadow-root">shadow root</a> nor <a href="dfn-insertion-point">insertion point</a>, and <var>STACK</var> is empty, so we push <code>#player</code> to <var>STACK</var>, then add (<code>#player</code>, <code>#player</code>) to <var>TARGETS</var></li>
+    <li>In our example, there are no further <a href="#dfn-parent-calculation-algorithm">parents</a>, causing us to exit the <a href="#algo-reatargeting-repeat">loop</a> and stop.</li>
 </ol>
 
-<pre class="example html"><code>
-<span class=event-ancestor>&lt;div id=&quot;player&quot;&gt; <em>7</em></span>
-    <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>6</em></span>
-        <span class=event-ancestor>&lt;div class=&quot;controls&quot;&gt; <em>5</em></span>
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
-            &lt;/input&gt;
-            <span class=event-ancestor>&lt;div class=&quot;volume-slider-container&quot;&gt; <em>4</em></span>
-                <span class=event-ancestor>&lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt; <em>3</em></span>
-                    <span class="shadow-boundary event-ancestor">&lt;shadow-boundary&gt; <em>2</em></span>
-                        <span class=event-ancestor>&lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt; <em>1</em></span>
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
-                &lt;/input&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
-&lt;/div&gt;
-</code></pre>
-
-<p>
-At the end of this process, we should have the following set of ancestors and relative targets:
-</p>
+<p>At the end of this process, we should have the following set of ancestors and relative targets:</p>
 <table>
 <thead>
 <tr>
@@ -643,28 +622,32 @@ At the end of this process, we should have the following set of ancestors and re
 </thead>
 <tbody>
 <tr>
-    <td><code>...</code></td>
-    <td><code>div#player</code></td>
+    <td><code>#player</code></td>
+    <td><code><strong>#player</strong></code></td>
 </tr>
 <tr>
-    <td><code>div#player</code></td>
-    <td><code><strong>div#player</strong></code></td>
+    <td><code>#player-shadow-root</code></td>
+    <td><code>#volume-slider</code></td>
 </tr>
 <tr>
-    <td><code>div#player .controls</code></td>
-    <td><code>div#player .controls .volume-slider</code></td>
+    <td><code>#controls</code></td>
+    <td><code>#volume-slider</code></td>
 </tr>
 <tr>
-    <td><code>div#player .volume-slider-container</code></td>
-    <td><code>div#player .controls .volume-slider</code></td>
+    <td><code>#volume-slider-container</code></td>
+    <td><code>#volume-slider</code></td>
 </tr>
 <tr>
-    <td><code>div#player .controls .volume-slider</code></td>
-    <td><code><strong>div#player .controls .volume-slider</strong></code></td>
+    <td><code>#volume-slider</code></td>
+    <td><code><strong>#volume-slider</strong></code></td>
 </tr>
 <tr>
-    <td><code>div#player .controls .volume-slider .slider-thumb</code></td>
-    <td><code><strong>div#player .controls .volume-slider .slider-thumb</strong></code></td>
+    <td><code>#volume-shadow-root</code></td>
+    <td><code>#volume-slider-thumb</code></td>
+</tr>
+<tr>
+    <td><code>#volume-slider-thumb</code></td>
+    <td><code><strong>#volume-slider-thumb</strong></code></td>
 </tr>
 </tbody>
 </table>
