@@ -655,37 +655,25 @@
 <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
 (<code>#player .timeline .slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected and whether the event crosses the <a href="dfn-shadow-boundary">shadow boundary</a>. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#player .timeline .slider-thumb</code>). Per <a href="#dfn-related-target-algorithm">algorithm</a>:</p>
+<p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per <a href="#dfn-related-target-algorithm">algorithm</a>:</p>
 
 <ol>
-    <li>We find lowest common ancestor of timeline thumb and volume slider thumb: the controls panel (<code>#player .controls</code>).</li>
-    <li>Walking up, we look for a <a href="#dfn-shadow-boundary">shadow boundary</a>, and find one just above. This is the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>.</li>
-    <li>Given that the lowest common boundary exists, we limit event dispatch to the descendants of this boundary.</li>
-    <li>Starting from the <a href="#dfn-lowest-common-boundary">lowest common boundary</a>, we walk down the ancestors of the timeline thumb, looking for a <a href="shadow-boundary">shadow boundary</a>. We find it just below the timeline (<code>#player .timeline</code>). This is the <a href="#dfn-first-divergent-boundary">first divergent boundary</a>.</li>
-    <li>We adjust <code>relatedTarget</code> to be the parent of the first divergent boundary, the timeline (<code>#player .timeline</code>). We are now ready to dispatch this event.</li>
+    <li>Starting with <var>NODE</var> as <code>#volume-slider-thumb</code> and <var>RELATED</var> as <code>#timeline-slider-thumb</code>,</li>
+    <li>We <a href="#algo-ancestor-repeat">examine</a> ancestors of <var>RELATED</var>:
+    <ol>
+        <li>First <a href="#dfn-parent-calculation-algorithm">up</a> is <code>#timeline-slider-thumb</code>, and we push it into <var>STACK</var></li>
+        <li>Then it's <code>#timeline-shadow-root</code>, a <a href="#dfn-shadow-root">shadow root</a>, so we pop <var>STACK</var>, emptying it</li>
+        <li>Next is <code>#timeline</code>, we push it into <var>STACK</var></li>
+        <li>Then comes <code>#controls</code> and after it, <code>#player-shadow-root</code>, a <a href="#dfn-shadow-root">shadow root</a>, so we pop <var>STACK</var>, emptying it</li>
+        <li>Final ancestor is <code>#player</code>, we push it into <var>STACK</var></li>
+    </ol>
+    <li>Set <var>TARGET</var> to <code>#volume-shadow-root</code></li>
+    <li>We again <a href="#algo-ancestor-repeat">examine</a> ancestors of <var>RELATED</var> and notice that it produces the same result as our previous such examination</li>
+    <li>We then set <var>TARGET</var> to <code>#volume-slider</code> and</li>
+    <li>Repeat <a href="#algo-ancestor-repeat">examination</a> of ancestors once more&mdash;and realize that when <var>ANCESTOR</var> value is <code>#timeline</code>, the <var>ANCESTOR</var> and <var>TARGET</var> are in the same tree, and thus</li>
+    <li>Return <code>#timeline</code> as the adjusted <code>relatedTarget</code> value.
 </ol>
 
-<pre class="example html"><code>
-&lt;div id=&quot;player&quot;&gt;
-    <span class="shadow-boundary lowest-common-boundary">&lt;shadow-boundary&gt;<em> &mdash; lowest common boundary</em></span>
-        &lt;div class=&quot;controls&quot;&gt;
-            &lt;button class=&quot;play-button&quot;&gt;
-            &lt;input type=&quot;range&quot; class=&quot;timeline&quot;&gt;
-                <span class="shadow-boundary first-divergent-boundary">&lt;shadow-boundary&gt;<em>  &mdash; first divergent boundary</em></span>
-                    &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                <span class="shadow-boundary first-divergent-boundary">&lt;/shadow-boundary&gt;</span>
-            &lt;/input&gt;
-            &lt;div class=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
-                    <span class=shadow-boundary>&lt;shadow-boundary&gt;</span>
-                        &lt;div class=&quot;slider-thumb&quot;&gt;&lt;/div&gt;
-                    <span class=shadow-boundary>&lt;/shadow-boundary&gt;</span>
-                &lt;/input&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    <span class="shadow-boundary lowest-common-boundary">&lt;/shadow-boundary&gt;</span>
-&lt;/div&gt;
-</code></pre>
 
 <h2 id="styles">Styles</h2>
 
