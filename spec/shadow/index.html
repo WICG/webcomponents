@@ -518,7 +518,7 @@
         <li>Let <var>LAST</var> be <strong>undefined</strong></li>
         <li><dfn id="algo-ancestor-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
         <ol>
-            <li>IF <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
+            <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
             <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
             <ol>
                 <li>If <var>LAST</var> is distributed or assigned into <var>ANCESTOR</var>:
@@ -533,6 +533,7 @@
                 <li><strong>Stop.</strong></li>
             </ol></li>
             <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>, pop <var>STACK</var></li>
+            <li>Let <var>LAST</var> be <var>ANCESTOR</var></li>
             <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
         </ol></li>
         <li>If <var>TARGET</var> is a <a href="#dfn-shadow-root">shadow root</a>, let <var>TARGET</var> be the <a href="#dfn-shadow-host">shadow host</a> of <var>TARGET</var></li>
@@ -653,7 +654,7 @@
 </table>
 
 <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
-(<code>#player .timeline .slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
+(<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
 <p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per <a href="#dfn-related-target-algorithm">algorithm</a>:</p>
 
