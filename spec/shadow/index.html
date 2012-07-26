@@ -205,7 +205,7 @@
 
 <object data="../../assets/images/shadow-rendering.svg" width="450" height="400"></object>
 
-<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering.</p>
+<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-points">insertion points</a> is called <dfn id="dfn-distribution">distribution</dfn>.</p>
 
 <object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
 
@@ -234,16 +234,16 @@
 
 <h3 id="lower-boundary-encapsulation">Lower-boundary Encapsulation</h3>
 
-<p>To maintain the lower-boundary encapsulation, the distribution of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
+<p>To maintain the lower-boundary encapsulation, the <a href="#dfn-distribution">distribution</a> of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
 <ul>
-    <li>The distribution does not affect the state of the document DOM tree or shadow DOM subtrees</li>
-    <li>Each insertion point participates in distribution by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be distributed to a given insertion point</li>
-    <li>The distribution is a result of executing a stable algorithm</li>
-    <li>The distribution itself does not change the variables affecting the distribution</li>
-    <li>The distribution reoccurs whenever any variable affecting it is changed</li>
+    <li>The <a href="#dfn-distribution">distribution</a> does not affect the state of the document DOM tree or shadow DOM subtrees</li>
+    <li>Each insertion point participates in <a href="#dfn-distribution">distribution</a> by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be <a href="#dfn-distribution">distributed</a> to a given insertion point</li>
+    <li>The <a href="#dfn-distribution">distribution</a> is a result of executing a stable algorithm</li>
+    <li>The <a href="#dfn-distribution">distribution</a> itself does not change the variables affecting the <a href="#dfn-distribution">distribution</a></li>
+    <li>The <a href="#dfn-distribution">distribution</a> reoccurs whenever any variable affecting it is changed</li>
 </ul>
 
-<p>An <a href="#dfn-insertion-point">insertion point</a> may be <strong>active</strong> or <strong>inactive</strong>. An <dfn id="dfn-active-insertion-point">active</dfn> insertion point participates in the distribution process, whereas the <dfn id="dfn-inactive-insertion-point">inactive</dfn> insertion does not. If not specifically set to be inactive, the insertion point must be considered <strong>active</strong>.</p>
+<p>An <a href="#dfn-insertion-point">insertion point</a> may be <strong>active</strong> or <strong>inactive</strong>. An <dfn id="dfn-active-insertion-point">active</dfn> insertion point participates in the <a href="#dfn-distribution">distribution</a> process, whereas the <dfn id="dfn-inactive-insertion-point">inactive</dfn> insertion does not. If not specifically set to be inactive, the insertion point must be considered <strong>active</strong>.</p>
 
 <p>If an <a href="#dfn-insertion-point">insertion point</a> is not in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</p>
 
@@ -255,7 +255,7 @@
     <dd><var>TREE</var>, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
     <dd><var>POOL</var>, a list of DOM nodes</dd>
 <dt>Output</dt>
-    <dd>The nodes in <var>POOL</var> are distributed among <a href="#dfn-insertion-point">insertion points</a> in <var>TREE</var>.</dd>
+    <dd>The nodes in <var>POOL</var> are <a href="#dfn-distribution">distributed</a> among <a href="#dfn-insertion-point">insertion points</a> in <var>TREE</var>.</dd>
 </dl>
 
 <ol>
@@ -267,7 +267,7 @@
             <li>Let <var>NODE</var> be the current node</li>
             <li>If the <var>NODE</var> matches <var>POINT</var>'s <a href="#dfn-matching-criteria">matching criteria</a>:
                 <ol>
-                    <li>Distribute the <var>NODE</var> to <var>POINT</var></li>
+                    <li><a href="#dfn-distribution">Distribute</a> the <var>NODE</var> to <var>POINT</var></li>
                     <li>Remove <var>NODE</var> from the <var>POOL</var></li>
                 </ol></li>
             <li>Otherwise, continue to <a href="#algo-distribution-repeat">repeat</a></li>
@@ -321,13 +321,13 @@
 
 <h3 id="selecting-nodes-distributed-to-insertion-points">Matching Children, Distributed To Insertion Points</h3>
 
-<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, distributed to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
+<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, <a href="#dfn-distribution">distributed</a> to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
 <ul>
     <li>The combinator value must be <code>select</code></li>
     <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>The second compound selector must match an element, distributed to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The second compound selector must match an element, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
 </ul>
-<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been distributed to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
+<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been <a href="#dfn-distribution">distributed</a> to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
 
 <p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> to the tree of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
@@ -336,7 +336,7 @@
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
-<p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted.</p>
+<p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted when rendering. It is said that the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-assigned">assigned</dfn> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> if the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>.</p>
 
 <p>Just like other <a href="#dfn-insertion-point">insertion points</a>, the <a href="#dfn-shadow-insertion-point">shadow insertion points</a> can be <a href="#dfn-active-insertion-point">active</a> or <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
@@ -364,13 +364,13 @@
             <ol>
                 <li>If there is no older tree:
                 <ol>
-                    <li>Distribute remaining nodes in <var>POOL</var>, if any, to <var>POINT</var></li>
+                    <li><a href="#dfn-distribution">Distribute</a> remaining nodes in <var>POOL</var>, if any, to <var>POINT</var></li>
                     <li><strong>stop</strong>.</li>
                 </ol></li>
                 <li>Otherwise:
                 <ol>
                     <li>Set <var>TREE</var> to be this older tree</li>
-                    <li><dfn id="dfn-assign-older-tree">Assign</dfn> <var>TREE</var> to the <var>POINT</var></li>
+                    <li><a href="#dfn-assigned">Assign</a> <var>TREE</var> to the <var>POINT</var></li>
                     <li>Continue to <a href="#algo-composition-repeat">repeat</a></li>
                 </ol></li>
             </ol></li>
@@ -380,7 +380,7 @@
 </ol>
 </div>
 
-<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assign-older-tree">assigned</a> or <a href="#dfn-distribution-algorithm">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
+<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assigned">assigned</a> or <a href="#dfn-distribution">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
@@ -407,7 +407,7 @@
         <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> must be <a href="#dfn-rendering">rendered</a> accordingly</li>
         <li>In place of each <a href="#dfn-insertion-point">insertion point</a>, process the following <dfn id="dfn-insertion-point-rendering">insertion point rendering</dfn> steps:
         <ol>
-            <li>If there are child nodes <a href="#dfn-distribution-algorithm">distributed</a> to this insertion point, for each child node and in the order they were distributed:
+            <li>If there are child nodes <a href="#dfn-distribution">distributed</a> to this insertion point, for each child node and in the order they were distributed:
             <ol>
                 <li>Let <var>CHILD</var> be the child node being rendered</li>
                 <li>If <var>CHILD</var> is itself an <a href="#dfn-insertion-point">insertion point</a>, and the tree being rendered is <a href="#dfn-nested-subtree">nested</a>, render them using <a href="#dfn-insertion-point-rendering">insertion point rendering</a> steps</li>
@@ -417,7 +417,7 @@
         </ol></li>
         <li>In place of each <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
         <ol>
-            <li>If there is an <a href="#dfn-older-tree">older tree</a>, <a href="#dfn-assign-older-tree">assigned</a> to this shadow insertion point, render it as <strong>any DOM subtree</strong>, but with the same <a href="#dfn-shadow-rendering">shadow rendering</a> exceptions.</li>
+            <li>If there is an <a href="#dfn-older-tree">older tree</a>, <a href="#dfn-assigned">assigned</a> to this shadow insertion point, render it as <strong>any DOM subtree</strong>, but with the same <a href="#dfn-shadow-rendering">shadow rendering</a> exceptions.</li>
             <li>Otherwise, render <a href="#dfn-fallback-content">fallback content</a> as <strong>any DOM subtree</strong></li>
         </ol></li>
     </ul></li>
@@ -442,13 +442,13 @@
 <ol>
     <li>If <var>NODE</var> is a <a href="#dfn-shadow-root">shadow root</a>:
     <ol>
-        <li>If <var>NODE</var> is currently <a href="#dfn-assign-older-tree">assigned</a> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+        <li>If <var>NODE</var> is currently <a href="#dfn-assigned">assigned</a> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
         <ol>
-            <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is <a href="#dfn-assign-older-tree">assigned</a> to</li>
+            <li>Let the <var>PARENT</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> to which <var>NODE</var> is <a href="#dfn-assigned">assigned</a> to</li>
         </ol></li>
         <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
     </ol></li>
-    <li>If <var>NODE</var> is currently distributed to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is distributed to</li>
+    <li>If <var>NODE</var> is currently <a href="#dfn-distribution">distributed</a> to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is <a href="#dfn-distribution">distributed</a> to</li>
     <li>Otherwise, let <var>PARENT</var> be the node's parent node.</li>
 </ol>
 </div>
@@ -521,7 +521,7 @@
             <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
             <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
             <ol>
-                <li>If <var>LAST</var> is distributed or assigned into <var>ANCESTOR</var>:
+                <li>If <var>LAST</var> is <a href="#dfn-distribution">distributed</a> or assigned into <var>ANCESTOR</var>:
                 <ol>
                     <li>Let <var>HEAD</var> be the DOM node at the top of the <var>STACK</var></li>
                     <li>Push <var>HEAD</var> into <var>STACK</var></li>
@@ -606,10 +606,10 @@
     <li>Because <code>#volume-shadow-root</code> is a <a href="#dfn-shadow-root">shadow root</a>, we pop <var>STACK</var>, thus emptying it</li>
     <li>Next <a href="#dfn-parent-calculation-algorithm">parent calculation</a> yields <code>#volume-slider</code>, and so we begin the third iteration</li>
     <li>Here, <var>STACK</var> is empty again, so we push <code>#volume-slider</code> into it and add (<code>#volume-slider</code>, <code>#volume-slider</code>) to <var>TARGETS</var></li>
-    <li>The <a href="#dfn-parent-calculation-algorithm">parent</a> of <code>#volume-slider</code> is <code>#volume-slider-container</code> not a <a href="#dfn-shadow-root">shadow root</a> and not an <a href="dfn-insertion-point">insertion point</a>, which dictates that we add (<code>#volume-slider</code>, <code>#volume-slider-container</code>) to <var>TARGETS</var></li>
-    <li>Next <a href="#dfn-parent-calculation-algorithm">up</a>, we see <code>#controls</code>, again neither a <a href="#dfn-shadow-root">shadow root</a> nor an <a href="dfn-insertion-point">insertion point</a>, which means we add (<code>##volume-slider</code>, <code>#controls</code>) to <var>TARGETS</var></li>
+    <li>The <a href="#dfn-parent-calculation-algorithm">parent</a> of <code>#volume-slider</code> is <code>#volume-slider-container</code> not a <a href="#dfn-shadow-root">shadow root</a> and not an <a href="#dfn-insertion-point">insertion point</a>, which dictates that we add (<code>#volume-slider</code>, <code>#volume-slider-container</code>) to <var>TARGETS</var></li>
+    <li>Next <a href="#dfn-parent-calculation-algorithm">up</a>, we see <code>#controls</code>, again neither a <a href="#dfn-shadow-root">shadow root</a> nor an <a href="#dfn-insertion-point">insertion point</a>, which means we add (<code>##volume-slider</code>, <code>#controls</code>) to <var>TARGETS</var></li>
     <li>The <a href="#dfn-parent-calculation-algorithm">next ancestor</a> is <code>#player-shadow-root</code>, a <a href="#dfn-shadow-root">shadow root</a>, and thus we add it (<code>#volume-slider</code>, <code>#player-shadow-root</code>) to <var>TARGETS</var>, then pop <var>STACK</var>, emptying it</li>
-    <li>Its <a href="#dfn-parent-calculation-algorithm">parent</a> is <code>#player</code>, neither <a href="#dfn-shadow-root">shadow root</a> nor <a href="dfn-insertion-point">insertion point</a>, and <var>STACK</var> is empty, so we push <code>#player</code> to <var>STACK</var>, then add (<code>#player</code>, <code>#player</code>) to <var>TARGETS</var></li>
+    <li>Its <a href="#dfn-parent-calculation-algorithm">parent</a> is <code>#player</code>, neither <a href="#dfn-shadow-root">shadow root</a> nor <a href="#dfn-insertion-point">insertion point</a>, and <var>STACK</var> is empty, so we push <code>#player</code> to <var>STACK</var>, then add (<code>#player</code>, <code>#player</code>) to <var>TARGETS</var></li>
     <li>In our example, there are no further <a href="#dfn-parent-calculation-algorithm">parents</a>, causing us to exit the <a href="#algo-reatargeting-repeat">loop</a> and stop.</li>
 </ol>
 
@@ -718,8 +718,8 @@
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
     <li>the styles of the <a href="#dfn-shadow-host">shadow host</a> are inherited by the children of the <a href="#dfn-shadow-root">shadow root</a></li>
-    <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> node are inherited by those child nodes of the <a href="#dfn-shadow-host">shadow host</a> that are <a href="#dfn-assign-older-tree">assigned</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> node are inherited by the child nodes of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, distributed to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
+    <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> node are inherited by those child nodes of the <a href="#dfn-shadow-host">shadow host</a> that are <a href="#dfn-assigned">assigned</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> node are inherited by the child nodes of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
 </ul>
 
 <p>If the <dfn id="dfn-reset-style-inheritance">reset-style-inheritance</dfn> flag is set for a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the upper boundary of the subtree.</p>
@@ -987,7 +987,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the <a href="#dfn-shadow-host">shadow host</a>'s children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd> -->
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#comma-separated-tokens">set of comma-separated tokens</a></dt>
     <dd>
-        defines the <a href="#dfn-matching-criteria">matching criteria</a> for distributing child nodes of the <a href="#dfn-shadow-host">shadow host</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
+        defines the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child nodes of the <a href="#dfn-shadow-host">shadow host</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
     </dd>
     </dl>
 </dd>
