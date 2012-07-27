@@ -909,6 +909,11 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
 <dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a>.</dd>
+<dd>On setting, these steps <strong>must</strong> be run:
+<ol>
+    <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></li>
+    <li><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root">shadow root</a>.</li>
+</ol></dd>
 </dl>
 
 <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance must return <code>"#document-fragment"</code>.</p>
