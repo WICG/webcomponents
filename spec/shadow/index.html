@@ -889,6 +889,8 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
     <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a> <a href="#api-shadow-root-selection">getSelection</a>();
+    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-add-style-sheet">addStyleSheet</a>(HTMLElement element) raises (DOMException);
+    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-remove-style-sheet">removeStyleSheet</a>(<a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> styleSheet) raises (DOMException);
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
     readonly attribute Element <a href="#api-shadow-root-active-element">activeElement</a>;
@@ -978,6 +980,47 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dt id="api-shadow-root-selection"><code>getSelection</code><dt>
 <dd>Returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dd>When invoked, it <strong>must</strong> return <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
+<dt id="api-shadow-root-add-style-sheet"><code>addStyleSheet</code></dt>
+<dd>Adds a new <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> to <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</dd>
+<dd>When invoked, the method <strong>must</strong> run the following steps:
+<ol>
+    <li>If the parameter is an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmllinkelement">HTMLLinkElement</a>:
+    <ol>
+        <li>Follow <a href="http://dev.w3.org/csswg/cssom/#requirements-on-user-agents-implementing-the-http-link-header">requirements</a> for implementing the HTTP <code>link</code> header with the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://dev.w3.org/csswg/cssom/#document-style-sheets">document style sheets</a></li>
+        <li>Return the newly created <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> object.</li>
+    </ol></li>
+    <li>If the parameter is an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmlstyleelement">HTMLStyleElement</a>:
+    <ol>
+        <li><a href="http://dev.w3.org/csswg/cssom/#create-a-style-sheet">Create a style sheet</a> with the following properties and the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://dev.w3.org/csswg/cssom/#document-style-sheets">document style sheets</a>:
+        <dl>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-location">style sheet location</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-node">style sheet owner node</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-parent">style sheet parent</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-media">style sheet media</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-title">style sheet title</a></dt>
+            <dd>null</dd>
+            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-alternate-flag">style sheet alternate flag</a></dt>
+            <dd>false</dd>
+        </dl></li>
+        <li>Return the newly created <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> object.</li>
+    </ol>
+    <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
+</ol></dd>
+<dt id="api-shadow-root-remove-style-sheet"><code>removeStyleSheet</code></dt>
+<dd>Removes a <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>.</dd>
+<dd>When invoked, the method <strong>must</strong> run these steps:
+<ol>
+    <li>If the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, represented by the method parameter exists in the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> and was added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>, remove the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> from <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</li>
+    <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#nomodificationallowederror"><code>NoModificationAllowedError</code></a> exception.</li>
+</ol></dd>
 </dl>
 
 <p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
