@@ -1018,7 +1018,11 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd>Removes a <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>.</dd>
 <dd>When invoked, the method <strong>must</strong> run these steps:
 <ol>
-    <li>If the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, represented by the method parameter exists in the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> and was added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>, remove the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> from <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</li>
+    <li>If the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, represented by the method parameter exists in the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> and was added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>:
+    <ol>
+        <li>Remove the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> from <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</li>
+        <li>Return the removed <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> instance.</li>
+    </ol></li>
     <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#nomodificationallowederror"><code>NoModificationAllowedError</code></a> exception.</li>
 </ol></dd>
 </dl>
