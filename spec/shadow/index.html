@@ -725,6 +725,8 @@
 
 <p>If the <dfn id="dfn-reset-style-inheritance">reset-style-inheritance</dfn> flag is set for a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the upper boundary of the subtree.</p>
 
+<p>If the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag is set for an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the lower boundary of the subtree.</p>
+
 <h3 id="css-variables">CSS Variables</h3>
 
 <p>The <a href="#dfn-shadow-host">shadow host</a> styles being inherited by the children of the <a href="#dfn-shadow-root">shadow root</a> must also apply to <a href="http://dev.w3.org/csswg/css-variables/">CSS Variables</a>. This provides a way for document DOM tree styles to send signals into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, and for the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> to receive these signals with the use of the <a href="http://dev.w3.org/csswg/css-variables/#using-variables"><code>var()</code></a> function.</p>
@@ -1051,6 +1053,8 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <dd>
         defines the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child nodes of the <a href="#dfn-shadow-host">shadow host</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
     </dd>
+    <dt id="markup-content-reset-style-inheritance"><code>reset-style-inheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
+    <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-insertion-point">insertion point</a>. If present, the value of the flag <strong>must<strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
     </dl>
 </dd>
 <dt>DOM Interface</dt>
@@ -1058,6 +1062,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <pre><code>
 interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {<!--    attribute bool <a href="#api-html-content-element-apply-shadow-styles">applyShadowStyles</a>; -->
     attribute DOMString <a href="#api-html-content-element-select">select</a>;
+    attribute boolean <a href="#api-html-content-element-reset-style-inheritance">resetStyleInheritance</a>;
 }
     </code></pre>
     <dl>
@@ -1068,6 +1073,8 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
         <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd> -->
         <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMString</code></dt>
         <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
+        <dt id="api-html-content-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
     </dl>
     </dd>
     </dl>
@@ -1088,14 +1095,25 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 <dd>Anything as <a href="#dfn-fallback-content">fallback content</a></dd>
 <dt>Content attributes</dt>
 <dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
+<dd>
+<dl>
+    <dt id="markup-content-reset-style-inheritance"><code>reset-style-inheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
+    <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>. If present, the value of the flag <strong>must<strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
+</dl></dd>
 <dt>DOM Interface</dt>
 <dd>
     <pre><code>
 interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
+    attribute boolean <a href="#api-html-shadow-element-reset-style-inheritance">resetStyleInheritance</a>;
 }
     </code></pre>
+    <dl>
+        <dt>Attributes</dt>
+        <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
+        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
+    </dl>
+</dd>
 </dl>
-
 </section>
 
 <h2 id="shadow-dom-example">Shadow DOM Example</h2>
