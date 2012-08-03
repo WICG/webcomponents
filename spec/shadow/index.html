@@ -91,7 +91,6 @@
         <li><a href="#css-variables"><span class="section">7.1</span> CSS Variables</a></li>
         <li><a href="#text-decoration-property"><span class="section">7.2</span> <code>text-decoration</code> Property</a></li>
         <li><a href="#host-at-rule"><span class="section">7.3</span> <code>@host</code> @-rule</a></li>
-        <li><a href="#shadow-root-style-sheets"><span class="section">7.4</span> Shadow Root Style Sheets</a></li>
     </ol></li>
     <li><a href="#user-interaction"><span class="section">8</span> User Interaction</a>
     <ol>
@@ -680,9 +679,15 @@
 
 <h2 id="styles">Styles</h2>
 
+<p>Each <a href="#dfn-shadow-root">shadow root</a> has an associated list of zero or more <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, named <dfn id="dfn-shadow-root-style-sheets">shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, associated with the <a href="#dfn-shadow-root">shadow root</a>, in <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-tree-order">tree order</a>.</p>
+
 <p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
-<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must not</strong> apply in the document tree.</p>
+<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-styles-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
+<ol>
+    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> and match elements in the document tree;</li>
+    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> that matches a <a href="#dfn-shadow-host">shadow host</a> in a document tree.</li>
+</ol>
 
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
@@ -696,18 +701,19 @@
 </dl>
 <ol>
     <li>If <var>RULE</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
+    <li>Otherwise, if <var>RULE</var> is either an <a href="#host-at-rule"><code>@host</code> @-rule</a> or contains a <code>select</code>  <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinator</a> <em>and</em> <var>RULE</var> is declared in <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>:
+    <ol>
+        <li>Let <var>BOTTOM</var> the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with which these <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> are associated</li>
+        <li>If the <a href="#dfn-shadow-host">shadow host</a> of <var>BOTTOM</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
+    </ol></li>
     <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
     <ol>
         <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in the document tree, <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-        <li>Otherwise, if <var>RULE</var> is declared with a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-style-element"><code>style</code></a> element:
+        <li>Otherwise, if <var>RULE</var> is declared in <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>:
         <ol>
-            <li>Let <var>STYLE</var> be this style element</li>
-            <li>If <var>STYLE</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-            <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in an <a href="#dfn-enclosed-subtree">enclosing</a> <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>
-            <ol>
-                <li>Let <var>TOP</var> be this tree</li>
-                <li>If each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-            </ol></li>
+            <li>Let <var>TOP</var> the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with which these <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> are associated</li>
+            <li>If <var>TOP</var> is <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
+            <li>Otherwise, if <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and if each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
         </ol></li>
         <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
     </ol></li>
@@ -756,8 +762,6 @@ host
 <p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> in the <code>@host</code> @-rule <strong>must</strong> be applied to the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> in which the style is specified.</p>
 
 <h3 id="shadow-root-style-sheets">Shadow Root Style Sheets</h3>
-
-<p>Each <a href="#dfn-shadow-root">shadow root</a> has an associated list of zero or more <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, named <dfn id="dfn-shadow-root-style-sheets">shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, associated with the <a href="#dfn-shadow-root">shadow root</a>, in <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-tree-order">tree order</a>.</p>
 
 <section class="mechanics">
 
