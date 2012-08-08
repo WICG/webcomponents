@@ -755,7 +755,7 @@
 
 <pre><code>
 host
-    : HOST_SYM S* '{' S* declaration? [ ';' S* declaration? ]* '}' S*
+    : HOST_SYM S* '{' S* ruleset* '}' S*
     ;
 </code></pre>
 
@@ -765,11 +765,10 @@ host
 @{H}{O}{S}{T}        {return HOST_SYM;}
 </code></pre>
 
-<p>When <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an element in a document tree, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
+<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> in which the style is specified, but only if this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <a href="#dfn-rendering">rendered</a>. When the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is not <a href="#dfn-rendering">rendered</a> (when it's an older tree that is not assigned to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
 
-<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> in the <code>@host</code> @-rule <strong>must</strong> be applied to the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> in which the style is specified, but only if this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <a href="#dfn-rendering">rendered</a>. When the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is not <a href="#dfn-rendering">rendered</a> (when it's an older tree that is not assigned to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
+<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an element, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
 
-<h3 id="shadow-root-style-sheets">Shadow Root Style Sheets</h3>
 
 <section class="mechanics">
 
