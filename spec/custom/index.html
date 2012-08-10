@@ -221,6 +221,29 @@
 </ol>
 </div>
 
+<p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>TREE</var>, a DOM tree</dd>
+    <dd><var>DEFINITION</var>, an <a href="#dfn-element-defintion">element definition</a></dd>
+<dt>Output</dt>
+    <dd><var>TREE</var> in a new state</dd>
+</dl>
+<ol>
+    <li>Let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> part of <var>DEFINITION</var></li>
+    <li>For each element <var>ELEMENT</var> in <var>TREE</var> with a value of <code>is</code> attribute equal to <var>NAME</var>:
+    <ol>
+        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-element-prototype">element prototype</a> in <var>DEFINITION</var></li>
+        <li>Let <var>TEMPLATE</var> be the <a href="#dfn-custom-element-template">custom element template</a> in <var>DEFINITION</var></li>
+        <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE<var> as arguments</li>
+        <li><a href="http://www.w3.org/TR/domcore/#concept-node-replace">Replace</a> <var>ELEMENT</var> with <var>UPGRADE</var> in <var>TREE</var></li>
+    </ol></li>
+    <a href="http://www.w3.org/TR/domcore/#concept-event-fire">Fire an event</a> named <code>elementupgrade</code> with its <code>bubbles</code> attribute set to <code>true</code>.</li>
+</ol>
+</div>
+
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom DOM Elements in HTML</h2>
 
 <p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a>, the UA <strong>must</strong> first check the tag has an attribute with the name <code>is</code>. If the attribute is present, the UA <strong>must</strong> run the following steps instead:
@@ -303,8 +326,9 @@ dictionary <dfn id="api-options">Options</dfn> {
     <li>Otherwise, if <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
     <li>Let <var>DEFINITION</var> be the tuple of (<var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>NAME</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
+    <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>DEFINITION</var> as argument</li>
     <li>Run <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE</var> as arguments</li>
-    <li>Return output of the previous step.</li>
+    <li>Return the output of the previous step.</li>
 </ol>
 </div>
 
