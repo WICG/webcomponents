@@ -89,7 +89,7 @@
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
-    <li><a href="#rendering-html-templates"><span class="section">9</span> Rendering HTML Templates</a></li>
+    <li><a href="#css-additions"><span class="section">9</span> Additions to the CSS user agent style sheet</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -460,9 +460,19 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd>If <em>current node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then set <em>current node</em> to <a href="#dfn-template-contents">template contents</a>.</dd>
 </dl>
 
-<h2 id="rendering-html-templates">Rendering HTML Templates</h2>
+<h2 id="css-additions">Additions to the CSS user agent style sheet</h2>
 
-<p>The <a href="#dfn-template">template</a> element is not rendered by default. Since they are not part of the document, the <a href="#dfn-template-contents">template contents</a> <strong>must not</strong> not rendered. The <a href="#dfn-template">template</a> element <strong>must</strong> behave as if it is hosting a <a href="../shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> with no <a href="../shadow/index.html#dfn-insertion-point">insertion points</a>.</p>
+<p>The <a href="#dfn-template-contents">template contents</a> are hidden implicitly since they are not part of the document. The <a href="#dfn-template">template</a> element itself <strong>must</strong> be hidden by default through the following addition to the user agent style sheet.</p>
+
+<code><pre class="prettyprint">
+
+@namespace "http://www.w3.org/1999/xhtml";
+
+template {
+    display : none;
+}
+
+</pre></code>
 
 </section>
 
