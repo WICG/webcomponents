@@ -322,7 +322,11 @@ dictionary <dfn id="api-options">Options</dfn> {
     <li>Otherwise, if <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
     <li>Let <var>DEFINITION</var> be the tuple of (<var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>NAME</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
-    <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>DEFINITION</var> as argument</li>
+    <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
+    <ol>
+        <li>Let <var>TREE</var> be this tree</li>
+        <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>TREE</var> and <var>DEFINITION</var> as arguments</li>
+    </ol></li>
     <li>Run <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE</var> as arguments</li>
     <li>Return the output of the previous step.</li>
 </ol>
