@@ -197,7 +197,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <li>providing an ersatz context element structure at the top of the tree, or</li>
     <li>using DOM APIs to build the tree.</li>
 </ul>
-<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tree-construction.html#tree-construction">tree construction</a> rules to allow context-free element insertion in certain cases.</p>
+<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> rules to allow context-free element insertion in certain cases.</p>
 
 <h3 id="declare-anywhere">Declare Anywhere</h3>
 
@@ -225,7 +225,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 &lt;/select&gt;
 </pre></code>
 
-<p>According to HTML <a href="http://dev.w3.org/html5/spec/tree-construction.html#tree-construction">tree construction</a> algorithm, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tree-construction.html#tree-construction">tree construction</a> rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
+<p>According to HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> algorithm, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
 
 <h3 id="limit-external-effects">Limit External Effects</h3>
 
@@ -346,7 +346,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h3 id="in-head-addition">Additions to the "in head" Insertion Mode</h3>
 
-<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
+<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
     <dd>Run these steps:
@@ -360,7 +360,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd>If the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://dev.w3.org/html5/spec/parsing.html#has-an-element-in-scope">have an element in scope</a> with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a>; ignore the token.</dd>
     <dd>Otherwise, run these steps:
     <ol>
-        <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#generate-implied-end-tags">Generate implied end tags</a></li>
+        <li><a href="http://dev.w3.org/html5/spec/tokenization.html#generate-implied-end-tags">Generate implied end tags</a></li>
         <li>If the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a></li>
         <li>Pop elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
         <li><a href="http://dev.w3.org/html5/spec/parsing.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
@@ -371,31 +371,31 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h3 id="in-body-addition">Additions to the "in body" Insertion Mode</h3>
 
-<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-table-addition">Additions to the "in table" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<p class="note">The "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">in body</a>".</p>
+<p class="note">The "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>".</p>
 
 <h3 id="in-select-addition">Additions to the "in select" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="template-contents-insertion-mode">The "template contents" Insertion Mode</h3>
@@ -403,16 +403,16 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <p>When the user is to apply the rules for the "template contents" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
 <dl>
 <dt>A character token</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A comment token</dt>
 <dt>A start tag whose name is one of: "link", "script", "style", "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A start tag whose name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "td", "th"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
 <dt>An end tag whose name is "template"</dt>
     <dd>
     <ol>
@@ -429,7 +429,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     </ol>
     </dd>
 <dt>Anything else</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 </dl>
 
 <h2 id="serializing-html-templates">Serializing HTML Templates</h2>
