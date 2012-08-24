@@ -80,12 +80,14 @@
     <li><a href="#template-element"><span class="section">6</span> The <code>template</code> element</a></li>
     <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
     <ol>
-        <li><a href="#clear-stack-adjustments"><span class="section">7.1</span> Clearing of the Stack Adjustments</a></li>
-        <li><a href="#in-body-addition"><span class="section">7.2</span> Addition to the "in body" Insertion Mode</a></li>
-        <li><a href="#in-table-addition"><span class="section">7.3</span> Addition to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-cell-addition"><span class="section">7.4</span> Addition to the "in cell" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.5</span> Addition to the "in select" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.6</span> Template contents" Insertion Mode</a></li>
+        <li><a href="#appending-to-a-template"><span class="section">7.1</span> Appending to a template</a></li>
+        <li><a href="#foster-parent-addition"><span class="section">7.2</span> Additions to "foster parenting"</a></li>
+        <li><a href="#reset-insertion-mode-addition"><span class="section">7.3</span> Additions to "reset the insertion mode appropriately"</a></li>
+        <li><a href="#in-head-addition"><span class="section">7.4</span> Additions to the "in head" Insertion Mode</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.5</span> Additions to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.6</span> Additions to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.7</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.8</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
@@ -319,49 +321,32 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
-<p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>:</p>
-<ul>
-    <li>The meaning of clearing of the stack is adjusted for some insertion modes</li>
-    <li>New rules to handle the <code>template</code> start tag for the following insertion modes:
-    <ul>
-            <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a></li>
-            <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a></li>
-            <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inselect">"in select"</a></li>
-    </ul>
-    </li>
-    <li>A new "template contents" insertion mode</li>
-</ul>
+<p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category.</p>
 
-<p>When parsing, the <a href="#dfn-template">template</a> node is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category and is inserted into document tree using <dfn id="dfn-template-insertion-algorithm">template insertion algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processsing these steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>TOKEN</var>, the <a href="#dfn-template">template</a> start tag token</dd>
-    <dd><var>STACK</var>, the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a></dd>
-<dt>Output</dd>
-    <dd>None</dd>
-</dl>
-<ol>
-    <li>Let <var>NODE</var> be the the top item in <var>STACK</var></li>
-    <li>Let <var>TEMPLATE</var> be the result of <a href="http://dev.w3.org/html5/spec/tree-construction.html#create-an-element-for-the-token">Creating an element</a> for the <var>TOKEN</var></li>
-    <li>Let <var>CONTENTS</var> be the result of <a href="#dfn-template-contents-initialization">initializing template contents</a> of the <var>TEMPLATE</var></a></li>
-    <li>Append <var>TEMPLATE</var> to <var>NODE</var></li>
-    <li>Push <var>CONTENTS</var> onto the <var>STACK</var></li>
-</ol>
-</div>
+<p class="fixme">These additions cause the HTML parsing algorithm to enter some conditions previously marked as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>. These cases still need to be documented.</p>
 
-<h3 id="clear-stack-adjustments">Clearing of the Stack Adjustments</h3>
+<h3 id="appending-to-a-template">Appending to a template</h3>
 
-<p>When popping elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
-<ol>
-    <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
-    <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
-    <li><a href="http://dev.w3.org/html5/spec/tree-construction.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
+<p>Whenever the HTML parser is about to append a node to a <a href="#dfn-template-element"><code>template</code></a> element, the node <strong>must</strong> be appended to the <a href="#dfn-template-contents">template contents</a> of the <a href="#dfn-template-element"><code>template</code></a> element instead.</p>
+
+<p class="note">As a result, the HTML parser will never place any nodes as direct children of a <a href="#dfn-template-element"><code>template</code></a> element.</p>
+
+<h3 id="foster-parent-addition">Additions to "foster parenting"</h3>
+
+<p>When a node is to be <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://dev.w3.org/html5/spec/the-table-element.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parenting">foster parenting</a> apply.</p>
+
+<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://dev.w3.org/html5/spec/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
+
+<h3 id="reset-insertion-mode-addition">Additions to "reset the insertion mode appropriately"</h3>
+
+<p>Just after the step labeled <strong>"Loop"</strong> in the algorithm to <a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">reset the insertion mode appropriately</a>, add the following step:</p>
+<ol start="4">
+    <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to "<a href="#template-contents-insertion-mode">template contents</a>" and abort these steps.</li>
 </ol>
 
-<h3 id="in-body-addition">Addition to the "in body" Insertion Mode</h3>
+<h3 id="in-head-addition">Additions to the "in head" Insertion Mode</h3>
 
-<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
     <dd>Run these steps:
@@ -384,47 +369,45 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     </dd>
 </dl>
 
-<h3 id="in-table-addition">Addition to the "in table" Insertion Mode</h3>
+<h3 id="in-body-addition">Additions to the "in body" Insertion Mode</h3>
+
+<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
+<dl>
+<dt>A start tag whose tag name is "template"</dt>
+<dt>An end tag whose name is "template"</dt>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+</dl>
+
+<h3 id="in-table-addition">Additions to the "in table" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode</dd>
+<dt>An end tag whose name is "template"</dt>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<h3 id="in-cell-addition">Addition to the "in cell" Insertion Mode</h3>
+<p class="note">The "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">in body</a>".</p>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
-<dl>
-<dt>An end tag whose tag name is "template"</dt>
-    <dd><a href="http://dev.w3.org/html5/spec/tree-construction.html#close-the-cell">Close the cell</a> and reprocess the current token</dd>
-</dl>
-
-<h3 id="in-select-addition">Addition to the "in select" Insertion Mode</h3>
+<h3 id="in-select-addition">Additions to the "in select" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">"in body"</a> insertion mode</dd>
 <dt>An end tag whose name is "template"</dt>
-    <dd>If the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://dev.w3.org/html5/spec/parsing.html#has-an-element-in-select-scope">have an element in select scope</a> with the same tag name as the token, this is a parse error.</dd>
-    <dd>Run these steps:
-    <ol>
-        <li>Pop elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> until a <code>template</code> element has been popped from the stack.</li>
-        <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
-    </ol>
-    </dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<h3 id="template-contents-insertion-mode">"Template contents" Insertion Mode</h3>
+<h3 id="template-contents-insertion-mode">The "template contents" Insertion Mode</h3>
 
 <p>When the user is to apply the rules for the "template contents" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
 <dl>
-<dt>A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE</dt>
-    <dd><a href="http://dev.w3.org/html5/spec/tree-construction.html#insert-a-character">Insert the character</a> into the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a></dd>
+<dt>A character token</dt>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A comment token</dt>
-    <dd>Append a <a href="http://dev.w3.org/html5/spec/infrastructure.html#comment-0">Comment</a> node to the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> with the <code>data</code> attribute set to the data given in the comment token</dd>
-<dt>A start tag whose name is one of: "caption", "col", "colgroup", "tbody", "tfoot", thead"</dt>
+<dt>A start tag whose name is one of: "link", "script", "style", "template"</dt>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+<dt>A start tag whose name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead"</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tree-construction.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
