@@ -335,7 +335,7 @@ dictionary <dfn id="api-options">Options</dfn> {
 
 <p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-dom-element">custom DOM element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
-<p>When called, the <a href="#dfn-document-register">register</a> method <strong>must</strong> run these steps:</p>
+<p>When called, the <a href="#dfn-document-register"><code>register</code></a> method <strong>must</strong> run these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -362,6 +362,11 @@ dictionary <dfn id="api-options">Options</dfn> {
     <li>Return the output of the previous step.</li>
 </ol>
 </div>
+
+<div class="informative">
+<p>Invoking <a href="#dfn-document-register"><code>register</code></a> has no effect on the elements that are not in document or its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. This means that any elements that were created imperatively and not inserted into the document, or any elements in document fragments will not be <a href="#dfn-element-upgrade">upgraded</a>.</p>
+</div>
+
 
 <h3 id="the-element-element">The <code>element</code> HTML element</h3>
 
