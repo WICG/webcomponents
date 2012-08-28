@@ -69,12 +69,13 @@
     <li><a href="#declaring-custom-elements"><span class="section">5</span> Declaring Custom DOM Elements</li>
     <li><a href="#serializing-and-parsing"><span class="section">6</span> Serializing and Parsing Custom DOM Elements in HTML</a></li>
     <li><a href="#unknown-element-pseudoclass"><span class="section">7</span> Unknown Element Pseudoclas</a></li>
-    <li><a href="#elements-and-dom-interfaces"><span class="section">8</span> Elements and DOM Interfaces</a>
+    <li><a href="#event-definitions"><span class="section">8</span> Event Definitions</a></li>
+    <li><a href="#elements-and-dom-interfaces"><span class="section">9</span> Elements and DOM Interfaces</a>
     <ol>
-        <li><a href="#extensions-to-document-interface"><span class="section">8.1</span> Extensions to <code>Document</code> interface</a></li>
-        <li><a href="#the-element-element"><span class="section">8.2</span> The <code>element</code> HTML element</a></li>
+        <li><a href="#extensions-to-document-interface"><span class="section">9.1</span> Extensions to <code>Document</code> interface</a></li>
+        <li><a href="#the-element-element"><span class="section">9.2</span> The <code>element</code> HTML element</a></li>
     </ol></li>
-    <li><a href="#other-languages"><span class="section">9</span> Other Languages</a></li>
+    <li><a href="#other-languages"><span class="section">10</span> Other Languages</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -243,6 +244,7 @@
         <li>Let <var>TEMPLATE</var> be the <a href="#dfn-custom-element-template">custom element template</a> in <var>DEFINITION</var></li>
         <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> and <var>TEMPLATE</var> as arguments</li>
         <li><a href="http://www.w3.org/TR/domcore/#concept-node-replace">Replace</a> <var>ELEMENT</var> with <var>UPGRADE</var> in <var>TREE</var></li>
+        <li>On <var>ELEMENT</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire</a> an <a href="#api-element-replace-event"><code>ElementReplaceEvent</code></a> event, initialized with values <em>upgrade</em> as <var>UPGRADE</var> and <em>bubbles</em> as <code>false</code>.</li>
     </ol></li>
     <li>On <var>UPGRADE</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire an event</a> named <code>elementupgrade</code> with its <code>bubbles</code> attribute set to <code>true</code>.</li>
 </ol>
@@ -298,6 +300,23 @@
 <div class="informative">
 <p>Since the <a href="#dfn-element-definition">definitions</a> for <a href="#dfn-custom-dom-element">custom DOM elements</a> may become available after the element is inserted in the document, the <code>:unknown</code> <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudoclass</a> could be used to mitigate the <a href="http://en.wikipedia.org/wiki/Flash_of_unstyled_content">Flash of Unstyled Content</a> (FOUC) issues with <a href="#dfn-custom-dom-element">custom DOM elements</a>.
 </div>
+
+<h2 id="event-definitions">Event Definitions</h2>
+
+<p>The <code>elementreplace</code> event is fired when an element is being replaced with an <a href="#dfn-element-upgrade">upgraded</a> element.</p>
+
+<pre><code>
+[Constructor(DOMString type, optional <a href="#api-element-replace-event-init">ElementReplaceEventInit</a> eventInitDict)]
+interface <dfn id="api-element-replace-event">ElementReplaceEvent</dfn> : <a href="http://www.w3.org/TR/dom/#event">Event</a> {
+    readonly attribute <a href="http://www.w3.org/TR/dom/#element">Element</a> upgrade;
+};
+
+dictionary <dfn id="api-element-replace-event-init">ElementReplaceEventInit</dfn> : <a href="http://www.w3.org/TR/dom/#eventinit">EventInit</a> {
+    <a href="http://www.w3.org/TR/dom/#element">Element</a> <dfn id="#api-element-replace-event-upgrade">upgrade</dfn>;
+}
+</code></pre>
+
+<p>The <a href="#api-element-replace-event-upgrade"><code>upgrade</code></a> attribute holds the <a href="#dfn-element-upgrade">upgraded</a> element and <strong>must</strong> return the value it was initialized to. When the object is created, this attribute <strong>must</strong> be initialized to <strong>null</strong>.</p>
 
 <h2 id="elements-and-dom-interfaces">Elements and DOM Intefaces</h2>
 
