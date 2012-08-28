@@ -192,6 +192,9 @@
 
 <p>The <dfn id="dfn-element-defintion">element definition</dfn> is an association between an <a href="#dfn-element-prototype">element prototype</a>, a <a href="#dfn-custom-element-template">custom element template</a>, and a <a href="#dfn-custom-element-name">custom element name</a>.
 
+<p><span id="dfn-invalid-definition" class="fixme">Specify invalid definition state</span></p>
+
+
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definiton</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
 
 <h2 id="declaring-custom-elements">Declaring Custom DOM Elements</h2>
@@ -377,39 +380,37 @@ interface <dfn id="api-html-element-element">HTMLElementElement</dfn> : <a href=
         <li>The element <strong>must</strong> be added to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#list-of-scripts-that-will-execute-in-order-as-soon-as-possible">set of scripts that will execute as soon as possible</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>, of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element at the time the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">prepare a script</a> algorithm started.</li>
         <li>The user agent then <strong>must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">queue</a> a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">task</a> to to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#execute-the-script-block">execute the script block</a> and then remove the element from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#set-of-scripts-that-will-execute-as-soon-as-possible">set of scripts that will execute as soon as possible</a>. The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#task-source">task source</a> is the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> if the element has the <a href=""><code>src</code></a> attribute, and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#dom-manipulation-task-source">DOM manipulation task source</a> otherwise.</p></li>
     </ol></li>
-</ol>
+    <li><p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">script's block source</a> <strong>must</strong> contain valid JavaScript code which, when parsed, would match the <a href="http://ecma-international.org/ecma-262/5.1/#sec-13">FunctionBody</a> production after the <a href="http://ecma-international.org/ecma-262/5.1/#sec-7.9">automatic semicolon insertion</a>.<p>
 
-<p><span id="dfn-invalid-definition" class="fixme">Specify invalid definition state</span></p>
-
-
-<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">script's block source</a> <strong>must</strong> contain valid JavaScript code which, when parsed, would match the <a href="http://ecma-international.org/ecma-262/5.1/#sec-13">FunctionBody</a> production after the <a href="http://ecma-international.org/ecma-262/5.1/#sec-7.9">automatic semicolon insertion</a>.<p>
-
-<p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">creating a script</a> from a node that is a child of the <code><a href="#the-element-element">element</a></code> element, the user agent must run the following steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> element</dd>
-    <dd><var>SOURCE</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">script's block source</a>.</dd>
-    <dd><var>GLOBAL</var>, the <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.3">global environment</a></dd>
-<dt>Output</dt>
-    <dd><var>SCRIPT</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-script">script</a> to be executed</dd>
-</dl>
-<ol>
-    <li>Let <var>DOCUMENT</var> be the <var>ELEMENT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a></dd>
-    <li>If <var>SOURCE</var> is not parsable as <a href="http://ecma-international.org/ecma-262/5.1/#sec-13">FunctionBody</a> or if parsing detects an <a href="http://ecma-international.org/ecma-262/5.1/#sec-16">early error</a>, then <a href="#dfn-invalid-definition">set the definition state to invalid</a> and <strong>stop</strong>.</li>
-    <li>Let <var>STRICT</var> be <strong>true</strong> if <var>SOURCE</var> begins with a <a href="http://ecma-international.org/ecma-262/5.1/#sec-14.1">Directive Prologue</a> that contains a <a href="http://ecma-international.org/ecma-262/5.1/#sec-14.1">Use Strict Directive</a>, and <strong>false</strong> otherwise</li>
-    <li>Let <var>DOCUMENTSCOPE</var> be the result of running <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.2.3">NewObjectEnvironment</a> with parameters <em>O</em> as <var>DOCUMENT</var> and <em>E</em> as <var>GLOBAL</var>.</li>
-    <li>Let <var>SCOPE</var> be the result of running <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.2.3">NewObjectEnvironment</a> with parameters <em>O</em> as <var>ELEMENT</var> and <em>E</em> as <var>DOCUMENTSCOPE</var>.</li>
-    <li>Let <var>ENVIRONMENT</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script-execution-environment">script execution environment</a> for JavaScript.</li>
-    <li>Let <var>FUNCTION</var> be the result of <a href="http://ecma-international.org/ecma-262/5.1/#sec-13.2">creating a function object</a> in <var>ENVIRONMENT</var> with parameters <em>FormalParameterList</em> empty, <em>FunctionBody</em> as <var>SOURCE</var>, <em>Scope</em> as <var>SCOPE</var>, and <em>Strict</em> as <var>STRICT</var></li>
-    <li>Return <var>SCRIPT</var> with:
+    <p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">creating a script</a> from a node that is a child of the <code><a href="#the-element-element">element</a></code> element, the user agent must run the following steps:</p>
+    <div class="algorithm">
+    <dl>
+    <dt>Input</dt>
+        <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> element</dd>
+        <dd><var>SOURCE</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-block's-source">script's block source</a>.</dd>
+        <dd><var>GLOBAL</var>, the <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.3">global environment</a></dd>
+    <dt>Output</dt>
+        <dd><var>SCRIPT</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-script">script</a> to be executed</dd>
+    </dl>
     <ol>
-        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script-execution-environment">script execution environment</a> as <var>ENVIRONMENT</var></li>
-        <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#list-of-code-entry-points">list of code entry points</a> consisting on <var>FUNCTION</var> as the only entry, and</li>
-        <li>the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-global-object>">script's global object</a>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">script's browsing context</a>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-document">script's document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-url-character-encoding">script's URL character encoding</a>, and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-base-url">script's base URL</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#the-script-settings-determined-from-the-node">the script settings determined on</a> <var>ELEMENT</var></li>
-    </ol></li>
+        <li>Let <var>DOCUMENT</var> be the <var>ELEMENT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a></dd>
+        <li>If <var>SOURCE</var> is not parsable as <a href="http://ecma-international.org/ecma-262/5.1/#sec-13">FunctionBody</a> or if parsing detects an <a href="http://ecma-international.org/ecma-262/5.1/#sec-16">early error</a>, then <a href="#dfn-invalid-definition">set the definition state to invalid</a> and <strong>stop</strong>.</li>
+        <li>Let <var>STRICT</var> be <strong>true</strong> if <var>SOURCE</var> begins with a <a href="http://ecma-international.org/ecma-262/5.1/#sec-14.1">Directive Prologue</a> that contains a <a href="http://ecma-international.org/ecma-262/5.1/#sec-14.1">Use Strict Directive</a>, and <strong>false</strong> otherwise</li>
+        <li>Let <var>DOCUMENTSCOPE</var> be the result of running <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.2.3">NewObjectEnvironment</a> with parameters <em>O</em> as <var>DOCUMENT</var> and <em>E</em> as <var>GLOBAL</var>.</li>
+        <li>Let <var>SCOPE</var> be the result of running <a href="http://ecma-international.org/ecma-262/5.1/#sec-10.2.2.3">NewObjectEnvironment</a> with parameters <em>O</em> as <var>ELEMENT</var> and <em>E</em> as <var>DOCUMENTSCOPE</var>.</li>
+        <li>Let <var>ENVIRONMENT</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script-execution-environment">script execution environment</a> for JavaScript.</li>
+        <li>Let <var>FUNCTION</var> be the result of <a href="http://ecma-international.org/ecma-262/5.1/#sec-13.2">creating a function object</a> in <var>ENVIRONMENT</var> with parameters <em>FormalParameterList</em> empty, <em>FunctionBody</em> as <var>SOURCE</var>, <em>Scope</em> as <var>SCOPE</var>, and <em>Strict</em> as <var>STRICT</var></li>
+        <li>Return <var>SCRIPT</var> with:
+        <ol>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script-execution-environment">script execution environment</a> as <var>ENVIRONMENT</var></li>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#list-of-code-entry-points">list of code entry points</a> consisting on <var>FUNCTION</var> as the only entry, and</li>
+            <li>the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-global-object>">script's global object</a>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">script's browsing context</a>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-document">script's document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-url-character-encoding">script's URL character encoding</a>, and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-base-url">script's base URL</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#the-script-settings-determined-from-the-node">the script settings determined on</a> <var>ELEMENT</var></li>
+        </ol></li>
+    </ol>
+    </div></li>
 </ol>
-</div>
+
+
 
 
 <h2 id="other-languages">Supporting Other Languages</h2>
