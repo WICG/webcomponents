@@ -217,7 +217,7 @@
 
 <h3 id="upper-boundary-encapsulation">Upper-boundary Encapsulation</h3>
 
-<p>To maintain the upper-boundary encapsulation, the following <dfn id="dfn-scoping-constraints">scoping constraints</dfn> must apply to all nodes in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
+<p>To maintain the upper-boundary encapsulation, the following <dfn id="dfn-scoping-constraints">scoping constraints</dfn> <strong>must</strong> apply to all nodes in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:</p>
 <ul>
     <li>The <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>The nodes and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a> or with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window">Window</a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a></li>
@@ -230,11 +230,11 @@
 </ul>
 <p>For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of DOM tree accessor methods. No nodes other than <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</p>
 
-<p>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentnode"><code>parentNode</code></a> and <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentelement"><code>parentElement</code></a> attributes of the <a href="#dfn-shadow-root">shadow root</a> object must always return <code>null</code>.</p>
+<p>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentnode"><code>parentNode</code></a> and <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/dom-core.html#dom-node-parentelement"><code>parentElement</code></a> attributes of the <a href="#dfn-shadow-root">shadow root</a> object <strong>must</strong> always return <code>null</code>.</p>
 
 <h3 id="lower-boundary-encapsulation">Lower-boundary Encapsulation</h3>
 
-<p>To maintain the lower-boundary encapsulation, the <a href="#dfn-distribution">distribution</a> of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> must have the following traits:</p>
+<p>To maintain the lower-boundary encapsulation, the <a href="#dfn-distribution">distribution</a> of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> have the following traits:</p>
 <ul>
     <li>The <a href="#dfn-distribution">distribution</a> does not affect the state of the document DOM tree or shadow DOM subtrees</li>
     <li>Each insertion point participates in <a href="#dfn-distribution">distribution</a> by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be <a href="#dfn-distribution">distributed</a> to a given insertion point</li>
@@ -243,11 +243,11 @@
     <li>The <a href="#dfn-distribution">distribution</a> reoccurs whenever any variable affecting it is changed</li>
 </ul>
 
-<p>An <a href="#dfn-insertion-point">insertion point</a> may be <strong>active</strong> or <strong>inactive</strong>. An <dfn id="dfn-active-insertion-point">active</dfn> insertion point participates in the <a href="#dfn-distribution">distribution</a> process, whereas the <dfn id="dfn-inactive-insertion-point">inactive</dfn> insertion does not. If not specifically set to be inactive, the insertion point must be considered <strong>active</strong>.</p>
+<p>An <a href="#dfn-insertion-point">insertion point</a> may be <strong>active</strong> or <strong>inactive</strong>. An <dfn id="dfn-active-insertion-point">active</dfn> insertion point participates in the <a href="#dfn-distribution">distribution</a> process, whereas the <dfn id="dfn-inactive-insertion-point">inactive</dfn> insertion does not. If not specifically set to be inactive, the insertion point <strong>must</strong> be considered <strong>active</strong>.</p>
 
 <p>If an <a href="#dfn-insertion-point">insertion point</a> is not in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</p>
 
-<p>The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> must produce an outcome that is <a href="#dfn-processing-equivalence">equivalent</a> of the outcome of processing these steps:</p>
+<p>The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> <strong>must</strong> produce an outcome that is <a href="#dfn-processing-equivalence">equivalent</a> of the outcome of processing these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -310,9 +310,9 @@
     </li>
 </ul>
 
-<p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment must be considered invalid.</p>
+<p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment <strong>must</strong> be considered invalid.</p>
 
-<p>A conforming UAs must consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
+<p>A conforming UAs <strong>must</strong> consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
 <ol>
     <li>is a child node of the shadow host; and</li>
     <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
@@ -323,9 +323,9 @@
 
 <p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, <a href="#dfn-distribution">distributed</a> to the <a href="#dfn-insertion-points">insertion points</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
 <ul>
-    <li>The combinator value must be <code>select</code></li>
-    <li>The first compound selector of the combinator must match an <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>The second compound selector must match an element, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The combinator value <strong>must</strong> be <code>select</code></li>
+    <li>The first compound selector of the combinator <strong>must</strong> match an <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The second compound selector <strong>must</strong> match an element, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
 </ul>
 <p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been <a href="#dfn-distribution">distributed</a> to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
 
@@ -340,7 +340,7 @@
 
 <p>Just like other <a href="#dfn-insertion-point">insertion points</a>, the <a href="#dfn-shadow-insertion-point">shadow insertion points</a> can be <a href="#dfn-active-insertion-point">active</a> or <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
-<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
+<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
 
 <div class="algorithm">
 <dl>
@@ -380,7 +380,7 @@
 </ol>
 </div>
 
-<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assigned">assigned</a> or <a href="#dfn-distribution">distributed</a> to them, the fallback content must be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content must be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
+<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assigned">assigned</a> or <a href="#dfn-distribution">distributed</a> to them, the fallback content <strong>must</strong> be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content <strong>must</strong> be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
@@ -390,7 +390,7 @@
 
 <h3 id="rendering-shadow-subtrees">Rendering Shadow DOM Subtrees</h3>
 
-<p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and must happen as these steps:</p>
+<p><dfn id="dfn-rendering">Rendering</dfn> of <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, or presenting them visually, is defined as a specialization of rendering <strong>any DOM subtree</strong>, and <strong>must</strong> happen as these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -404,7 +404,7 @@
     <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
-        <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> must be <a href="#dfn-rendering">rendered</a> accordingly</li>
+        <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> <strong>must</strong> be <a href="#dfn-rendering">rendered</a> accordingly</li>
         <li>In place of each <a href="#dfn-insertion-point">insertion point</a>, process the following <dfn id="dfn-insertion-point-rendering">insertion point rendering</dfn> steps:
         <ol>
             <li>If there are child nodes <a href="#dfn-distribution">distributed</a> to this insertion point, for each child node and in the order they were distributed:
@@ -430,7 +430,7 @@
 
 <p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
 
-<p>For event path to cross the <a href="#dfn-shadow-boundary">shadow boundary</a>, it <strong>must</strong> be populated with <dfn id="dfn-adjusted-parent">adjusted parents</dfn>, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+<p>For event path to cross the <a href="#dfn-shadow-boundary">shadow boundary</a>, it <strong>must</strong> be populated with <dfn id="dfn-adjusted-parent">adjusted parents</dfn>, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -457,7 +457,7 @@
 
 <p>In the cases where events cross the <a href="#dfn-shadow-boundary">shadow boundaries</a>, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the node at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a DOM node that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-upper-boundary-encapsulation">upper boundary encapsulation</a>.
 
-<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+<p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -484,15 +484,15 @@
 </ol>
 </div>
 
-<p>The retargeting process must occur prior to dispatch of an event.</p>
+<p>The retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
 
 <h3 id="retargeting-related-target">Retargeting <code>relatedTarget</code></h3>
 
 <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a node that's not the event's target, but is related to the event.</p>
 
-<p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the node from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must not leak its actual value outside of this subtree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs must <em>stop</em> events at the <a href="#dfn-shadow-boundary">shadow boundary</a> to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
+<p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the node from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this subtree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the <a href="#dfn-shadow-boundary">shadow boundary</a> to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
 
-<p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch must be adjusted. In general:</p>
+<p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch <strong>must</strong> be adjusted. In general:</p>
 <ol>
     <li>For a given DOM node, the <code>relatedTarget</code> <strong>must</strong> be changed to its ancestor (or self) that is in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> as the node</li>
     <li>Event listeners <strong>must not</strong> be invoked on a DOM node for which the <code>target</code> and <code>relatedTarget</code> are the same.</li>
@@ -544,7 +544,7 @@
 
 <h3 id="retargeting-focus-events">Retargeting Focus Events</h3>
 
-<p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events must be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding node that is losing focus as a result of <code>target</code> gaining focus or the node that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
+<p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding node that is losing focus as a result of <code>target</code> gaining focus or the node that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
 
 <h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
 
@@ -741,7 +741,7 @@
 
 <h3 id="css-variables">CSS Variables</h3>
 
-<p>The <a href="#dfn-shadow-host">shadow host</a> styles being inherited by the children of the <a href="#dfn-shadow-root">shadow root</a> must also apply to <a href="http://dev.w3.org/csswg/css-variables/">CSS Variables</a>. This provides a way for document DOM tree styles to send signals into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, and for the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> to receive these signals with the use of the <a href="http://dev.w3.org/csswg/css-variables/#using-variables"><code>var()</code></a> function.</p>
+<p>The <a href="#dfn-shadow-host">shadow host</a> styles being inherited by the children of the <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also apply to <a href="http://dev.w3.org/csswg/css-variables/">CSS Variables</a>. This provides a way for document DOM tree styles to send signals into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, and for the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> to receive these signals with the use of the <a href="http://dev.w3.org/csswg/css-variables/#using-variables"><code>var()</code></a> function.</p>
 
 <h3 id="text-decoration-property"><code>text-decoration</code> Property</h3>
 
@@ -784,9 +784,9 @@ host
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> must be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
+<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> <strong>must</strong> be determined using the <a href="#dfn-as-rendered">as-rendered</a> structure and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence must be inserted into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence <strong>must</strong> be inserted into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
 <ol>
     <li>immediately after the <a href="#dfn-shadow-host">shadow host</a>, if the shadow host is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
     <li>in place of the <a href="#dfn-shadow-host">shadow host</a> as if the shadow host were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
@@ -821,7 +821,7 @@ host
 
 <h3 id="editing">Editing</h3>
 
-<p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable"><code>contenteditable</code></a> attribute must not propagate from <a href="#dfn-shadow-host">shadow host</a> to its <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
+<p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable"><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a href="#dfn-shadow-host">shadow host</a> to its <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
 <h3 id="assistive-technology">Assistive Technology</h3>
 
@@ -941,7 +941,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dd>
 </dl>
 
-<p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance must return <code>"#document-fragment"</code>.</p>
+<p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
 
 <h4 id="shadow-root-methods"><code>ShadowRoot</code> Methods</h4>
 
@@ -1062,7 +1062,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
     <dd>indicates whether or not the rules in the scoped styles, defined in shadow DOM subtree are applied to the <a href="#dfn-shadow-host">shadow host</a>'s children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd> -->
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#comma-separated-tokens">set of comma-separated tokens</a></dt>
     <dd>
-        defines the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child nodes of the <a href="#dfn-shadow-host">shadow host</a>. Each token must be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
+        defines the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child nodes of the <a href="#dfn-shadow-host">shadow host</a>. Each token <strong>must</strong> be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
     </dd>
     <dt id="markup-content-reset-style-inheritance"><code>reset-style-inheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
     <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-insertion-point">insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
@@ -1083,9 +1083,9 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 <!--        <dt id="api-html-content-element-apply-shadow-styles"><code>applyShadowStyles</code> of type <code>bool</code></dt>
         <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd> -->
         <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMString</code></dt>
-        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
+        <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
         <dt id="api-html-content-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
-        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
+        <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
     </dl>
     </dd>
     </dl>
@@ -1121,7 +1121,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
     <dl>
         <dt>Attributes</dt>
         <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
-        <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
+        <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
     </dl>
 </dd>
 </dl>
