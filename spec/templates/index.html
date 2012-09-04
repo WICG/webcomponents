@@ -81,13 +81,14 @@
     <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
     <ol>
         <li><a href="#appending-to-a-template"><span class="section">7.1</span> Appending to a template</a></li>
-        <li><a href="#foster-parent-addition"><span class="section">7.2</span> Additions to "foster parenting"</a></li>
-        <li><a href="#reset-insertion-mode-addition"><span class="section">7.3</span> Additions to "reset the insertion mode appropriately"</a></li>
-        <li><a href="#in-head-addition"><span class="section">7.4</span> Additions to the "in head" Insertion Mode</a></li>
-        <li><a href="#in-body-addition"><span class="section">7.5</span> Additions to the "in body" Insertion Mode</a></li>
-        <li><a href="#in-table-addition"><span class="section">7.6</span> Additions to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.7</span> Additions to the "in select" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.8</span> The "template contents" Insertion Mode</a></li>
+        <li><a href="#clearing-the-stack"><span class="section">7.2</span> Clearing the stack back to a given context</a></li>
+        <li><a href="#foster-parent-addition"><span class="section">7.3</span> Additions to "foster parenting"</a></li>
+        <li><a href="#reset-insertion-mode-addition"><span class="section">7.4</span> Additions to "reset the insertion mode appropriately"</a></li>
+        <li><a href="#in-head-addition"><span class="section">7.5</span> Additions to the "in head" Insertion Mode</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.6</span> Additions to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.7</span> Additions to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.8</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.9</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
@@ -330,6 +331,15 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <p>Whenever the HTML parser is about to append a node to a <a href="#dfn-template-element"><code>template</code></a> element, the node <strong>must</strong> be appended to the <a href="#dfn-template-contents">template contents</a> of the <a href="#dfn-template-element"><code>template</code></a> element instead.</p>
 
 <p class="note">As a result, the HTML parser will never place any nodes as direct children of a <a href="#dfn-template-element"><code>template</code></a> element.</p>
+
+<h3 id="clearing-the-stack">Clearing the stack back to a given context</h3>
+ 
+<p>When popping elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
+<ol>
+    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
+    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
+    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
+</ol>
 
 <h3 id="foster-parent-addition">Additions to "foster parenting"</h3>
 
