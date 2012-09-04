@@ -345,7 +345,6 @@
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>DISTRIBUTOR</var>, a method for <a href="#dfn-distribution">distributing</a> nodes with arguments <em>POOL</em> and <em>TREE</em></dd>
     <dd><var>HOST</var>, a <a href="#dfn-shadow-host">shadow host</a></dd>
 <dt>Output</dt>
     <dd>All <a href="#dfn-insertion-point">insertion points</a> and <a href="#dfn-shadow-insertion-point">shadow insertion points</a> are populated.</dd>
@@ -358,7 +357,7 @@
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:
     <ol>
         <li>Let <var>POINT</var> be the first encountered <a href="#dfn-active-insertion-point">active</a> <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
-        <li>Run <var>DISTRIBUTOR</var>, supplying <var>POOL</var> and <var>TREE</var> as input</li>
+        <li>Run the <a href="#dfn-distribution-algorithm">distribution algorithm</a>, supplying <var>POOL</var> and <var>TREE</var> as input</li>
         <li>If <var>POINT</var> exists:
         <ol>
             <li>Find the next older tree, relative to <var>TREE</var> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
@@ -402,7 +401,7 @@
 </dl>
 
 <ol>
-    <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a>, supplying arguments <a href="#dfn-shadow-host">shadow host</a> as <em>HOST</em> and <a href="#dfn-distribution-algorithm">distribution algorithm</a> as <em>DISTRIBUTOR</em></li>
+    <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
         <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> <strong>must</strong> be <a href="#dfn-rendering">rendered</a> accordingly</li>
