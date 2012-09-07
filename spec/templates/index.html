@@ -88,10 +88,11 @@
         <li><a href="#in-head-addition"><span class="section">7.6</span> Additions to the "in head" Insertion Mode</a></li>
         <li><a href="#in-body-addition"><span class="section">7.7</span> Additions to the "in body" Insertion Mode</a></li>
         <li><a href="#in-table-addition"><span class="section">7.8</span> Additions to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-colgroup-addition"><span class="section">7.9</span> Additions to the "in column group" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.10</span> Additions to the "in select" Insertion Mode</a></li>
-        <li><a href="#in-frameset-addition"><span class="section">7.11</span> Additions to the "in frameset" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.12</span> The "template contents" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.9</span> Additions to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-colgroup-addition"><span class="section">7.10</span> Additions to the "in column group" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.11</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#in-frameset-addition"><span class="section">7.12</span> Additions to the "in frameset" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.13</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
@@ -336,7 +337,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <p class="note">As a result, the HTML parser will never place any nodes as direct children of a <a href="#dfn-template-element"><code>template</code></a> element.</p>
 
 <h3 id="clearing-the-stack">Clearing the stack back to a given context</h3>
- 
+
 <p>When popping elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
 <ol>
     <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
@@ -357,9 +358,9 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to "<a href="#template-contents-insertion-mode">template contents</a>" and abort these steps.</li>
 </ol>
 
-<p>Just before the step that begins with <em>"If node is a head element..."</em> add the following step:</p>
+<p>Modify the step which begins <em>"If node is a head element..."</em> to be:</p>
 <ol start="11">
-    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
 </ol>
 
 <h3 id="in-table-scope-addition">Additions to "has an element in table scope"</h3>
@@ -414,6 +415,13 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p class="note">The "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>".</p>
 
+
+<h3 id="in-cell-addition">Additions to the "in cell" Insertion Mode</h3>
+
+<p>Modify the parenthetical comment within the <strong>An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intd">"in cell"</a> insertion mode, to be:</p>
+
+<p>(which can only happen for "tbody", "tfoot" and "thead", when parsing template contents, or in the fragment case)</p>
+
 <h3 id="in-colgroup-addition">Additions to the "in column group" Insertion Mode</h3>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
@@ -448,9 +456,13 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <dt>A character token</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A comment token</dt>
-<dt>A start tag whose name is one of: "link", "script", "style", "template"</dt>
+<dt>A start tag whose name is one of: "link", "script", "style", "meta", template"</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
-<dt>A start tag whose name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead"</dt>
+<dt>A start tag whose name is "frame"</dt>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
+<dt>A start tag whose name is "col"</dt>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
+<dt>A start tag whose name is one of: "caption", "colgroup", "tbody", "tfoot", "thead"</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
