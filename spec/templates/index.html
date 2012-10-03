@@ -80,19 +80,20 @@
     <li><a href="#template-element"><span class="section">6</span> The <code>template</code> element</a></li>
     <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
     <ol>
-        <li><a href="#appending-to-a-template"><span class="section">7.1</span> Appending to a template</a></li>
-        <li><a href="#clearing-the-stack"><span class="section">7.2</span> Clearing the stack back to a given context</a></li>
-        <li><a href="#foster-parent-addition"><span class="section">7.3</span> Additions to "foster parenting"</a></li>
-        <li><a href="#reset-insertion-mode-addition"><span class="section">7.4</span> Additions to "reset the insertion mode appropriately"</a></li>
-        <li><a href="#in-table-scope-addition"><span class="section">7.5</span> Additions to "has an element in table scope"</a></li>
-        <li><a href="#in-head-addition"><span class="section">7.6</span> Additions to the "in head" Insertion Mode</a></li>
-        <li><a href="#in-body-addition"><span class="section">7.7</span> Additions to the "in body" Insertion Mode</a></li>
-        <li><a href="#in-table-addition"><span class="section">7.8</span> Additions to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-cell-addition"><span class="section">7.9</span> Additions to the "in cell" Insertion Mode</a></li>
-        <li><a href="#in-colgroup-addition"><span class="section">7.10</span> Additions to the "in column group" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.11</span> Additions to the "in select" Insertion Mode</a></li>
-        <li><a href="#in-frameset-addition"><span class="section">7.12</span> Additions to the "in frameset" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.13</span> The "template contents" Insertion Mode</a></li>
+        <li><a href="#creating-an-element-for-a-token"><span class="section">7.1</span> Creating an element for a token</a></li>
+        <li><a href="#appending-to-a-template"><span class="section">7.2</span> Appending to a template</a></li>
+        <li><a href="#clearing-the-stack"><span class="section">7.3</span> Clearing the stack back to a given context</a></li>
+        <li><a href="#foster-parent-addition"><span class="section">7.4</span> Additions to "foster parenting"</a></li>
+        <li><a href="#reset-insertion-mode-addition"><span class="section">7.5</span> Additions to "reset the insertion mode appropriately"</a></li>
+        <li><a href="#in-table-scope-addition"><span class="section">7.6</span> Additions to "has an element in table scope"</a></li>
+        <li><a href="#in-head-addition"><span class="section">7.7</span> Additions to the "in head" Insertion Mode</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.8</span> Additions to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.9</span> Additions to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.10</span> Additions to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-colgroup-addition"><span class="section">7.11</span> Additions to the "in column group" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.12</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#in-frameset-addition"><span class="section">7.13</span> Additions to the "in frameset" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.14</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
@@ -354,6 +355,10 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category.</p>
 
 <p class="fixme">These additions cause the HTML parsing algorithm to enter some conditions previously marked as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>. These cases still need to be documented.</p>
+
+<h3 id="creating-an-element-for-a-token">Creating an element for the token</h3>
+
+<p>Whenever the HTML parser is about to <a href="http://dev.w3.org/html5/spec/tokenization.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
 
 <h3 id="appending-to-a-template">Appending to a template</h3>
 
