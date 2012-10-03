@@ -136,6 +136,8 @@
 <p>The following terms are used throughout the specification:
 
 <dl>
+<dt>context object</dt>
+    <dd>The object on which the method or attribute being discussed was called</dd>
 <dt>DOM</dt>
     <dd>The <a href="http://www.w3.org/TR/domcore/">document object model</a></dd>
 <dt>document</dt>
@@ -265,11 +267,26 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
 
 <p>A <dfn id="dfn-template">template</dfn> provides a method for declaring document fragments in <a href="http://dev.w3.org/html5/spec/">HTML</a>. The document fragment that is declared by a <a href="#dfn-template">template</a> is called <dfn id="dfn-template-contents">template contents</dfn>.</p>
 
-<p>The <a href="#dfn-template-contents">template contents</a> <strong>must</strong> be declared using the <a href="http://dev.w3.org/html5/spec/syntax.html#syntax">HTML syntax</a> in an HTML document. Once parsed, the <a href="#dfn-template-contents">template contents</a> <strong>must not</strong> be in the document tree.</p>
+<p>A <dfn id="dfn-template-contents-owner">template contents owner</dfn> is a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a> which does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>.</p>
 
-<p>All elements in <a href="#dfn-template-contents">template contents</a> <strong>must</strong> be <em>inert</em>. An element is <dfn id="dfn-inert">inert</dfn> when modifying its attributes or contents does not trigger any effects that can be perceived outside of the tree, in which it <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-tree-participate">participates</a>.</p>
+<p>Every <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a> has an associated <a href="#dfn-template-contents-owner">template contents owner</a>, which is <dfn id="dfn-template-contents-owner-initialization">initialized</dfn> in a way that is <a href="#dfn-processing-equivalence">equivalent</a> to processing these steps:</p>
 
-<p>Conversely, serializing a <a href="#dfn-template">template</a> <strong>must</strong> result in the <a href="#dfn-template-contents">template contents</a> serialized as part of the HTML document.</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var>, the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a></dd>
+<dt>Output</dt>
+    <dd><var>TEMPLATE CONTENTS OWNER</var>, the <a href="#dfn-template-contents-owner">template contents owner</a></dd>
+</dl>
+<ol>
+    <li>If <var>DOCUMENT</var> does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>, Let <var>TEMPLATE CONTENTS OWNER</var> be <var>DOCUMENT</var> and abort these steps.</li>
+    <li>Otherwise, Let <var>TEMPLATE CONTENTS OWNER</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">Document</a> node that does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>.</li>
+    <li>Mark <var>TEMPLATE CONTENTS OWNER</var> as an <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#html-document">HTML document</a>.</li>
+</ol>
+</div>
+
+<p>The <a href="#dfn-template-contents">template contents</a> <strong>must</strong> be a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is a <a href="#dfn-template-contents-owner">template contents owner</a>.</p>
+
 
 </section>
 
@@ -292,7 +309,7 @@ div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
     <dd>
         <pre><code>
 interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a href="http://dev.w3.org/html5/spec/elements.html#htmlelement">HTMLElement</a> {
-    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
+    attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
 }
         </code></pre>
         <dl>
@@ -315,13 +332,22 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd><var>CONTENTS</var>, the <a href="#dfn-template-contents">template contents</a></dd>
 </dl>
 <ol>
-    <li>Let <var>DOCUMENT</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">Document</a> node that does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a></li>
-    <li>Mark <var>DOCUMENT</var> as an <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#html-document">HTML document</a></li>
-    <li>Let <var>CONTENTS</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> object whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is <var>DOCUMENT</var></li>
+    <li>Let <var>DOCUMENT</var> be the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> of the context object.</li>
+    <li>Let <var>CONTENTS</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> object whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is <var>DOCUMENT</var>.</li>
 </ol>
 </div>
 
-<p>The <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-clone-ext">cloning steps</a> for the <a href="#dfn-template-element"><code>template</code></a> template element <strong>must</strong> include the cloning of <a href="#dfn-template-contents">template contents</a>.</p>
+<p>On setting, these steps must run:</p>
+
+<div class="algorithm">
+<dl>
+<ol>
+    <li>If the new value is not a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-throw">throw</a> an <code><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#typemismatcherror">"TypeMismatchError"</a></code> error, and abort these steps.</li>
+    <li>Otherwise, if the new value is the same as the <a href="#api-html-template-element-content">content</a>, do nothing. Abort these steps.</li>
+    <li>Otherwise, if the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> of the new value is not the same as the context object's <a href="#dfn-template-contents-owner">template contents owner</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-adopt">adopt</a> the new value with context object's <a href="#dfn-template-contents-owner">template contents owner</a>.</li>
+    <li>Replace <a href="#api-html-template-element-content">content</a> with the new value.</li>
+</ol>
+</div>
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
