@@ -96,7 +96,8 @@
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
-    <li><a href="#css-additions"><span class="section">9</span> Additions to the CSS user agent style sheet</a></li>
+    <li><a href="#innerhtml-on-templates"><span class="section">9</span> innerHTML on Templates</a></li>
+    <li><a href="#css-additions"><span class="section">10</span> Additions to the CSS user agent style sheet</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -489,14 +490,20 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h2 id="serializing-html-templates">Serializing HTML Templates</h2>
 
-<p>The serialization of HTML Templates is defined this addition to the <a href="http://dev.w3.org/html5/spec/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a>:</p>
+<p>The serialization of <a href="#dfn-template">templates</a> is defined as the following addition to the <a href="http://dev.w3.org/html5/spec/the-end.html#serializing-html-fragments">Serializing HTML Fragments</a> algorithm.</p>
 
-<p>In the rule "If current node is an Element", just before the step of recursing into the algorithm, add this step</p>
+<p>When running these steps, before step 2 ("For each child node of <em>the node</em>, in tree order, run the following steps"), insert the following step:</p>
 
-<dl>
-<dt>If current nodes in an Element</dt>
-    <dd>If <em>current node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then set <em>current node</em> to <a href="#dfn-template-contents">template contents</a>.</dd>
-</dl>
+<p>If <em>the node</em> is a &lt;template&gt; element, let <em>the node</em> be the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> referenced by <em>the node</em>'s <a href="#api-html-template-element-content">content</a> attribute</p>
+
+
+<h2 id="innerhtml-on-templates">innerHTML on Templates</h2>
+
+<p>The behavior of innerHTML on <a href="#dfn-template">templates</a> is defined as a modification to the <a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html">DOM Parsing and Serialization</a> specification.</p>
+
+<p>When running the steps for setting <a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#widl-Element-innerHTML">innerHTML</a>, modify step 2, ("<em>Replace all</em>, with <em>fragment</em> within the <a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#dfn-context-object">context object</a>") to be:</p>
+
+<p>If <a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#dfn-context-object">context object</a> is an HTML Template Element, <em>replace all</em> with <em>fragment</em> within the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> referenced by the <em>content object</em>'s <a href="#api-html-template-element-content">content</a> attribute. Otherwise, <em>replace all</em> with <em>fragment</em> within the <a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#dfn-context-object">context object</a>.</p>
 
 <h2 id="css-additions">Additions to the CSS user agent style sheet</h2>
 
