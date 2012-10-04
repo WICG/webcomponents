@@ -353,7 +353,16 @@
 <ol>
     <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
     <li>Let <var>POOL</var> be the list of nodes</li>
-    <li>Populate <var>POOL</var> with child nodes of the <var>HOST</var></li>
+    <li>For each child node of <var>HOST</var>:
+    <ol>
+        <li>Let <var>CHILD</var> be this node</li>
+        <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point">insertion point</a>:
+        <ol>
+            <li>Let <var>REPROJECTED</var> be the list of nodes, distributed into this <a href="#dfn-insertion-point">insertion point</a> as a result of running <a href="dfn-tree-composition">tree composition algorithm</a> on this <a href="dfn-insertion-point">insertion point</a>'s <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+            <li>Add all nodes in <var>REPROJECTED</var> into <var>POOL</var></li>
+        </ol></li>
+        <li>Otherwise, add <var>CHILD</var> to <var>POOL</var></li>
+    </ol></li>
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:
     <ol>
         <li>Let <var>POINT</var> be the first encountered <a href="#dfn-active-insertion-point">active</a> <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
