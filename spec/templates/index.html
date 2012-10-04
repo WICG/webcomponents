@@ -67,15 +67,7 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#introduction"><span class="section">4</span> Introduction</a>
-    <ol>
-        <li><a href="#declare-as-markup"><span class="section">4.1</span> Declare as Markup</a></li>
-        <li><a href="#document-fragments-not-strings"><span class="section">4.2</span> Declare Document Fragments, not Strings</a></li>
-        <li><a href="#declare-anything"><span class="section">4.3</span> Declare Anything</a></li>
-        <li><a href="#declare-anywhere"><span class="section">4.4</span> Declare Anywhere</a></li>
-        <li><a href="#limit-external-effects"><span class="section">4.5</span> Limit External Effects</a></li>
-    </ol>
-    </li>
+    <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
     <li><a href="#definitions"><span class="section">5</span> Definitions</a></li>
     <li><a href="#template-element"><span class="section">6</span> The <code>template</code> element</a></li>
     <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
@@ -160,109 +152,21 @@
 <h2 id="introduction">Introduction</h2>
 
 <p><em>This section is non-normative.</em></p>
-<p>Web developers commonly need to create a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#documentfragment">document fragment</a> that they could later insert into the document. This document fragment could be a part of temporary structure that is used to quickly switch in and out parts of the document DOM as a reaction to some trigger, such as timer or user action. It could also be an intermediate structure that serves as a template and is populated with specific data, to then be cloned or moved into the document DOM.</p>
 
-<p>Let's examine the desired properties of declaring document fragments and challenges of acquiring these properties.</p>
+<p>Modern web pages dynamically alter the contents of their documents (e.g. in response to user interaction or new data arriving from the server). It is common that such web pages are authored to require fragments of HTML which may be used in certain states and may require further modification before use, such as the insertion of values appropriate for the usage context.</p>
 
-<h3 id="declare-as-markup">Declare As Markup</h3>
+<p><a href="http://dev.w3.org/html5/spec/">HTML</a> currently provides no mechanism for the declaration of markup fragments as prototypes, which are serialized and deserialized with the document, but not used until needed. Consequently, authors hide these fragments so that their content is available at runtime but is otherwise ignored by the browser. This is generally done either by authoring the fragment as:</p>
 
-<p>A typical approach for creating temporary or intermediate DOM trees is to build them with DOM APIs:</p>
-
-<code><pre class="prettyprint">
-
-var tree = document.createDocumentFragment();
-// add tree nodes imperatively &hellip;
-var div = tree.appendChild(document.createElement('div'));
-// &hellip; and/or use strings and innerHTML.
-div.innerHTML = '&lt;a href="//example.com/link"&gt;LINK&lt;/a&gt;';
-// &hellip;
-
-</pre></code>
-
-<p>While achieving its objective, such code views the elements either as purely DOM objects or strings. Both of the perspectives are removed from the document's markup flow, with the DOM objects perspective being imperative and verbose, thus difficult to reason about without first executing code, and the strings perspective being a poor-man's bootstrap into the HTML parser.</p>
-
-<p>Consequently, a more elegant solution is necessary: something that allows developers declare arbitrary DOM subtrees <em>in</em> the document markup. Empirically, all widely used Web frameworks and toolkits attempt to solve this problem, whether by using the <a href="http://dev.w3.org/html5/spec/scripting-1.html#the-script-element"><code>script</code></a> element with a custom type or with the help of specially-named attributes.</p>
-
-<h3 id="document-fragments-not-strings">Declare Document Fragments, not Strings</h3>
-
-<p>There are two approaches to parsing the document fragment declarations:</p>
 <ul>
-    <li>treat <strong>declaration as string</strong> of characters</li>
-    <li>treat <strong>declaration as tokens</strong> that represent DOM elements</li>
+    <li>Markup (inline within the document), but setting its style ”display:none”.</li>
+    <li>String (e.g. within a &lt;script&gt; block).</li>
 </ul>
 
-<p>The "declaration-as-string" approach is convenient on the surface, since it allows delaying the tokenization of a document fragment until it needs to be instantiated. In turn, this opens opportunity for easy string matching to substitute some specially marked placeholders with the actual data when templating. However, the delay also introduces an unhappy side effect of only discovering whether a document fragment declaration is valid at runtime.</p>
+<p>The former has the primary drawback that the author must take care that the fragment not have side effects, such as loading resources with URLs that are not yet fully composed, while the latter has the primary drawback that it encourages run-time parsing (via innerHTML) of strings which include user-supplied data and thus become XSS attack surfaces. Neither approach has an effective way to declare fragments which contain elements at the top-level that are only allowed to occur as children of specific elements (e.g. &lt;tr&gt; or &lt;td&gt;).</p>
 
-<p>Additionally, should the Web developer require for declarations to nest&mdash;to provide the templating for two-dimensional data, for instance&mdash;things start falling apart quickly. To address this, one must contemplate drastic additions to <a href="http://dev.w3.org/html5/spec/tokenization.html#tokenization">HTML tokenization</a> to keep track of the nesting level in the declaration. Alternatively, a distinct syntax for nested declarations could be introduced to differentiate the first level of nesting, with a special tokenization mode inside of the outer declaration.</p>
+<p>This specification defines the HTML Template element, which allows for the declaration of document fragments which are unused by the document when loaded, but are parsed as HTML and are available at runtime for use by the web page.</p>
 
-<p>These undesirable consequences force us to consider the "declaration-as-tokens" approach. This approach, while still requiring some changes to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing</a>, handles nested templates more gracefully, and ensures that construction of the declared document fragment happens while parsing the document.</p>
-
-<h3 id="declare-anything">Declare Anything</h3>
-
-<p>Attempting to declare arbitrary document fragments runs into the limitations on the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">context</a> of the element, imposed by the HTML parser. For example, in order for a <code>tr</code> element to succeed in being inserted into a tree while parsing, its parent has to be either <a href="http://dev.w3.org/html5/spec/tabular-data.html#the-table-element"><code>table</code></a>, <a href="http://dev.w3.org/html5/spec/tabular-data.html#the-thead-element"><code>thead</code></a>, <a href="http://dev.w3.org/html5/spec/tabular-data.html#the-tbody-element"><code>tbody</code></a>, or <a href="http://dev.w3.org/html5/spec/tabular-data.html#the-tfoot-element"><code>tfoot</code></a>. Since the developers are creating these tree outside of a document, they have to work around these limitations by either:<p>
-<ul>
-    <li>providing an ersatz context element structure at the top of the tree, or</li>
-    <li>using DOM APIs to build the tree.</li>
-</ul>
-<p>Both solutions incur unnecessary costs: the former requires extra work to manage the transient contextualizing elements, and the latter takes us away from the declarative syntax. Thus, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> rules to allow context-free element insertion in certain cases.</p>
-
-<h3 id="declare-anywhere">Declare Anywhere</h3>
-
-<p>Whenever developers declare a document fragment, they may need to place it at to the site of its instantiation. For instance, if the tree is used as a template for repeating elements, it would make sense to place it at the insertion site for the repeating elements:</p>
-
-<code><pre class="prettyprint">
-
-&lt;!-- uses fictional syntax --&gt;
-&lt;ul&gt;
-    &lt;stuff-to-repeat&gt;
-        &lt;li class=&quot;<span class="nocode" style="color:blue">${importance}</span>&quot;&gt;&lt;a href=&quot;<span class="nocode" style="color:blue">${link}</span>&quot;&gt;<span class="nocode" style="color:blue">${title}</span>&lt;/a&gt;&lt;/li&gt;
-    &lt;/stuff-to-repeat&gt;
-&lt;/ul&gt;
-</pre></code>
-
-<p>Once again, the developers run into HTML parser limitations. Consider this, slightly modified example:</p>
-
-<code><pre class="prettyprint">
-
-&lt;!-- uses fictional syntax --&gt;
-&lt;select&gt;
-    &lt;stuff-to-repeat&gt;
-        &lt;option class=&quot;<span class="nocode" style="color:blue">${importance}</span>&quot;&gt;<span class="nocode" style="color:blue">${title}</span>&lt;/option&gt;
-    &lt;/stuff-to-repeat&gt;
-&lt;/select&gt;
-</pre></code>
-
-<p>According to HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> algorithm, the <code>stuff-to-repeat</code> element will be never inserted into the resulting document DOM tree, thus losing information about the presence of the declaration. Similarly to the "do-what-I-mean" situation, we must consider relaxing the HTML <a href="http://dev.w3.org/html5/spec/tokenization.html#tree-construction">tree construction</a> rules to allow the placement of document fragment tree declarations anywhere in the document.</p>
-
-<h3 id="limit-external-effects">Limit External Effects</h3>
-
-<p>One reason for creating a document fragment is to clone it multiple times to create repeating items that vary in some content, but have common basic structure of across all instances.</p>
-
-<p>Then, a typical flow of processing steps involves using this DOM tree and its clones as intermediaries to populate the document:</p>
-<ol>
-    <li>Create a prototype: a document fragment to serve as a template</li>
-    <li>Instantiate the prototype: clone the fragment to create a template document fragment</li>
-    <li>Populate the template document fragment with data for this fragment</li>
-    <li>Append the template document fragment to the document</li>
-    <li>Instantiate the prototype: clone the document fragment to create a template document fragment</li>
-    <li>Populate the template document fragment with data for that fragment</li>
-    <li>&hellip;</li>
-</ol>
-
-<p>In these steps, developers typically assume that modifying these intermediate document fragments does not have any external effects. In other words, changes to elements or structure of a document fragment is not perceptible outside of this tree. For most elements, this condition is immediately satisfied, since most HTML elements do not have external effects, such as rendering or firing events, until they are in the document tree. However, a small set of HTML elements, such as those representing <a href="http://dev.w3.org/html5/spec/embedded-content-1.html#embedded-content-1">embedded content</a> requires special treatment.</p>
-
-<p>For example, if developers wish to automate the process of populating a newly cloned template in the processing steps above, they would opt to use some specially-marked placeholders as attribute or text node values in the document fragment:</p>
-
-<code><pre class="prettyprint">
-&lt;div class="comment"&gt;
-    &lt;img src="<span class="nocode" style="color:blue;">${avatar}</span>"&gt;
-    &lt;div class="text"&gt;<span class="nocode" style="color:blue;">${text}</span>&lt;/div&gt;
-&lt;/div&gt;
-</pre></code>
-
-<p>Then, when populating the newly cloned template document fragment, the placeholders are replaced with the actual values. Unfortunately, the <a href="http://dev.w3.org/html5/spec/embedded-content-1.html#the-img-element"><code>img</code></a> element will likely attempt to <a href="http://dev.w3.org/html5/spec/embedded-content-1.html#update-the-image-data">update the image data</a> as soon as its <a href="http://dev.w3.org/html5/spec/embedded-content-1.html#attr-img-src"><code>src</code></a> attribute is set to any non-empty value. In the scenario above, this leads to an unintended effect of making server requests with the url of <code>${avatar}</code> for first document fragment, and then all other instances that are cloned from it.</p>
-
-<p>To enforce developers' assumption on external effects, a slightly different set of restrictions is needed for the elements in intermediate trees. These restrictions would make the elements in the intermediate trees appear <em>inert</em>, or lacking any externals effects that are perceptible outside of the intermediate trees.</p>
+<p>The &lt;template&gt; element can be placed anywhere within the &lt;head&gt;, &lt;body&gt;, and &lt;frameset&gt; elements, and its contents can contain any content which could otherwise occur at any location within the &lt;head&gt;, &lt;body&gt;, and &lt;frameset&gt; elements. The content of templates are not a part of the document (they do not display, are not matched querySelector, etc.) and are inactive (e.g. do not cause resources to load, scripts to run, media to play, etc.).</p>
 
 <h2 id="definitions">Definitions</h2>
 
