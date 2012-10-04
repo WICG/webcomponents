@@ -258,8 +258,6 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category.</p>
 
-<p class="fixme">These additions cause the HTML parsing algorithm to enter some conditions previously marked as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>. These cases still need to be documented.</p>
-
 <h3 id="creating-an-element-for-a-token">Creating an element for the token</h3>
 
 <p>Whenever the HTML parser is about to <a href="http://dev.w3.org/html5/spec/tokenization.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
@@ -296,6 +294,15 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <ol start="11">
     <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
 </ol>
+
+<p>The following cases which were previously annotated as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>, can now be entered during normal parsing (i.e. <em>not</em> only in the fragment case) immediately following encountering a &lt/template&gt token, and the annotation should be removed:</p>
+
+<ul>
+    <li>Step 4: "If <em>node</em> is a select element..."</li>
+    <li>Step 4: "If <em>node</em> is a colgroup element..."</li>
+    <li>Step 4: "If <em>node</em> is a head element..."</li>
+    <li>Step 4: "If <em>node</em> is a frameset element..."</li>
+</ul>
 
 <h3 id="in-table-scope-addition">Additions to "has an element in table scope"</h3>
 
