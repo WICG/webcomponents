@@ -279,7 +279,12 @@
 
 <h3 id="matching-insertion-points">Matching Insertion Points</h3>
 
-<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
+<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is a fragment in a fictional <a href="http://www.w3.org/TR/css3-selectors">selector</a> consisting of:</p>
+<ol>
+    <li>A selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a> of this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+    <li>A combinator that expresses the relationship between an element that is either a parent of another element <em>or</em> between an element, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">'s  parent element</li>
+    <li>The <a href="#dfn-selector-fragment">selector fragment</a>.</li>
+</ol>
 
 <p>A <dfn id="dfn-valid-selector-fragment">valid selector fragment</dfn> may contain:</p>
 
@@ -312,9 +317,8 @@
 
 <p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment <strong>must</strong> be considered invalid.</p>
 
-<p>A conforming UAs <strong>must</strong> consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
+<p>A conforming UAs <strong>must</strong> consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if:
 <ol>
-    <li>is a child node of the shadow host; and</li>
     <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
     <li>child node matches at least one selector fragment in the set or the set is empty.</li>
 </ol>
@@ -353,7 +357,16 @@
 <ol>
     <li>Let <var>TREE</var> be the <a href="#dfn-youngest-tree">youngest tree</a> in the <var>HOST</var>'s <a href="#dfn-tree-stack">tree stack</a>
     <li>Let <var>POOL</var> be the list of nodes</li>
-    <li>Populate <var>POOL</var> with child nodes of the <var>HOST</var></li>
+    <li>For each child node of <var>HOST</var>:
+    <ol>
+        <li>Let <var>CHILD</var> be this node</li>
+        <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point">insertion point</a>:
+        <ol>
+            <li>Let <var>REPROJECTED</var> be the list of nodes, distributed into this <a href="#dfn-insertion-point">insertion point</a> as a result of running <a href="dfn-tree-composition">tree composition algorithm</a> on this <a href="dfn-insertion-point">insertion point</a>'s <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+            <li>Add all nodes in <var>REPROJECTED</var> into <var>POOL</var></li>
+        </ol></li>
+        <li>Otherwise, add <var>CHILD</var> to <var>POOL</var></li>
+    </ol></li>
     <li><dfn id="algo-composition-repeat">Repeat</dfn> while <var>TREE</var> exists:
     <ol>
         <li>Let <var>POINT</var> be the first encountered <a href="#dfn-active-insertion-point">active</a> <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>TREE</var>, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>
