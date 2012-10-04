@@ -279,7 +279,12 @@
 
 <h3 id="matching-insertion-points">Matching Insertion Points</h3>
 
-<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is indeed a fragment in the <a href="http://www.w3.org/TR/css3-selectors">selector</a> <code>(shadow-host)>(fragment)</code>, where <code>(shadow-host)</code> is a selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a>, and <code>(fragment)</code> is the <a href="#dfn-selector-fragment">selector fragment</a>.</p>
+<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is a fragment in a fictional <a href="http://www.w3.org/TR/css3-selectors">selector</a> consisting of:</p>
+<ol>
+    <li>A selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a> of this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+    <li>A combinator that expresses the relationship between an element that is either a parent of another element <em>or</em> between an element, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> that is a parent of another element</li>
+    <li>The <a href="#dfn-selector-fragment">selector fragment</a>.</li>
+</ol>
 
 <p>A <dfn id="dfn-valid-selector-fragment">valid selector fragment</dfn> may contain:</p>
 
@@ -312,9 +317,8 @@
 
 <p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment <strong>must</strong> be considered invalid.</p>
 
-<p>A conforming UAs <strong>must</strong> consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if it:
+<p>A conforming UAs <strong>must</strong> consider a node as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if:
 <ol>
-    <li>is a child node of the shadow host; and</li>
     <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
     <li>child node matches at least one selector fragment in the set or the set is empty.</li>
 </ol>
