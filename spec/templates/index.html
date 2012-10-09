@@ -344,15 +344,12 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h3 id="in-body-addition">Additions to the "in body" Insertion Mode</h3>
 
-<p>Modify the rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a> insertion mode for encountering a "body" start tag:</p>
+<p>Modify the the first clause of the rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a> insertion mode for encountering a "body" start tag:</p>
 
 <dt>A start tag whose tag name is "body"</dt>
-    <dd><p><a href="">Parse error</a></p>
-        <p>If the second element on the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a > is not a <a href="http://dev.w3.org/html5/spec/the-body-element.html#the-body-element"><code>body</code></a> element, or, if the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has only one node on it, or, if the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> then ignore the token. (<a href="#fragment-or-template-contents-case">fragment or template contents case</a>)</p>
-        <p>Otherwise, set the frameset-ok flag to "not ok"; then, for each attribute on the token, check to see if the attribute is already present on the body element (the second element) on the stack of open elements, and if it is not, add the attribute and its corresponding value to that element.</p>
+    <dd><p>If the second element on the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a > is not a <a href="http://dev.w3.org/html5/spec/the-body-element.html#the-body-element"><code>body</code></a> element, or, if the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has only one node on it, or, if the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> then ignore the token. (<a href="#fragment-or-template-contents-case">fragment or template contents case</a>)</p>
     </dd>
 </dl>
-
 
 <p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
 <dl>
@@ -399,6 +396,15 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 </dl>
 
 <h3 id="in-frameset-addition">Additions to the "in frameset" Insertion Mode</h3>
+
+
+<p>Modify the first clause of the rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inframeset">in frameset</a> insertion mode for encountering a "frameset" end tag to be:</p>
+
+<dt>An end tag whose tag name is "frameset"</dt>
+    <dd>
+        <p>If the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#current-node">current node</a > is the root <a href="http://dev.w3.org/html5/spec/the-html-element.html#the-html-element"><code>html</code></a>, or, if the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> then this is a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parse-error">parse error</a>; ignore the token. (<a href="#fragment-or-template-contents-case">fragment or template contents case</a>)</p>
+    </dd>
+</dl>
 
 <p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inframeset">"in frameset"</a> insertion mode, add the following rule:</p>
 <dl>
