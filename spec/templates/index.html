@@ -121,7 +121,7 @@
 <ul>
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://dev.w3.org/html5/spec/">HTML</a></li>
-    <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
+    <li><a href="http://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html">DOM Parsing and Serialization</a></li>
 </ul>
 
 <h2 id="terminology">Terminology</h2>
@@ -172,7 +172,7 @@
 
 <p>A <dfn id="dfn-template">template</dfn> provides a method for declaring document fragments in <a href="http://dev.w3.org/html5/spec/">HTML</a>. The document fragment that is declared by a <a href="#dfn-template">template</a> is called <dfn id="dfn-template-contents">template contents</dfn>.</p>
 
-<p>A <dfn id="dfn-template-contents-owner">template contents owner</dfn> is a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a> which does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>.</p>
+<p>A <dfn id="dfn-template-contents-owner">template contents owner</dfn> is a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a> which does not have a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#browsing-context">browsing context</a>.</p>
 
 <p>Every <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">document</a> has an associated <a href="#dfn-template-contents-owner">template contents owner</a>, which is <dfn id="dfn-template-contents-owner-initialization">initialized</dfn> in a way that is <a href="#dfn-processing-equivalence">equivalent</a> to processing these steps:</p>
 
@@ -184,8 +184,8 @@
     <dd><var>TEMPLATE CONTENTS OWNER</var>, the <a href="#dfn-template-contents-owner">template contents owner</a></dd>
 </dl>
 <ol>
-    <li>If <var>DOCUMENT</var> does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>, Let <var>TEMPLATE CONTENTS OWNER</var> be <var>DOCUMENT</var> and abort these steps.</li>
-    <li>Otherwise, Let <var>TEMPLATE CONTENTS OWNER</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">Document</a> node that does not have a <a href="http://dev.w3.org/html5/spec/browsers.html#browsing-context">browsing context</a>.</li>
+    <li>If <var>DOCUMENT</var> does not have a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#browsing-context">browsing context</a>, Let <var>TEMPLATE CONTENTS OWNER</var> be <var>DOCUMENT</var> and abort these steps.</li>
+    <li>Otherwise, Let <var>TEMPLATE CONTENTS OWNER</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-document">Document</a> node that does not have a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#browsing-context">browsing context</a>.</li>
     <li>Mark <var>TEMPLATE CONTENTS OWNER</var> as an <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#html-document">HTML document</a>.</li>
 </ol>
 </div>
@@ -205,9 +205,9 @@
 <dt>Context</dt>
     <dd>As a descendant of the <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element">head</a> element.</dd>
     <dd>As a descendant of the <a href="http://dev.w3.org/html5/spec/the-body-element.html#the-body-element">body</a> element.</dd>
-    <dd>As a descendant of the <a href="http://dev.w3.org/html5/spec/obsolete.html#frameset">frameset</a> element.</dd>
+    <dd>As a descendant of the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#frameset">frameset</a> element.</dd>
 <dt>Content Model</dt>
-    <dd>Any, except the <a href="http://dev.w3.org/html5/spec/the-html-element.html#the-html-element">html</a> element, the <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element">head</a> element, the <a href="http://dev.w3.org/html5/spec/the-body-element.html#the-body-element">body</a> element, or the <a href="http://dev.w3.org/html5/spec/obsolete.html#frameset">frameset</a> element.</dd>
+    <dd>Any, except the <a href="http://dev.w3.org/html5/spec/the-html-element.html#the-html-element">html</a> element, the <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element">head</a> element, the <a href="http://dev.w3.org/html5/spec/the-body-element.html#the-body-element">body</a> element, or the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#frameset">frameset</a> element.</dd>
 <dt>Content attributes</dt>
     <dd><a href="http://dev.w3.org/html5/spec/elements.html#global-attributes">Global attributes</a></dd>
 <dt>DOM Interface</dt>
@@ -256,11 +256,11 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
-<p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category.</p>
+<p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#special">special</a> category.</p>
 
 <h3 id="creating-an-element-for-a-token">Creating an element for the token</h3>
 
-<p>Whenever the HTML parser is about to <a href="http://dev.w3.org/html5/spec/tokenization.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
+<p>Whenever the HTML parser is about to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
 
 <h3 id="appending-to-a-template">Appending to a template</h3>
 
@@ -270,29 +270,29 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h3 id="clearing-the-stack">Clearing the stack back to a given context</h3>
 
-<p>When popping elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
+<p>When popping elements from the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
 <ol>
-    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
-    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
-    <li><a href="http://dev.w3.org/html5/spec/tokenization.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
+    <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
+    <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
+    <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
 </ol>
 
 <h3 id="foster-parent-addition">Additions to "foster parenting"</h3>
 
-<p>When a node is to be <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://dev.w3.org/html5/spec/the-table-element.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parenting">foster parenting</a> apply.</p>
+<p>When a node is to be <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://dev.w3.org/html5/spec/the-table-element.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parenting">foster parenting</a> apply.</p>
 
-<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://dev.w3.org/html5/spec/tokenization.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://dev.w3.org/html5/spec/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
+<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://dev.w3.org/html5/spec/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
 
 <h3 id="reset-insertion-mode-addition">Additions to "reset the insertion mode appropriately"</h3>
 
-<p>Just after the step labeled <strong>"Loop"</strong> in the algorithm to <a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">reset the insertion mode appropriately</a>, add the following step:</p>
+<p>Just after the step labeled <strong>"Loop"</strong> in the algorithm to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#reset-the-insertion-mode-appropriately">reset the insertion mode appropriately</a>, add the following step:</p>
 <ol start="4">
-    <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to "<a href="#template-contents-insertion-mode">template contents</a>" and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to "<a href="#template-contents-insertion-mode">template contents</a>" and abort these steps.</li>
 </ol>
 
 <p>Modify the step which begins <em>"If node is a head element..."</em> to be:</p>
 <ol start="11">
-    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
 </ol>
 
 <p>The following cases which were previously annotated as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>, can now be entered during normal parsing (i.e. <em>not</em> only in the fragment case) immediately following encountering a &lt/template&gt token, and the annotation should be removed:</p>
@@ -305,126 +305,126 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h3 id="in-table-scope-addition">Additions to "has an element in table scope"</h3>
 
-<p>Add the following to the list of element types for the algorithm to <a href="http://dev.w3.org/html5/spec/parsing.html#has-an-element-in-table-scope"><strong>have an element in table scope</strong></a>:</p>
+<p>Add the following to the list of element types for the algorithm to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#has-an-element-in-table-scope"><strong>have an element in table scope</strong></a>:</p>
 <ul>
     <li><a href="#dfn-template-element"><code>template</code></a> in the <a href="http://dev.w3.org/html5/spec/namespaces.html#html-namespace-0">HTML namespace</a>
 </ul>
 
 <h3 id="in-head-addition">Additions to the "in head" Insertion Mode</h3>
 
-<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
+<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
     <dd>Run these steps:
     <ol>
-        <li>Insert a marker at the end of the <a href="http://dev.w3.org/html5/spec/parsing.html#list-of-active-formatting-elements">list of active formatting elements</a></li>
+        <li>Insert a marker at the end of the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#list-of-active-formatting-elements">list of active formatting elements</a></li>
         <li><a href="#dfn-template-insertion-algorithm">Insert new template HTML element</a></li>
-        <li>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a>
+        <li>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a>
     </ol>
     </dd>
 <dt>An end tag whose name is "template"</dt>
-    <dd>If the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://dev.w3.org/html5/spec/parsing.html#has-an-element-in-scope">have an element in scope</a> with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a>; ignore the token.</dd>
+    <dd>If the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#has-an-element-in-scope">have an element in scope</a> with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parse-error">parse error</a>; ignore the token.</dd>
     <dd>Otherwise, run these steps:
     <ol>
-        <li><a href="http://dev.w3.org/html5/spec/tokenization.html#generate-implied-end-tags">Generate implied end tags</a></li>
-        <li>If the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a></li>
-        <li>Pop elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
-        <li><a href="http://dev.w3.org/html5/spec/parsing.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
-        <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
+        <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#generate-implied-end-tags">Generate implied end tags</a></li>
+        <li>If the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parse-error">parse error</a></li>
+        <li>Pop elements from the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
+        <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
+        <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
     </ol>
     </dd>
 </dl>
 
 <h3 id="in-body-addition">Additions to the "in body" Insertion Mode</h3>
 
-<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-table-addition">Additions to the "in table" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<p class="note">The "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>".</p>
+<p class="note">The "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inrow">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a>".</p>
 
 
 <h3 id="in-cell-addition">Additions to the "in cell" Insertion Mode</h3>
 
-<p>Modify the parenthetical comment within the <strong>An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intd">"in cell"</a> insertion mode, to be:</p>
+<p>Modify the parenthetical comment within the <strong>An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intd">"in cell"</a> insertion mode, to be:</p>
 
 <p>(which can only happen for "tbody", "tfoot" and "thead", when parsing template contents, or in the fragment case)</p>
 
 <h3 id="in-colgroup-addition">Additions to the "in column group" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-select-addition">Additions to the "in select" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-frameset-addition">Additions to the "in frameset" Insertion Mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inframeset">"in frameset"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inframeset">"in frameset"</a> insertion mode, add the following rule:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="template-contents-insertion-mode">The "template contents" Insertion Mode</h3>
 
-<p>When the user is to apply the rules for the "template contents" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
+<p>When the user is to apply the rules for the "template contents" <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a>, the user agent <strong>must</strong> handle the token as follows:</p>
 <dl>
 <dt>A character token</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A comment token</dt>
 <dt>A start tag whose name is one of: "link", "script", "style", "meta", template"</dt>
-    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A start tag whose name is "frame"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is "col"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "caption", "colgroup", "tbody", "tfoot", "thead"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "td", "th"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
 <dt>An end tag whose name is "template"</dt>
     <dd>
     <ol>
-        <li>Pop the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> off the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a></li>
-        <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
+        <li>Pop the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#current-node">current node</a> off the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a></li>
+        <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
     </ol>
     </dd>
 <dt>An end-of-file token</dt>
-    <dd><a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">Parse error</a></dd>
+    <dd><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parse-error">Parse error</a></dd>
     <dd>Run these steps:
     <ol>
-        <li>Pop the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> off the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a></li>
-        <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a> and reprocess the token</li>
+        <li>Pop the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#current-node">current node</a> off the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a></li>
+        <li><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a> and reprocess the token</li>
     </ol>
     </dd>
 <dt>Anything else</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
+    <dd>Switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 </dl>
 
 <h2 id="serializing-html-templates">Serializing HTML Templates</h2>
