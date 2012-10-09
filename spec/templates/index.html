@@ -198,6 +198,8 @@
     <li><a href="http://dev.w3.org/html5/spec/the-html-element.html#the-html-element">html</a></li>
 </ul>
 
+<p class="note">Parts marked <dfn id="template-contents-case">template contents case</dfn> in algorithms in the parser section are parts that only occur if there is a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> (the parser is presently parsing <a href="#dfn-template-contents">template contents</a>).</p>
+
 <p class="note">Parts marked <dfn id="fragment-or-template-contents-case">fragment or template contents case</dfn> in algorithms in the parser section are parts that only occur if the parser was created for the purposes of the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#fragment-case">fragment parsing algorithm</a> <em>or</em> if there is a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> (the parser is presently parsing <a href="#dfn-template-contents">template contents</a>).</p>
 
 </section>
@@ -343,6 +345,13 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 </dl>
 
 <h3 id="in-body-addition">Additions to the "in body" Insertion Mode</h3>
+
+<p>Modify the rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a> insertion mode for encountering a "html" start tag</p>
+
+<dt>A start tag whose tag name is "html"</dt>
+    <dd><p><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parse-error">Parse error</a>. If the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> has a <a href="#dfn-template-element-in-html-scope">template element in html scope</a> then ignore the token (<a href="#template-contents-case">template contents case</a>). Otherwise, for each attribute on the token, check to see if the attribute is already present on the top element of the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a>. If it is not, add the attribute and its corresponding value to that element.</p>
+    </dd>
+</dl>
 
 <p>Modify the first clause of the rule in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a> insertion mode for encountering a "body" start tag:</p>
 
