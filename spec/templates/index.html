@@ -281,7 +281,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>When a node is to be <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://dev.w3.org/html5/spec/the-table-element.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parenting">foster parenting</a> apply.</p>
 
-<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://dev.w3.org/html5/spec/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
+<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
 
 <h3 id="reset-insertion-mode-addition">Additions to "reset the insertion mode appropriately"</h3>
 
@@ -292,10 +292,10 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>Modify the step which begins <em>"If node is a head element..."</em> to be:</p>
 <ol start="11">
-    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="http://dev.w3.org/html5/spec/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">"in body"</a> ("<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://dev.w3.org/html5/spec/textFieldSelection.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
 </ol>
 
-<p>The following cases which were previously annotated as <a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>, can now be entered during normal parsing (i.e. <em>not</em> only in the fragment case) immediately following encountering a &lt/template&gt token, and the annotation should be removed:</p>
+<p>The following cases which were previously annotated as <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#fragment-case">fragment case</a>, can now be entered during normal parsing (i.e. <em>not</em> only in the fragment case) immediately following encountering a &lt/template&gt token, and the annotation should be removed:</p>
 
 <ul>
     <li>Step 4: "If <em>node</em> is a select element..."</li>
@@ -429,7 +429,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <h2 id="serializing-html-templates">Serializing HTML Templates</h2>
 
-<p>The serialization of <a href="#dfn-template">templates</a> is defined as the following addition to the <a href="http://dev.w3.org/html5/spec/the-end.html#serializing-html-fragments">Serializing HTML Fragments</a> algorithm.</p>
+<p>The serialization of <a href="#dfn-template">templates</a> is defined as the following addition to the <a href="http://dev.w3.org/html5/spec/textFieldSelection.html#serializing-html-fragments">Serializing HTML Fragments</a> algorithm.</p>
 
 <p>When running these steps, before step 2 ("For each child node of <em>the node</em>, in tree order, run the following steps"), insert the following step:</p>
 
