@@ -81,11 +81,12 @@
         <li><a href="#in-head-addition"><span class="section">7.7</span> Additions to the "in head" Insertion Mode</a></li>
         <li><a href="#in-body-addition"><span class="section">7.8</span> Additions to the "in body" Insertion Mode</a></li>
         <li><a href="#in-table-addition"><span class="section">7.9</span> Additions to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-cell-addition"><span class="section">7.10</span> Additions to the "in cell" Insertion Mode</a></li>
-        <li><a href="#in-colgroup-addition"><span class="section">7.11</span> Additions to the "in column group" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.12</span> Additions to the "in select" Insertion Mode</a></li>
-        <li><a href="#in-frameset-addition"><span class="section">7.13</span> Additions to the "in frameset" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.14</span> The "template contents" Insertion Mode</a></li>
+        <li><a href="#in-row-addition"><span class="section">7.10</span> Additions to the "in row" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.11</span> Additions to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-colgroup-addition"><span class="section">7.12</span> Additions to the "in column group" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.13</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#in-frameset-addition"><span class="section">7.14</span> Additions to the "in frameset" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.15</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
     <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
@@ -384,8 +385,34 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<p class="note">The "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">in table body</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">in row</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>".</p>
+<p class="note">The "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">in table body</a>" insertion mode is not modified because it defers to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>".</p>
 
+<h3 id="in-row-addition">Modifications to the "in row" Insertion Mode</h3>
+
+<p>Modify the first clause of the rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">in row</a> insertion mode for encountering a "tr" end tag:</p>
+
+<dt>A end tag whose tag name is "tr"</dt>
+    <dd><p>If the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a > does not have an <a href="http://dev.w3.org/html5/spec/parsing.html#has-an-element-in-table-scope">element in table scope</a> with the same tag name as the token, this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a>. Ignore the token. (<a href="#fragment-or-template-contents-case">fragment or template contents case</a>)</p>
+    </dd>
+</dl>
+
+<p>Modify the first clause of the rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">in row</a> insertion mode for encountering a "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr" start tag or a "table" end tag:</p>
+
+<dt>A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr"</dt>
+<dt>An end tag whose tag name is "table"</dt>
+    <dd><p>Act as if an end tag with the tag name "tr" had been seen, then, if that token wasn't ignored, reprocess the current token.</p>
+        <p>The fake end tag token here can only be ignored in the <a href="#fragment-or-template-contents-case">fragment or template contents case</a>.</p>
+    </dd>
+</dl>
+
+<h3 id="in-colgroup-addition">Additions to the "in column group" Insertion Mode</h3>
+
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
+<dl>
+<dt>A start tag whose tag name is "template"</dt>
+<dt>An end tag whose name is "template"</dt>
+    <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+</dl>
 
 <h3 id="in-cell-addition">Additions to the "in cell" Insertion Mode</h3>
 
