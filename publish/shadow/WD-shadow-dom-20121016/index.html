@@ -143,7 +143,7 @@
 
 <ul>
     <li><a href="http://www.w3.org/TR/CSS2/">CSS Level 2 Revision 1</a></li>
-    <li><a href="http://dev.w3.org/csswg/cssom/">CSSOM</a></li>
+    <li><a href="http://www.w3.org/TR/cssom/">CSSOM</a></li>
     <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
@@ -201,7 +201,7 @@
 
 <object data="shadow-rendering.svg" width="450" height="400"></object>
 
-<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-points">insertion points</a> is called <dfn id="dfn-distribution">distribution</dfn>.</p>
+<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="dfn-distribution">distribution</dfn>.</p>
 
 <object data="insertion-points.svg" width="800" height="900"></object>
 
@@ -217,9 +217,9 @@
 <ul>
     <li>The <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>The nodes and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a> or with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window">Window</a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a></li>
-    <li>The nodes <strong>are not</strong> present in any of the document's <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-nodelist"><code>NodeList</code></a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-htmlcollection"><code>HTMLCollection</code></a>, or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#domelementmap-0"><code>DOMElementMap</code></a> instances</li>
+    <li>The nodes <strong>are not</strong> present in any of the document's <a href="http://www.w3.org/TR/dom/#interface-nodelist"><code>NodeList</code></a>, <a href="http://www.w3.org/TR/dom/#interface-htmlcollection"><code>HTMLCollection</code></a>, or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#domelementmap-0"><code>DOMElementMap</code></a> instances</li>
     <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> addressable from any attributes of elements in <a href="#dfn-shadow-host">shadow host</a>'s document</li>
-    <li>The style sheets, represented by the nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> document's <a href="http://dev.w3.org/csswg/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
+    <li>The style sheets, represented by the nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> document's <a href="http://www.w3.org/TR/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
     <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods</li>
     <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are</strong> addressable from any attributes of elements in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
     <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from the document tree into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
@@ -332,7 +332,7 @@
 
 <p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
-<p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted when rendering. If multiple <a href="dfn-shadow-insertion-point">shadow insertion points</a> exist in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, only the first, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>, is recognized. It is said that the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-assigned">assigned</dfn> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> if the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>.</p>
+<p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted when rendering. If multiple <a href="#dfn-shadow-insertion-point">shadow insertion points</a> exist in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, only the first, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>, is recognized. It is said that the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-assigned">assigned</dfn> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> if the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>.</p>
 
 <p>Just like other <a href="#dfn-insertion-point">insertion points</a>, the <a href="#dfn-shadow-insertion-point">shadow insertion points</a> can be <a href="#dfn-active-insertion-point">active</a> or <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
@@ -397,7 +397,7 @@
 </dl>
 
 <ol>
-    <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
+    <li>Run <a href="#dfn-tree-composition">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
         <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> <strong>must</strong> be <a href="#dfn-rendering">rendered</a> accordingly</li>
@@ -502,7 +502,7 @@
     <dd><var>NODE</var>, the DOM node on which event listeners would be invoked</dd>
     <dd><var>RELATED</var>, the related target for the event</dd>
 <dt>Output</dt>
-    <dd><var>ADJUSTED</var>, the adjusted related target for <var>NODE</var></dd>
+    <dd><var>ADJUSTED</var>, the <dfn id="dfn-adjusted-related-target">adjusted related target</a> for <var>NODE</var></dd>
 </dl>
 <ol>
     <li>Let <var>TARGET</var> be <var>NODE</var></li>
@@ -677,15 +677,15 @@
 
 <h2 id="styles"><span class="section">7</span> Styles</h2>
 
-<p>Each <a href="#dfn-shadow-root">shadow root</a> has an associated list of zero or more <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, named <dfn id="dfn-shadow-root-style-sheets">shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheets</a>, associated with the <a href="#dfn-shadow-root">shadow root</a>, in <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-tree-order">tree order</a>.</p>
+<p>Each <a href="#dfn-shadow-root">shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, named <dfn id="dfn-shadow-root-style-sheets">shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a href="#dfn-shadow-root">shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
-<p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://www.w3.org/TR/CSS2/cascade.html#cascading-order">sorting order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-shadow-stack">shadow stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.
+<p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://www.w3.org/TR/CSS2/cascade.html#cascading-order">sorting order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-tree-stack">tree stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.
 
 </p><p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
 
 </p><p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the document CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-styles-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
+<p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
 <ol>
     <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> and match elements in the document tree;</li>
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> that matches a <a href="#dfn-shadow-host">shadow host</a> in a document tree.</li>
@@ -898,15 +898,14 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
     <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a> <a href="#api-shadow-root-selection">getSelection</a>();
-    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-add-style-sheet">addStyleSheet</a>(HTMLElement element) raises (DOMException);
-    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-remove-style-sheet">removeStyleSheet</a>(<a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> styleSheet) raises (DOMException);
+    <a href="http://www.w3.org/TR/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-add-style-sheet">addStyleSheet</a>(HTMLElement element) raises (DOMException);
+    <a href="http://www.w3.org/TR/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-remove-style-sheet">removeStyleSheet</a>(<a href="http://www.w3.org/TR/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> styleSheet) raises (DOMException);
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
     readonly attribute Element <a href="#api-shadow-root-active-element">activeElement</a>;
     attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
-    readonly attribute <a href="http://dev.w3.org/csswg/cssom/#the-stylesheet-interface">StyleSheetList</a> <a href="#api-shadow-root-style-sheets">styleSheets</a>;
+    readonly attribute <a href="http://www.w3.org/TR/cssom/#the-stylesheet-interface">StyleSheetList</a> <a href="#api-shadow-root-style-sheets">styleSheets</a>;
 }
-ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
 </code></pre>
 
 <h4 id="shadow-root-attributes"><span class="section">11.1.1</span> <code>ShadowRoot</code> Attributes</h4>
@@ -929,7 +928,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dd>On setting, these steps <strong>must</strong> be run:
 <ol>
     <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a></li>
-    <li><a href="#dfn-shadow-host"></a><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root">shadow root</a>.</li>
+    <li><a href="#dfn-shadow-host"></a><a href="http://www.w3.org/TR/dom/#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root">shadow root</a>.</li>
 </ol></dd>
 <dt id="api-shadow-root-style-sheets"><code>styleSheets</code> of type <code>StyleSheetList</code>, readonly</dt>
 <dd>Represents the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</dd>
@@ -990,47 +989,47 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 </dt><dd>Returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dd>When invoked, it <strong>must</strong> return <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
 <dt id="api-shadow-root-add-style-sheet"><code>addStyleSheet</code></dt>
-<dd>Adds a new <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> to <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</dd>
+<dd>Adds a new <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> to <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</dd>
 <dd>When invoked, the method <strong>must</strong> run the following steps:
 <ol>
     <li>If the parameter is an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmllinkelement">HTMLLinkElement</a>:
     <ol>
-        <li>Follow <a href="http://dev.w3.org/csswg/cssom/#requirements-on-user-agents-implementing-the-http-link-header">requirements</a> for implementing the HTTP <code>link</code> header with the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://dev.w3.org/csswg/cssom/#document-style-sheets">document style sheets</a></li>
-        <li>Return the newly created <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> object.</li>
+        <li>Follow <a href="http://www.w3.org/TR/cssom/#requirements-on-user-agents-implementing-the-http-link-header">requirements</a> for implementing the HTTP <code>link</code> header with the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://www.w3.org/TR/cssom/#document-style-sheets">document style sheets</a></li>
+        <li>Return the newly created <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> object.</li>
     </ol></li>
     <li>If the parameter is an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmlstyleelement">HTMLStyleElement</a>:
     <ol>
-        <li><a href="http://dev.w3.org/csswg/cssom/#create-a-style-sheet">Create a style sheet</a> with the following properties and the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://dev.w3.org/csswg/cssom/#document-style-sheets">document style sheets</a>:
+        <li><a href="http://www.w3.org/TR/cssom/#create-a-style-sheet">Create a style sheet</a> with the following properties and the exception that the newly created style sheet <strong>must</strong> be appended to the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, not <a href="http://www.w3.org/TR/cssom/#document-style-sheets">document style sheets</a>:
         <dl>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-location">style sheet location</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-location">style sheet location</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-node">style sheet owner node</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-owner-node">style sheet owner node</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-parent">style sheet parent</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-parent">style sheet parent</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-owner-css-rule">style sheet owner CSS rule</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-media">style sheet media</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-media">style sheet media</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-title">style sheet title</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-title">style sheet title</a></dt>
             <dd>null</dd>
-            <dt><a href="http://dev.w3.org/csswg/cssom/#style-sheet-alternate-flag">style sheet alternate flag</a></dt>
+            <dt><a href="http://www.w3.org/TR/cssom/#style-sheet-alternate-flag">style sheet alternate flag</a></dt>
             <dd>false</dd>
         </dl></li>
-        <li>Return the newly created <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> object.</li>
+        <li>Return the newly created <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> object.</li>
     </ol>
     </li><li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
 </ol></dd>
 <dt id="api-shadow-root-remove-style-sheet"><code>removeStyleSheet</code></dt>
-<dd>Removes a <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>.</dd>
+<dd>Removes a <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a>, added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>.</dd>
 <dd>When invoked, the method <strong>must</strong> run these steps:
 <ol>
-    <li>If the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a>, represented by the method parameter exists in the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> and was added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>:
+    <li>If the <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a>, represented by the method parameter exists in the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> and was added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>:
     <ol>
-        <li>Remove the <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> from <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</li>
-        <li>Return the removed <a href="http://dev.w3.org/csswg/cssom/#style-sheet">style sheet</a> instance.</li>
+        <li>Remove the <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> from <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</li>
+        <li>Return the removed <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> instance.</li>
     </ol></li>
     <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#nomodificationallowederror"><code>NoModificationAllowedError</code></a> exception.</li>
 </ol></dd>
