@@ -258,7 +258,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <div class="algorithm">
 <dl>
 <ol>
-    <li>If the new value is not a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-throw">throw</a> an <code><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#typemismatcherror">"TypeMismatchError"</a></code> error, and abort these steps.</li>
+    <li>If the new value is not a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a>, or is a <a href="http://www.w3.org/TR/shadow-dom/#shadow-root-object">ShadowRoot</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-throw">throw</a> n <code><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#typemismatcherror">"TypeMismatchError"</a></code> error, and abort these steps.</li>
     <li>Otherwise, if the new value is the same as the <a href="#api-html-template-element-content">content</a>, do nothing. Abort these steps.</li>
     <li>Otherwise, if the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> of the new value is not the same as the context object's <a href="#dfn-template-contents-owner">template contents owner</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-adopt">adopt</a> the new value with context object's <a href="#dfn-template-contents-owner">template contents owner</a>.</li>
     <li>Replace <a href="#api-html-template-element-content">content</a> with the new value.</li>
