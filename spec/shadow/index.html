@@ -74,8 +74,10 @@
         <li><a href="#matching-insertion-points"><span class="section">5.3</span> Matching Insertion Points</a></li>
         <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">5.4</span> Matching Children, Distributed To Insertion Points</a></li>
         <li><a href="#multiple-shadow-subtrees"><span class="section">5.5</span> Hosting Multiple Shadow Subtrees</a></li>
-        <li><a href="#nested-shadow-subtrees"><span class="section">5.6</span> Nested Shadow Subtrees</a></li>
-        <li><a href="#rendering-shadow-subtrees"><span class="section">5.7</span> Rendering Shadow Subtrees</a></li>
+        <li><a href="#reprojection"><span class="section">5.6</span> Reprojection</a></li>
+        <li><a href="#composition"><span class="section">5.7</span> Composition</a></li>
+        <li><a href="#nested-shadow-subtrees"><span class="section">5.8</span> Nested Shadow Subtrees</a></li>
+        <li><a href="#rendering-shadow-subtrees"><span class="section">5.9</span> Rendering Shadow Subtrees</a></li>
     </ol></li>
     <li><a href="#events"><span class="section">6</span> Events</a>
     <ol>
@@ -282,7 +284,7 @@
 <p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is a fragment in a fictional <a href="http://www.w3.org/TR/css3-selectors">selector</a> consisting of:</p>
 <ol>
     <li>A selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a> of this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
-    <li>A combinator that expresses the relationship between an element that is either a parent of another element <em>or</em> between an element, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">'s  parent element</li>
+    <li>A combinator that expresses the relationship between an element that is either a parent of another element <em>or</em> between an element, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">insertion point</a>'s  parent element</li>
     <li>The <a href="#dfn-selector-fragment">selector fragment</a>.</li>
 </ol>
 
@@ -344,7 +346,18 @@
 
 <p>Just like other <a href="#dfn-insertion-point">insertion points</a>, the <a href="#dfn-shadow-insertion-point">shadow insertion points</a> can be <a href="#dfn-active-insertion-point">active</a> or <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
-<p>The composition is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
+<h3 id="reprojection">Reprojection</h3>
+
+<p>One case that deserves special consideration is the situation when an <a href="#dfn-insertion-point">insertion point</a> is a child node of another <a href="#dfn-shadow-host">shadow host</a>. In such situations, the nodes <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a> <strong>must</strong> appear as if they were child nodes of the <a href="#dfn-shadow-host">shadow host</a> in the context of <a href="#dfn-distribution">distribution</a> within the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, hosted by said <a href="#dfn-shadow-host">shadow host</a>. Thus, the nodes <a href="#dfn-distribution">distributed</a> to a <a href="#dfn-shadow-dom-subtree">subtree</a> could have already been <a href="#dfn-distribution">distributed</a> by the <a href="#dfn-nested-subtree">nesting</a> subtree. The effect of a node being <a href="#dfn-distribution">distributed</a> into more than one <a href="#dfn-insertion-point">insertion point</a> is called <dfn id="dfn-reprojection">reprojection</a>.</p>
+
+<div class="informative">
+Despite being distributed to more than one insertion point during reprojection, a node is still only rendered once, because of the constraints under which the reprojection occurs: since the insertion points are only subject to reprojection when they are children of a shadow host, they are never rendered. Instead the shadow DOM subtree is rendered in their place.
+</div>
+
+<h3 id="composition">Composition</h3>
+
+<p>The composition of <a href="#dfn-shadow-DOM-subtree">shadow DOM subtrees</a> for a given <a href="#dfn-shadow-host">shadow host</a> is performed with the <dfn id="dfn-tree-composition">tree composition algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:
+
 
 <div class="algorithm">
 <dl>
@@ -449,6 +462,7 @@
 <dl>
 <dt>Input</dt>
     <dd><var>NODE</var>, a DOM node</dd>
+    <dd><var>CONTEXT</var>, <strong>null</strong> or a <a href="#dfn-reprojection">reprojection</a> context DOM node</dd>
 <dt>Output</dt>
     <dd><var>PARENT</var>, a DOM node's <a href="#dfn-adjusted-parent">adjusted parent</a></dd>
 </dl>
@@ -461,7 +475,11 @@
         </ol></li>
         <li>Otherwise, let the <var>PARENT</var> be the <a href="#dfn-shadow-host">shadow host</a> of the <var>NODE</var>
     </ol></li>
-    <li>If <var>NODE</var> is currently <a href="#dfn-distribution">distributed</a> to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, let the <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is <a href="#dfn-distribution">distributed</a> to</li>
+    <li>If <var>NODE</var> is currently <a href="#dfn-distribution">distributed</a> to an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, let <var>PARENT</var> be the <a href="#dfn-insertion-point">insertion point</a> to which the <var>NODE</var> is <a href="#dfn-distribution">distributed</a></li>
+    <li>If <var>NODE</var> is an <a href="#dfn-insertion-point">insertion point</a> and <var>CONTEXT</var> is not <strong>null</strong>:
+    <ol>
+      <li>If the parent node of <var>NODE</var> is a <a href="#dfn-shadow-host">shadow host</a> <em>and</em> its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> contains an <a href="#dfn-insertion-point">insertion point</a> to which <var>CONTEXT</var> is <a href="#dfn-distribution">distributed</a>, let <var>PARENT</var> be that <a href="#dfn-insertion-point">insertion point</a></li>
+    </ol></li>
     <li>Otherwise, let <var>PARENT</var> be the node's parent node.</li>
 </ol>
 </div>
