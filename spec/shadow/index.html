@@ -502,7 +502,12 @@ Despite being distributed to more than one insertion point during reprojection, 
     <li>Let <var>ANCESTOR</var> be <var>NODE</var></li>
     <li><dfn id="algo-reatargeting-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
     <ol>
-        <li>If <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>, push <var>ANCESTOR</var> into <var>STACK</var></li>
+        <li>If <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
+        <ol>
+            <li>Let <var>CONTEXT</var> be the top-most item in <var>STACK</var> that is not an <a href="#dfn-insertion-point">insertion point</a> or <strong>null</strong> if such item does not exist.</li>
+            <li>Push <var>ANCESTOR</var> into <var>STACK</var></li>
+        </ol></li>
+        <li>Otherwise, let <var>CONTEXT</var> be <strong>null</strong></li>
         <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
         <li>Let <var>TARGET</var> be the DOM node at the top of <var>STACK</var></li>
         <li>Add (<var>TARGET</var>, <var>ANCESTOR</var>) tuple to <var>TARGETS</var></li>
@@ -510,7 +515,7 @@ Despite being distributed to more than one insertion point during reprojection, 
         <ol>
             <li>Pop <var>STACK</var>, if <var>STACK</var> is not empty</li>
         </ol></li>
-        <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
+        <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> and <var>CONTEXT</var> as input</li>
     </ol></li>
 </ol>
 </div>
@@ -549,9 +554,11 @@ Despite being distributed to more than one insertion point during reprojection, 
         <li>Let <var>LAST</var> be <strong>undefined</strong></li>
         <li><dfn id="algo-ancestor-repeat">Repeat</dfn> while <var>ANCESTOR</var> exists:
         <ol>
+            <li>Let <var>CONTEXT</var> be <strong>null</strong>
             <li>If <var>STACK</var> is empty, push <var>ANCESTOR</var> into <var>STACK</var></li>
             <li>Otherwise, if <var>ANCESTOR</var> is an <a href="#dfn-insertion-point">insertion point</a>:
             <ol>
+                <li>Let <var>CONTEXT</var> be the top-most item that is not an <a href="#dfn-insertion-point">insertion point</a> in <var>STACK</var> or <strong>null</strong>, if such item does not exist.</li>
                 <li>If <var>LAST</var> is <a href="#dfn-distribution">distributed</a> or assigned into <var>ANCESTOR</var>:
                 <ol>
                     <li>Let <var>HEAD</var> be the DOM node at the top of the <var>STACK</var></li>
@@ -565,7 +572,7 @@ Despite being distributed to more than one insertion point during reprojection, 
             </ol></li>
             <li>If <var>ANCESTOR</var> is a <a href="#dfn-shadow-root">shadow root</a>, pop <var>STACK</var></li>
             <li>Let <var>LAST</var> be <var>ANCESTOR</var></li>
-            <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> as input</li>
+            <li>Set <var>ANCESTOR</var> to be the result of <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>, given <var>ANCESTOR</var> and <var>CONTEXT</var> as input</li>
         </ol></li>
         <li>If <var>TARGET</var> is a <a href="#dfn-shadow-root">shadow root</a>, let <var>TARGET</var> be the <a href="#dfn-shadow-host">shadow host</a> of <var>TARGET</var></li>
         <li>Otherwise, let <var>TARGET</var> be <var>TARGET</var>'s parent node</li>
