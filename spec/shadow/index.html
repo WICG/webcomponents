@@ -139,7 +139,7 @@
     <li>explaining of the conceptual model and algorithms behind it, and</li>
     <li>expressing this model with DOM interfaces and HTML elements.</li>
 </ol>
-<p>In a sense, these parts can be viewed as <em>math</em>, which sets up the reasoning environment, <em>physics</em>, which is the theoretical reasoning about the concept, and <em>mechanics</em>, which is the is the practical application of this reasoning.</p>
+<p>In a sense, these parts can be viewed as <em>math</em>, which sets up the reasoning environment, <em>physics</em>, which is the theoretical reasoning about the concept, and <em>mechanics</em>, which is the practical application of this reasoning.</p>
 
 <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
 
@@ -340,7 +340,7 @@
 
 <h3 id="multiple-shadow-subtrees">Hosting Multiple Shadow Subtrees</h3>
 
-<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
+<p>A <a href="#dfn-shadow-host">shadow host</a> may host more than one <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. In such cases, the subtrees are stacked in the order they were added the host, starting with the subtree added most recently. This set of trees is called a <dfn id="dfn-tree-stack">tree stack</dfn>. The more recently added subtree is called the <dfn id="dfn-younger-tree">younger tree</dfn>, and the less recently added subtree is called the <dfn id="dfn-older-tree">older tree</dfn>. The most recently added subtree is called the <dfn id="dfn-youngest-tree">youngest tree</dfn>.</p>
 
 <p>To facilitate composing multiple shadow subtrees of the same host, a special kind of <a href="#dfn-insertion-point">insertion point</a> is defined. The <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> designates a place in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, where an <a href="#dfn-older-tree">older tree</a> is inserted when rendering. If multiple <a href="#dfn-shadow-insertion-point">shadow insertion points</a> exist in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, only the first, in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>, is recognized. It is said that the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-assigned">assigned</dfn> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> if the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>.</p>
 
@@ -1115,7 +1115,7 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
         <dd>Must <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-apply-shadow-styles">apply-shadow-styles</a> attribute.</dd> -->
         <dt id="api-html-content-element-select"><code>select</code> of type <code>DOMString</code></dt>
         <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
-        <dt id="api-html-content-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
+        <dt id="api-html-content-element-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>boolean</code></dt>
         <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
     </dl>
     </dd>
@@ -1158,7 +1158,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
     </code></pre>
     <dl>
         <dt>Attributes</dt>
-        <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInhertiance</code> of type <code>boolean</code></dt>
+        <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>boolean</code></dt>
         <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">reset-style-inheritance</a> attribute.</dd>
     </dl>
 </dd>
@@ -1287,7 +1287,7 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Deepak Sherveghar</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Glenn Adams</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Oliver Nightingale</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Richard Bradshaw</span>, <span class="vcard">Sam Dutton</span>, <span class="vcard">Shinya Kawanaka</span>, <span class="vcard">Tab Atkins</span>, and <span class="vcard">Takashi Sakamoto</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Deepak Sherveghar</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Glenn Adams</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Oliver Nightingale</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Richard Bradshaw</span>, <span class="vcard">Ruud Steltenpool</span>, <span class="vcard">Sam Dutton</span>, <span class="vcard">Shinya Kawanaka</span>, <span class="vcard">Tab Atkins</span>, and <span class="vcard">Takashi Sakamoto</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
