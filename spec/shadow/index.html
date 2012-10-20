@@ -78,6 +78,7 @@
         <li><a href="#composition"><span class="section">5.7</span> Composition</a></li>
         <li><a href="#nested-shadow-subtrees"><span class="section">5.8</span> Nested Shadow Subtrees</a></li>
         <li><a href="#rendering-shadow-subtrees"><span class="section">5.9</span> Rendering Shadow Subtrees</a></li>
+        <li><a href="#custom-pseudo-elements"><span class="section">5.10</span> Custom Pseudo-elements</a></li>
     </ol></li>
     <li><a href="#events"><span class="section">6</span> Events</a>
     <ol>
@@ -453,6 +454,16 @@ Despite being distributed to more than one insertion point during reprojection, 
 
 <p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several DOM subtrees, including the document tree. The term "<dfn id="dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
 
+<h3 id="custom-pseudo-elements">Custom Pseudo-Elements</h3>
+
+<p>In certain situations, the author of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> may wish to designate one or more elements from that tree as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></p>
+
+<div class="informative">
+For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
+</div>
+
+<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. Any element in a <a href="#dfn-shadow-dom-subtree">shadow dom subtree</a> can be a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>. Each <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> <strong>must</strong> have a string value associated with it. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</a>.
+
 <h2 id="events">Events</h2>
 
 <p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
@@ -724,7 +735,11 @@ Despite being distributed to more than one insertion point during reprojection, 
 
 <p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://www.w3.org/TR/CSS2/cascade.html#cascading-order">sorting order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-shadow-stack">shadow stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.
 
-<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, unless the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.
+<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with these two exceptions:</p>
+<ol>
+    <li>If the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</li>
+    <li>If the <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> ends with a <a href=http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</li>
+</ol>
 
 <p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the document CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
@@ -928,6 +943,21 @@ host
 </table>
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
+
+<h3 id="element-additions">Additions to <code>Element</code> Interface</h3>
+
+<pre><code>
+interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
+    attribute DOMString? <dfn id="api-pseudo-element-stylable-pseudo">pseudo</dfn>;
+}
+<a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> implements <a href="#dfn-api-pseudo-element-stylable">PseudoElementStylable</a>;
+</code></pre>
+
+<dl>
+<dt><code>pseudo</code> of type <code>DOMString</code></dt>
+<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the element.</dd>
+</dd>
+</dl>
 
 <h3 id="shadow-root-object"><code>ShadowRoot</code> Object</h3>
 
