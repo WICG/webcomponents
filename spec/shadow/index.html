@@ -112,13 +112,14 @@
     <li><a href="#html-elements-and-their-shadow-dom-subtrees"><span class="section">10</span> HTML Elements and Their Shadow DOM subtrees</a>
     <li><a href="#elements-and-dom-objects"><span class="section">11</span> Elements and DOM Objects</a>
     <ol>
-        <li><a href="#shadow-root-object"><span class="section">11.1</span> <code>ShadowRoot</code> Object</a>
+        <li><a href="#extensions-to-element"><span class="section">11.1</span>  Extensions to <code>Element</code> Interface</a></li>
+        <li><a href="#shadow-root-object"><span class="section">11.2</span> <code>ShadowRoot</code> Object</a>
         <ol>
-            <li><a href="#shadow-root-attributes"><span class="section">11.1.1</span> <code>ShadowRoot</code> Attributes</a></li>
-            <li><a href="#shadow-root-methods"><span class="section">11.1.2</span> <code>ShadowRoot</code> Methods</a></li>
+            <li><a href="#shadow-root-attributes"><span class="section">11.2.1</span> <code>ShadowRoot</code> Attributes</a></li>
+            <li><a href="#shadow-root-methods"><span class="section">11.2.2</span> <code>ShadowRoot</code> Methods</a></li>
         </ol></li>
-        <li><a href="#content-element"><span class="section">11.2</span> The <code>content</code> HTML element</a></li>
-        <li><a href="#shadow-element"><span class="section">11.3</span> The <code>shadow</code> HTML element</a></li>
+        <li><a href="#content-element"><span class="section">11.3</span> The <code>content</code> HTML element</a></li>
+        <li><a href="#shadow-element"><span class="section">11.4</span> The <code>shadow</code> HTML element</a></li>
     </ol></li>
     <li><a href="#shadow-dom-example"><span class="section">12</span> Shadow DOM Example</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -462,7 +463,7 @@ Despite being distributed to more than one insertion point during reprojection, 
 For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
 </div>
 
-<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. Any element in a <a href="#dfn-shadow-dom-subtree">shadow dom subtree</a> can be a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>. Each <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> <strong>must</strong> have a string value associated with it. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</a>.
+<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.
 
 <h2 id="events">Events</h2>
 
@@ -738,10 +739,12 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 <p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared by the document <strong>must not</strong> apply in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with these two exceptions:</p>
 <ol>
     <li>If the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this subtree. The flag signals that document CSS rules are applicable in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</li>
-    <li>If the <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> ends with a <a href=http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</li>
+    <li>If the <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudo-element</a> with the name that equals the <a href="#dfn-custom-pseudo-element-value">value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</li>
 </ol>
 
 <p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the document CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+
+<p>If the last <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> of a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">rule</a> contains a <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudo-element</a> whose name equals to a <a href="#dfn-valid-custom-pseudo-element">valid</a> <a href="#dfn-custom-pseudo-element-value">value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, this <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudo-element</a> <strong>must</strong> match the element, associated with this <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>.</p>
 
 <p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-styles-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
 <ol>
@@ -944,7 +947,7 @@ host
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
-<h3 id="element-additions">Additions to <code>Element</code> Interface</h3>
+<h3 id="extensions-to-element">Extensions to <code>Element</code> Interface</h3>
 
 <pre><code>
 interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
@@ -956,6 +959,12 @@ interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
 <dl>
 <dt><code>pseudo</code> of type <code>DOMString</code></dt>
 <dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the element.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>null</strong> if the no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is associated with this element.</dd>
+<dd>On setting, these steps <strong>must</strong> be run:
+<ol>
+    <li>If exists, discard current <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this element</li>
+    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with element and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
+</ol></dd>
 </dd>
 </dl>
 
