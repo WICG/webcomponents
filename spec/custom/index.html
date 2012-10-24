@@ -206,30 +206,6 @@
 
 <p><span class="fixme">Specify how custom DOM elements are defined declaratively</span></p>
 
-<p>The <dfn id="dfn-prototype-construction-algorithm">prototype construction algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>EXTENDS</var>, an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a></dd>
-    <dd><var>PROPERTIES</var>, an object</dd>
-<dt>Output</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
-</dl>
-<ol>
-    <li>If <var>EXTENDS</var> is an invalid <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>, throw an <a href="http://www.w3.org/TR/domcore/#invalidcharactererror"><code>InvalidCharacterError</code></a> exception.</li>
-    <li>If <var>EXTENDS</var> is a <a href="#dfn-custom-element-name">custom element name</a> name, let <var>BASE</var> be the <a href="#dfn-element-prototype">element prototype</a> of the <a href="#dfn-custom-dom-element">custom DOM element</a> with the <a href="#dfn-custom-element-name">custom element name</a> of <var>EXTENDS</var></li>
-    <li>Otherwise:
-    <ol>
-        <li>If <var>EXTENDS</var> is defined in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML specification</a> or other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, let <var>BASE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>EXTENDS</var></li>
-        <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#notsupportederror"><code>NotSupportedError</code></a> exception.</li>
-    </ol></li>
-    <li><a href="http://ecma-international.org/ecma-262/5.1/#sec-15.2.3.5">Create</a> a new object that implements <var>BASE</var></li>
-    <li>Let <var>PROTOTYPE</var> be this new object</li>
-    <li>If <var>PROPERTIES</var> is present and not <code>undefined</code>, <a href="http://ecma-international.org/ecma-262/5.1/#sec-15.2.3.7">define properties</a> on <var>PROTOTYPE</var> using <var>PROPERTIES</var></li>
-</ol>
-</div>
-
 <p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
 <div class="algorithm">
