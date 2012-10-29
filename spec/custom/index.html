@@ -222,12 +222,30 @@
     <ol>
         <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-element-prototype">element prototype</a> in <var>DEFINITION</var></li>
         <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
+        <li>Let <var>REFERENCE</var> be the next sibling of <var>ELEMENT</a></li>
+        <li>Let <var>PARENT</var> be the parent of <var>ELEMENT</var></li>
+        <li><a href="http://www.w3.org/TR/domcore/#concept-node-remove">Remove</a> <var>ELEMENT</var> from <var>PARENT</var> with <em>suppress observers flag</em> set</li>
+        <li>Let <var>CHILDREN</var> be the list of all child nodes of <var>ELEMENT</var>
+        <li>For each item in <var>CHILDREN</var>:
+        <ol>
+            <li>Let <var>CHILD</var> be this item</li>
+            <li><a href="http://www.w3.org/TR/domcore/#concept-node-append">Append</a> <var>CHILD</var> to <var>UPGRADE</var></li>
+        </ol></li>
+        <li>Let <var>ATTRIBUTES</var> be <var>ELEMENT</var>'s <a href="http://www.w3.org/TR/domcore/#concept-element-attribute">attribute list</a></li>
+        <li>For each item in <var>ATTRIBUTES</var>:
+        <ol>
+            <li>Let <var>ATTRIBUTE</var> be this item</li>
+            <li>Append <var>ATTRIBUTE</var> to <var>UPGRADE</var>'s <a href="http://www.w3.org/TR/domcore/#concept-element-attribute">attribute list</a></li>
+        </ol></li>
+        <li><a href="">Insert</a> <var>UPGRADE</var> into <var>PARENT</var> before <var>REFERENCE</var> with <em>suppress observers flag</em> set</li>
         <li><a href="http://www.w3.org/TR/domcore/#concept-node-replace">Replace</a> <var>ELEMENT</var> with <var>UPGRADE</var> in <var>TREE</var></li>
         <li>On <var>ELEMENT</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire</a> an <a href="#api-element-replace-event"><code>ElementReplaceEvent</code></a> event, initialized with values <em>upgrade</em> as <var>UPGRADE</var> and <em>bubbles</em> as <code>false</code>.</li>
     </ol></li>
     <li>On <var>UPGRADE</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire an event</a> named <code>elementupgrade</code> with its <code>bubbles</code> attribute set to <code>true</code>.</li>
 </ol>
 </div>
+
+<p>The <a href="#dfn-element-upgrade">element upgrade algorithm</a> <strong>must not</strong> <a href="http://www.w3.org/TR/domcore/#concept-MO-queue">queue</a> any observer records</a>.
 
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom DOM Elements in HTML</h2>
 
