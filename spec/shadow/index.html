@@ -744,39 +744,6 @@ For example, when developing a 2-dimensional range slider widget, which offers a
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-nested-subtree">nesting</a> tree.</li>
 </ol>
 
-<p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-<dd><var>RULE</var>, a CSS rule whose applicability is being determined</dd>
-<dd><var>TREE</var>, the document tree or <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></dd>
-<dt>Output</dt>
-<dd>Whether <var>RULE</var> is applicable in <var>TREE</var>.</dd>
-</dl>
-<ol>
-    <li>If <var>RULE</var> is not an <a href="http://www.w3.org/TR/CSS2/cascade.html">author style</a>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
-    <li>Otherwise, if <var>RULE</var> is either an <a href="#host-at-rule"><code>@host</code> @-rule</a> or contains a <code>select</code>  <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinator</a> <em>and</em> <var>RULE</var> is declared in <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>:
-    <ol>
-        <li>Let <var>BOTTOM</var> the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with which these <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> are associated</li>
-        <li>If the <a href="#dfn-shadow-host">shadow host</a> of <var>BOTTOM</var> is in <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-    </ol></li>
-    <li>Otherwise, if <var>TREE</var> is a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>:
-    <ol>
-        <li>If <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and <var>RULE</var> is declared in the document tree, <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-        <li>Otherwise, if <var>RULE</var> is declared in <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>:
-        <ol>
-            <li>Let <var>TOP</var> the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, with which these <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> are associated</li>
-            <li>If <var>TOP</var> is <var>TREE</var>, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-            <li>Otherwise, if <var>TREE</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set and if each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that both <a href="#dfn-enclosed-subtree">encloses</a> <var>TREE</var> and is <a href="#dfn-enclosed-subtree">enclosed</a> by <var>TOP</var> has <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set, then <var>RULE</var> <strong>is</strong> applicable in <var>TREE</var>.</li>
-        </ol></li>
-        <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
-    </ol></li>
-    <li>Otherwise, if <var>TREE</var> is a document tree and <var>RULE</var> is declared in <var>TREE</var>, the rule <strong>is</strong> applicable in <var>TREE</var>.</li>
-    <li>Otherwise, <var>RULE</var> <strong>is not</strong> applicable in <var>TREE</var>.</li>
-</ol>
-</div>
-
 <p>In a document that contains <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
     <li>the styles of the <a href="#dfn-shadow-host">shadow host</a> are inherited by the children of the <a href="#dfn-shadow-root">shadow root</a></li>
