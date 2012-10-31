@@ -932,15 +932,15 @@ interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
 <p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root">shadow root</a>.</p>
     
 <pre><code>
-[Constructor(in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> host) raises (DOMException)]
+[Constructor(<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> host)]
 interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> {
-    <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
-    <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a> <a href="#api-shadow-root-selection">getSelection</a>();
-    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-add-style-sheet">addStyleSheet</a>(HTMLElement element) raises (DOMException);
-    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-remove-style-sheet">removeStyleSheet</a>(<a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> styleSheet) raises (DOMException);
+    <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(DOMString elementId);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(DOMString tagName);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(DOMString className);
+    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
+    <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a>? <a href="#api-shadow-root-selection">getSelection</a>();
+    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-add-style-sheet">addStyleSheet</a>(HTMLElement element);
+    <a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> <a href="#api-shadow-root-remove-style-sheet">removeStyleSheet</a>(<a href="http://dev.w3.org/csswg/cssom/#the-cssstylesheet-interface">CSSStyleSheet</a> styleSheet);
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
     readonly attribute Element <a href="#api-shadow-root-active-element">activeElement</a>;
