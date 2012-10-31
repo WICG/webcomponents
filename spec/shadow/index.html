@@ -409,7 +409,7 @@ Despite being distributed to more than one insertion point during reprojection, 
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
-<p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the document, the document is the <a href="#dfn-nested-subtree">nesting</a> tree of its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <p>A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-enclosed-subtree">enclosed</dfn> by another <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> when the enclosing subtree nests the enclosed subtree through one or more levels of nesting. All <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are <a href="#dfn-enclosed-subtree">enclosed</a> by the document tree.</p>
 
@@ -740,8 +740,8 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 
 <p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-styles-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
 <ol>
-    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> and match elements in the document tree;</li>
-    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> that matches a <a href="#dfn-shadow-host">shadow host</a> in a document tree.</li>
+    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> match elements in the <a href="#dfn-enclosed-subtree">enclosing</a> trees;</li>
+    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-nested-subtree">nesting</a> tree.</li>
 </ol>
 
 <p>The <dfn id="dfn-rule-applicability-algorithm">rule applicability algorithm</dfn> is used to determine whether any given rule is applicable to any DOM tree, and it <strong>must</strong> be equivalent to processing the following steps:</p>
