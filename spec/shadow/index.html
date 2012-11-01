@@ -173,8 +173,6 @@
     <dd>Any DOM object that <a href="http://www.w3.org/TR/domcore/#concept-tree-participate">participates in a tree</a></dd>
 <dt>DOM tree</dt>
     <dd>Any <a href="http://www.w3.org/TR/domcore/#trees">tree</a>, composed of DOM objects</dd>
-<dt>DOM structure</dt>
-    <dd>A DOM tree or fragment of a DOM tree</dd>
 </dl>
 
 </section>
@@ -183,7 +181,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM structure. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM subtree. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
 <p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
 
@@ -193,7 +191,7 @@
 
 <object data="../../assets/images/functional-encapsulation-example.svg" width="800" height="500"></object>
 
-<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how a widget's DOM structure is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
+<p>This need for observing the functional <a href="#dfn-boundary">boundaries</a> in a document tree is even larger when a <a href="#dfn-widget">widget</a> is operated on&mdash;added, moved, or removed in the document tree&mdash;by an outside actor, such as the Web application that consumes these widgets. Unless the widget consumer knows exactly how a widget's DOM subtree is designed, it is impossible for the consumer to reasonably operate on the widget. A typical workaround has been providing alternative means of operation by the widget developer, which, in striving for API consistency quickly extrapolates into a complete set of widget-specific, DOM-like APIs.</p>
 
 <h2 id="shadow-dom-subtrees">Shadow DOM Subtrees</h2>
 
