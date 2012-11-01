@@ -181,7 +181,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM subtree. Despite being part of one document tree, there are typically many functional fragments of DOM (or <dfn id="dfn-dom-subtree">DOM subtrees</dfn>), as well as assumptions about these fragments operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
+<p>Web application developers often encounter the need to provide <dfn id="dfn-encapsulation">encapsulation</dfn> of a DOM subtree. Despite being part of one document tree, there are typically many functional subtrees, as well as assumptions about these subtrees operating independently. This type of encapsulation is called <dfn id="dfn-functional-encapsulation">functional encapsulation</dfn>, as opposed to <dfn id="dfn-trust-encapsulation">trust encapsulation</dfn>, which deals with limiting information flow based on trust and ensuring security of data and state within an application.</p>
 
 <p><a href="#dfn-functional-encapsulation">Functional encapsulation</a> is primarily concerned with establishing functional boundaries in a document tree. A functional boundary (or just <dfn id="dfn-boundary">boundary</dfn> hereon) is a delineation of functional concerns between two loosely coupled units of functionality.</p>
 
@@ -197,19 +197,19 @@
 
 <p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
 
-<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between shadow DOM subtrees are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="dfn-shadow-root">shadow roots</dfn>. Any types of nodes other than <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> <strong>must not</strong> be allowed to become <a href="#dfn-shadow-host">shadow hosts</a>.</p>
+<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are called <dfn id="dfn-shadow-root">shadow roots</dfn>. Any types of nodes other than <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> <strong>must not</strong> be allowed to become <a href="#dfn-shadow-host">shadow hosts</a>.</p>
 
 <object data="../../assets/images/shadow-dom-subtrees.svg" width="800" height="430"></object>
 
-<p>When rendered, the shadow DOM subtree takes place of the <a href="#dfn-shadow-host">shadow host</a>'s content.</p>
+<p>When rendered, the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> takes place of the <a href="#dfn-shadow-host">shadow host</a>'s content.</p>
 
 <object data="../../assets/images/shadow-rendering.svg" width="450" height="400"></object>
 
-<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the shadow DOM subtree, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the shadow DOM subtree, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="dfn-distribution">distribution</dfn>.</p>
+<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, a notion of insertion points is added to the abstraction. An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="dfn-distribution">distribution</dfn>.</p>
 
 <object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
 
-<p>Thus, the encapsulation of a shadow DOM subtree can be viewed as a two-fold problem:
+<p>Thus, the encapsulation of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be viewed as a two-fold problem:
 <ol>
     <li>the <dfn id="dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
     <li>the <dfn id="dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
@@ -236,7 +236,7 @@
 
 <p>To maintain the lower-boundary encapsulation, the <a href="#dfn-distribution">distribution</a> of child nodes of the <a href="#dfn-shadow-host">shadow host</a> among the <a href="#dfn-insertion-point">insertion points</a> in the associated <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> have the following traits:</p>
 <ul>
-    <li>The <a href="#dfn-distribution">distribution</a> does not affect the state of the document DOM tree or shadow DOM subtrees</li>
+    <li>The <a href="#dfn-distribution">distribution</a> does not affect the state of the document DOM tree or <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a></li>
     <li>Each insertion point participates in <a href="#dfn-distribution">distribution</a> by providing a matching criteria for the child nodes. The <dfn id="dfn-matching-criteria">matching criteria</dfn> determines whether a given node could be <a href="#dfn-distribution">distributed</a> to a given insertion point</li>
     <li>The <a href="#dfn-distribution">distribution</a> is a result of executing a stable algorithm</li>
     <li>The <a href="#dfn-distribution">distribution</a> itself does not change the variables affecting the <a href="#dfn-distribution">distribution</a></li>
@@ -405,7 +405,7 @@ Despite being distributed to more than one insertion point during reprojection, 
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
-<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the document, the document is the <a href="#dfn-nested-subtree">nesting</a> tree of its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the document, the document is the <a href="#dfn-nested-subtree">nesting</a> tree of its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <p>A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-enclosed-subtree">enclosed</dfn> by another <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> when the enclosing subtree nests the enclosed subtree through one or more levels of nesting. All <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are <a href="#dfn-enclosed-subtree">enclosed</a> by the document tree.</p>
 
@@ -459,7 +459,7 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 
 <h2 id="events">Events</h2>
 
-<p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a shadow DOM subtree.</p>
+<p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <p>For event path to cross the <a href="#dfn-shadow-boundary">shadow boundary</a>, it <strong>must</strong> be populated with <dfn id="dfn-adjusted-parent">adjusted parents</dfn>, or nodes that appear as parents <a href="#dfn-as-rendered">as rendered</a>. The <dfn id="dfn-parent-calculation-algorithm">parent calculation algorithm</dfn> is used to determine the <a href="#dfn-adjusted-parent">adjusted parent</a> of any given node and create the list of ancestors for event dispatch. This algorithm <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -841,7 +841,7 @@ host
 
 <h2 id="html-elements">HTML Elements in Shadow DOM Subtrees</h2>
 
-<p>Comparatively, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be seen as somewhere between <em>just a DOM subtree in a document</em> and a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a shadow DOM subtree aims to retain the traits of a typical DOM subtree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document DOM tree. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, with a few exceptions.</p>
+<p>Comparatively, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be seen as somewhere between <em>just a DOM subtree in a document</em> and a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> aims to retain the traits of a typical DOM subtree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document DOM tree. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>, with a few exceptions.</p>
 
 <h3 id="inert-html-elements">Inert HTML Elements</h3>
 
@@ -949,7 +949,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 
 <dl>
 <dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
-<dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>'s document apply to the shadow DOM subtree. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the shadow DOM subtree. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
+<dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>'s document apply to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
 <dd>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree to specified value.</dd>
 <dt id="api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>bool</code></dt>
@@ -1015,13 +1015,13 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     </ol>
 </dd>
 <dt id="api-shadow-root-get-element-by-id"><code>getElementById</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
+<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dt id="api-shadow-root-get-elements-by-class-name"><code>getElementsByClassName</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
+<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dt id="api-shadow-root-get-elements-by-tag-name"><code>getElementsByTagName</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
+<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dt id="api-shadow-root-get-elements-by-tag-name-ns"><code>getElementsByTagNameNS</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the shadow DOM subtree.</dd>
+<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dt id="api-shadow-root-selection"><code>getSelection</code><dt>
 <dd>Returns the current selection in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
 <dd>When invoked, it <strong>must</strong> return <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
