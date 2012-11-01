@@ -171,8 +171,6 @@
     <dd>The Document Object Model's underlying document</dd>
 <dt>node</dt>
     <dd>Any DOM object that <a href="http://www.w3.org/TR/domcore/#concept-tree-participate">participates in a tree</a></dd>
-<dt>element</dt>
-    <dd>A DOM object that implements the <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> interface</dd>
 <dt>DOM tree</dt>
     <dd>Any <a href="http://www.w3.org/TR/domcore/#trees">tree</a>, composed of DOM objects</dd>
 <dt>DOM structure</dt>
@@ -199,9 +197,9 @@
 
 <h2 id="shadow-dom-subtrees">Shadow DOM Subtrees</h2>
 
-<p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any element in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
+<p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple DOM subtrees (in addition to the document tree) to be composed into one larger tree when rendered. The existence of multiple DOM subtrees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the document tree to host one or more additional DOM subtrees. These <dfn id="dfn-shadow-dom-subtree">shadow DOM subtrees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard DOM composability semantics.</p>
 
-<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between shadow DOM subtrees are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The elements that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="dfn-shadow-root">shadow roots</dfn>. Any types of nodes other than elements <strong>must not</strong> be allowed to become <a href="#dfn-shadow-host">shadow hosts</a>.</p>
+<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between shadow DOM subtrees are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host shadow DOM subtrees are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the root nodes of the shadow DOM subtrees are called <dfn id="dfn-shadow-root">shadow roots</dfn>. Any types of nodes other than <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> <strong>must not</strong> be allowed to become <a href="#dfn-shadow-host">shadow hosts</a>.</p>
 
 <object data="../../assets/images/shadow-dom-subtrees.svg" width="800" height="430"></object>
 
@@ -226,10 +224,10 @@
     <li>The <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> property refers to the document of the <a href="#dfn-shadow-host">shadow host</a></li>
     <li>The nodes and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a>'s document <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessors</a> or with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window">Window</a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a></li>
     <li>The nodes <strong>are not</strong> present in any of the document's <a href="http://www.w3.org/TR/dom/#interface-nodelist"><code>NodeList</code></a>, <a href="http://www.w3.org/TR/dom/#interface-htmlcollection"><code>HTMLCollection</code></a>, or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#domelementmap-0"><code>DOMElementMap</code></a> instances</li>
-    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> addressable from any attributes of elements in <a href="#dfn-shadow-host">shadow host</a>'s document</li>
+    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are not</strong> addressable from any attributes of <a href="www.w3.org/TR/domcore/#element">elements</a> in <a href="#dfn-shadow-host">shadow host</a>'s document</li>
     <li>The style sheets, represented by the nodes <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> document's <a href="http://dev.w3.org/csswg/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
     <li>The nodes <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s DOM tree accessor methods</li>
-    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are</strong> addressable from any attributes of elements in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
+    <li>The nodes with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are</strong> addressable from any attributes of <a href="www.w3.org/TR/domcore/#element">elements</a> in the same <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
     <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from the document tree into the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
 </ul>
 <p>For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of DOM tree accessor methods. No nodes other than <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</p>
@@ -286,7 +284,7 @@
 <p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is a fragment in a fictional <a href="http://www.w3.org/TR/css3-selectors">selector</a> consisting of:</p>
 <ol>
     <li>A selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a> of this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
-    <li>A combinator that expresses the relationship between an element that is either a parent of another element <em>or</em> between an element, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">insertion point</a>'s  parent element</li>
+    <li>A combinator that expresses the relationship between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that is either a parent of another <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> <em>or</em> between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">insertion point</a>'s  parent <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></li>
     <li>The <a href="#dfn-selector-fragment">selector fragment</a>.</li>
 </ol>
 
@@ -333,9 +331,9 @@
 <ul>
     <li>The combinator value <strong>must</strong> be <code>select</code></li>
     <li>The first compound selector of the combinator <strong>must</strong> match an <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>The second compound selector <strong>must</strong> match an element, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
+    <li>The second compound selector <strong>must</strong> match an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
 </ul>
-<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> elements that have <code>class</code> attribute set to <code>special</code> and have been <a href="#dfn-distribution">distributed</a> to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
+<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that have <code>class</code> attribute set to <code>special</code> and have been <a href="#dfn-distribution">distributed</a> to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
 
 <p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> to the tree of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
@@ -405,11 +403,11 @@ Despite being distributed to more than one insertion point during reprojection, 
 </ol>
 </div>
 
-<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assigned">assigned</a> or <a href="#dfn-distribution">distributed</a> to them, the fallback content <strong>must</strong> be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the DOM element that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content <strong>must</strong> be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
+<p>When an <a href="#dfn-insertion-point">insertion point</a> or a <a href="#dfn-shadow-insertion-point">shadow insertion point</a> has nothing <a href="#dfn-assigned">assigned</a> or <a href="#dfn-distribution">distributed</a> to them, the fallback content <strong>must</strong> be used instead when rendering. The <dfn id="dfn-fallback-content">fallback content</dfn> is all descendants of the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that represents the insertion point. The <a href="#dfn-insertion-point">insertion points</a> or <a href="#dfn-shadow-insertion-point">shadow insertion points</a> in fallback content <strong>must</strong> be considered <a href="#dfn-inactive-insertion-point">inactive</a>.</p>
 
 <h3 id="nested-shadow-subtrees">Nested Shadow Subtrees</h3>
 
-<p>Any element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the document, the document is the <a href="#dfn-nested-subtree">nesting</a> tree of its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested shadow DOM subtrees. A shadow DOM subtree is <dfn id="dfn-nested-subtree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the document, the document is the <a href="#dfn-nested-subtree">nesting</a> tree of its <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
 <p>A <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <dfn id="dfn-enclosed-subtree">enclosed</dfn> by another <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> when the enclosing subtree nests the enclosed subtree through one or more levels of nesting. All <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a> are <a href="#dfn-enclosed-subtree">enclosed</a> by the document tree.</p>
 
@@ -429,7 +427,7 @@ Despite being distributed to more than one insertion point during reprojection, 
     <li>Run <a href="#dfn-tree-composition-algorithm">tree composition algorithm</a> for the given <a href="#dfn-shadow-host">shadow host</a></li>
     <li>As content of the <a href="#dfn-shadow-host">shadow host</a>, render the <a href="#dfn-youngest-tree">youngest tree</a> as a <strong>any DOM subtree</strong>, with the following <dfn id="dfn-shadow-rendering">shadow rendering</dfn> exceptions:
     <ul>
-        <li>Each element that is a <a href="#dfn-shadow-host">shadow host</a> <strong>must</strong> be <a href="#dfn-rendering">rendered</a> accordingly</li>
+        <li>Each <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that is a <a href="#dfn-shadow-host">shadow host</a> <strong>must</strong> be <a href="#dfn-rendering">rendered</a> accordingly</li>
         <li>In place of each <a href="#dfn-insertion-point">insertion point</a>, process the following <dfn id="dfn-insertion-point-rendering">insertion point rendering</dfn> steps:
         <ol>
             <li>If there are child nodes <a href="#dfn-distribution">distributed</a> to this insertion point, for each child node and in the order they were distributed:
@@ -453,13 +451,13 @@ Despite being distributed to more than one insertion point during reprojection, 
 
 <h3 id="custom-pseudo-elements">Custom Pseudo-Elements</h3>
 
-<p>In certain situations, the author of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> may wish to designate one or more elements from that tree as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></p>
+<p>In certain situations, the author of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> may wish to designate one or more <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> from that tree as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a></p>
 
 <div class="informative">
 For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
 </div>
 
-<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an element in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.
+<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.
 
 <h2 id="events">Events</h2>
 
@@ -623,7 +621,7 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 
 <h3 id="event-retargeting-example">Event Retargeting Example</h3>
 
-<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the elements. Also, we will invent a fictional <code>shadow-root</code> element to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a> and represent <a href="#dfn-shadow-root">shadow roots</a>:</p>
+<p>Suppose we have a user interface for a media controller, represented by this DOM tree, composed of both document and the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> to demarcate the <a href="#dfn-shadow-boundary">shadow boundaries</a> and represent <a href="#dfn-shadow-root">shadow roots</a>:</p>
 <pre><code>
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-root id=&quot;player-shadow-root&quot;&gt;</span>
@@ -736,11 +734,11 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 
 <p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the document CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in a <a href="#dfn-nested-subtree">nesting</a> subtree ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> whose name equals to a <a href="#dfn-valid-custom-pseudo-element-value">valid</a> <a href="#dfn-custom-pseudo-element-value">value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, this <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> <strong>must</strong> match the element, associated with this <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>.</p>
+<p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in a <a href="#dfn-nested-subtree">nesting</a> subtree ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> whose name equals to a <a href="#dfn-valid-custom-pseudo-element-value">valid</a> <a href="#dfn-custom-pseudo-element-value">value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>, this <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> <strong>must</strong> match the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, associated with this <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>.</p>
 
 <p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-styles-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the document tree, with two exceptions:</p>
 <ol>
-    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> match elements in the <a href="#dfn-enclosed-subtree">enclosing</a> trees;</li>
+    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> match <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#dfn-enclosed-subtree">enclosing</a> trees;</li>
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-nested-subtree">nesting</a> tree.</li>
 </ol>
 
@@ -783,7 +781,7 @@ host
 
 <p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> in which the style is specified, but only if this <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is <a href="#dfn-rendering">rendered</a>. When the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> is not <a href="#dfn-rendering">rendered</a> (when it's an older tree that is not assigned to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
 
-<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an element, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
+<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
 
 
 <section class="mechanics">
@@ -800,7 +798,7 @@ host
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> be computed as a list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> elements in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a> <a href="#dfn-as-rendered">as-rendered</a>, with the exception of any elements, <a href="#dfn-distribution">distributed</a> its <a href="#dfn-insertion-point">insertion points</a>, and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
+<p><a href="#dfn-shadow-dom-subtree">Shadow DOM subtrees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the document tree. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> be computed as a list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a> <a href="#dfn-as-rendered">as-rendered</a>, with the exception of any <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a>, <a href="#dfn-distribution">distributed</a> its <a href="#dfn-insertion-point">insertion points</a>, and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
 
 <p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence <strong>must</strong> be inserted into the document <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
 <ol>
@@ -812,14 +810,14 @@ host
 
 <h3 id="active-element">Active Element</h3>
 
-<p>To maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
+<p>To maintain <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>The <dfn id="active-element-adjustment-algorithm">active element adjustment algorithm</dfn> is used to determine the values of the respective <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> properties, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+<p>The <dfn id="active-element-adjustment-algorithm">active <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> adjustment algorithm</dfn> is used to determine the values of the respective <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> properties, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>ELEMENT</var>, the focused element</dd>
+    <dd><var>ELEMENT</var>, the focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></dd>
 <dt>Output</dt>
     <dd>Adjusted values of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> properties.</dd>
 </dl>
@@ -849,7 +847,7 @@ host
 
 <h3 id="inert-html-elements">Inert HTML Elements</h3>
 
-<p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave as <dfn id="dfn-inert">inert</dfn>, or not part of the document tree. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These elements are:</p>
+<p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave as <dfn id="dfn-inert">inert</dfn>, or not part of the document tree. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> are:</p>
 <ul>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-base-element"><code>base</code></a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a></li>
@@ -859,13 +857,13 @@ host
 
 <h3 id="html-forms">HTML Forms</h3>
 
-<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the document level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the document <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. Per <a href="#dfn-scoping-constraints">scoping constraints</a>, this <strong>must</strong> exclude elements in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
+<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the document level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the document <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. Per <a href="#dfn-scoping-constraints">scoping constraints</a>, this <strong>must</strong> exclude <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtrees</a>.</p>
 
-<p>Instead, each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> scope its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> elements and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s document, the form submission <strong>must</strong> continue to work <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
+<p>Instead, each <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> <strong>must</strong> scope its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s document, the form submission <strong>must</strong> continue to work <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
 
 <h2 id="html-elements-and-their-shadow-dom-subtrees">HTML Elements and Their Shadow DOM Subtrees</h2>
 
-<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the shadow DOM <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that is created and populated at the time of element instantiation. It is up to a user agent to define the content of these subtrees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the shadow DOM <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> that is created and populated at the time of <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> instantiation. It is up to a user agent to define the content of these subtrees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
 <table>
 <thead>
@@ -877,7 +875,7 @@ host
 <tbody>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element"><code>iframe</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element"><code>embed</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element"><code>object</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element"><code>video</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element"><code>audio</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element"><code>canvas</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element"><code>map</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element"><code>input</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element"><code>textarea</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element"><code>progress</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element"><code>meter</code></a></td>
-        <td>If the element that can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-insertion-point">insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the element needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-insertion-point">insertion points</a> or an <a href="#dfn-insertion-point">insertion points</a> that matches nothing.</td>
+        <td>If the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-insertion-point">insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-insertion-point">insertion points</a> or an <a href="#dfn-insertion-point">insertion points</a> that matches nothing.</td>
     </tr>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-fieldset-element"><code>fieldset</code></a></td>
@@ -898,7 +896,7 @@ host
         </td>
     </tr>
     <tr>
-        <td>All other elements</td>
+        <td>All other <<a href="http://www.w3.org/TR/domcore/#concept-element">elements</a></td>
         <td>Contains one <a href="#dfn-insertion-point">insertion point</a> with the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> as the <a href="#dfn-matching-criteria">matching criteria</a></td>
     </tr>
 </tbody>
@@ -917,12 +915,12 @@ interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
 
 <dl>
 <dt><code>pseudo</code> of type <code>DOMString</code></dt>
-<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the element.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>null</strong> if the no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is associated with this element.</dd>
+<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>null</strong> if the no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
 <dd>On setting, these steps <strong>must</strong> be run:
 <ol>
-    <li>If exists, discard current <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this element</li>
-    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with element and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
+    <li>If exists, discard current <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></li>
+    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
 </ol></dd>
 </dd>
 </dl>
@@ -953,7 +951,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 
 <dl>
 <dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
-<dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the element's document apply to the shadow DOM subtree. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the shadow DOM subtree. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
+<dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>'s document apply to the shadow DOM subtree. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the shadow DOM subtree. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
 <dd>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree to specified value.</dd>
 <dt id="api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>bool</code></dt>
@@ -961,8 +959,8 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <dd>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree.</dd>
 <dd>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s subtree to specified value.</dd>
 <dt id="api-shadow-root-active-element"><code>activeElement</code> of type <code>Element</code>, readonly</dt>
-<dd>Represents the currently focused element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the currently focused element in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> or <code>null</code>, if there is none.</dd>
+<dd>Represents the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a> or <code>null</code>, if there is none.</dd>
 <dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
 <dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a>.</dd>
@@ -999,7 +997,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
                 <td><a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a></td>
                 <td>No</td>
                 <td>No</td>
-                <td>Element that will be the <a href="#dfn-shadow-host">shadow host</a> of the newly created <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</td>
+                <td><a href="http://www.w3.org/TR/domcore/#concept-element">Element</a> that will be the <a href="#dfn-shadow-host">shadow host</a> of the newly created <a href="#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</td>
             </tr>
         <tbody>
         </tbody>
@@ -1014,7 +1012,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     <p>When invoked, the <code>ShadowRoot()</code> constructor <strong>must</strong> run these steps:</p>
     <ol>
         <li>Create a new instance of the <code>ShadowRoot</code> object</li>
-        <li>Establish element, supplied as <code>element</code> argument as the <a href="#dfn-shadow-host">shadow host</a> for the <code>ShadowRoot</code> object</li>
+        <li>Establish <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, supplied as <code>element</code> argument as the <a href="#dfn-shadow-host">shadow host</a> for the <code>ShadowRoot</code> object</li>
         <li>Return <code>ShadowRoot</code> object</li>
     </ol>
 </dd>
