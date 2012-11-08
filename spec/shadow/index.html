@@ -45,7 +45,7 @@
 
 <h2 id="abstract">Abstract</h2>
 
-<p>This specification describes a method of establishing and maintaining functional boundaries between DOM trees and how these trees interact with each other within a document, thus enabling better functional encapsulation within DOM.</p>
+<p>This specification describes a method of establishing and maintaining functional boundaries between DOM trees and how these trees interact with each other within a document, thus enabling better functional encapsulation within the DOM.</p>
 
 <h2 id="status">Status of This Document</h2>
 
@@ -712,7 +712,7 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 
 <p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://www.w3.org/TR/CSS2/cascade.html#cascading-order">sorting order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-tree-stack">tree stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.
 
-<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#dfn-enclosed-tree">enclosing</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules, declared in an <a href="#dfn-enclosed-tree">enclosing</a> trees are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</li>
+<p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#dfn-enclosed-tree">enclosing</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a href="#dfn-enclosed-tree">enclosing</a> trees are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</li>
 
 <p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
@@ -724,7 +724,7 @@ For example, when developing a 2-dimensional range slider widget, which offers a
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-nested-tree">nesting</a> tree.</li>
 </ol>
 
-<p>In a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> that contains <a href="#dfn-shadow-tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
+<p>In a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> that contains <a href="#dfn-shadow-tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
     <li>the styles of the <a href="#dfn-shadow-host">shadow host</a> are inherited by the children of the <a href="#dfn-shadow-root">shadow root</a></li>
     <li>the styles of the <a href="#dfn-insertion-point">insertion point</a> <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> are inherited by those child <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> of the <a href="#dfn-shadow-host">shadow host</a> that are <a href="#dfn-assigned">assigned</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
@@ -857,7 +857,7 @@ host
 <tbody>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element"><code>iframe</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element"><code>embed</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element"><code>object</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element"><code>video</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element"><code>audio</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element"><code>canvas</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element"><code>map</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element"><code>input</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element"><code>textarea</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element"><code>progress</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element"><code>meter</code></a></td>
-        <td>If the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-insertion-point">insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-insertion-point">insertion points</a> or an <a href="#dfn-insertion-point">insertion points</a> that matches nothing.</td>
+        <td>If the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-insertion-point">insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-insertion-point">insertion points</a> or an <a href="#dfn-insertion-point">insertion point</a> that matches nothing.</td>
     </tr>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-fieldset-element"><code>fieldset</code></a></td>
@@ -901,7 +901,7 @@ interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
 <dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>null</strong> if the no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
 <dd>On setting, these steps <strong>must</strong> be run:
 <ol>
-    <li>If exists, discard current <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></li>
+    <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
     <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
 </ol></dd>
 </dd>
@@ -994,7 +994,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     <p>When invoked, the <code>ShadowRoot()</code> constructor <strong>must</strong> run these steps:</p>
     <ol>
         <li>Create a new instance of the <code>ShadowRoot</code> object</li>
-        <li>Establish <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, supplied as <code>element</code> argument as the <a href="#dfn-shadow-host">shadow host</a> for the <code>ShadowRoot</code> object</li>
+        <li>Establish <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, supplied as <code>element</code> argument, as the <a href="#dfn-shadow-host">shadow host</a> for the <code>ShadowRoot</code> object</li>
         <li>Return <code>ShadowRoot</code> object</li>
     </ol>
 </dd>
@@ -1008,7 +1008,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
 <dt id="api-shadow-root-selection"><code>getSelection</code><dt>
 <dd>Returns the current selection in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dd>When invoked, it <strong>must</strong> return <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in <a href="#dfn-shadow-host">shadow host</a>'s tree.</dd>
+<dd>When invoked, it <strong>must</strong> return the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in the <a href="#dfn-shadow-host">shadow host</a>'s tree.</dd>
 <dt id="api-shadow-root-add-style-sheet"><code>addStyleSheet</code></dt>
 <dd>Adds a new <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> to <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.
 <div class="informative">
