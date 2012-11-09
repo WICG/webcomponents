@@ -208,6 +208,28 @@
 
 <p><span class="fixme">Specify how custom DOM elements are defined declaratively</span></p>
 
+<p>The <dfn id="dfn-element-finalization">element finalization algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>ELEMENT</var>, an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> being finalized</dd>
+    <dd><var>DEFINITION</var>, an <a href="#dfn-element-definition">element definition</a></dd>
+<dt>Output</dt>
+    <dd>Finalized <var>ELEMENT</var></dd>
+</dl>
+<ol>
+    <li>If <var>DEFINITION</var> contains <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>:
+    <ol>
+        <li>Let <var>CREATED</var> be the callback, corresponding to the <em>created</em> key in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> dictionary</li>
+        <li>If <var>CREATED</var> exists:
+        <ol>
+            <li>Call <var>CREATE</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
+        </ol></li>
+    </ol></li>
+</ol>
+</div>
+
 <p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
 <div class="algorithm">
@@ -240,16 +262,8 @@
             <li>Append <var>ATTRIBUTE</var> to <var>UPGRADE</var>'s <a href="http://www.w3.org/TR/domcore/#concept-element-attribute">attribute list</a></li>
         </ol></li>
         <li><a href="">Insert</a> <var>UPGRADE</var> into <var>PARENT</var> before <var>REFERENCE</var> with <em>suppress observers flag</em> set</li>
-        <li><a href="http://www.w3.org/TR/domcore/#concept-node-replace">Replace</a> <var>ELEMENT</var> with <var>UPGRADE</var> in <var>TREE</var></li>
-        <li>If <var>DEFINITION</var> contains <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>:
-        <ol>
-            <li>Let <var>CREATED</var> be the callback, corresponding to the <em>created</em> key in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> dictionary</li>
-            <li>If <var>CREATED</var> exists:
-            <ol>
-                <li>Call <var>CREATE</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>UPGRADE</var></li>
-            </ol></li>
-        </ol></li>
-        <li>On <var>ELEMENT</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire</a> an <a href="#api-element-replace-event"><code>ElementReplaceEvent</code></a> event, initialized with values <em>upgrade</em> as <var>UPGRADE</var> and <em>bubbles</em> as <code>false</code>.</li>
+        <li>Invoke <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>UPGRADE</var> and <var>DEFINITION</var> as arguments</li>
+       <li>On <var>ELEMENT</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire</a> an <a href="#api-element-replace-event"><code>ElementReplaceEvent</code></a> event, initialized with values <em>upgrade</em> as <var>UPGRADE</var> and <em>bubbles</em> as <code>false</code>.</li>
         <li>On <var>UPGRADE</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire an event</a> named <code>elementupgrade</code> with its <code>bubbles</code> attribute set to <code>true</code>.</li>
     </ol></li>
 </ol>
