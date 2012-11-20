@@ -108,7 +108,7 @@
         <li><a href="#inert-html-elements"><span class="section">8.1</span> Inert HTML Elements</a></li>
         <li><a href="#html-forms"><span class="section">8.2</span> HTML Forms</a></li>
     </ol></li>
-    <li><a href="#html-elements-and-their-shadow-trees"><span class="section">9</span> HTML Elements and Their shadow trees</a>
+    <li><a href="#html-elements-and-their-shadow-trees"><span class="section">9</span> HTML Elements and Their Shadow Trees</a>
     <li><a href="#elements-and-dom-objects"><span class="section">10</span> Elements and DOM Objects</a>
     <ol>
         <li><a href="#shadow-root-object"><span class="section">10.1</span> <code>ShadowRoot</code> Object</a>
@@ -848,7 +848,7 @@ host
 
 <p>Instead, each <a href="#dfn-shadow-tree">shadow tree</a> <strong>must</strong> scope its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> is the <a href="#dfn-shadow-host">shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the form submission <strong>must</strong> continue to work <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
 
-<h2 id="html-elements-and-their-shadow-trees">HTML Elements and Their shadow trees</h2>
+<h2 id="html-elements-and-their-shadow-trees">HTML Elements and Their Shadow Trees</h2>
 
 <p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a href="#dfn-shadow-dom">shadow DOM</a> <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-tree">shadow tree</a> that is created and populated at the time of <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
@@ -1015,6 +1015,7 @@ There is a <a href="http://lists.w3.org/Archives/Public/www-style/2012Oct/thread
 <pre><code>
 interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
     <a href="#api-shadow-root">ShadowRoot</a> <a href="#api-shadow-aware-create-shadow-root">createShadowRoot</a>();
+    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-shadow-aware-shadow-root">shadowRoot</a>;
     attribute DOMString <a href="#api-shadow-aware-pseudo">pseudo</a>;
 }
 <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> implements <a href="#api-shadow-aware">ShadowAware</a>;
@@ -1031,6 +1032,10 @@ interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
     <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
     <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
 </ol></dd>
+<dt><dfn id="api-shadow-aware-shadow-root">shadowRoot</dfn> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a><dt>
+<dd>Represents the top <a href="#dfn-shadow-tree">shadow tree</a> in the "<a href="#dfn-as-rendered">as rendered</a>" structure.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-tree">youngest tree</a> that has the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as its <a href="#dfn-shadow-host">shadow host</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-tree">shadow tree</a> is accesible.</dd>
+<dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
 </dd>
 </dl>
 
