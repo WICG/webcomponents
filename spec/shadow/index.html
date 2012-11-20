@@ -111,11 +111,15 @@
     <li><a href="#html-elements-and-their-shadow-trees"><span class="section">9</span> HTML Elements and Their shadow trees</a>
     <li><a href="#elements-and-dom-objects"><span class="section">10</span> Elements and DOM Objects</a>
     <ol>
-        <li><a href="#extensions-to-element"><span class="section">10.1</span>  Extensions to <code>Element</code> Interface</a></li>
-        <li><a href="#shadow-root-object"><span class="section">10.2</span> <code>ShadowRoot</code> Object</a>
+        <li><a href="#shadow-root-object"><span class="section">10.1</span> <code>ShadowRoot</code> Object</a>
         <ol>
-            <li><a href="#shadow-root-attributes"><span class="section">10.2.1</span> <code>ShadowRoot</code> Attributes</a></li>
-            <li><a href="#shadow-root-methods"><span class="section">10.2.2</span> <code>ShadowRoot</code> Methods</a></li>
+            <li><a href="#shadow-root-attributes"><span class="section">10.1.1</span> <code>ShadowRoot</code> Attributes</a></li>
+            <li><a href="#shadow-root-methods"><span class="section">10.1.2</span> <code>ShadowRoot</code> Methods</a></li>
+        </ol></li>
+        <li><a href="#extensions-to-element"><span class="section">10.2</span>  Extensions to <code>Element</code> Interface</a>
+        <ol>
+            <li><a href="#shadow-aware-attributes"><span class="section">10.2.1</span> <code>ShadowAware</code> Attributes</a></li>
+            <li><a href="#shadow-aware-methods"><span class="section">10.2.2</span> <code>ShadowAware</code> Methods</a></li>
         </ol></li>
         <li><a href="#content-element"><span class="section">10.3</span> The <code>content</code> HTML element</a></li>
         <li><a href="#shadow-element"><span class="section">10.4</span> The <code>shadow</code> HTML element</a></li>
@@ -887,33 +891,11 @@ host
 
 <h2 id="elements-and-dom-objects">Elements and DOM Objects</h2>
 
-<h3 id="extensions-to-element">Extensions to <code>Element</code> Interface</h3>
-
-<pre><code>
-interface <dfn id="api-pseudo-element-stylable">PseudoElementStylable</dfn> {
-    attribute DOMString <dfn id="api-pseudo-element-stylable-pseudo">pseudo</dfn>;
-}
-<a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> implements <a href="#api-pseudo-element-stylable">PseudoElementStylable</a>;
-</code></pre>
-
-<dl>
-<dt><code>pseudo</code> of type <code>DOMString</code></dt>
-<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>empty string</strong> if there is no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
-<dd>On setting, these steps <strong>must</strong> be run:
-<ol>
-    <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
-    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
-</ol></dd>
-</dd>
-</dl>
-
 <h3 id="shadow-root-object"><code>ShadowRoot</code> Object</h3>
 
 <p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root">shadow root</a>.</p>
     
 <pre><code>
-[Constructor(<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> host)]
 interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> {
     <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(DOMString elementId);
     <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(DOMString tagName);
@@ -963,42 +945,6 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <h4 id="shadow-root-methods"><code>ShadowRoot</code> Methods</h4>
 
 <dl>
-<dt><code>constructor</code></dt>
-<dd>
-    <table>
-        <thead>
-            <tr>
-                <th>Parameter</th>
-                <th>Type</th>
-                <th>Nullable</th>
-                <th>Optional</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-            <tr>
-                <td><dfn id="api-shadow-root-constructor-element"><code>element</code></dfn></td>
-                <td><a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a></td>
-                <td>No</td>
-                <td>No</td>
-                <td><a href="http://www.w3.org/TR/domcore/#concept-element">Element</a> that will be the <a href="#dfn-shadow-host">shadow host</a> of the newly created <a href="#dfn-shadow-tree">shadow tree</a>.</td>
-            </tr>
-        <tbody>
-        </tbody>
-    </table>
-    <div>
-        <em>Exceptions:</em>
-        <dl>
-            <dt><a href="http://www.w3.org/TR/domcore/#dom-domexception-hierarchy_request_err"><code>HIERARCHY_REQUEST_ERR</code></a></dt>
-            <dd>This exception <strong>must</strong> be thrown when the <code>element</code> parameter is not a valid <a href="http://www.w3.org/TR/domcore/#element"><code>Element</code></a>.
-        </dl>
-    </div>
-    <p>When invoked, the <code>ShadowRoot()</code> constructor <strong>must</strong> run these steps:</p>
-    <ol>
-        <li>Create a new instance of the <code>ShadowRoot</code> object</li>
-        <li>Establish <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, supplied as <code>element</code> argument, as the <a href="#dfn-shadow-host">shadow host</a> for the <code>ShadowRoot</code> object</li>
-        <li>Return <code>ShadowRoot</code> object</li>
-    </ol>
-</dd>
 <dt id="api-shadow-root-get-element-by-id"><code>getElementById</code></dt>
 <dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
 <dt id="api-shadow-root-get-elements-by-class-name"><code>getElementsByClassName</code></dt>
@@ -1062,6 +1008,49 @@ There is a <a href="http://lists.w3.org/Archives/Public/www-style/2012Oct/thread
 </dl>
 
 <p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
+
+
+<h3 id="extensions-to-element">Extensions to <code>Element</code> Interface</h3>
+
+<pre><code>
+interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
+    <a href="#api-shadow-root">ShadowRoot</a> <a href="#api-shadow-aware-create-shadow-root">createShadowRoot</a>();
+    attribute DOMString <a href="#api-shadow-aware-pseudo">pseudo</a>;
+}
+<a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> implements <a href="#api-shadow-aware">ShadowAware</a>;
+</code></pre>
+
+<h4 id="shadow-aware-attributes"><code>ShadowAware</code> Attributes</h4>
+
+<dl>
+<dt><dfn id="api-shadow-aware-pseudo">pseudo</dfn> of type <code>DOMString</code></dt>
+<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>empty string</strong> if there is no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
+<dd>On setting, these steps <strong>must</strong> be run:
+<ol>
+    <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
+    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
+</ol></dd>
+</dd>
+</dl>
+
+<h4 id="shadow-aware-methods"><code>ShadowAware</code> Methods</h4>
+
+<dl>
+<dt><dfn id="api-shadow-aware-create-shadow-root"><code>createShadowRoot</code></dfn></dt>
+<dd>When invoked, these steps <strong>must</strong> be run:
+<ol>
+    <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, throw <a href="http://www.w3.org/TR/domcore/#dom-domexception-hierarchy_request_err">HierarchyRequestError</a> exception.</li>
+    <li>Otherwise:
+    <ol>
+        <li>Create a new instance of the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
+        <li>Establish the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
+        <li>Add the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object at the top of the <a href="#dfn-tree-stack">tree stack</a> of its <a href="#dfn-shadow-host">host</a></li>
+        <li>Return <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
+    </ol></li>
+</ol>
+</dd>
+</dl>
 
 
 <h3 id="content-element">The <code>content</code> HTML element</h3>
@@ -1218,7 +1207,7 @@ function createStyle()
 
 function makeShadowTree(storyList)
 {
-    var root = new ShadowRoot(storyList);
+    var root = storyList.createShadowRoot();
     root.appendChild(createStyle());
     root.appendChild(createStoryGroup('breaking', '.breaking'));
     root.appendChild(createStoryGroup('other', ''));
@@ -1248,7 +1237,7 @@ function createElectionStyle()
 
 function makeElectionShadowTree(storyList)
 {
-    var root = new ShadowRoot(storyList);
+    var root = storyList.createShadowRoot();
     // Add and style election story box.
     root.appendChild(createElectionStyle());
     root.appendChild(createStoryGroup('election', '.election'));
