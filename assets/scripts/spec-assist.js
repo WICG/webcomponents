@@ -12,4 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             target.insertBefore(sectionNumber.cloneNode(true), target.firstChild);
         }
     });
+    [].forEach.call(document.querySelectorAll('dfn[id]'), function(definition) {
+        definition.setAttribute('title', '#' + definition.id);
+    });
 })
