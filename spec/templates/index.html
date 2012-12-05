@@ -90,9 +90,10 @@
         <li><a href="#template-contents-insertion-mode"><span class="section">7.16</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
-    <li><a href="#serializing-html-templates"><span class="section">8</span> Serializing HTML Templates</a></li>
-    <li><a href="#innerhtml-on-templates"><span class="section">9</span> innerHTML on Templates</a></li>
-    <li><a href="#css-additions"><span class="section">10</span> Additions to the CSS user agent style sheet</a></li>
+    <li><a href="#node-clone-additions"><span class="section">8</span> cloneAdditions to the steps to clone a node</a></li>
+    <li><a href="#serializing-html-templates"><span class="section">9</span> Serializing HTML Templates</a></li>
+    <li><a href="#innerhtml-on-templates"><span class="section">10</span> innerHTML on Templates</a></li>
+    <li><a href="#css-additions"><span class="section">11</span> Additions to the CSS user agent style sheet</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -225,7 +226,7 @@
     <dd>
         <pre><code>
 interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a href="http://dev.w3.org/html5/spec/elements.html#htmlelement">HTMLElement</a> {
-    attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
+    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> <a href="#api-html-template-element-content">content</a>;
 }
         </code></pre>
         <dl>
@@ -250,18 +251,6 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <ol>
     <li>Let <var>DOCUMENT</var> be the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> of the context object.</li>
     <li>Let <var>CONTENTS</var> be a new <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a> object whose <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> is <var>DOCUMENT</var>.</li>
-</ol>
-</div>
-
-<p>On setting, these steps must run:</p>
-
-<div class="algorithm">
-<dl>
-<ol>
-    <li>If the new value is not a <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#interface-documentfragment">DocumentFragment</a>, or is a <a href="http://www.w3.org/TR/shadow-dom/#shadow-root-object">ShadowRoot</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-throw">throw</a> n <code><a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#typemismatcherror">"TypeMismatchError"</a></code> error, and abort these steps.</li>
-    <li>Otherwise, if the new value is the same as the <a href="#api-html-template-element-content">content</a>, do nothing. Abort these steps.</li>
-    <li>Otherwise, if the <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> of the new value is not the same as the context object's <a href="#dfn-template-contents-owner">template contents owner</a>, <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-adopt">adopt</a> the new value with context object's <a href="#dfn-template-contents-owner">template contents owner</a>.</li>
-    <li>Replace <a href="#api-html-template-element-content">content</a> with the new value.</li>
 </ol>
 </div>
 
@@ -525,6 +514,16 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <dt>Anything else</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 </dl>
+
+<h2 id="node-clone-additions">Additions to the steps to clone a node</h2>
+
+<p>The steps for <a href="http://www.w3.org/TR/domcore/#concept-node-clone">cloning a node</a> are defined by the <a href="http://www.w3.org/TR/domcore/">DOM4 specification</a>.</p>
+
+<p>Add a step before step 7 (Return <em>copy</em>):</p>
+
+<p>If the <var>clone children flag</var> is set and <var>node</var> is <code>template</code> element, clone all the children of node's <a href="#api-html-template-element-content">content</a> and append them to <var>copy</var>'s <a href="#api-html-template-element-content">content</a>, with ownerDocument set as <var>node</var>'s <a href="#dfn-template-contents-owner">template content owner</a> and the <var>clone children flag</var> being set.</p>
+
+<dt>If the node is a <code>template</code> element, <dt>
 
 <h2 id="serializing-html-templates">Serializing HTML Templates</h2>
 
