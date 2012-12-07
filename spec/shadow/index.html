@@ -121,8 +121,13 @@
             <li><a href="#shadow-aware-attributes"><span class="section">10.2.1</span> <code>ShadowAware</code> Attributes</a></li>
             <li><a href="#shadow-aware-methods"><span class="section">10.2.2</span> <code>ShadowAware</code> Methods</a></li>
         </ol></li>
-        <li><a href="#content-element"><span class="section">10.3</span> The <code>content</code> HTML element</a></li>
-        <li><a href="#shadow-element"><span class="section">10.4</span> The <code>shadow</code> HTML element</a></li>
+        <li><a href="#css-host-rule-interface"><span class="section">10.3</span> <code>CSSHostRule</code> Interface</a>
+        <ol>
+            <li><a href="#css-host-rule-attributes"><span class="section">10.3.1</span> <code>CSSHostRule</code> Attributes</a></li>
+            <li><a href="#css-host-rule-methods"><span class="section">10.3.2</span> <code>CSSHostRule</code> Methods</a></li>
+        </ol></li>
+        <li><a href="#content-element"><span class="section">10.4</span> The <code>content</code> HTML element</a></li>
+        <li><a href="#shadow-element"><span class="section">10.5</span> The <code>shadow</code> HTML element</a></li>
     </ol></li>
     <li><a href="#shadow-dom-example"><span class="section">11</span> Shadow DOM Example</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -1082,7 +1087,6 @@ interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
 <dd>Represents the top <a href="#dfn-shadow-tree">shadow tree</a> in the "<a href="#dfn-as-rendered">as rendered</a>" structure.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-tree">youngest tree</a> that has the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as its <a href="#dfn-shadow-host">shadow host</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-tree">shadow tree</a> is accesible.</dd>
 <dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
-</dd>
 </dl>
 
 <h4 id="shadow-aware-methods"><code>ShadowAware</code> Methods</h4>
@@ -1099,10 +1103,51 @@ interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
         <li>Add the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object at the top of the <a href="#dfn-tree-stack">tree stack</a> of its <a href="#dfn-shadow-host">host</a></li>
         <li>Return <a href="#api-shadow-root"><code>ShadowRoot</code></a> object.</li>
     </ol></li>
-</ol>
-</dd>
+</ol></dd>
 </dl>
 
+
+<h3 id="css-host-rule-interface"><code>CSSHostRule</code> Interface</h3>
+
+<p>The <code>CSSHostRule</code> represents the <a href="#host-at-rule"><code>@host</code></a> at-rule in a CSS style sheet.</p>
+
+<pre><code>
+interface <dfn id="api-css-host-rule">CSSHostRule</dfn> : <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> {
+    readonly attribute <a href="http://dev.w3.org/csswg/cssom/#the-cssrulelist-sequence">CSSRuleList</a> <a href="#api-css-host-rule-css-rules">cssRules</a>;
+    unsigned long <a href="#api-css-host-rule-insert-rule">insertRule</a>(DOMString rule, unsigned long index);
+    void <a href="#api-css-host-rule-delete-rule">deleteRule</a>(unsigned long index);
+};
+</code></pre>
+
+<h4 id="css-host-rule-attributes"><code>CSSHostRule</code> Attributes</h4>
+
+<dl>
+    <dt><dfn id="api-css-host-rule-css-rules"><code>cssRules</code></dfn> of type <a href="http://dev.w3.org/csswg/cssom/#the-cssrulelist-sequence">CSSRuleList</a></dt>
+    <dd>Represents the CSS rules in the <code>@host</code> style block</dd>
+    <dd>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a>.</dd>
+</dl>
+
+<h4 id="css-host-rule-methods"><code>CSSHostRule</code> Methods</h4>
+
+<dl>
+    <dt><dfn id="api-css-host-rule-insert-rule"><code>insertRule(DOMSTring <em>rule</em>, unsigned long <em>index</em>)</code></dfn></dt>
+    <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#insert-a-css-rule">insert a CSS rule</a> <em>rule</em> into the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
+    <dt><dfn id="api-css-host-rule-delete-rule"><code>deleteRule(unsigned long <em>index</em>)</code></dfn></dt>
+    <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#remove-a-css-rule">remove a CSS rule</a> <em>rule</em> from the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
+</dl>
+
+<p>The <code>HOST_RULE</code> type is added to <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> interface.</p>
+
+<pre><code>
+partial interface <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> {
+    const unsigned short <a href="#api-css-rule-host-rule">HOST_RULE</a> = 1001;
+};
+</code></pre>
+
+<dl>
+    <dt><dfn id="api-css-rule-host-rule"><code>HOST_RULE</code></dfn></dt>
+    <dd>When the value of the <code>type</code> attribute is <code>HOST_RULE</code>, then the object that implements this interface <strong>must</strong> implement <a href="#api-css-host-rule"><code>CSSHostRule</code></a> interface</a>.</dd>
+</dl>
 
 <h3 id="content-element">The <code>content</code> HTML element</h3>
 
