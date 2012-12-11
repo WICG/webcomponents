@@ -397,6 +397,23 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
 <p>Invoking <a href="#dfn-document-register"><code>register</code></a> has no effect on the elements that are not in document or its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. This means that any elements that were created imperatively and not inserted into the document, or any elements in document fragments will not be <a href="#dfn-element-upgrade">upgraded</a>.</p>
 </div>
 
+<div class="informative">
+<p>In order to  <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-dom-element">custom element</a> with a prototypeother than <code>HTMLSpanElement</code>, the caller of <a href="#api-document-register">document.register</a> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
+<pre><code class="prettyprint">
+document.register('x-foo', {
+    prototype: Object.create(HTMLParagraphElement.prototype, {
+        firstMember: {
+            get: function() { return foo; },
+            enumerable: true,
+            configurable: true
+        }
+        // specify more members for you prototype.
+    })
+});
+
+</code></pre>
+</div>
+
 
 <h3 id="the-element-element">The <code>element</code> HTML element</h3>
 
@@ -414,7 +431,7 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
 <dd><a href="#dfn-element-name"><code>name</code></a></dd>
 <dt>DOM Interface</dt>
 <dd>
-    <pre><code>
+    <pre><code class="prettyprint">
 interface <dfn id="api-html-element-element">HTMLElementElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
     attribute DOMString <a href="#dfn-html-element-element-constructor-name">constructorName</a>;
     attribute DOMString <a href="#dfn-html-element-element-extends">extends</a>;
