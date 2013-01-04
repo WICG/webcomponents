@@ -72,28 +72,30 @@
     <li><a href="#template-element"><span class="section">6</span> The <code>template</code> element</a></li>
     <li><a href="#parsing"><span class="section">7</span> Parsing HTML Templates</a>
     <ol>
-        <li><a href="#creating-an-element-for-a-token"><span class="section">7.1</span> Creating an element for a token</a></li>
-        <li><a href="#appending-to-a-template"><span class="section">7.2</span> Appending to a template</a></li>
-        <li><a href="#clearing-the-stack"><span class="section">7.3</span> Clearing the stack back to a given context</a></li>
-        <li><a href="#foster-parent-addition"><span class="section">7.4</span> Additions to "foster parenting"</a></li>
-        <li><a href="#reset-insertion-mode-addition"><span class="section">7.5</span> Additions to "reset the insertion mode appropriately"</a></li>
-        <li><a href="#in-table-scope-addition"><span class="section">7.6</span> Additions to "has an element in table scope"</a></li>
-        <li><a href="#in-head-addition"><span class="section">7.7</span> Additions to the "in head" Insertion Mode</a></li>
-        <li><a href="#in-body-addition"><span class="section">7.8</span> Additions to the "in body" Insertion Mode</a></li>
-        <li><a href="#in-table-addition"><span class="section">7.9</span> Additions to the "in table" Insertion Mode</a></li>
-        <li><a href="#in-table-body-addition"><span class="section">7.10</span> Additions to the "in table body" Insertion Mode</a></li>
-        <li><a href="#in-row-addition"><span class="section">7.11</span> Additions to the "in row" Insertion Mode</a></li>
-        <li><a href="#in-cell-addition"><span class="section">7.12</span> Additions to the "in cell" Insertion Mode</a></li>
-        <li><a href="#in-colgroup-addition"><span class="section">7.13</span> Additions to the "in column group" Insertion Mode</a></li>
-        <li><a href="#in-select-addition"><span class="section">7.14</span> Additions to the "in select" Insertion Mode</a></li>
-        <li><a href="#in-frameset-addition"><span class="section">7.15</span> Additions to the "in frameset" Insertion Mode</a></li>
-        <li><a href="#template-contents-insertion-mode"><span class="section">7.16</span> The "template contents" Insertion Mode</a></li>
+        <li><a href="#stack-of-template-insertion-modes"><span class="section">7.1</span> The stack of template insertion modes</a></li>
+        <li><a href="#creating-an-element-for-a-token"><span class="section">7.2</span> Creating an element for a token</a></li>
+        <li><a href="#appending-to-a-template"><span class="section">7.3</span> Appending to a template</a></li>
+        <li><a href="#clearing-the-stack"><span class="section">7.4</span> Clearing the stack back to a given context</a></li>
+        <li><a href="#foster-parent-addition"><span class="section">7.5</span> Additions to "foster parenting"</a></li>
+        <li><a href="#reset-insertion-mode-addition"><span class="section">7.6</span> Additions to "reset the insertion mode appropriately"</a></li>
+        <li><a href="#in-table-scope-addition"><span class="section">7.7</span> Additions to "has an element in table scope"</a></li>
+        <li><a href="#in-head-addition"><span class="section">7.8</span> Additions to the "in head" Insertion Mode</a></li>
+        <li><a href="#in-body-addition"><span class="section">7.9</span> Additions to the "in body" Insertion Mode</a></li>
+        <li><a href="#in-table-addition"><span class="section">7.10</span> Additions to the "in table" Insertion Mode</a></li>
+        <li><a href="#in-table-body-addition"><span class="section">7.11</span> Additions to the "in table body" Insertion Mode</a></li>
+        <li><a href="#in-row-addition"><span class="section">7.12</span> Additions to the "in row" Insertion Mode</a></li>
+        <li><a href="#in-cell-addition"><span class="section">7.13</span> Additions to the "in cell" Insertion Mode</a></li>
+        <li><a href="#in-colgroup-addition"><span class="section">7.14</span> Additions to the "in column group" Insertion Mode</a></li>
+        <li><a href="#in-select-addition"><span class="section">7.15</span> Additions to the "in select" Insertion Mode</a></li>
+        <li><a href="#in-frameset-addition"><span class="section">7.16</span> Additions to the "in frameset" Insertion Mode</a></li>
+        <li><a href="#template-contents-insertion-mode"><span class="section">7.17</span> The "template contents" Insertion Mode</a></li>
     </ol>
     </li>
-    <li><a href="#node-clone-additions"><span class="section">8</span> Additions to the steps to clone a node</a></li>
-    <li><a href="#serializing-html-templates"><span class="section">9</span> Serializing HTML Templates</a></li>
-    <li><a href="#innerhtml-on-templates"><span class="section">10</span> innerHTML on Templates</a></li>
-    <li><a href="#css-additions"><span class="section">11</span> Additions to the CSS user agent style sheet</a></li>
+    <li><a href="#fragment-parsing-additions"><span class="section">8</span> Additions to the steps for parsing HTML fragments</a></li>
+    <li><a href="#node-clone-additions"><span class="section">9</span> Additions to the steps to clone a node</a></li>
+    <li><a href="#serializing-html-templates"><span class="section">10</span> Serializing HTML Templates</a></li>
+    <li><a href="#innerhtml-on-templates"><span class="section">11</span> innerHTML on Templates</a></li>
+    <li><a href="#css-additions"><span class="section">12</span> Additions to the CSS user agent style sheet</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -258,6 +260,15 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>The parsing of <a href="#dfn-template">templates</a> is defined as a set of additions to the <a href="http://dev.w3.org/html5/spec/parsing.html#parsing">HTML parsing algorithm</a>. When parsing, the <a href="#dfn-template-element"><code>template</code></a> element is in the <a href="http://dev.w3.org/html5/spec/parsing.html#special">special</a> category.</p>
 
+
+
+
+<h3 id="stack-of-template-insertion-modes">The stack of template insertion modes</h3>
+
+<p>Initially, <dfn id="stack-of-template-insertion-modes">the stack of template insertion modes</dfn> is empty. The stack grows downwards; the topmost value on the stack is the first one added to the stack, and the bottommost value of the stack is the one most recently added.</p>
+
+<p>The <dfn id="current-template-insertion-mode">current template insertion mode</dfn> is the bottommost node in this stack.</p>
+
 <h3 id="creating-an-element-for-a-token">Creating an element for the token</h3>
 
 <p>Whenever the HTML parser is about to <a href="http://dev.w3.org/html5/spec/tokenization.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://dev.w3.org/html5/spec/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
@@ -287,7 +298,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>Just after the step labeled <strong>"Loop"</strong> in the algorithm to <a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">reset the insertion mode appropriately</a>, add the following step:</p>
 <ol start="4">
-    <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to "<a href="#template-contents-insertion-mode">template contents</a>" and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="#dfn-template-element"><code>template</code></a> element, then switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to the <a href="#current-template-insertion-mode">current template insertion mode</a> and abort these steps.</li>
 </ol>
 
 <p>Modify the step which begins <em>"If node is a head element..."</em> to be:</p>
@@ -319,7 +330,8 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <ol>
         <li>Insert a marker at the end of the <a href="http://dev.w3.org/html5/spec/parsing.html#list-of-active-formatting-elements">list of active formatting elements</a></li>
         <li><a href="#dfn-template-insertion-algorithm">Insert new template HTML element</a></li>
-        <li>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a>
+        <li>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="#template-contents-insertion-mode">"template contents"</a></li>
+        <li>Push "template contents" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a> so that it is the new <a href="#current-template-insertion-mode">current template insertion mode</a>.</li>
     </ol>
     </dd>
 <dt>An end tag whose name is "template"</dt>
@@ -330,6 +342,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
         <li>If the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a></li>
         <li>Pop elements from the <a href="http://dev.w3.org/html5/spec/parsing.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
         <li><a href="http://dev.w3.org/html5/spec/parsing.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
+        <li>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>.</li>
         <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a></li>
     </ol>
     </dd>
@@ -495,15 +508,15 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <dt>A start tag whose name is one of: "link", "script", "style", "meta", template"</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
 <dt>A start tag whose name is "frame"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in frameset" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is "col"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in column group" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "caption", "colgroup", "tbody", "tfoot", "thead"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "tr"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
 <dt>A start tag whose name is one of: "td", "th"</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in row" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
 <dt>A start tag whose tag name is "template"</dt>
 <dt>An end tag whose name is "template"</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
@@ -518,6 +531,18 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <dt>Anything else</dt>
     <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 </dl>
+
+
+
+<h2 id="fragment-parsing-additions">Additions to the steps for parsing HTML fragments</h2>
+
+<p>Add a sub-step to step 4 (If there is a context element) before sub-step 5 (Reset the parser's insertion mode appropriately):</p>
+
+<dl>
+<dd>
+<p>If the context element is a <code>template</code> element, push "template contents" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>.</p>
+</dd>
+<dl>
 
 <h2 id="node-clone-additions">Additions to the steps to clone a node</h2>
 
