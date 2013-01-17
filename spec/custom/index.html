@@ -142,7 +142,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p><dfn id="dfn-custom-element">Custom elements</dfn> are <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>, whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is defined by the author. This <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-element-prototype">element prototype</dfn>.</p> 
+<p><dfn id="dfn-custom-element">Custom elements</dfn> are <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>, whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is defined by the author. This <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p> 
 
 <p>When created, new instances of <a href="#dfn-custom-element">custom elements</a> are given an opportunity to create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> which it <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">hosts</a>. The <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> is populated by cloning an <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a>, which is called the <dfn id="dfn-custom-element-template">custom element template</dfn>.
 
@@ -152,7 +152,7 @@
 
 <p> For an element or token, the <a href="#dfn-custom-element-name">custom element name</a> is the element's tag name. An element or token is considered <dfn id="dfn-custom-element-matchable">matchable</dfn> if and only if its tag name is a <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
-<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between an <a href="#dfn-element-prototype">element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
+<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between an <a href="#dfn-custom-element-prototype">custom element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
 
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
 
@@ -160,7 +160,7 @@
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a></dd>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a></dd>
 <dt>Output</dt>
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
@@ -171,7 +171,7 @@
     <li><dfn id="algo-chain-iteration">For each</dfn> item in <var>CHAIN</var>:
     <ol>
         <li>Let <var>ITEM</var> be this item</li>
-        <li>Let <var>DEFINITION</var> be a <a href="#dfn-element-registration">registered</a> <a href="#dfn-element-definition">element definition</a> that has <var>ITEM</var> as <a href="#dfn-element-prototype">element prototype</a>.</li>
+        <li>Let <var>DEFINITION</var> be a <a href="#dfn-element-registration">registered</a> <a href="#dfn-element-definition">element definition</a> that has <var>ITEM</var> as <a href="#dfn-custom-element-prototype">custom-element prototype</a>.</li>
         <li>If <var>DEFINITION</var> was not found, <strong>stop.</strong></li>
         <li>If <var>DEFINITION</var> has <a href="#dfn-custom-element-template">element template</a>:
         <ol>
@@ -188,12 +188,12 @@
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>.</dd>
+    <dd><var>PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>.</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-element-prototype">element prototype</a></li>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Generate a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a> which, when called:
     <ol>
         <li>Runs the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
@@ -250,7 +250,7 @@ The effect of the closure in the generated function object is that while the mem
     <li>Let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> part of <var>DEFINITION</var></li>
     <li>For each element <var>ELEMENT</var> in <var>TREE</var> whose <a href="#dfn-custom-element-name">custom element name</a> is <var>NAME</var>:
     <ol>
-        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-element-prototype">element prototype</a> in <var>DEFINITION</var></li>
+        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
         <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
         <li>Let <var>REFERENCE</var> be the next sibling of <var>ELEMENT</a></li>
         <li>Let <var>PARENT</var> be the parent of <var>ELEMENT</var></li>
@@ -301,7 +301,7 @@ There may be situations where multiple registrations
     <li>If <var>DEFINTION</var> is missing, let <var>ELEMENT</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for token</a>.</li>
     <li>Otherwise:
     <ol>
-        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-element-prototype">element prototype</a> in <var>DEFINITION</var></li>
+        <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
         <li>If <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>TOKEN</var>, let <var>ELEMENT</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for token</a>.</li>
         <li>Otherwise, return result of running the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument.</li>
     </ol></li>
@@ -376,7 +376,7 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
 <dt>Input</dt>
     <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> on which the method is called</dd>
     <dd><var id="var-document-register-name">NAME</var>, the <a href="#dfn-custom-element-name">custom element name</a> of the element being registered</dd>
-    <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-element-prototype">element prototype</a>, optional</dd>
+    <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>, optional</dd>
     <dd><var id="var-options-template">FRAGMENT</var>, the <a href="http://www.w3.org/TR/domcore/#documentfragment">document fragment</a> that represents the <a href="#dfn-custom-element-template">custom element template</a>, optional</dd>
     <dd><var id="var-options-lifecycle">LIFECYCLE</var>, the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>, optional</dd>
 <dt>Output</dt>
