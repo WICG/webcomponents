@@ -142,13 +142,31 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p><dfn id="dfn-custom-element">Custom elements</dfn> are <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>, whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> are defined by the author. These <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of a <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p> 
+<p><dfn id="dfn-custom-element">Custom elements</dfn> are <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>, whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> are defined by the author. These <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of a <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p>
+
+<p>The <dfn id="dfn-custom-element-name">custom element name</dfn> identifies a <a href="#dfn-custom-element">custom element</a> and is a sequence of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#alphanumeric-ascii-characters">alphanumeric ASCII characters</a> that <strong>must</strong> contain a <var>U+002D HYPHEN-MINUS</var> character and <strong>must not</strong> be one of the following values:</p>
+<ul>
+    <li><code>annotation-xml</code></li>
+    <li><code>color-profile</code></li>
+    <li><code>font-face</code></li>
+    <li><code>font-face-src</code></li>
+    <li><code>font-face-uri</code></li>
+    <li><code>font-face-format</code></li>
+    <li><codE>font-face-name</code></li>
+    <li><code>missing-glyph</code></li>
+</ul>
+
+<p>The <a href="#dfn-custom-element-name">custom element name</a> is given to a <a href="#dfn-custom-element">custom element</a> at the time its creation in one of the two ways:</p>
+<ol>
+    <li>As the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of the <a href="#dfn-custom-element">custom element</a>. These types of <a href="#dfn-custom-element-name">custom element names</a> are called <dfn id="dfn-custom-tag">custom tags</dfn>.</li>
+    <li>As the value of the <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> of the <a href="#dfn-custom-element">custom element</a>. <a href="#dfn-custom-element-name">Custom element names</a> given this way are called <dfn id="dfn-extension-type">extension types</dfn>.</li>
+</ol>
+
+<p>After a <a href="#dfn-custom-element">custom element</a> is created, changing the value of the <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> <strong>must not</strong> affect this element's <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
 <p>When created, new instances of <a href="#dfn-custom-element">custom elements</a> are given an opportunity to create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> which it <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">hosts</a>. The <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> is populated by cloning an <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a>, which is called the <dfn id="dfn-custom-element-template">custom element template</dfn>.
 
 <p>After a new instance of a <a href="#dfn-custom-element">custom element</a> is created, the author of the element can optionally provide a set of callbacks that are called when the state of the element changes throughout its lifecycle. This set of callbacks is provided by a <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-interface">callback interface</a> that is called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
-
-<p>The <dfn id="dfn-custom-element-name">custom element name</dfn> identifies a <a href="#dfn-custom-element">custom element</a> and is a sequence of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#alphanumeric-ascii-characters">alphanumeric ASCII characters</a> that <strong>must</strong> contain a <var>U+002D HYPHEN-MINUS</var> character.</p>
 
 <p> For an element or token, the <a href="#dfn-custom-element-name">custom element name</a> is the element's tag name. An element or token is considered <dfn id="dfn-custom-element-matchable">matchable</dfn> if and only if its tag name is a <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
