@@ -65,7 +65,7 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#introduction"><span class="section">4</span> Introduction</a></li>
+    <li><a href="#instantiating-custom-elements"><span class="section">4</span> Instantiating Custom Elements</a></li>
     <li><a href="#declaring-custom-elements"><span class="section">5</span> Declaring Custom Elements</a></li>
     <li><a href="#serializing-and-parsing"><span class="section">6</span> Serializing and Parsing Custom Elements in HTML</a></li>
     <li><a href="#unknown-element-pseudoclass"><span class="section">7</span> Unknown Element Pseudoclass</a></li>
@@ -117,30 +117,11 @@
     <li><a href="http://www.w3.org/TR/WebIDL/">Web IDL</a></li>
 </ul>
 
-<h2 id="terminology">Terminology</h2>
-
-<p>The following terms are used throughout the specification:
-
-<dl>
-<dt>DOM</dt>
-    <dd>The <a href="http://www.w3.org/TR/domcore/">document object model</a></dd>
-<dt>document</dt>
-    <dd>The Document Object Model's underlying document</dd>
-<dt>node</dt>
-    <dd>Any DOM object that <a href="http://www.w3.org/TR/domcore/#concept-tree-participate">participates in a tree</a></dd>
-<dt>DOM tree</dt>
-    <dd>Any <a href="http://www.w3.org/TR/domcore/#trees">tree</a>, composed of DOM objects</dd>
-<dt>DOM structure</dt>
-    <dd>A DOM tree or fragment of a DOM tree</dd>
-<dt>JavaScript</dt>
-    <dd>The term "JavaScript" is used to refer to ECMA262, rather than the official term ECMAScript, since the term JavaScript is more widely known.</dd>
-</dl>
-
 </section>
 
 <section class="physics">
 
-<h2 id="introduction">Introduction</h2>
+<h2 id="Terminology">Terminology</h2>
 
 <p><dfn id="dfn-custom-element">Custom elements</dfn> are <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>, whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> are defined by the author. These <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interfaces</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of a <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p>
 
@@ -160,6 +141,13 @@
 The list of names above is the summary of all hyphen-containing names from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely the <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> and the <a href="http://www.w3.org/TR/MathML/">MathML</a>.
 </div>
 
+<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between a <a href="#dfn-custom-element-prototype">custom element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
+
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
+
+<p> For an element or token, the <a href="#dfn-custom-element-name">custom element name</a> is the element's tag name. An element or token is considered <dfn id="dfn-custom-element-matchable">matchable</dfn> if and only if its tag name is a <a href="#dfn-custom-element-name">custom element name</a>.</p>
+
+<h2 id="instantiating-custom-elements">Instantiating Custom Elements</h2>
 
 <p>The <a href="#dfn-custom-element-name">custom element name</a> is given to a <a href="#dfn-custom-element">custom element</a> at the time of its instantation in one of the two ways:</p>
 <ol>
@@ -173,25 +161,21 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <p>While being instantiated, <a href="#dfn-custom-element">custom elements</a> are given an opportunity to create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> which it <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">hosts</a>. The <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> is populated by cloning an <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a>, which is called the <dfn id="dfn-custom-element-template">custom element template</dfn>.
 
-<p>After a new instance of a <a href="#dfn-custom-element">custom element</a> is instantiated, the author of the element can optionally provide a set of callbacks that are called when the state of the element changes throughout its lifecycle. This set of callbacks is provided by a <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-interface">callback interface</a> that is called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
-
-<p> For an element or token, the <a href="#dfn-custom-element-name">custom element name</a> is the element's tag name. An element or token is considered <dfn id="dfn-custom-element-matchable">matchable</dfn> if and only if its tag name is a <a href="#dfn-custom-element-name">custom element name</a>.</p>
-
-<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between an <a href="#dfn-custom-element-prototype">custom element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
-
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
-
 <p>A new instance of a <a href="#dfn-custom-element">custom element</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-instantiation">custom element instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a></dd>
+    <dd><var>DEFINITION</var>, the <a href="#dfn-custom-element-definition">custom element definition</a></dd>
+    <dd><var>BASE</var>, an optional <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>.</dd>
 <dt>Output</dt>
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
 <ol>
     <li><a href="http://ecma-international.org/ecma-262/5.1/#sec-15.2.3.5">Create</a> a new object that implements <var>PROTOTYPE</var></li>
     <li>Let <var>ELEMENT</var> be this new object</li>
+    <li>Let <var>NAME</var> be <var>BASE</var> if <var>BASE</var> is present</li>
+    <li>Otherwise, let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
+    <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/namespaces.html#html-namespace-0">HTML namespace</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> to <em>null</em></li>
     <li>Let <var>CHAIN</var> be <var>ELEMENT</var>'s <a href="http://ecma-international.org/ecma-262/5.1/#sec-4.2.1">prototype chain</a>, in reverse order (starting with at the top of the prototype chain)</li>
     <li><dfn id="algo-chain-iteration">For each</dfn> item in <var>CHAIN</var>:
     <ol>
@@ -209,6 +193,8 @@ The list of names above is the summary of all hyphen-containing names from the <
 </div>
 <p>Some user agents treat DOM objects as special, hybrid entities. They exist in JavaScript environment only as thin <a href="http://en.wikipedia.org/wiki/Adapter_pattern">wrappers</a> that hide some monolothic implementation of the object. In such user agents, the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> <strong>must</strong> also ensure that the output is a valid DOM element with the proper wrapper in place.</p>
 
+<div class="informative">The term "JavaScript" is used to refer to ECMA262, rather than the official term ECMAScript, since the term JavaScript is more widely known.</div>
+
 <p>All <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be constructable with a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a>, called <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>. This constructor <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
@@ -221,7 +207,7 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Generate a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a> which, when called:
     <ol>
-        <li>Runs the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
+        <li>Runs the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
         <li>Runs the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
         <li>Returns algorithm's output as result</li>
     </ol></li>
@@ -234,6 +220,10 @@ The list of names above is the summary of all hyphen-containing names from the <
 <div class="informative">
 The effect of the closure in the generated function object is that while the members of this object could be modified (including its <code>constructor</code> property), calling this function object as a constructor will always result in instantiating a custom element with the prototype that was used to generated the constructor.
 </div>
+
+<h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
+
+<p>After an <a href="#dfn-custom-element">custom element</a> is instantiated, the author of the element can optionally provide a set of callbacks that are called when the state of the element changes throughout its lifecycle. This set of callbacks is provided by a <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-interface">callback interface</a> that is called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
 
 <h2 id="declaring-custom-elements">Declaring Custom Elements</h2>
 
@@ -276,7 +266,7 @@ The effect of the closure in the generated function object is that while the mem
     <li>For each element <var>ELEMENT</var> in <var>TREE</var> whose <a href="#dfn-custom-element-name">custom element name</a> is <var>NAME</var>:
     <ol>
         <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
-        <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
+        <li>Let <var>UPGRADE</var> be the result of running <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
         <li>Let <var>REFERENCE</var> be the next sibling of <var>ELEMENT</a></li>
         <li>Let <var>PARENT</var> be the parent of <var>ELEMENT</var></li>
         <li><a href="http://www.w3.org/TR/domcore/#concept-node-remove">Remove</a> <var>ELEMENT</var> from <var>PARENT</var> with <em>suppress observers flag</em> set</li>
