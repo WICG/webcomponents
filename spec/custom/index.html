@@ -171,6 +171,7 @@ The list of names above is the summary of all hyphen-containing names from the <
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
 <ol>
+    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
     <li><a href="http://ecma-international.org/ecma-262/5.1/#sec-15.2.3.5">Create</a> a new object that implements <var>PROTOTYPE</var></li>
     <li>Let <var>ELEMENT</var> be this new object</li>
     <li>Let <var>NAME</var> be <var>BASE</var> if <var>BASE</var> is present</li>
@@ -218,7 +219,17 @@ The list of names above is the summary of all hyphen-containing names from the <
 </div>
 
 <div class="informative">
-The effect of the closure in the generated function object is that while the members of this object could be modified (including its <code>constructor</code> property), calling this function object as a constructor will always result in instantiating a custom element with the prototype that was used to generated the constructor.
+<p>The effect of the closure in the generated function object is that while the members of this object could be modified (including its <code>constructor</code> property), calling this function object as a constructor will always result in instantiating a custom element with the prototype that was used to generated the constructor.</p>
+</div>
+
+<div class="monkeypatch">
+<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with a <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following additional steps:</p>
+<ol>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
+    <li>If <var>DEFINITION</var> doesn't exist, <strong>stop</strong>.</li>
+    <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
+    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
+</ol>
 </div>
 
 <h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
