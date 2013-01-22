@@ -143,7 +143,7 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between a <a href="#dfn-custom-element-prototype">custom element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
 
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>.</p>
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
 <p class=fixme>Write definition of <dfn id="dfn-custom-element-matchable">matchable</dfn>.</p>
 
@@ -176,7 +176,7 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li>Let <var>ELEMENT</var> be this new object</li>
     <li>Let <var>NAME</var> be <var>BASE</var> if <var>BASE</var> is present</li>
     <li>Otherwise, let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
-    <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/namespaces.html#html-namespace-0">HTML namespace</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> to <em>null</em></li>
+    <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/namespaces.html#html-namespace-0">HTML namespace</a>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> to <em>null</em>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> with which <var>DEFINITION</var> is registered</li>
     <li>Let <var>CHAIN</var> be <var>ELEMENT</var>'s <a href="http://ecma-international.org/ecma-262/5.1/#sec-4.2.1">prototype chain</a>, in reverse order (starting with at the top of the prototype chain)</li>
     <li><dfn id="algo-chain-iteration">For each</dfn> item in <var>CHAIN</var>:
     <ol>
@@ -222,11 +222,11 @@ The list of names above is the summary of all hyphen-containing names from the <
 <p>The effect of the closure in the generated function object is that while the members of this object could be modified (including its <code>constructor</code> property), calling this function object as a constructor will always result in instantiating a custom element with the prototype that was used to generated the constructor.</p>
 </div>
 
-<div class="monkeypatch">
-<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with a <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following additional steps:</p>
+<div class="monkeypatch" id="monkeypatch-create-element">
+<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with a <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last step of creating an element (step 3):</p>
 <ol>
-    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
-    <li>If <var>DEFINITION</var> doesn't exist, <strong>stop</strong>.</li>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a>, <a href="#dfn-element-registration">registered</a> with the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
+    <li>If <var>DEFINITION</var> doesn't exist, run the step that this algorithm replaces and <strong>stop</strong>.</li>
     <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
     <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
 </ol>
