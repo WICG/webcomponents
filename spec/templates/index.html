@@ -261,6 +261,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>When a <a href="#dfn-template">template</a> element's <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> changes, the template element's <a href="#api-html-template-element-content"><code>content</code></a> DocumentFragment <strong>must</strong> be <a href="http://www.w3.org/TR/domcore/#concept-node-adopt">adopted</a> into the new node document's <a href="#dfn-template-contents-owner">template contents owner</a> document.</p>
 
+<p><em>Non-normative note: It is recommended that user agents implementing the template element prevent DOM hierarhcy cycles, including those which contain a reference (graph edge) from template element to the templates document fragment. When such a cycle would be created, it is recommended that the user agent throw a HierarchyRequestError.</em></p>
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
