@@ -166,7 +166,7 @@ The list of names above is the summary of all hyphen-containing names from the <
 <dl>
 <dt>Input</dt>
     <dd><var>DEFINITION</var>, the <a href="#dfn-custom-element-definition">custom element definition</a></dd>
-    <dd><var>BASE</var>, an optional <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a>.</dd>
+    <dd><var>BASE</var>, an optional <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">tag name</a>.</dd>
 <dt>Output</dt>
     <dd><var>ELEMENT</var>, the DOM element</dd>
 </dl>
@@ -223,10 +223,24 @@ The list of names above is the summary of all hyphen-containing names from the <
 </div>
 
 <div class="monkeypatch" id="monkeypatch-create-element">
-<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with a <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last step of creating an element (step 3):</p>
+<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last two steps of creating an element (steps 3 and 4):</p>
 <ol>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a>, <a href="#dfn-element-registration">registered</a> with the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
-    <li>If <var>DEFINITION</var> doesn't exist, run the step that this algorithm replaces and <strong>stop</strong>.</li>
+    <li>If <var>DEFINITION</var> doesn't exist, run the steps that this algorithm replaces and <strong>stop</strong>.</li>
+    <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
+    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
+</ol>
+</div>
+
+<div class="monkeypatch" id="monkeypatch-create-element-ns">
+<p>When a <a href="#dfn-custom-element">custom element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last two steps of creating an element (steps 8 and 9):</p>
+<ol>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a>, <a href="#dfn-element-registration">registered</a> with the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
+    <li>If <var>DEFINITION</var> doesn't exist, run the steps that this algorithm replaces and <strong>stop</strong>.</li>
+    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
+    <li>Let <var>INTERFACE</var> be the <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a></li>
+    <li>If <var>INTERFACE</var> inherits from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a> and <var>namespace</var> is not <a href="http://www.w3.org/2000/svg">SVG namespace</a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop.</strong></li>
+    <li>If <var>INTERFACE</var> inherits from <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> and <var>namespace</var> is not <a href="http://www.w3.org/1999/xhtml">HTML namespace</a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop.</strong></li>
     <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as argument</li>
     <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
 </ol>
