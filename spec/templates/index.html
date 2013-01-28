@@ -97,7 +97,8 @@
     <li><a href="#innerhtml-on-templates"><span class="section">11</span> innerHTML on Templates</a></li>
     <li><a href="#parsing-xhtml-documents"><span class="section">12</span> Additions to Parsing XHTML Documents</a></li>
     <li><a href="#serializing-xhtml-documents"><span class="section">13</span> Additions to Serializing XHTML Documents</a></li>
-    <li><a href="#css-additions"><span class="section">14</span> Additions to the CSS user agent style sheet</a></li>
+    <li><a href="#xslt-and-xpath"><span class="section">14</span> Behavior of XSLT and XPath in the presence of the template element</a></li>
+    <li><a href="#css-additions"><span class="section">15</span> Additions to the CSS user agent style sheet</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -260,6 +261,7 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>When a <a href="#dfn-template">template</a> element's <a href="http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#concept-node-document">node document</a> changes, the template element's <a href="#api-html-template-element-content"><code>content</code></a> DocumentFragment <strong>must</strong> be <a href="http://www.w3.org/TR/domcore/#concept-node-adopt">adopted</a> into the new node document's <a href="#dfn-template-contents-owner">template contents owner</a> document.</p>
 
+<p><em>Non-normative note: It is recommended that user agents implementing the template element prevent DOM hierarhcy cycles, including those which contain a reference (graph edge) from template element to the templates document fragment. When such a cycle would be created, it is recommended that the user agent throw a HierarchyRequestError.</em></p>
 
 <h2 id="parsing">Parsing HTML Templates</h2>
 
@@ -591,7 +593,9 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 
 <p>When the algorithm must produce a serialization of a <code>template</code> element, the string returned must be contain a serialization of the child nodes of the template element's <a href="#api-html-template-element-content"><code>content</code></a> DocumentFragment, rather than the <code>template</code> element's children.</p>
 
-<p><em>Non-normative note: XSLT processing which operates on an XHTML document should act as if it operates on a serialized version of the document. That is, XSLT processing should treat template contents as descendants of the template element.</em></p>
+<h2 id="xslt-and-xpath">Behavior of XSLT and XPath in the presence of the template element</h2>
+
+<p><a href="http://www.w3.org/TR/xslt">XSLT</a> processing should to treat <a href="#dfn-template-contents">template contents</a> as descendants of the template element when contained in XHTML input of an XSLT transform and place the descendants of a template element into <a href="#dfn-template-contents">template contents</a> in XSLT output. However, XPath evaluation using the <a href="http://www.w3.org/TR/xpath/">XPath</a> DOM API should not to match on template contents.</p>
 
 <h2 id="css-additions">Additions to the CSS user agent style sheet</h2>
 
