@@ -385,6 +385,12 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
+<p>Modify the step 10 of the rule in the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a> insertion mode for encountering an <strong>end tag whose tag name is one of "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u"</strong>:</p>
+
+    <dd><p>If the <em>common ancestor</em> node is a table, tbody, tfoot, thead, or tr element, then, foster parent whatever <em>last node</em> ended up being in the previous step, first removing it from its previous parent node if any.</p>
+    <p>If the <em>common ancestor</em> is a <code>template</code> element, append whatever <em>last node</em> ended up being in the previous step to the template element's <a href="#api-html-template-element-content"><code>content</code></a> DocumentFragment, first removing it from its previous parent node if any.</p>
+    <p>Otherwise, append whatever <em>last node</em> ended up being in the previous step to the <em>common ancestor</em> node, first removing it from its previous parent node if any.</p>
+    </dd>
 
 <h3 id="in-table-addition">Additions to the "in table" insertion mode</h3>
 
