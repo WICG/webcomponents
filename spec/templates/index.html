@@ -507,6 +507,8 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
 <dl>
 <dt>A character token</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">in body</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
+<dt>A DOCTYPE token</dt>
+    <dd><a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">Parse error</a>. Ignore the token.</dd>
 <dt>A comment token</dt>
 <dt>A start tag whose name is one of: "link", "script", "style", "meta", template"</dt>
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the "<a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a>.</dd>
@@ -525,6 +527,8 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
     <dd>Process the token <a href="http://dev.w3.org/html5/spec/parsing.html#using-the-rules-for">using the rules for</a> the <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 <dt>Any other start tag</dt>
     <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
+<dt>Any other end tag</dt>
+    <dd><a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">Parse error</a>. Ignore the token.</dd>
 <dt>An end-of-file token</dt>
     <dd>If the <a href="http://dev.w3.org/html5/spec/parsing.html#current-node">current node</a> is the root <a href="http://dev.w3.org/html5/spec/the-html-element.html#the-html-element"><code>html</code></a> element, then <a href="http://dev.w3.org/html5/spec/the-end.html#stop-parsing">stop parsing</a>. (<a href="http://dev.w3.org/html5/spec/the-end.html#fragment-case">fragment case</a>)</dd>
     <dd>Otherwise, this is a <a href="http://dev.w3.org/html5/spec/parsing.html#parse-error">parse error</a>. Run these steps:
@@ -533,9 +537,6 @@ interface <dfn id="api-html-template-element">HTMLTemplateElement</dfn> : <a hre
         <li><a href="http://dev.w3.org/html5/spec/parsing.html#reset-the-insertion-mode-appropriately">Reset the insertion mode appropriately</a> and reprocess the token</li>
     </ol>
     </dd>
-<dt>Anything else</dt>
-    <dd>Switch the <a href="http://dev.w3.org/html5/spec/parsing.html#insertion-mode">insertion mode</a> to <a href="http://dev.w3.org/html5/spec/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
-
 </dl>
 
 <h2 id="fragment-parsing-additions">Additions to the steps for parsing HTML fragments</h2>
