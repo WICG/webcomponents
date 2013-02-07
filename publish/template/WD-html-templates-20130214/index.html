@@ -272,7 +272,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <h3 id="creating-an-element-for-a-token"><span class="section">7.2</span> Creating an element for the token</h3>
 
-<p>Whenever the HTML parser is about to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
+<p>Whenever the HTML parser is about to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#create-an-element-for-the-token">create an element for the token</a>, if the current node is a <a href="#dfn-template-element"><code>template</code></a> element, the element must be created with its <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> set to the <a href="#dfn-template-contents-owner">template contents owner</a> of the <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#dom-node-ownerdocument">ownerDocument</a> of the <a href="#dfn-template-element"><code>template</code></a> element.</p>
 
 <h3 id="appending-to-a-template"><span class="section">7.3</span> Appending to a template</h3>
 
@@ -284,16 +284,16 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <p>When popping elements from the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a>, a conforming UA <strong>must</strong> abort the following procedures when the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#current-node">current node</a> is <a href="#dfn-template-element"><code>template</code></a>:
 </p><ol>
-    <li><a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
-    <li><a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
-    <li><a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
+    <li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#clear-the-stack-back-to-a-table-context">Clearing the stack back to a table context</a></li>
+    <li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#clear-the-stack-back-to-a-table-body-context">Clearing the stack back to a table body context</a></li>
+    <li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#clear-the-stack-back-to-a-table-row-context">Clearing the stack back to a table row context</a></li>
 </ol>
 
 <h3 id="foster-parent-addition"><span class="section">7.5</span> Additions to "foster parenting"</h3>
 
-<p>When a node is to be <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://www.w3.org/html/wg/drafts/html/master/tabular-data.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#foster-parenting">foster parenting</a> apply.</p>
+<p>When a node is to be <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#foster-parent"><strong>foster parented</strong></a>, the last <a href="#dfn-template-element"><code>template</code></a> element with no <a href="http://www.w3.org/html/wg/drafts/html/master/tabular-data.html#the-table-element"><code>table</code></a> element is below it in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a> is the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#foster-parent-element"><strong>foster parent element</strong></a> <em>(NOT the template's parent!)</em> if there is such a <a href="#dfn-template-element"><code>template</code></a> element in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a>. Otherwise normal rules for <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#foster-parenting">foster parenting</a> apply.</p>
 
-<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
+<p class="note">This prevents the HTML parser from "lifting" content outside of a template when a node is to be <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#foster-parent"><strong>foster parented</strong></a>, aligning template behavior more closely with the <a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</p>
 
 <h3 id="reset-insertion-mode-addition"><span class="section">7.6</span> Additions to "reset the insertion mode appropriately"</h3>
 
@@ -304,7 +304,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <p>Modify the step which begins <em>"If node is a head element..."</em> to be:</p>
 <ol start="11">
-    <li>If <em>node</em> is a <a href="http://www.w3.org/html/wg/drafts/html/master/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">"in body"</a> ("<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
+    <li>If <em>node</em> is a <a href="http://www.w3.org/html/wg/drafts/html/master/the-head-element.html#the-head-element"><code>head</code></a> element <strong>and</strong> <em>node</em> is the <a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#concept-frag-parse-context"><em>context</em></a> element, then switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">"in body"</a> ("<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a>"! not "<em><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">in head</a></em>") and abort these steps (<a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#fragment-case">fragment case</a>). Otherwise, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a>, and abort these steps.</li>
 </ol>
 
 <p>The following cases which were previously annotated as <a href="http://www.w3.org/html/wg/drafts/html/master/the-end.html#fragment-case">fragment case</a>, can now be entered during normal parsing (i.e. <em>not</em> only in the fragment case) immediately following encountering a &lt;/template&gt; token, and the annotation should be removed:</p>
@@ -324,7 +324,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <h3 id="in-head-addition"><span class="section">7.8</span> Additions to the "in head" insertion mode</h3>
 
-<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
+<p>Just before the <strong>A start tag whose tag name is "head"</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode, add the following rules:</p>
 <dl>
 <dt>A start tag whose tag name is "template"</dt>
     <dd>Run these steps:
@@ -339,7 +339,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     <dd>If the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a> does not <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#has-an-element-in-scope">have an element in scope</a> with the same tag name as that of the token, then this is a <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parse-error">parse error</a>; ignore the token.</dd>
     <dd>Otherwise, run these steps:
     <ol>
-        <li><a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#generate-implied-end-tags">Generate implied end tags</a></li>
+        <li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#generate-implied-end-tags">Generate implied end tags</a></li>
         <li>If the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#current-node">current node</a> is not an element with the same tag name as that of the token, then this is a <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parse-error">parse error</a></li>
         <li>Pop elements from the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#stack-of-open-elements">stack of open elements</a> until an element with the same tag name as the token has been popped from the stack</li>
         <li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#clear-the-list-of-active-formatting-elements-up-to-the-last-marker">Clear the list of active formatting elements up to the last marker</a></li>
@@ -351,7 +351,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <h3 id="in-body-addition"><span class="section">7.9</span> Additions to the "in body"  insertion mode</h3>
 
-<p>Modify the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a> insertion mode for encountering a "html" start tag</p>
+<p>Modify the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a> insertion mode for encountering a "html" start tag</p>
 
 <dl>
     <dt>A start tag whose tag name is "html"</dt>
@@ -360,7 +360,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a> insertion mode for encountering a "body" start tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a> insertion mode for encountering a "body" start tag:</p>
 
 <dl>
     <dt>A start tag whose tag name is "body"</dt>
@@ -369,7 +369,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a> insertion mode for encountering a "frameset" start tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a> insertion mode for encountering a "frameset" start tag:</p>
 
 <dl>
     <dt>A start tag whose tag name is "frameset"</dt>
@@ -378,15 +378,15 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Any other start tag</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">"in body"</a> insertion mode, add the following rule:</p>
 
 <dl>
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-        <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+        <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<p>Modify the step 10 of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a> insertion mode for encountering an <strong>end tag whose tag name is one of "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u"</strong>:</p>
+<p>Modify the step 10 of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a> insertion mode for encountering an <strong>end tag whose tag name is one of "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u"</strong>:</p>
 
 <dl>
     <dd>
@@ -400,7 +400,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <h3 id="in-table-addition"><span class="section">7.10</span> Additions to the "in table" insertion mode</h3>
 
-<p>Modify the non-normative <em>Note</em> for the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intable">in table</a> insertion mode for encountering a "table" start tag:</p>
+<p>Modify the non-normative <em>Note</em> for the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intable">in table</a> insertion mode for encountering a "table" start tag:</p>
 
 <dl>
     <dt>A start tag whose tag name is "table"</dt>
@@ -411,7 +411,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intable">in table</a> insertion mode for encountering a "table" end tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intable">in table</a> insertion mode for encountering a "table" end tag:</p>
 
 <dl>
     <dt>A end tag whose tag name is "table"</dt>
@@ -420,22 +420,22 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intable">"in table"</a> insertion mode, add the following rule:</p>
 
 <dl>
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
-<p class="note">The "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intbody">in table body</a>" insertion mode is not modified because it defers to "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-incaption">in caption</a>" and "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a>".</p>
+<p class="note">The "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intbody">in table body</a>" insertion mode is not modified because it defers to "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intable">in table</a>" for <strong>"Anything else"</strong>. Likewise, the "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-incaption">in caption</a>" and "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-incell">in cell</a>" insertion modes are not modified because they defer to "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a>".</p>
 
 
 <h3 id="in-table-body-addition"><span class="section">7.11</span> Additions to the "in table body" insertion mode</h3>
 
 <p class="note">The following modification only modifies this two cases as "<a href="#fragment-or-template-contents-case">fragment or template contents case</a>"</p>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intbody">in table body</a> insertion mode for encountering a "caption", "col", "colgroup", "tbody", "tfoot", "thead" start tag or a "table" end tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intbody">in table body</a> insertion mode for encountering a "caption", "col", "colgroup", "tbody", "tfoot", "thead" start tag or a "table" end tag:</p>
 
 <dl>
     <dt>A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead"</dt>
@@ -449,7 +449,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <p class="note">The following modifications only modify these two case as "<a href="#fragment-or-template-contents-case">fragment or template contents case</a>"</p>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intr">in row</a> insertion mode for encountering a "tr" end tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intr">in row</a> insertion mode for encountering a "tr" end tag:</p>
 
 <dl>
     <dt>A end tag whose tag name is "tr"</dt>
@@ -458,7 +458,7 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intr">in row</a> insertion mode for encountering a "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr" start tag or a "table" end tag:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intr">in row</a> insertion mode for encountering a "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr" start tag or a "table" end tag:</p>
 
 <dl>
     <dt>A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr"</dt>
@@ -472,13 +472,13 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <h3 id="in-cell-addition"><span class="section">7.13</span> Additions to the "in cell" insertion mode</h3>
 
-<p>Modify the parenthetical comment within the <strong>An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intd">"in cell"</a> insertion mode, to be:</p>
+<p>Modify the parenthetical comment within the <strong>An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intd">"in cell"</a> insertion mode, to be:</p>
 
 <p>(which can only happen for "tbody", "tfoot" and "thead", when parsing template contents, or in the fragment case)</p>
 
 <h3 id="in-colgroup-addition"><span class="section">7.14</span> Additions to the "in column group" insertion mode</h3>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-incolgroup">"in column group"</a> insertion mode for encountering a "colgroup" end tag to be:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-incolgroup">"in column group"</a> insertion mode for encountering a "colgroup" end tag to be:</p>
 
 <dl>
     <dt>An end tag whose tag name is "colgroup"</dt>
@@ -487,27 +487,27 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-incolgroup">"in column group"</a> insertion mode, add the following rule:</p>
 
 <dl>
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-select-addition"><span class="section">7.15</span> Additions to the "in select" insertion mode</h3>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inselect">"in select"</a> insertion mode, add the following rule:</p>
 
 <dl>
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="in-frameset-addition"><span class="section">7.16</span> Additions to the "in frameset" insertion mode</h3>
 
-<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inframeset">in frameset</a> insertion mode for encountering a "frameset" end tag to be:</p>
+<p>Modify the first clause of the rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inframeset">in frameset</a> insertion mode for encountering a "frameset" end tag to be:</p>
 
 <dl>
     <dt>An end tag whose tag name is "frameset"</dt>
@@ -516,12 +516,12 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
     </dd>
 </dl>
 
-<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inframeset">"in frameset"</a> insertion mode, add the following rule:</p>
+<p>Just before the <strong>Anything else</strong> rule in the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inframeset">"in frameset"</a> insertion mode, add the following rule:</p>
 
 <dl>
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 </dl>
 
 <h3 id="template-contents-insertion-mode"><span class="section">7.17</span> The "template contents" insertion mode</h3>
@@ -530,36 +530,36 @@ interface <dfn id="api-html-template-element" title="#api-html-template-element"
 
 <dl>
     <dt>A character token</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">in body</a>" <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">in body</a>" <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a>.</dd>
 
     <dt>A DOCTYPE token</dt>
     <dd><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parse-error">Parse error</a>. Ignore the token.</dd>
 
     <dt>A comment token</dt>
     <dt>A start tag whose name is one of: "link", "script", "style", "meta", template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the "<a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">in head</a>" <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a>.</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the "<a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">in head</a>" <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a>.</dd>
 
     <dt>A start tag whose name is "frame"</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in frameset" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in frameset" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inframeset">"in frameset"</a> and reprocess the current token</dd>
 
     <dt>A start tag whose name is "col"</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in column group" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in column group" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-incolgroup">"in column group"</a> and reprocess the current token</dd>
 
     <dt>A start tag whose name is one of: "caption", "colgroup", "tbody", "tfoot", "thead"</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intable">"in table"</a> and reprocess the current token</dd>
 
     <dt>A start tag whose name is one of: "tr"</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in table body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intbody">"in table body"</a> and reprocess the current token</dd>
 
     <dt>A start tag whose name is one of: "td", "th"</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in row" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in row" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-intr">"in row"</a> and reprocess the current token</dd>
 
     <dt>A start tag whose tag name is "template"</dt>
     <dt>An end tag whose name is "template"</dt>
-    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
+    <dd>Process the token <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#using-the-rules-for">using the rules for</a> the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inhead">"in head"</a> insertion mode</dd>
 
     <dt>Any other start tag</dt>
-    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/tokenization.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
+    <dd>Pop the <a href="#current-template-insertion-mode">current template insertion mode</a> off the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, push "in body" onto the <a href="#stack-of-template-insertion-modes">stack of template insertion modes</a>, switch the <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#insertion-mode">insertion mode</a> to <a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parsing-main-inbody">"in body"</a> and reprocess the current token</dd>
 
     <dt>Any other end tag</dt>
     <dd><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#parse-error">Parse error</a>. Ignore the token.</dd>
