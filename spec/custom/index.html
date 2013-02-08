@@ -161,23 +161,13 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <p>While being instantiated, <a href="#dfn-custom-element">custom elements</a> are given an opportunity to create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> which it <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">hosts</a>. The <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> is populated by cloning an <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a>, which is called the <dfn id="dfn-custom-element-template">custom element template</dfn>.
 
-<p>A new instance of a <a href="#dfn-custom-element">custom element</a> <strong>must</strong> be created with the <dfn id="dfn-custom-element-instantiation">custom element instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p>Creating a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow tree</a> <strong>must</strong> follow the <dfn id="dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>DEFINITION</var>, the <a href="#dfn-custom-element-definition">custom element definition</a></dd>
-    <dd><var>NAMESPACE</var>, a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a></dd>
-    <dd><var>BASE</var>, an optional <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">tag name</a></dd>
-<dt>Output</dt>
-    <dd><var>ELEMENT</var>, the DOM element</dd>
+    <dd><var>ELEMENT</var>, the <a href="#dfn-custom-element">custom element</a></dd>
 </dl>
 <ol>
-    <li>Let <var>NAME</var> be <var>BASE</var> if <var>BASE</var> is present or otherwise, the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
-    <li>Let <var>INTERFACE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> of the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
-    <li>If <var>INTERFACE</var> inherits from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a> and <var>NAMESPACE</var> is not <a href="http://www.w3.org/2000/svg">SVG namespace</a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop.</strong></li>
-    <li>If <var>INTERFACE</var> inherits from <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> and <var>NAMESPACE</var> is not <a href="http://www.w3.org/1999/xhtml">HTML namespace</a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop.</strong></li>
-   <li>Let <var>ELEMENT</var> be a new <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>INTERFACE</var>, with no attributes, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> with which <var>DEFINITION</var> is registered</li>
-    <li>If <var>BASE</var> is present, set the <a href="http://dom.spec.whatwg.org/#concept-attribute-value">value</a> of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to the <a href="#dfn-custom-element">custom element name</a> in <var>DEFINITION</var></li>
     <li>Let <var>CHAIN</var> be <var>ELEMENT</var>'s <a href="http://ecma-international.org/ecma-262/5.1/#sec-4.2.1">prototype chain</a>, in reverse order (starting from the end farthest from <var>ELEMENT</var>)</li>
     <li><dfn id="algo-chain-iteration">For each</dfn> item in <var>CHAIN</var>:
     <ol>
@@ -193,9 +183,6 @@ The list of names above is the summary of all hyphen-containing names from the <
     </ol>
 </ol>
 </div>
-<p>Some user agents treat DOM objects as special, hybrid entities. They exist in JavaScript environment only as thin <a href="http://en.wikipedia.org/wiki/Adapter_pattern">wrappers</a> that hide some monolothic implementation of the object. In such user agents, the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> <strong>must</strong> also ensure that the output is a valid DOM element with the proper wrapper in place.</p>
-
-<div class="informative">The term "JavaScript" is used to refer to ECMA262, rather than the official term ECMAScript, since the term JavaScript is more widely known.</div>
 
 <p>All <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be constructable with a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a>, called <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>. This constructor <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -209,9 +196,13 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a function, executes these steps:
     <ol>
-        <li>Runs the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> as and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> arguments</li>
-        <li>Runs the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
-        <li>Returns algorithm's output as result</li>
+        <li>Let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
+        <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
+        <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
+        <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> with which <var>DEFINITION</var> is registered</li>
+        <li>Run the <a href="#dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</a> with <var>ELEMENT</var> as argument</li>
+        <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>ELEMENT</var> as argument</li>
+        <li>Return <var>ELEMENT</var>.</li>
     </ol></li>
 </ol>
 </div>
@@ -221,22 +212,11 @@ The list of names above is the summary of all hyphen-containing names from the <
 </div>
 
 <div class="monkeypatch" id="monkeypatch-create-element">
-<p>When an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last two steps of creating an element (steps 3 and 4):</p>
+<p>When an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods, the method <strong>must</strong> run the following steps <em>after</em> the last step of creating an element and <em>before</em> returning the result:</p>
 <ol>
-    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a>, <a href="#dfn-element-registration">registered</a> with the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
-    <li>If <var>DEFINITION</var> doesn't exist, run the steps that this algorithm replaces and <strong>stop</strong>.</li>
-    <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> and <a href="http://www.w3.org/1999/xhtml">HTML namespace</a> as arguments</li>
-    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
-</ol>
-</div>
-
-<div class="monkeypatch" id="monkeypatch-create-element-ns">
-<p>When an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> method, the method <strong>must</strong> run the following steps <em>instead</em> of the last two steps of creating an element (steps 8 and 9):</p>
-<ol>
-    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a>, <a href="#dfn-element-registration">registered</a> with the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> that has <var>localName</var> as <a href="#dfn-custom-element-name">custom element name</a></li>
-    <li>If <var>DEFINITION</var> doesn't exist, run the steps that this algorithm replaces and <strong>stop</strong>.</li>
-    <li>Run the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>DEFINITION</var> and <var>namespace</var> as arguments</li>
-    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>DEFINITION</var> as argument</li>
+    <li>Let <var>ELEMENT</var> be the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a></li>
+    <li>Run the <a href="#dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</a> with <var>ELEMENT</var> as argument</li>
+    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>ELEMENT</var> as argument</li>
 </ol>
 </div>
 
@@ -254,11 +234,11 @@ The list of names above is the summary of all hyphen-containing names from the <
 <dl>
 <dt>Input</dt>
     <dd><var>ELEMENT</var>, an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> being finalized</dd>
-    <dd><var>DEFINITION</var>, an <a href="#dfn-element-definition">element definition</a></dd>
 <dt>Output</dt>
     <dd>Finalized <var>ELEMENT</var></dd>
 </dl>
 <ol>
+    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-custom-element-definition">definition</a></li>
     <li>If <var>DEFINITION</var> contains <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>:
     <ol>
         <li>Let <var>CREATED</var> be the callback, corresponding to the <em>created</em> key in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> dictionary</li>
@@ -269,6 +249,10 @@ The list of names above is the summary of all hyphen-containing names from the <
     </ol></li>
 </ol>
 </div>
+
+<p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <span class="fixme">needs to be rewritten</span>.</p>
+
+<!--
 
 <p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
@@ -315,6 +299,8 @@ The list of names above is the summary of all hyphen-containing names from the <
 There may be situations where multiple registrations 
 </div>
 
+-->
+
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</h2>
 
 <div class="monkeypatch">This part of the specification describes changes to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a> specification.</div>
@@ -337,7 +323,7 @@ There may be situations where multiple registrations
     <ol>
         <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
         <li>If <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.w3.org/TR/domcore/#interface-element">element</a> type corresponding to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#syntax-tag-name">HTML tag name</a> of <var>TOKEN</var>, let <var>ELEMENT</var> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for token</a>.</li>
-        <li>Otherwise, return result of running the <a href="#dfn-custom-element-instantiation">custom element instantiation algorithm</a> with <var>PROTOTYPE</var> as argument.</li>
+        <li><span class="fixme">this needs to be entirely rewritten</span></li>
     </ol></li>
 </ol>
 </div>
@@ -542,6 +528,8 @@ This part of the specification describes changes to behavior of <a href="http://
     </ol>
     </div></li>
 </ol>
+
+<div class="informative">The term "JavaScript" is used to refer to ECMA262, rather than the official term ECMAScript, since the term JavaScript is more widely known.</div>
 
 <h2 id="other-languages">Supporting Other Languages</h2>
 
