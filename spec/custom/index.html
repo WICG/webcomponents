@@ -141,7 +141,7 @@
 The list of names above is the summary of all hyphen-containing names from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely the <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> and the <a href="http://www.w3.org/TR/MathML/">MathML</a>.
 </div>
 
-<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between a <a href="#dfn-custom-element-prototype">custom element prototype</a>, a <a href="#dfn-custom-element-name">custom element name</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
+<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association between a <a href="#dfn-custom-element-name">custom element name</a>, a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>,  a <a href="#dfn-custom-element-prototype">custom element prototype</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
 
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
@@ -408,7 +408,7 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> on which the method is called</dd>
+    <dd><var>DOCUMENT</var>, the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> of the method</dd>
     <dd><var id="var-document-register-name">NAME</var>, the <a href="#dfn-custom-element-name">custom element name</a> of the element being registered</dd>
     <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>, optional</dd>
     <dd><var id="var-options-template">FRAGMENT</var>, the <a href="http://www.w3.org/TR/domcore/#documentfragment">document fragment</a> that represents the <a href="#dfn-custom-element-template">custom element template</a>, optional</dd>
@@ -417,19 +417,26 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>If <var>NAME</var> is an invalid <a href="#dfn-custom-element-name">custom element name</a>, throw an <a href="http://www.w3.org/TR/domcore/#invalidcharactererror"><code>InvalidCharacterError</code></a> exception.</li>
-    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#htmlspanelement"><code>HTMLSpanElement</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a></li>
-    <li>Otherwise, if <var>PROTOTYPE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
+    <li>If <var>NAME</var> is an invalid <a href="#dfn-custom-element-name">custom element name</a>, throw an <a href="http://dom.spec.whatwg.org/#invalidcharactererror"><code>InvalidCharacterError</code></a> exception and <strong>stop</strong>.</li>
+    <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
+    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#htmlspanelement"><code>HTMLSpanElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
+    <li>Otherwise:
+    <ol>
+        <li>Let <var>INTERFACE</var> be <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a></li>
+        <li>If <var>INTERFACE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a> exception and <strong>stop</strong>.</li>
+        <li>If <var>INTERFACE</var> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
+        <li>If <var>INTERFACE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop</strong>.</li>
+    </ol></li>
     <li>If <var>FRAGMENT</var> is not <strong>null</strong>, let <var>TEMPLATE</var> be <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a> with <var>FRAGMENT</var> as <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template-contents">template contents</a></li>
     <li>Otherwise, let <var>TEMPLATE</var> be <strong>null</strong></li>
-    <li>Let <var>DEFINITION</var> be the tuple of (<var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>NAME</var>, <var>LIFECYCLE</var>)</li>
+    <li>Let <var>DEFINITION</var> be the tuple of (<var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
     <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
     <ol>
         <li>Let <var>TREE</var> be this tree</li>
         <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>TREE</var> and <var>DEFINITION</var> as arguments</li>
     </ol></li>
-    <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
+    <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as argument.</li>
 </ol>
 </div>
 
