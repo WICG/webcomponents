@@ -10,7 +10,7 @@ To configure, use meta tags as follows:
 
 Sample use and configuration:
 
-<script src="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/assets/scripts/bug-assist.js"></script>
+<script src="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/assets/scripts/bug-assist.js"></script>
 <meta name="bug.blocked" content="14949">
 <meta name="bug.short_desc" content="[Explainer]: ">
 <meta name="bug.product" content="WebAppsWG">
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var form = document.body.appendChild(document.createElement('form'));
     form.style.cssText = 'position:fixed;width:10em;top:1em;right:1em;font-family:Tahoma,sans-serif;font-size:11px;opacity:0.8;text-align:right';
-    form.action = 'http://www.w3.org/Bugs/Public/enter_bug.cgi';
+    form.action = '//www.w3.org/Bugs/Public/enter_bug.cgi';
     form.target = '_blank';
     form.textContent = 'See a problem? Select text and ';
 
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.appendChild(document.createTextNode(' or '));
         var a = form.appendChild(document.createElement('a'));
         a.textContent = 'view bugs filed';
-        a.href = 'http://www.w3.org/Bugs/Public/showdependencytree.cgi?id=' + blocked;
+        a.href = '//www.w3.org/Bugs/Public/showdependencytree.cgi?id=' + blocked;
         a.target = '_blank';
     }
     form.appendChild(document.createTextNode('.'));
