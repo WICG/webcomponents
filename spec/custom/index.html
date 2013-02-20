@@ -133,7 +133,7 @@
 The list of names above is the summary of all hyphen-containing names from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely the <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> and the <a href="http://www.w3.org/TR/MathML/">MathML</a>.
 </div>
 
-<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association of a <a href="#dfn-custom-element-name">custom element name</a> and a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> with a <a href="#dfn-custom-element-prototype">custom element prototype</a>, and optionally, a <a href="#dfn-custom-element-template">custom element template</a> and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
+<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association of a <a href="#dfn-custom-element-name">custom element name</a> and a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> with a <a href="#dfn-custom-element-prototype">custom element prototype</a>, and optionally, <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
 
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-attribute-name">name</a> and <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> values of <a href="#dfn-custom-element-name">custom element name</a> and the <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
 
@@ -150,31 +150,6 @@ The list of names above is the summary of all hyphen-containing names from the <
 <p>After a <a href="#dfn-custom-element">custom element</a> is instantiated, changing the value of the <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> <strong>must not</strong> affect this element's <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
 <p>If both types of <a href="#dfn-custom-element-name">custom element names</a> are provided at the time of element's instantiation, the <a href="#dfn-custom-tags">custom tag</a> <strong>must</strong> win over the <a href="#dfn-type-extension">type extension</a>.
-
-<p>While being instantiated, <a href="#dfn-custom-element">custom elements</a> are given an opportunity to create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> which it <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">hosts</a>. The <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> is populated by cloning an <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a>, which is called the <dfn id="dfn-custom-element-template">custom element template</dfn>.
-
-<p>Creating a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow tree</a> <strong>must</strong> follow the <dfn id="dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, the <a href="#dfn-custom-element">custom element</a></dd>
-</dl>
-<ol>
-    <li>Let <var>CHAIN</var> be <var>ELEMENT</var>'s <a href="http://ecma-international.org/ecma-262/5.1/#sec-4.2.1">prototype chain</a>, in reverse order (starting from the end farthest from <var>ELEMENT</var>)</li>
-    <li><dfn id="algo-chain-iteration">For each</dfn> item in <var>CHAIN</var>:
-    <ol>
-        <li>Let <var>ITEM</var> be this item</li>
-        <li>Let <var>DEFINITION</var> be a <a href="#dfn-element-registration">registered</a> <a href="#dfn-element-definition">element definition</a> that has <var>ITEM</var> as <a href="#dfn-custom-element-prototype">custom-element prototype</a>.</li>
-        <li>If <var>DEFINITION</var> was not found, <strong>stop.</strong></li>
-        <li>If <var>DEFINITION</var> has <a href="#dfn-custom-element-template">element template</a>:
-        <ol>
-            <li>Let <var>TEMPLATE</var> be this template</li>
-            <li>Create a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> with <var>ELEMENT</var> as its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-host">host</a></li>
-            <li><a href="http://www.w3.org/TR/domcore/#dom-node-clonenode">Clone</a> <var>TEMPLATE</var> as contents of this <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a></li>
-        </ol></li>
-    </ol>
-</ol>
-</div>
 
 <p>All <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be constructable with a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a>, called <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>. This constructor <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -193,8 +168,7 @@ The list of names above is the summary of all hyphen-containing names from the <
         <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
         <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> with which <var>DEFINITION</var> is registered</li>
-        <li>Run the <a href="#dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</a> with <var>ELEMENT</var> as argument</li>
-        <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>ELEMENT</var> as argument</li>
+        <li>Run the <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>ELEMENT</var> as argument</li>
         <li>Return <var>ELEMENT</var>.</li>
     </ol></li>
 </ol>
@@ -208,8 +182,7 @@ The list of names above is the summary of all hyphen-containing names from the <
 <p>When an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods, the method <strong>must</strong> run the following steps <em>after</em> the last step of creating an element and <em>before</em> returning the result:</p>
 <ol>
     <li>Let <var>ELEMENT</var> be the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a></li>
-    <li>Run the <a href="#dfn-shadow-tree-instantiation">shadow tree instantiation algorithm</a> with <var>ELEMENT</var> as argument</li>
-    <li>Run the <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>ELEMENT</var> as argument</li>
+    <li>Run the <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>ELEMENT</var> as argument</li>
 </ol>
 </div>
 
@@ -221,7 +194,7 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <p><span class="fixme">Specify how custom elements are defined declaratively</span></p>
 
-<p>The <dfn id="dfn-element-finalization">element finalization algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p>The <dfn id="dfn-element-initialization">element initialization algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -279,7 +252,7 @@ The list of names above is the summary of all hyphen-containing names from the <
             <li>Append <var>ATTRIBUTE</var> to <var>UPGRADE</var>'s <a href="http://www.w3.org/TR/domcore/#concept-element-attribute">attribute list</a></li>
         </ol></li>
         <li><a href="">Insert</a> <var>UPGRADE</var> into <var>PARENT</var> before <var>REFERENCE</var> with <em>suppress observers flag</em> set</li>
-        <li>Invoke <a href="#dfn-element-finalization">element finalization algorithm</a> with <var>UPGRADE</var> and <var>DEFINITION</var> as arguments</li>
+        <li>Invoke <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>UPGRADE</var> and <var>DEFINITION</var> as arguments</li>
        <li>On <var>ELEMENT</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire</a> an <a href="#api-element-replace-event"><code>ElementReplaceEvent</code></a> event, initialized with values <em>upgrade</em> as <var>UPGRADE</var> and <em>bubbles</em> as <code>false</code>.</li>
         <li>On <var>UPGRADE</var>, <a href="http://www.w3.org/TR/domcore/#concept-event-fire">fire an event</a> named <code>elementupgrade</code> with its <code>bubbles</code> attribute set to <code>true</code>.</li>
     </ol></li>
@@ -322,10 +295,9 @@ There may be situations where multiple registrations
 </div>
 
 <div class="informative">
-<p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the following consequences:</p>
+<p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the following consequence:</p>
 <ul>
     <li>The <a href="#dfn-custom-element">custom elements</a> are created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a></li>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">Parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a> could trigger creation of a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-root">shadow root</a> and instantiation of a <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a></li>
 </ul>
 </div>
 
@@ -371,7 +343,6 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
 
 dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions</dfn> {
     object? <a href="#var-options-prototype">prototype</a> = null;
-    <a href="http://www.w3.org/TR/domcore/#documentfragment">DocumentFragment</a>? <a href="#var-options-template">template</a> = null;
     <a href="#api-lifecycle-callbacks">LifecycleCallbacks</a>? <a href="#var-options-lifecycle">lifecycle</a> = null;
 };
 
@@ -390,7 +361,6 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
     <dd><var>DOCUMENT</var>, the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> of the method</dd>
     <dd><var id="var-document-register-name">NAME</var>, the <a href="#dfn-custom-element-name">custom element name</a> of the element being registered</dd>
     <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>, optional</dd>
-    <dd><var id="var-options-template">FRAGMENT</var>, the <a href="http://www.w3.org/TR/domcore/#documentfragment">document fragment</a> that represents the <a href="#dfn-custom-element-template">custom element template</a>, optional</dd>
     <dd><var id="var-options-lifecycle">LIFECYCLE</var>, the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>, optional</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
@@ -405,10 +375,8 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
         <li>If <var>INTERFACE</var> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
         <li>Otherwise, if <var>INTERFACE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop</strong>.</li>
     </ol></li>
-    <li>If <var>FRAGMENT</var> is not <strong>null</strong>, let <var>TEMPLATE</var> be <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template">HTML template</a> with <var>FRAGMENT</var> as <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#dfn-template-contents">template contents</a></li>
-    <li>Otherwise, let <var>TEMPLATE</var> be <strong>null</strong></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> that has both <var>NAME</var> and <var>NAMESPACE</var> and/or has <var>PROTOTYPE</var>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
-    <li>Let <var>DEFINITION</var> be the tuple of (<var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>TEMPLATE</var>, <var>LIFECYCLE</var>)</li>
+    <li>Let <var>DEFINITION</var> be the tuple of (<var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
     <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
     <ol>
