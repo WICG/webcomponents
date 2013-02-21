@@ -133,9 +133,9 @@
 The list of names above is the summary of all hyphen-containing names from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely the <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> and the <a href="http://www.w3.org/TR/MathML/">MathML</a>.
 </div>
 
-<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association of a <a href="#dfn-custom-element-name">custom element name</a> and a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> with a <a href="#dfn-custom-element-prototype">custom element prototype</a>, and optionally, <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
+<p>The <dfn id="dfn-element-definition">element definition</dfn> is an association of a <a href="#dfn-custom-element-name">custom element name</a>, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and a <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> with a <a href="#dfn-custom-element-prototype">custom element prototype</a>, and optionally, <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</p>
 
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-attribute-name">name</a> and <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> values of <a href="#dfn-custom-element-name">custom element name</a> and the <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> values of <a href="#dfn-custom-element-name">custom element name</a> and the <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
 
 <p class=fixme>Write definition of <dfn id="dfn-custom-element-matchable">matchable</dfn>.</p>
 
@@ -164,10 +164,12 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
-        <li>Let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
+        <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
+        <li>Let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in <var>DEFINITION</var></li>
         <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
         <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> with which <var>DEFINITION</var> is registered</li>
+        <li>If <var>TYPE</var> is not the same as <var>NAME</var>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
         <li>Run the <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>ELEMENT</var> as argument</li>
         <li>Return <var>ELEMENT</var>.</li>
     </ol></li>
@@ -175,11 +177,24 @@ The list of names above is the summary of all hyphen-containing names from the <
 </div>
 
 <div class="monkeypatch" id="monkeypatch-create-element">
-<p>When an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is instantiated with the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods, the method <strong>must</strong> run the following steps <em>after</em> the last step of creating an element and <em>before</em> returning the result:</p>
+
+<p>To allow creating both <a href="#dfn-custom-tag">custom tag</a> and <a href="#dfn-type-extension">type extension</a>-style <a href="#dfn-custom-element">custom elements</a>, the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods have an optional <code>typeExtension</code> argument:</p>
+
+<pre><code>
+partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-element">createElement</a>(DOMString localName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-elementns">createElementNS</a>(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
+};
+</code></pre>
+
+<p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following 
+steps:</p>
 <ol>
-    <li>Let <var>ELEMENT</var> be the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a></li>
-    <li>Run the <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>ELEMENT</var> as argument</li>
+    <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
+    <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
 </ol>
+
+<p>Both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the <a href="#dfn-element-initialization">element initialization algorithm</a> with the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a> just <em>before</em> returning the result.</p>
 </div>
 
 <h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
@@ -364,15 +379,18 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
 <ol>
     <li>If <var>NAME</var> is an invalid <a href="#dfn-custom-element-name">custom element name</a>, throw an <a href="http://dom.spec.whatwg.org/#invalidcharactererror"><code>InvalidCharacterError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
-    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#htmlspanelement"><code>HTMLSpanElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
+    <li>Let <var>TYPE</var> be <var>NAME</var></li>
+    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
     <li>Otherwise:
     <ol>
         <li>Let <var>INTERFACE</var> be <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a></li>
         <li>If <var>INTERFACE</var> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
         <li>Otherwise, if <var>INTERFACE</var> does not <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#namespaceerror"><code>NamespaceError</code></a> and <strong>stop</strong>.</li>
+        <li>Let <var>BASE</var> be <var>INTERFACE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-inherited-interfaces">inherited interface</a> that is nearest to <var>BASE</var> in the <a href="http://es5.github.com/#x4.2.1">prototype chain</a> <strong>and</strong> that is an <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
+        <li>If <var>BASE</var> is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> or <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, let <var>NAME</var> be the <a href="">local name</a>, associated with <var>BASE</var> <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
     </ol></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> that has both <var>NAME</var> and <var>NAMESPACE</var> and/or has <var>PROTOTYPE</var>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
-    <li>Let <var>DEFINITION</var> be the set of (<var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
+    <li>Let <var>DEFINITION</var> be the set of (<var>TYPE</var>, <var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
     <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
     <ol>
