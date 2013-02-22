@@ -194,7 +194,11 @@ steps:</p>
     <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
 </ol>
 
-<p>Both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the <a href="#dfn-element-initialization">element initialization algorithm</a> with the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a> just <em>before</em> returning the result.</p>
+<p>Additionally, both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the following steps just <em>before</em> returning the result:</p>
+<ol>
+    <li>If <var>TYPE</var> is not the same as <em>localName</em>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
+    <li>Run <a href="#dfn-element-initialization">element initialization algorithm</a> with the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a></li>
+</ol>
 </div>
 
 <h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
