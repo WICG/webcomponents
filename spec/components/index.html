@@ -65,10 +65,12 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
+    <li><a href="#interface-component"><span class="section">4</span>Interface <code>Component</code></a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 </section>
 
+<section class="spec">
 <h2 id="about">About this Document</h2>
 
 <p>All diagrams, examples, notes, are non-normative, as well as sections explicitly marked as non-normative. Everything else in this specification is normative.</p>
@@ -84,11 +86,12 @@
 <ul>
 <!--     <li><a href="http://www.w3.org/TR/CSS2/">CSS Level 2 Revision 1</a></li>
     <li><a href="http://dev.w3.org/csswg/cssom/">CSSOM</a></li>
-    <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
-    <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li> -->
+    <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li> -->
+    <li><a href="http://dom.spec.whatwg.org/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
     <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
     <li><a href="http://ecma-international.org/ecma-262/5.1/">ECMAScript Language Specification</a></li>
+    <li><a href="http://url.spec.whatwg.org/">URL</a></li>
 <!--     <li><a href="http://www.w3.org/TR/selectors/">Selectors Level 3</a></li>
     <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
     <li><a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a></li>
@@ -97,7 +100,59 @@
 
 <h2 id="terminology">Terminology</h2>
 
-<p>HTML components, or just <dfn id="dfn-component">components</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to a <a href="#dfn-component">component</a> is called a <dfn id="dfn-master-document">master document</a>.</p>
+<p>HTML components, or just <dfn id="dfn-component">components</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to a <a href="#dfn-component">component</a> is called a <dfn id="dfn-master-document">master document</dfn>.</p>
+
+<p>The <a href="http://dom.spec.whatwg.org/#concept-document">document</a> that represents a <a href="#dfn-component">component</a> is called the <dfn id="dfn-component-document">component document</dfn>, and the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the <a href="#dfn-component-document">component document</a> is called the <dfn id="dfn-component-location">component location</dfn>.</p>
+
+<h2 id="interface-component">Interface <code>Component</code></h2>
+
+<p>The <a href="#api-component"><code>Component</code></a> interface represents a <a href="#dfn-component">component</a> in a <a href="#dfn-master-document">master document</a>:</p>
+
+<pre><code>
+interface <dfn id="api-component">Component</dfn> {
+    readonly attribute DOMString? <a href="#dfn-component-href">href</a>;
+    readonly attribute Node <a href="#dfn-component-owner-node">ownerNode</a>;
+    readonly attribute <a href="http://dom.spec.whatwg.org/#document">Document</a> <a href="#dfn-component-content">content</a>;
+};
+</code></pre>
+
+<p>The <dfn id="dfn-component-href"><code>href</code></dfn> attribute <strong>must</strong> return the <a href="#dfn-component-location">component location</a> or <strong>null</strong> if none.</p>
+
+<p>The <dfn id="dfn-component-owner-node"><code>ownerNode</code></dfn> attribute <strong>must</strong> return the <a href="http://dom.spec.whatwg.org/#concept-node">node</a> that links <a href="#dfn-master-document">master document</a> to the <a href="#dfn-component">component</a>.</p>
+
+<p>The <dfn id="dfn-component-content"><code>content</code></dfn> attribute <strong>must</strong> return the <a href="#dfn-component-document">component document</a>.</p>
+
+<p>The <a href="#api-link-component"><code>LinkComponent</code></a> interface provides access to a <a href="#dfn-component">component</a> from <a href="#dfn-master-document">master document</a>:</p>
+
+<pre><code>
+[NoInterfaceObject]
+interface <dfn id="api-link-component">LinkComponent</dfn> {
+    readonly attribute <a href="#api-component">Component?</a> <a href="#dfn-link-component-component">component</a>;
+}
+</code></pre>
+
+<p>The <dfn id="dfn-link-component-component"><code>component</code></dfn> attribute must return the <a href="#api-component"><code>Component</code></a> for the <a href="http://dom.spec.whatwg.org/#concept-node">node</a> that implements this interface.</p>
+
+<div class="monkeypatch" id="html-link-monkeypatch">
+
+The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element implements <a href="#api-link-component"><code>LinkComponent</code> interface:</p>
+<pre><code>
+<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmllinkelement">HTMLLinkElement</a> implements <a href="#api-link-component">LinkComponent</a>;
+</code></pre>
+
+<p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> elements that do not represent <a href="#dfn-component">components</a>, the <a href="#dfn-link-component-component"><code>component</code></a> attribute of the <a href="#api-link-component"><code>LinkComponent</code></a> interface <strong>must</strong> return <strong>null</strong>. Similarly, if the user agent does not support <a href="#dfn-component">components</a>, or whose resource is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#cors-cross-origin">CORS-cross-origin</a>, the <a href="#dfn-link-component-component"><code>component</code></a> attribute of the <a href="#api-link-component"><code>LinkComponent</code></a> interface <strong>must</strong> return <strong>null</strong>.</p>
+
+<p>Otherwise, the <a href="#api-link-component"><code>LinkComponent</code></a> interface's <a href="#dfn-link-component-component"><code>component</code></a> attribute <strong>must</strong> return <strong>null</strong> if the correspnding element is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a <code>Document</code></a>, and otherwise must return a <a href="#api-component"><code>Component</code></a> object with the following properties:</p>
+
+<dl>
+<dt>component location</dt>
+<dd>The <a href="#dfn-component-location">component location</a> <strong>must</strong> be the result of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/urls.html#resolve-a-url">resolving</a> the <a href="http://url.spec.whatwg.org/#concept-url">URL</a> given by <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element's <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-link-href"><code>href</code></a> content attribute, relative to the element, or empty string if that fails.
+<dt>owner node</dt>
+<dd>The owner node value <strong>must</strong> be the the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element.</dd>
+</dl>
+
+<p>The same object <strong>must</strong> be returned each time.</p>
+</div>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
@@ -111,5 +166,6 @@
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
+</section>
 </body>
 </html>
