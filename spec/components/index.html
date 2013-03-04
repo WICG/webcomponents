@@ -66,6 +66,7 @@
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
     <li><a href="#interface-component"><span class="section">4</span>Interface <code>Component</code></a></li>
+    <li><a href="#loading-components"><span class="section">5</span>Loading Components</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 </section>
@@ -134,15 +135,14 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 <p>The <dfn id="dfn-link-component-component"><code>component</code></dfn> attribute must return the <a href="#api-component"><code>Component</code></a> for the <a href="http://dom.spec.whatwg.org/#concept-node">node</a> that implements this interface.</p>
 
 <div class="monkeypatch" id="html-link-monkeypatch">
-
-The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element implements <a href="#api-link-component"><code>LinkComponent</code> interface:</p>
+<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element implements <a href="#api-link-component"><code>LinkComponent</code></a> interface:</p>
 <pre><code>
 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#htmllinkelement">HTMLLinkElement</a> implements <a href="#api-link-component">LinkComponent</a>;
 </code></pre>
 
 <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> elements that do not represent <a href="#dfn-component">components</a>, the <a href="#dfn-link-component-component"><code>component</code></a> attribute of the <a href="#api-link-component"><code>LinkComponent</code></a> interface <strong>must</strong> return <strong>null</strong>. Similarly, if the user agent does not support <a href="#dfn-component">components</a>, or whose resource is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#cors-cross-origin">CORS-cross-origin</a>, the <a href="#dfn-link-component-component"><code>component</code></a> attribute of the <a href="#api-link-component"><code>LinkComponent</code></a> interface <strong>must</strong> return <strong>null</strong>.</p>
 
-<p>Otherwise, the <a href="#api-link-component"><code>LinkComponent</code></a> interface's <a href="#dfn-link-component-component"><code>component</code></a> attribute <strong>must</strong> return <strong>null</strong> if the correspnding element is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a <code>Document</code></a>, and otherwise must return a <a href="#api-component"><code>Component</code></a> object with the following properties:</p>
+<p>Otherwise, the <a href="#api-link-component"><code>LinkComponent</code></a> interface's <a href="#dfn-link-component-component"><code>component</code></a> attribute <strong>must</strong> return <strong>null</strong> if the correspnding element is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a <code>Document</code></a>, and otherwise <strong>must</strong> return a <a href="#api-component"><code>Component</code></a> object with the following properties:</p>
 
 <dl>
 <dt>component location</dt>
@@ -153,6 +153,25 @@ The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semanti
 
 <p>The same object <strong>must</strong> be returned each time.</p>
 </div>
+
+<div class="informative">
+<p>The following document has one component, located at <kbd>/components/heart.html</kbd>:</p>
+
+<pre><code class="prettyprint">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en-US"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Human Being&gt;/title&gt;
+        &lt;link rel="component" href="/components/heart.html"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;What is a body without a heart?&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</div>
+
+<h2 id="loading-components">Loading Components</h2>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
