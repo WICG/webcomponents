@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>HTML Components</title>
+<title>Web Components</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
 <link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css">
@@ -23,7 +23,7 @@
     <a href="http://www.w3.org/"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
 </div>
 
-<h1>HTML Components</h1>
+<h1>Web Components</h1>
 <h2 id="editors-draft">W3C Editor's Draft</h2>
 <dl>
 <dt>This version</dt>
@@ -47,7 +47,7 @@
 
 <h2 id="abstract">Abstract</h2>
 
-<p>HTML Components are a way to include and reuse parts of HTML documents in other HTML documents.</p>
+<p>Web Components are a way to include and reuse HTML documents in other HTML documents.</p>
 
 <h2 id="status">Status of This Document</h2>
 
@@ -65,8 +65,9 @@
     <li><a href="#about"><span class="section">1</span> About this Document</a></li>
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
-    <li><a href="#interface-component"><span class="section">4</span>Interface <code>Component</code></a></li>
-    <li><a href="#loading-components"><span class="section">5</span>Loading Components</a></li>
+    <li><a href="#link-type-component"><span class="section">4</span> Link Type "<code>component</code>"</a></li>
+    <li><a href="#interface-component"><span class="section">5</span>Interface <code>Component</code></a></li>
+    <li><a href="#loading-components"><span class="section">6</span>Loading Components</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 </section>
@@ -101,9 +102,19 @@
 
 <h2 id="terminology">Terminology</h2>
 
-<p>HTML components, or just <dfn id="dfn-component">components</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to a <a href="#dfn-component">component</a> is called a <dfn id="dfn-master-document">master document</dfn>.</p>
+<p>Web components, or just <dfn id="dfn-component">components</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to a <a href="#dfn-component">component</a> is called a <dfn id="dfn-master-document">master document</dfn>.</p>
 
 <p>The <a href="http://dom.spec.whatwg.org/#concept-document">document</a> that represents a <a href="#dfn-component">component</a> is called the <dfn id="dfn-component-document">component document</dfn>, and the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the <a href="#dfn-component-document">component document</a> is called the <dfn id="dfn-component-location">component location</dfn>.</p>
+
+<h2 id="link-type-component">Link Type "<code>component</code>"</h2>
+
+<div class="monkeypatch">
+<p>The <a href="#link-type-component"><code>component</code></a> keyword may be used with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> elements. This keyword creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to a <a href="#dfn-component">component</a>.</p>
+
+<p>The default type for resources given by the <a href="#link-type-component"><code>component</code></a> keyword is <code>text/html</code>.</p>
+
+<p>The appropriate time to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain</a> the resource is when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> is created or when its element is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a>, whichever happens last.</p>
+</div>
 
 <h2 id="interface-component">Interface <code>Component</code></h2>
 
@@ -172,6 +183,36 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 </div>
 
 <h2 id="loading-components">Loading Components</h2>
+
+<p>Being <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a>, the <a href="#dfn-component">components</a> are loaded along with the <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
+
+<p>When a <a href="#dfn-component">component</a> is to be loaded, the user agent <strong>must</strong> run these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+<dd><var>LOCATION</var>, the <a href="#dfn-component-location">component location</a></dd>
+</dl>
+<ol>
+    <li>Let <var>DOCUMENT</var> be a new <a href="http://dom.spec.whatwg.org/#concept-document">Document</a> that is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a> with no <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a></li>
+    <li>Set <var>DOCUMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document-content-type">content type</a> to "<code>text/html</code>".</li>
+    <li>Set <var>DOCUMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> to <var>LOCATION</var></li>
+    <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>DOCUMENT</var></li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>DOCUMENT</var> as <em>override referrer source</em> and <em>block cookies</em> flag set:
+    <ol>
+        <li>For each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">task</a> that the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">networking task source</a> places on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#task-queue">task queue</a> while fetching:
+        <ol>
+            <li>Fill <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with the fetched bytes</li>
+            <li>Let <var>PARSER</var> process the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a></li>
+        </ol></li>
+        <li>When no more bytes are available, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
+    </ol></li>
+</ol>
+</div>
+
+<h2 id="preparing-components">Preparing Components</h2>
+
+<p>Every <a href="#dfn-component">components</a> has a <dfn id="dfn-component-ready">component ready</dfn> flag, which is initially unset.</p>
+
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
