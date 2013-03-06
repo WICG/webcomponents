@@ -66,8 +66,8 @@
     <li><a href="#dependencies"><span class="section">2</span> Dependencies</a></li>
     <li><a href="#terminology"><span class="section">3</span> Terminology</a></li>
     <li><a href="#link-type-component"><span class="section">4</span> Link Type "<code>component</code>"</a></li>
-    <li><a href="#interface-component"><span class="section">5</span>Interface <code>Component</code></a></li>
-    <li><a href="#loading-components"><span class="section">6</span>Loading Components</a></li>
+    <li><a href="#interface-component"><span class="section">5</span> Interface <code>Component</code></a></li>
+    <li><a href="#loading-components"><span class="section">6</span> Loading Components</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 </section>
@@ -108,12 +108,31 @@
 
 <h2 id="link-type-component">Link Type "<code>component</code>"</h2>
 
+<p>To enable declaring <a href="#dfn-component">components</a> in HTML, a new link type is added to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#linkTypes">HTML link types</a>:</p>
+
 <div class="monkeypatch">
 <p>The <a href="#link-type-component"><code>component</code></a> keyword may be used with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> elements. This keyword creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to a <a href="#dfn-component">component</a>.</p>
 
 <p>The default type for resources given by the <a href="#link-type-component"><code>component</code></a> keyword is <code>text/html</code>.</p>
 
 <p>The appropriate time to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain</a> the resource is when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> is created or when its element is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a>, whichever happens last.</p>
+</div>
+
+<div class="informative">
+<p>The following document has one component, located at <kbd>/components/heart.html</kbd>:</p>
+
+<pre><code class="prettyprint">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en-US"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Human Being&gt;/title&gt;
+        &lt;link rel="component" href="/components/heart.html"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;What is a body without a heart?&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
 </div>
 
 <h2 id="interface-component">Interface <code>Component</code></h2>
@@ -165,28 +184,11 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 <p>The same object <strong>must</strong> be returned each time.</p>
 </div>
 
-<div class="informative">
-<p>The following document has one component, located at <kbd>/components/heart.html</kbd>:</p>
-
-<pre><code class="prettyprint">
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en-US"&gt;
-    &lt;head&gt;
-        &lt;title&gt;Human Being&gt;/title&gt;
-        &lt;link rel="component" href="/components/heart.html"&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;p&gt;What is a body without a heart?&lt;/p&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-</div>
-
 <h2 id="loading-components">Loading Components</h2>
 
 <p>Being <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a>, the <a href="#dfn-component">components</a> are loaded along with the <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
-<p>When a <a href="#dfn-component">component</a> is to be loaded, the user agent <strong>must</strong> run these steps:</p>
+<p>When a <a href="#dfn-component">component</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtained</a>, the user agent <strong>must</strong> run these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
