@@ -186,9 +186,9 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 
 <h2 id="loading-components">Loading Components</h2>
 
-<p>Being <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a>, the <a href="#dfn-component">components</a> are loaded along with the <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
+<p>The list of all <a href="#dfn-component">components</a> that have been loaded by the <a href="#dfn-master-document">master document</a> is kept in the <dfn id="dfn-loaded-component-list">loaded component list</dfn>.</p>
 
-<p>When a <a href="#dfn-component">component</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtained</a>, the user agent <strong>must</strong> run these steps:</p>
+<p>When a <a href="#dfn-component">component</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">fetched</a>, the user agent <strong>must</strong> run these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
@@ -206,8 +206,25 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
             <li>Fill <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with the fetched bytes</li>
             <li>Let <var>PARSER</var> process the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a></li>
         </ol></li>
-        <li>When no more bytes are available, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
+        <li>When no more bytes are available:
+        <ol>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">Queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
+            <li>Add <var>LOCATION</var> to the <a href="#dfn-loaded-component-list">loaded component list</a></li>
+            <li><a href="#dfn-sub-component-processing">Processs sub-components</a>.</li>
     </ol></li>
+</ol>
+</div>
+
+<p>Each loaded <a href="#dfn-component">component</a> may also contain <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">links</a> to other <a href="#dfn-component">components</a>, called <dfn id="dfn-sub-component">sub-components</dfn>.</p>
+
+<p>The <a href="#dfn-sub-component">sub-components</a> are discovered and processed with the <dfn id="dfn-sub-component-processing">sub-component processing</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to these steps:</p>
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+<dd><var>DOCUMENT</var> the <a href="#dfn-component">component</a> document</dd>
+</dl>
+<ol>
+    <li>Awesome.</li>
 </ol>
 </div>
 
