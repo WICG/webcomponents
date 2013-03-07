@@ -186,15 +186,18 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 
 <h2 id="loading-components">Loading Components</h2>
 
-<p>The list of all <a href="#dfn-component">components</a> that have been loaded by the <a href="#dfn-master-document">master document</a> is kept in the <dfn id="dfn-loaded-component-list">loaded component list</dfn>.</p>
+<p>The list of all <a href="#dfn-component">components</a> that have been loaded by the <a href="#dfn-master-document">master document</a> is kept in the <dfn id="dfn-loaded-component-list">loaded component list</dfn>, an ordered list of <a href="#dfn-component-location">component location</a> and <a href="#dfn-component-document">component document</a> pairs. New items are added to the bottom of the list.</p>
 
-<p>When a <a href="#dfn-component">component</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">fetched</a>, the user agent <strong>must</strong> run these steps:</p>
+<p>When a <a href="#dfn-component">component</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">fetched</a>, the user agent <strong>must</strong> run the <dfn id="dfn-component-fetching">component fetching</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>LOCATION</var>, the <a href="#dfn-component-location">component location</a></dd>
+<dt>Output</dt>
+<dd><var>DOCUMENT</var>, the <a href="#dfn-component-document">component document</a></dd>
 </dl>
 <ol>
+    <li>If <var>LOCATION</var> is already in the <a href="#dfn-loaded-component-list">loaded component list</a>, let <var>DOCUMENT</var> be the <a href="#dfn-component-document">component document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
     <li>Let <var>DOCUMENT</var> be a new <a href="http://dom.spec.whatwg.org/#concept-document">Document</a> that is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a> with no <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a></li>
     <li>Set <var>DOCUMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document-content-type">content type</a> to "<code>text/html</code>".</li>
     <li>Set <var>DOCUMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> to <var>LOCATION</var></li>
@@ -209,7 +212,7 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
         <li>When no more bytes are available:
         <ol>
             <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">Queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
-            <li>Add <var>LOCATION</var> to the <a href="#dfn-loaded-component-list">loaded component list</a></li>
+            <li>Add <var>LOCATION</var> and <var>DOCUMENT</var> to the <a href="#dfn-loaded-component-list">loaded component list</a></li>
             <li><a href="#dfn-sub-component-processing">Processs sub-components</a>.</li>
     </ol></li>
 </ol>
@@ -224,14 +227,22 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 <dd><var>DOCUMENT</var> the <a href="#dfn-component">component</a> document</dd>
 </dl>
 <ol>
-    <li>Awesome.</li>
+    <li>For each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element in the <a href="#dfn-component">component</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a>, in <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>:
+    <ol>
+        <li>Let <var>LINK</var> be this <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element</li>
+        <li>If <var>LINK</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#linkTypes">type</a> is <a href="#link-type-component"><code>component</code></a>:
+        <ol>
+            <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">Obtain</a> the <a href="#dfn-component">component</a> resources using <var>LINK</var> and <a href="#dfn-component-fetching">component fetching</a> algorithm</li>
+        </ol></li>
+    </ol></li>
 </ol>
 </div>
 
+<!--
 <h2 id="preparing-components">Preparing Components</h2>
 
 <p>Every <a href="#dfn-component">components</a> has a <dfn id="dfn-component-ready">component ready</dfn> flag, which is initially unset.</p>
-
+-->
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
