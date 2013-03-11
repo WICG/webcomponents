@@ -182,6 +182,23 @@ interface <dfn id="api-link-component">LinkComponent</dfn> {
 </dl>
 
 <p>The same object <strong>must</strong> be returned each time.</p>
+
+<p><a href="#dfn-component">Components</a> have a <dfn id="dfn-component-ready-flag">component ready flag</dfn>, which is initially unset. When a component is ready to be used, its <a href="#dfn-component-ready-flag">component ready flag</a> <strong>must</strong> be set.</p>
+
+<p>A <a href="#dfn-component">component</a> in the context of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a> is said to be <dfn id="dfn-a-component-that-is-blocking-scripts">a component that is blocking scripts</dfn> if the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>'s parser, and the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> of type <A href="#link-type-component"><code>component</code></a> when the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by the parser, and the <a href="http://dom.spec.whatwg.org/#concept-element">element</a>'s <a href="#dfn-component-ready-flag">component ready flag</a> is not yet set, and, the last time the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#event-loop">event loop</a> has reached step 1, the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in that <code>Document</code></a>, and the user agent hasn't given up on that <a href="#dfn-component">component</a> yet. A user agent may give up on a <a href="#dfn-component">component</a> at any time.</p>
+
+</div>
+<div class="informative">
+<p>
+Giving up an a component before it loads, even if the component eventually does still load, means that the script might end up operating with incorrect information. For example, if a component registers a custom element and a script relies on the availability of this element, the script will find that this element is unavailable if the user agent gives up early. Implementors have to balance the likelihood of a script using incorrect information with the performance impact of doing nothing while waiting for a slow network request to finish.
+</p>
+</div>
+
+<div class="monkeypatch">
+<p>A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> <dfn id="dfn-has-a-component-that-is-blocking-scripts">has a component that is blocking scripts</dfn> if there is either a <a href="#dfn-a-component-that-is-blocking-scripts">a component that is blocking scripts</a> in the context of that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>, or if that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> is in a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> that has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#parent-browsing-context">parent browsing context</a>, an the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#active-document">active document</a> of that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#parent-browsing-context">parent browsing context</a> itself <a href="#dfn-has-a-component-that-is-blocking-scripts">has a component that is blocking scripts</a>.</p>
+
+<p>A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> <dfn id="dfn-has-no-component-that-is-blocking-scripts">has no component that is blocking scripts</dfn> if it does not <a href="#dfn-has-no-component-that-is-blocking-scripts">have a component that is blocking scripts</a> as defined in the previous paragraph.</p>
+
 </div>
 
 <h2 id="loading-components">Loading Components</h2>
