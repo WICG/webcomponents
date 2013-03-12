@@ -68,6 +68,11 @@
     <li><a href="#link-type-component"><span class="section">4</span> Link Type "<code>component</code>"</a></li>
     <li><a href="#interface-component"><span class="section">5</span> Interface <code>Component</code></a></li>
     <li><a href="#loading-components"><span class="section">6</span> Loading Components</a></li>
+    <li><a href="#parsing-components"><span class="section">7</span> Parsing Components</a>
+    <ol>
+        <li><a href="additions-to-prepare-a-script-algorithm"><span class="section">7.1</span>Additions to Prepare A Script Algorithm</a></li>
+        <li><a href="#additions-to-tree-construction-algorithm"><span class="section">7.2</span> Additions to Tree Construction Algorithm</a></li>
+    </ol></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 </section>
@@ -255,11 +260,41 @@ Giving up an a component before it loads, even if the component eventually does 
 </ol>
 </div>
 
-<!--
-<h2 id="preparing-components">Preparing Components</h2>
+<h2 id="parsing-components">Parsing Components</h2>
 
-<p>Every <a href="#dfn-component">components</a> has a <dfn id="dfn-component-ready">component ready</dfn> flag, which is initially unset.</p>
--->
+<p>The parsing of <a href="#dfn-component">components</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML Parsing</a>.</p>
+
+<h3 id="additions-to-prepare-a-script-algorithm">Additions to Prepare A Script Algorithm</h3>
+
+<p>In step 15 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">prepare a script</a> algorithm, modify the last part of condition which begins with <em>If element does not have a <code>src</code> attribute</em> to read:</p>
+<div class="monkeypatch">
+<p>... and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML parser</a> that created the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-a-style-sheet-that-is-blocking-scripts">has a style sheet that is blocking scripts</a> or <a href="#dfn-has-a-component-that-is-blocking-scripts">has a component that is blocking scripts</a></p>
+</div>
+
+<h3 id="additions-to-tree-construction-algorithm">Additions to Tree Construction Algorithm</h3>
+
+<p>In sub-condition named <em>Otherwise</em> of condition <em>An end tag whose name is "script"</em> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-incdata">"text" insertion mode</a>, modify step 3 to read:</p>
+<div class="monkeypatch">
+<ol start="3">
+    <li>If the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-a-style-sheet-that-is-blocking-scripts">has a style sheet that is blocking scripts</a> or <a href="#dfn-has-a-component-that-is-blocking-scripts">has a component that is blocking scripts</a> or <em>the script</em>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is not set: <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">spin the event loop</a> until the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> and <a href="#dfn-has-no-component-that-is-blocking-scripts">has no component that is blocking scripts</a> and <var title="">the script</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is set.</li>
+</ol>
+</div>
+
+<p>Modify sub-step 1 of step 3 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#the-end">the end</a> to read:</p>
+<div class="monkeypatch">
+<ol>
+    <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the first <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element">script</a></code> in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#list-of-scripts-that-will-execute-when-the-document-has-finished-parsing">list of scripts that will execute when the document has finished parsing</a> has its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag set <em>and</em> the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> <em>and</em> has <a href="#dfn-has-no-component-that-is-blocking-scripts">has no component that is blocking scripts</a>.</p></li>    
+</ol>
+</div>
+
+<h3 id="additions-to-parsing-xhtml-documents">Additions to Parsing XHTML Documents</h3>
+
+<p>Modify step 3 of steps that run following <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">preparing</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element to read:</p>
+<div class="monkeypatch">
+<ol start="3">
+    <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> and <a href="#dfn-has-no-component-that-is-blocking-scripts">has no component that is blocking scripts</a> and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#pending-parsing-blocking-script">pending parsing-blocking script</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is set.</p></li>
+</ol>
+</div>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
