@@ -318,16 +318,26 @@
 
 <h3 id="selecting-nodes-distributed-to-insertion-points">Matching Children, Distributed To Insertion Points</h3>
 
-<p><a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">Reference combinators</a> match the children of a <a href="#dfn-shadow-host">shadow host</a>, <a href="#dfn-distribution">distributed</a> to the <a href="#dfn-insertion-point">insertion points</a> within a <a href="#dfn-shadow-tree">shadow tree</a>. To match, all of these conditions <strong>must</strong> apply:</p>
-<ul>
-    <li>The combinator value <strong>must</strong> be <code>select</code></li>
-    <li>The first compound selector of the combinator <strong>must</strong> match an <a href="#dfn-insertion-point">insertion point</a></li>
-    <li>The second compound selector <strong>must</strong> match an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-insertion-point">insertion point</a></li>
-</ul>
-<p>For example, <code class="prettify">.some-insertion-point /select/ div.special</code> will match all <code>div</code> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that have <code>class</code> attribute set to <code>special</code> and have been <a href="#dfn-distribution">distributed</a> to an insertion point that has a class attribute set to <code>some-insertion-point</code>.</p>
+
+<p>The <a href="http://dev.w3.org/csswg/selectors4/#structural-pseudos">tree-structural pseudo-classes</a> section in <a href="http://dev.w3.org/csswg/selectors4/">Selectors Level 4</a> is amended as follows:</p>
+<div class="monkeypatch">
+<h3>12.15 <a href="#dfn-distributed-pseudo-element"><code>::distributed()</code></a> pseudo-element</p></h3>
+<p>The <dfn id="dfn-distributed-pseudo-element">::distrbuted(selector)</dfn> is a functional pseudo-element taking a <a href="http://www.w3.org/TR/selectors-api2/#relative-selector">relative selector</a> as an argument. It represents a relationship between an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a>. The argument is <a href="http://dev.w3.org/csswg/selectors4/#scope-relative">scope-relative</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#contextual-reference-element-set">contextual reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-insertion-point">insertion point</a>.</p>
+</div>
+<div class="informative">
+<p>For example, the following selector represents the all <code>div</code> elements that that are descendants of an element, distributed into an insertion point</p>
+<pre><code class="prettyprint">
+    ::distributed(div)
+</code></pre>
+<p>This selector represents all child <code>span</code> elements that are distrubted into insertion points with class attribute <code>victory</code></p>
+<pre><code class="prettyprint">
+    .victory::distributed(>span)
+</code></pre>
+</div>
+
+<p class="fixme">Should contextual reference element set be insertion point or parent?</p>
 
 <p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-tree">shadow tree</a> to the <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-host">shadow host</a>.</p>
-
 
 <h3 id="multiple-shadow-trees">Hosting Multiple Shadow Trees</h3>
 
@@ -757,7 +767,7 @@ div::x-thumb {
 
 <p>Conversely, to enforce <a href="#dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the <a href="#dfn-document-tree">document tree</a>, with two exceptions:</p>
 <ol>
-    <li>Rules that contain <code>select</code> <a href="http://dev.w3.org/csswg/selectors4/#idref-combinators">reference combinators</a> match <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#dfn-enclosed-tree">enclosing</a> trees;</li>
+    <li>Rules that contain <code>select</code> <a href="#dfn-distributed-pseudo-element"><code>::distributed()</code> pseudo-element</a> match <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#dfn-enclosed-tree">enclosing</a> trees;</li>
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-nesting-tree">nesting</a> tree.</li>
 </ol>
 
