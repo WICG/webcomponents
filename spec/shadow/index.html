@@ -999,7 +999,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <div class="informative">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification</div>
 When invoked, it <strong>must</strong> return result of running the following steps:
 <ol>
-    <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a>.</li>
+    <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
     <li>If either argument is negative, <code>x</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
     <li>Let <var>HIT</var> be the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
     <li>Let <var>TARGETS</var> be the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>HIT</var> as its argument</li>
@@ -1043,7 +1043,7 @@ There is a <a href="http://lists.w3.org/Archives/Public/www-style/2012Oct/thread
         </dl></li>
         <li>Return the newly created <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a> object.</li>
     </ol>
-    <li>Otherwise, throw a <a href="http://www.w3.org/TR/domcore/#typemismatcherror"><code>TypeMismatchError</code></a> exception.</li>
+    <li>Otherwise, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
 </ol></dd>
 <dt id="api-shadow-root-remove-style-sheet"><code>removeStyleSheet</code></dt>
 <dd>Removes a <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheet</a>, added with <a href="#api-shadow-root-add-style-sheet"><code>addStyleSheet</code></a>.</dd>
@@ -1095,7 +1095,7 @@ interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
 <dt><dfn id="api-shadow-aware-create-shadow-root"><code>createShadowRoot</code></dfn></dt>
 <dd>When invoked, these steps <strong>must</strong> be run:
 <ol>
-    <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, throw <a href="http://www.w3.org/TR/domcore/#typemismatcherror">TypeMismatchError</a> exception.</li>
+    <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror">InvalidNodeTypeError</a>.</li>
     <li>Otherwise:
     <ol>
         <li>Create a new instance of the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
