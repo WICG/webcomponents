@@ -202,7 +202,7 @@ steps:</p>
 
 <h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
 
-<p>After an <a href="#dfn-custom-element">custom element</a> is instantiated, the author of the element can optionally provide a set of callbacks that are called when the state of the element changes throughout its lifecycle. This set of callbacks is provided by a <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-interface">callback interface</a> that is called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
+<p>A <a href="#dfn-custom-element">custom element</a> can optionally implement several callbacks that are invoked when the state of the element changes throughout its lifecycle. These callbacks are stored internally as a collection of <a href="http://en.wikipedia.org/wiki/Associative_array">key-value pairs</a> and called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
 
 <h2 id="declaring-custom-elements">Declaring Custom Elements</h2>
 
@@ -213,20 +213,14 @@ steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>ELEMENT</var>, an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> being finalized</dd>
+    <dd><var>ELEMENT</var>, an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> being initialized</dd>
 <dt>Output</dt>
-    <dd>Finalized <var>ELEMENT</var></dd>
+    <dd>Initialized <var>ELEMENT</var></dd>
 </dl>
 <ol>
     <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-custom-element-definition">definition</a></li>
-    <li>If <var>DEFINITION</var> contains <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>:
-    <ol>
-        <li>Let <var>CREATED</var> be the callback, corresponding to the <em>created</em> key in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> dictionary</li>
-        <li>If <var>CREATED</var> exists:
-        <ol>
-            <li>Call <var>CREATED</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
-        </ol></li>
-    </ol></li>
+    <li>Let <var>READY</var> be the callback, associated with the key <em>ready</em> in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
+    <li>If it is not <code>null</code>, invoke <var>READY</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
 </ol>
 </div>
 
@@ -299,17 +293,9 @@ This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/
 
 <pre><code>
 partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
-    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-name">name</a>, optional <a href="#api-element-registration-options">ElementRegistrationOptions</a> options);
+    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-name">name</a>, optional object <a href="#var-options-prototype">prototype</a> = null);
 };
 
-dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions</dfn> {
-    object? <a href="#var-options-prototype">prototype</a> = null;
-    <a href="#api-lifecycle-callbacks">LifecycleCallbacks</a>? <a href="#var-options-lifecycle">lifecycle</a> = null;
-};
-
-callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
-    void created();
-};
 </code></pre>
 
 <p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
@@ -322,7 +308,6 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
     <dd><var>DOCUMENT</var>, the <a href="http://dom.spec.whatwg.org/#context-object">context object</a> of the method</dd>
     <dd><var id="var-document-register-name">NAME</var>, the <a href="#dfn-custom-element-name">custom element name</a> of the element being registered</dd>
     <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>, optional</dd>
-    <dd><var id="var-options-lifecycle">LIFECYCLE</var>, the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>, optional</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
@@ -340,6 +325,9 @@ callback interface <dfn id="api-lifecycle-callbacks">LifecycleCallbacks</dfn> {
         <li>If <var>BASE</var> is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> or <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, let <var>NAME</var> be the <a href="">local name</a>, associated with <var>BASE</var> <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
     </ol></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var> and <var>NAME</var> and <var>NAMESPACE</var> and/or <var>PROTOTYPE</var>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
+    <li>Let <var>READY</var> be the result of <a href="http://es5.github.io/#x8.12.3">getting</a> the property <code>readyCallback</code> of <var>PROTOTYPE</var></li>
+    <li>Add <var>READY</var> to <var>LIFECYCLE</var>, associated with the key <em>ready</em></li>
     <li>Let <var>DEFINITION</var> be the set of (<var>TYPE</var>, <var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
     <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
