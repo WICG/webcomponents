@@ -249,9 +249,11 @@ steps:</p>
 
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</h2>
 
-<div class="monkeypatch">
-<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run these steps when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a>:
+<p>The <dfn id="dfn-lifecycle-callback-queue">lifecycle callback queue</dfn> is used to collect pending <a href="#dfn-lifecycle-callbacks">lifecycle callback</a> invocations for <a href="#dfn-custom-elements">custom elements</a>, created during parsing. Each pending invocation consists of the key to match the callback in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> and the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>. Each <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has one <a href="#dfn-lifecycle-callback-queue">lifecycle callback queue</a>.</p>
 
+<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run these steps when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a>:</p>
+
+<div class="monkeypatch">
 <dl>
 <dt>Input</dt>
     <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> in which the element is being created</dd>
@@ -265,12 +267,24 @@ steps:</p>
     <li>Let <var>NAMESPACE</var> be the <em>token</em>'s namespace</li>
     <li>Let <var>TYPE</var> be the value of <code>is</code> attribute for the <em>token</em> or <var>NAME</var>, if this attribute is not present</li>
     <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
-    <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var>.</li>
+    <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
+    <li>Place callback invocation with the key of <var>ready</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callback-queue">lifecycle callback queue</a>.</li>
 </ol>
 </div>
 
 <div class="informative">
-This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.
+<p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
+</div>
+
+<p>In addition, the following extra step is added to the "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">perform a microtask checkpoint</a>" process, right after invoking <code>MutationObserver</code> objects:</p>
+
+<div class="fixme">Work in progress</div>
+
+<div class="monkeypatch">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var></dd>
+</dl>
 </div>
 
 <p>The <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be serialized like <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments">any HTML elements</a>.</p>
