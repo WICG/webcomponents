@@ -138,9 +138,32 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <h2 id="registering-custom-elements">Registering Custom Elements</h2>
 
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> values of <a href="#dfn-custom-element-name">custom element name</a> and the <a href="http://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> values of <a href="#dfn-custom-element-name">custom element name</a> and the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
 
-<p>Because <a href="#dfn-element-registration">element registration</a> can occur at any time, a <a href="#dfn-custom-element">custom element</a> may exist a state where its instances are created before the element is <a href="#dfn-element-registration">registered</a>. The <a href="#dfn-custom-element">custom element</a> instances in such state are called <dfn id="dfn-unresolved-element">unresolved elements</dfn>.</p>
+<p>Because <a href="#dfn-element-registration">element registration</a> can occur at any time, a <a href="#dfn-custom-element">custom element</a> could be created before it is <a href="#dfn-element-registration">registered</a>. The <a href="#dfn-custom-element">custom element</a> instances in such state are called <dfn id="dfn-unresolved-element">unresolved elements</dfn>.<!--Since <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>--> </p>
+
+<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-name">custom element name</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty.</p>
+
+<p>As an <a href="#dfn-element-definition">element definition</a> is <a href="#dfn-element-registration">registered</a>, all corresponding <a href="#dfn-unresolved-element">unresolved elements</a> are upgraded using the <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>CONTEXT</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a></dd>
+    <dd><var>DEFINITION</var>, an <a href="#dfn-element-definition">element definition</a></dd>
+<dt>Output</dt>
+    <dd>None</dd>
+</dl>
+<ol>
+    <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
+    <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
+    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
+    <li>Let <var>MAP</var> be <var>CONTEXT</var>'s <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
+    <li>Let <var>CANDIDATES</var> be the list of all <a href="#dfn-unresolved-element">unresolved elements</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
+    <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>, set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
+    <li>Set <var>CANDIDATES</var> to empty list</li>
+</ol>
+</div>
 
 <p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
@@ -185,21 +208,13 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
     <li>Let <var>DEFINITION</var> be the set of (<var>TYPE</var>, <var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
-    <li>For <var>DOCUMENT</var> tree and every <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtree</a> <a href="http://www.w3.org/TR/shadow-dom/#dfn-enclosed-subtree">enclosed</a> by <var>DOCUMENT</var> tree:
-    <ol>
-        <li>Let <var>TREE</var> be this tree</li>
-        <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>TREE</var> and <var>DEFINITION</var> as arguments</li>
-    </ol></li>
+    <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>DOCUMENT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> and <var>DEFINITION</var> as arguments</li>
     <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as argument.</li>
 </ol>
 </div>
 
 <div class="informative">
 <p><code>ElementRegistrationOptions</code> is an abstraction that enables using function objects and ES6 classes as the second argument of <code>document.register</code> method.</p>
-</div>
-
-<div class="informative">
-<p>Invoking <a href="#dfn-document-register"><code>register</code></a> has no effect on the elements that are not in document or its <a href="http://www.w3.org/TR/shadow-dom/#dfn-shadow-dom-subtree">shadow DOM subtrees</a>. This means that any elements that were created imperatively and not inserted into the document, or any elements in document fragments will not be <a href="#dfn-element-upgrade">upgraded</a>.</p>
 </div>
 
 <div class="informative">
@@ -369,29 +384,6 @@ steps:</p>
     <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-custom-element-definition">definition</a></li>
     <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em></li>
     <li>If it is not <code>null</code>, invoke <var>READY</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
-</ol>
-</div>
-
-<p>The <dfn id="dfn-element-upgrade">element upgrade algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>TREE</var>, a DOM tree</dd>
-    <dd><var>DEFINITION</var>, an <a href="#dfn-element-defintion">element definition</a></dd>
-<dt>Output</dt>
-    <dd><var>TREE</var> in a new state</dd>
-</dl>
-<ol>
-    <li>Let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in <var>DEFINITION</var></li>
-    <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
-    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
-    <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DEFINITION</var></li>
-    <li>For each element <var>ELEMENT</var> in <var>TREE</var> and all <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-enclosed-tree">enclosed</a> trees with <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> <var>NAME</var> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> <var>NAMESPACE</var>, in <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>:
-    <ol>
-        <li>If <var>TYPE</var> does not equal <var>NAME</var> and the <a href="http://dom.spec.whatwg.org/#concept-attribute-value">value</a> of <var>ELEMENT</var>'s <code>is</code> attribute does not equal <var>TYPE</var>, <strong>continue</strong> to next element</li>
-        <li>Otherwise, set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
-    </ol></li>
 </ol>
 </div>
 
