@@ -237,9 +237,11 @@ steps:</p>
 </ol>
 </div>
 
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="running-lifecycle-callbacks">running lifecycle callbacks</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the algorithm to <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a>.</p>
+<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback and the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>.
 
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback and the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>. To <dfn id="dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+<p>Also, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-running-lifecycle-callbacks">running lifecycle callbacks</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the algorithm to <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a>.</p>
+
+<p>To <dfn id="dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
 <dl>
