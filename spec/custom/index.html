@@ -292,7 +292,7 @@ steps:</p>
 </dl>
 <ol>
     <li>Let <var>CALLBACK</var> be the result of <a href="http://es5.github.io/#x8.12.3">getting</a> a property named <var>PROPERTY</var> of <var>OBJECT</var></li>
-    <li>If <var>CALLBACK</var> exists, add <var>CALLBACK</var> to <var>LIFECYCLE</var>, associated with the key <var>NAME</var>.</li>
+    <li>If <var>CALLBACK</var> exists and is a <a href="http://es5.github.io/#callable">callable object</a>, add <var>CALLBACK</var> to <var>LIFECYCLE</var>, associated with the key <var>NAME</var>.</li>
 </ol>
 </div>
 
@@ -307,8 +307,9 @@ steps:</p>
 </dl>
 <ol>
     <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-custom-element-definition">definition</a></li>
-    <li>Let <var>CALLBACK</var> be the callback, associated with the key <var>NAME</var> in <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
-    <li>If there is no callback, associated with the key <var>NAME</var>, set <var>CALLBACK</var> to <strong>null</strong>.</li>
+    <li>If <var>DEFINITION</var> does not exist, let <var>CALLBACK</var> be <strong>null</strong> and <strong>stop</strong>.</li>
+    <li>Let <var>CALLBACKS</var> be the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> from <var>DEFINITION</var>
+    <li>Let <var>CALLBACK</var> be the callback, associated with the key <var>NAME</var> in <var>CALLBACKS</var>, or <strong>null</strong> if there is no such callback.</li>
 </ol>
 </div>
 
