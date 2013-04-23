@@ -146,7 +146,11 @@ The list of names above is the summary of all hyphen-containing names from the <
 
 <pre><code>
 partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
-    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-name">name</a>, optional object <a href="#var-options-prototype">prototype</a> = null);
+    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-name">name</a>, optional <a href="#api-element-registration-options">ElementRegistrationOptions</a> options);
+};
+
+dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions</dfn> {
+     object? <a href="#var-options-prototype">prototype</a> = null;
 };
 
 </code></pre>
@@ -188,6 +192,10 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
     </ol></li>
     <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as argument.</li>
 </ol>
+</div>
+
+<div class="informative">
+<p><code>ElementRegistrationOptions</code> is an abstraction that enables using function objects and ES6 classes as the second argument of <code>document.register</code> method.</p>
 </div>
 
 <div class="informative">
