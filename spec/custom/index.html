@@ -273,7 +273,7 @@ document.register('x-foo', {
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> <strong>or</strong> <var>PROTOTYPE</var> has a <a href="http://es5.github.io/#x8.6.1">non-configurable</a> property named <code>constructor</code>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
