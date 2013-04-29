@@ -149,7 +149,7 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li><a href="#dfn-custom-element">Custom element</a> is garbage-collected.</li>
 </ol>
 
-<p>A <a href="#dfn-custom-element">custom element</a> can optionally implement several callbacks that are invoked when the state of the element changes throughout its lifecycle. These callbacks are stored internally as a collection of <a href="http://en.wikipedia.org/wiki/Associative_array">key-value pairs</a> and called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.
+<p>A <a href="#dfn-custom-element">custom element</a> can optionally implement several callbacks that are invoked when the element goes through some of these changes. These callbacks are stored internally as a collection of <a href="http://en.wikipedia.org/wiki/Associative_array">key-value pairs</a> and called <dfn id="dfn-lifecycle-callbacks">lifecycle callbacks</dfn>.</p>
 
 <p>To <dfn id="dfn-transfer-callback">transfer a callback named <em>name</em> from an object property named <em>property</em></dfn> to <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>, the user agen <strong>must</strong> run the following steps:</p>
 <div class="algorithm">
@@ -215,6 +215,16 @@ The list of names above is the summary of all hyphen-containing names from the <
     <li>Set <var>RUNNING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
+
+<p>The following callbacks are recognized:</p>
+<dl>
+<dt>ready</dt>
+    <dd>invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="http://dom.spec.whatwg.org/#concept-document">document</a>. The actual timing of this callback is defined further in this specification.</dd>
+<dt>inserted</dt>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
+<dt>removed</dt>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+</dl>
 
 <h2 id="registering-custom-elements">Registering Custom Elements</h2>
 
@@ -303,6 +313,8 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>inserted</em> to <var>LIFECYCLE</var> from property named <em>insertedCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>removed</em> to <var>LIFECYCLE</var> from property named <em>removedCallback</em> on <var>PROTOTYPE</var></li>
     <li>Let <var>DEFINITION</var> be the set of (<var>TYPE</var>, <var>NAME</var>, <var>NAMESPACE</var>, <var>PROTOTYPE</var>, <var>LIFECYCLE</var>)</li>
     <li><a href="#dfn-element-registration">Register</a> the <var>DEFINITION</var> with <var>DOCUMENT</var></li>
     <li>Run <a href="#dfn-element-upgrade">element upgrade algorithm</a> with <var>DOCUMENT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> and <var>DEFINITION</var> as arguments</li>
