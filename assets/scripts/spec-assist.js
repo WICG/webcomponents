@@ -7,7 +7,7 @@ function fetchLastUpdated(callback)
     if (!logAnchorNode)
         return callback(lastUpdated);
 
-    var logURL = logAnchorNode.href.replace("/log", "/log-atom");
+    var logURL = logAnchorNode.href.replace("/log", "/atom-log");
     if (!logURL)
         return callback(lastUpdated);
 
