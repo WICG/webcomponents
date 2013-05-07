@@ -19,7 +19,7 @@ function fetchLastUpdated(callback)
         var updatedNode = doc.querySelector('feed>updated');
         if (!updatedNode)
             return callback(lastUpdated);
-        callback(Date.parse(updatedNode.textContent));
+        callback(new Date(updatedNode.textContent));
     }
     xhr.onerror = function() {
         callback(lastUpdated);
