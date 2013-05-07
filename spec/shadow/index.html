@@ -118,8 +118,8 @@
         </ol></li>
         <li><a href="#extensions-to-element"><span class="section">10.2</span>  Extensions to <code>Element</code> Interface</a>
         <ol>
-            <li><a href="#shadow-aware-attributes"><span class="section">10.2.1</span> <code>ShadowAware</code> Attributes</a></li>
-            <li><a href="#shadow-aware-methods"><span class="section">10.2.2</span> <code>ShadowAware</code> Methods</a></li>
+            <li><a href="#partial-element-attributes"><span class="section">10.2.1</span> Attributes</a></li>
+            <li><a href="#partial-element-methods"><span class="section">10.2.2</span> Methods</a></li>
         </ol></li>
         <li><a href="#css-host-rule-interface"><span class="section">10.3</span> <code>CSSHostRule</code> Interface</a>
         <ol>
@@ -1080,18 +1080,17 @@ There is a <a href="http://lists.w3.org/Archives/Public/www-style/2012Oct/thread
 <h3 id="extensions-to-element">Extensions to <code>Element</code> Interface</h3>
 
 <pre><code>
-interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
-    <a href="#api-shadow-root">ShadowRoot</a> <a href="#api-shadow-aware-create-shadow-root">createShadowRoot</a>();
-    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-shadow-aware-shadow-root">shadowRoot</a>;
-    attribute DOMString <a href="#api-shadow-aware-pseudo">pseudo</a>;
+partial interface <a href="http://dom.spec.whatwg.org/#element">Element</a> {
+    <a href="#api-shadow-root">ShadowRoot</a> <a href="#api-partial-element-create-shadow-root">createShadowRoot</a>();
+    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-partial-element-shadow-root">shadowRoot</a>;
+    attribute DOMString <a href="#api-partial-element-pseudo">pseudo</a>;
 }
-<a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> implements <a href="#api-shadow-aware">ShadowAware</a>;
 </code></pre>
 
-<h4 id="shadow-aware-attributes"><code>ShadowAware</code> Attributes</h4>
+<h4 id="partial-element-attributes">Attributes</h4>
 
 <dl>
-<dt><dfn id="api-shadow-aware-pseudo">pseudo</dfn> of type <code>DOMString</code></dt>
+<dt><dfn id="api-partial-element-pseudo">pseudo</dfn> of type <code>DOMString</code></dt>
 <dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>empty string</strong> if there is no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
 <dd>On setting, these steps <strong>must</strong> be run:
@@ -1099,16 +1098,16 @@ interface <dfn id="api-shadow-aware">ShadowAware</dfn> {
     <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
     <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
 </ol></dd>
-<dt><dfn id="api-shadow-aware-shadow-root">shadowRoot</dfn> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a><dt>
+<dt><dfn id="api-partial-element-shadow-root">shadowRoot</dfn> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a><dt>
 <dd>Represents the top <a href="#dfn-shadow-tree">shadow tree</a> in the "<a href="#dfn-as-rendered">as rendered</a>" structure.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-tree">youngest tree</a> that has the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as its <a href="#dfn-shadow-host">shadow host</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-tree">shadow tree</a> is accesible.</dd>
 <dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
 </dl>
 
-<h4 id="shadow-aware-methods"><code>ShadowAware</code> Methods</h4>
+<h4 id="partial-element-methods">Methods</h4>
 
 <dl>
-<dt><dfn id="api-shadow-aware-create-shadow-root"><code>createShadowRoot</code></dfn></dt>
+<dt><dfn id="api-partial-element-create-shadow-root"><code>createShadowRoot</code></dfn></dt>
 <dd>When invoked, these steps <strong>must</strong> be run:
 <ol>
     <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror">InvalidNodeTypeError</a>.</li>
