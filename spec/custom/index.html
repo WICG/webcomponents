@@ -315,6 +315,7 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
         <li>Let <var>BASE</var> be <var>INTERFACE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-inherited-interfaces">inherited interface</a> that is nearest to <var>BASE</var> in the <a href="http://es5.github.com/#x4.2.1">prototype chain</a> <strong>and</strong> that is an <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
         <li>If <var>BASE</var> is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> or <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, let <var>NAME</var> be the <a href="">local name</a>, associated with <var>BASE</var> <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
     </ol></li>
+    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
@@ -458,6 +459,7 @@ steps:</p>
     <li>Let <var>NAME</var> be the tag name of the <em>token</em></li>
     <li>Let <var>NAMESPACE</var> be the <em>token</em>'s namespace</li>
     <li>Let <var>TYPE</var> be the value of <code>is</code> attribute for the <em>token</em> or <var>NAME</var>, if this attribute is not present</li>
+    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
     <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
     <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em>.</li>
