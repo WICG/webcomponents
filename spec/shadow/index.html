@@ -190,7 +190,7 @@
 
 <p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="dfn-shadow-dom">shadow DOM</dfn> allows multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees (in addition to the <a href="#dfn-document-tree">document tree</a>) to be composed into one larger <a href="http://www.w3.org/TR/domcore/#trees">tree</a> when rendered. The existence of multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-document-tree">document tree</a> to host one or more additional <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees. These <dfn id="dfn-shadow-tree">shadow trees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> composability semantics.</p>
 
-<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between the <a href="dfn-document-tree">document tree</a> and <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the <a href="http://www.w3.org/TR/domcore/#concept-tree-root">roots</a> of the <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-root">shadow roots</dfn>.</p>
+<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between the <a href="#dfn-document-tree">document tree</a> and <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-host">shadow hosts</dfn>, and the <a href="http://www.w3.org/TR/domcore/#concept-tree-root">roots</a> of the <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="dfn-shadow-root">shadow roots</dfn>.</p>
 
 <object data="../../assets/images/shadow-trees.svg" width="800" height="430"></object>
 
@@ -309,7 +309,7 @@
 
 <h3 id="distributed-pseudo-element"><code>::distributed()</code> pseudo-element</h3>
 
-<p>The <dfn id="dfn-distributed-pseudo-element">::distributed(selector)</dfn> is a functional pseudo-element taking a <a href="http://www.w3.org/TR/selectors-api2/#relative-selector">relative selector</a> as an argument. It represents a relationship between an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a>. The argument is <a href="http://dev.w3.org/csswg/selectors4/#scope-relative">scope-relative</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#contextual-reference-element-set">contextual reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-insertion-point">insertion point</a>.</p>
+<p>The <dfn id="dfn-distributed-pseudo-element">::distributed(selector)</dfn> is a functional pseudo-element taking a <a href="http://www.w3.org/TR/selectors-api2/#relative-selector">relative selector</a> as an argument. It represents a relationship between an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a>. The argument is <a href="http://dev.w3.org/csswg/selectors4/#scope-contained-selectors">scope-contained</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#reference-element-set">reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-insertion-point">insertion point</a>.</p>
 
 <div class="informative">
 <p>For example, the following selector represents the all <code>div</code> elements that that are descendants of an element, distributed into an insertion point</p>
@@ -322,7 +322,7 @@
 </code></pre>
 </div>
 
-<p class="fixme">Should contextual reference element set be insertion point or parent?</p>
+<p class="fixme">Should reference element set be insertion point or parent?</p>
 
 <p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-tree">shadow tree</a> to the <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
