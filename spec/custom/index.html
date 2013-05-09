@@ -338,7 +338,7 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 </div>
 
 <div class="informative">
-<p>In order to  <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <a href="#api-document-register">document.register</a> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
+<p>In order to  <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <code>document.register</code> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
 <pre><code class="prettyprint">
 document.register('x-foo', {
     prototype: Object.create(HTMLParagraphElement.prototype, {
@@ -373,7 +373,7 @@ document.register('x-foo', {
 
 <p>After a <a href="#dfn-custom-element">custom element</a> is instantiated, changing the value of the <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> <strong>must not</strong> affect this element's <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
-<p>If both types of <a href="#dfn-custom-element-name">custom element names</a> are provided at the time of element's instantiation, the <a href="#dfn-custom-tags">custom tag</a> <strong>must</strong> win over the <a href="#dfn-type-extension">type extension</a>.
+<p>If both types of <a href="#dfn-custom-element-name">custom element names</a> are provided at the time of element's instantiation, the <a href="#dfn-custom-tag">custom tag</a> <strong>must</strong> win over the <a href="#dfn-type-extension">type extension</a>.
 
 <p>All <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be constructable with a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a>, called <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>. This constructor <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -406,8 +406,8 @@ document.register('x-foo', {
 
 <pre><code>
 partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-element">createElement</a>(DOMString localName, optional DOMString typeExtension);
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-elementns">createElementNS</a>(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElement(DOMString localName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
 };
 </code></pre>
 
@@ -415,7 +415,7 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
 steps:</p>
 <ol>
     <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
-    <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <em>localName</em>, <em>namespace</em>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <em>localName</em></li>
+    <li>If an <a href="#dfn-element-definition">element definition</a> with matching <em>localName</em>, <em>namespace</em>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <em>localName</em></li>
     <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
 </ol>
 
@@ -460,7 +460,7 @@ steps:</p>
     <li>Let <var>NAMESPACE</var> be the <em>token</em>'s namespace</li>
     <li>Let <var>TYPE</var> be the value of <code>is</code> attribute for the <em>token</em> or <var>NAME</var>, if this attribute is not present</li>
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
-    <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
+    <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
     <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em>.</li>
     <li>Place <var>READY</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>

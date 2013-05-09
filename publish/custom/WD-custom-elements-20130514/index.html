@@ -16,7 +16,7 @@
 </div>
 
 <h1>Custom Elements</h1>
-<h2 id="working-draft">W3C First Public Working Draft</h2>
+<h2 id="working-draft">W3C First Public Working Draft 14 May 2013</h2>
 <dl>
 <dt>This version</dt>
     <dd><a href="http://www.w3.org/TR/2013/WD-custom-elements-20130514/">http://www.w3.org/TR/2013/WD-custom-elements-20130514/</a></dd>
@@ -35,7 +35,7 @@
     <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
 </dl>
 
-<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2013 <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>©</sup> (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>, <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2013 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), All Rights Reserved. W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
 
 <hr>
 
@@ -45,9 +45,7 @@
 
 <h2 id="status">Status of This Document</h2>
 
-<p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at http://www.w3.org/TR/.</em></p>
-
-<p>This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as a Working Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>). All feedback is welcome.</p><p>Publication as a Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
+<p>Publication as a First Public Working Draft does not imply endorsement by the W3C Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
 
 <p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/42538/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.</p>
 
@@ -332,7 +330,7 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 </div>
 
 <div class="informative">
-<p>In order to  <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <a href="#api-document-register">document.register</a> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
+<p>In order to  <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <code>document.register</code> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
 <pre><code class="prettyprint">
 document.register('x-foo', {
     prototype: Object.create(HTMLParagraphElement.prototype, {
@@ -367,7 +365,7 @@ document.register('x-foo', {
 
 <p>After a <a href="#dfn-custom-element">custom element</a> is instantiated, changing the value of the <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> <strong>must not</strong> affect this element's <a href="#dfn-custom-element-name">custom element name</a>.</p>
 
-<p>If both types of <a href="#dfn-custom-element-name">custom element names</a> are provided at the time of element's instantiation, the <a href="#dfn-custom-tags">custom tag</a> <strong>must</strong> win over the <a href="#dfn-type-extension">type extension</a>.
+<p>If both types of <a href="#dfn-custom-element-name">custom element names</a> are provided at the time of element's instantiation, the <a href="#dfn-custom-tag">custom tag</a> <strong>must</strong> win over the <a href="#dfn-type-extension">type extension</a>.
 
 </p><p>All <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be constructable with a <a href="http://www.w3.org/TR/WebIDL/#dfn-function-object">function object</a>, called <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>. This constructor <strong>must</strong> be created with the <dfn id="dfn-custom-element-constructor-generation">custom element constructor generation algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -400,8 +398,8 @@ document.register('x-foo', {
 
 <pre><code>
 partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> {
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-element">createElement</a>(DOMString localName, optional DOMString typeExtension);
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> <a href="#dfn-document-create-elementns">createElementNS</a>(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElement(DOMString localName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
 };
 </code></pre>
 
@@ -409,7 +407,7 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
 steps:</p>
 <ol>
     <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
-    <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <em>localName</em>, <em>namespace</em>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <em>localName</em></li>
+    <li>If an <a href="#dfn-element-definition">element definition</a> with matching <em>localName</em>, <em>namespace</em>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <em>localName</em></li>
     <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
 </ol>
 
@@ -454,7 +452,7 @@ steps:</p>
     <li>Let <var>NAMESPACE</var> be the <em>token</em>'s namespace</li>
     <li>Let <var>TYPE</var> be the value of <code>is</code> attribute for the <em>token</em> or <var>NAME</var>, if this attribute is not present</li>
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
-    <li>If an <a href="#dfn-element-defintion">element defintion</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
+    <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
     <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em>.</li>
     <li>Place <var>READY</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
