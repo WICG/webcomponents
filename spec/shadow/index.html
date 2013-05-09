@@ -70,7 +70,7 @@
     <ol>
         <li><a href="#upper-boundary-encapsulation"><span class="section">4.1</span> Upper-boundary Encapsulation</a></li>
         <li><a href="#lower-boundary-encapsulation"><span class="section">4.2</span> Lower-boundary Encapsulation</a></li>
-        <li><a href="#matching-insertion-points"><span class="section">4.3</span> Matching Insertion Points</a></li>
+        <li><a href="#satisfying-matching-criteria"><span class="section">4.3</span> Satisfying Matching Criteria</a></li>
         <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">4.4</span> Matching Children, Distributed To Insertion Points</a></li>
         <li><a href="#multiple-shadow-trees"><span class="section">4.5</span> Hosting Multiple Shadow Trees</a></li>
         <li><a href="#reprojection"><span class="section">4.6</span> Reprojection</a></li>
@@ -258,7 +258,7 @@
         <li><dfn id="algo-distribution-repeat">Repeat</dfn> for each <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> in <var>POOL</var>:
         <ol>
             <li>Let <var>NODE</var> be the current <a href="http://www.w3.org/TR/domcore/#concept-node">node</a></li>
-            <li>If the <var>NODE</var> matches <var>POINT</var>'s <a href="#dfn-matching-criteria">matching criteria</a>:
+            <li>If the <var>NODE</var> <a href="#dfn-satisfies-matching-criteria">satisfies</a> <var>POINT</var>'s <a href="#dfn-matching-criteria">matching criteria</a>:
                 <ol>
                     <li><a href="#dfn-distribution">Distribute</a> the <var>NODE</var> to <var>POINT</var></li>
                     <li>Remove <var>NODE</var> from the <var>POOL</var></li>
@@ -270,22 +270,15 @@
 </ol>
 </div>
 
-<h3 id="matching-insertion-points">Matching Insertion Points</h3>
+<h3 id="satisfying-matching-criteria">Satisfying Matching Criteria</h3>
 
-<p>The <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-insertion-point">insertion point</a> is defined as a set of selector fragments. Each <dfn id="dfn-selector-fragment">selector fragment</dfn> is a fragment in a fictional <a href="http://www.w3.org/TR/css3-selectors">selector</a> consisting of:</p>
-<ol>
-    <li>A selector that uniquely identifies the <a href="#dfn-shadow-host">shadow host</a> of this <a href="#dfn-shadow-tree">shadow tree</a></li>
-    <li>A combinator that expresses the relationship between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> that is either a parent of another <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> <em>or</em> between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, <a href="#dfn-distribution">distributed</a> into an <a href="#dfn-insertion-point">insertion point</a> and this <a href="#dfn-insertion-point">insertion point</a>'s  parent <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></li>
-    <li>The <a href="#dfn-selector-fragment">selector fragment</a>.</li>
-</ol>
-
-<p>A <dfn id="dfn-valid-selector-fragment">valid selector fragment</dfn> may contain:</p>
+<p>The <a href="#dfn-matching-criteria">matching criteria</a> for an <a href="#dfn-insertion-point">insertion point</a> is a set of <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a>. These <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> are restricted to contain only these <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a>:</p>
 
 <ul>
-    <li>A <a href="http://www.w3.org/TR/css3-selectors/#type-selectors">type selector</a> or a <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#class-html">class selector(s)</a></li>
-    <li>An <a href="http://www.w3.org/TR/css3-selectors/#id-selectors">ID selector</a></li>
-    <li><a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">attribute selector(s)</a></li>
+    <li>A <a href="http://dev.w3.org/csswg/selectors4/#type-selector">type selector</a> or a <a href="http://dev.w3.org/csswg/selectors4/#universal-selector0">universal selector</a></li>
+    <li><a href="http://dev.w3.org/csswg/selectors4/#class-selector">class selector(s)</a></li>
+    <li>An <a href="http://dev.w3.org/csswg/selectors4/#id-selector">ID selector</a></li>
+    <li><a href="http://dev.w3.org/csswg/selectors4/#attribute-selector">attribute selector(s)</a></li>
 <!--     <li>the following <a href="http://www.w3.org/TR/css3-selectors/#pseudo-classes">pseudo-class selector(s)</a>:
         <ul>
             <li><code>:link</code></li>
@@ -308,12 +301,10 @@
     </li> -->
 </ul>
 
-<p>If any other types of selectors are present in the <a href="#dfn-selector-fragment">selector fragment</a>, the fragment <strong>must</strong> be considered invalid.</p>
-
-<p>A conforming UAs <strong>must</strong> consider a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> as <dfn id="#dfn-content-matching">matching</dfn> a set of <a href="#dfn-selector-fragment">selector fragments</a> in the context of a given <a href="#dfn-shadow-host">shadow host</a>, if:
+<p>A <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> <dfn id="dfn-satisfies-matching-criteria">satisfies</dfn> a <a href="#dfn-matching-criteria">matching criteria</a> only if:
 <ol>
-    <li>all <a href="#dfn-selector-fragment">selector fragments</a> in the set are <a href="#dfn-valid-selector-fragment">valid</a>; and</li>
-    <li>child <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> matches at least one selector fragment in the set or the set is empty.</li>
+    <li>all <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set, contain only the <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a> specified above; and</li>
+    <li>a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> matches at least one <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set or the set is empty.</li>
 </ol>
 
 <h3 id="selecting-nodes-distributed-to-insertion-points">Matching Children, Distributed To Insertion Points</h3>
@@ -1186,7 +1177,7 @@ partial interface <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface"
     <dd>indicates whether or not the rules in the scoped styles, defined in shadow tree are applied to the <a href="#dfn-shadow-host">shadow host</a>'s children that are inserted in place of this <code>content</code> element. If present, the styles are applied.</dd> -->
     <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#comma-separated-tokens">set of comma-separated tokens</a></dt>
     <dd>
-        defines the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> of the <a href="#dfn-shadow-host">shadow host</a>. Each token <strong>must</strong> be a valid <a href="#dfn-selector-fragment">selector fragment</a>. If any token is invalid, the entire value of the <code>select</code> attribute is considered invalid.
+        represents the <a href="#dfn-matching-criteria">matching criteria</a> for <a href="#dfn-distribution">distributing</a> child <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> of the <a href="#dfn-shadow-host">shadow host</a>. Each token <strong>must</strong> be a <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selector</a>.
     </dd>
     <dt id="markup-content-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
     <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-insertion-point">insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
