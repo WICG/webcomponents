@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <link rel="stylesheet" href="spec.css" type="text/css">
 <link rel="stylesheet" href="prettify.css" type="text/css">
-<link rel="stylesheet" href="//www.w3.org/StyleSheets/TR/W3C-WD" type="text/css">
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/W3C-WD" type="text/css">
 </head>
 
 <body>
@@ -12,7 +12,7 @@
 <div class="head">
 
 <div class="logo">
-    <a href="//www.w3.org/"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+    <a href="http://www.w3.org/"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
 </div>
 
 <h1>Shadow DOM</h1>
@@ -35,7 +35,7 @@
     <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
 </dl>
 
-<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2012 <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>, <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2013 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), All Rights Reserved. W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
 
 <hr>
 
@@ -67,7 +67,7 @@
         <li><a href="#upper-boundary-encapsulation"><span class="section">4.1</span> Upper-boundary Encapsulation</a></li>
         <li><a href="#lower-boundary-encapsulation"><span class="section">4.2</span> Lower-boundary Encapsulation</a></li>
         <li><a href="#satisfying-matching-criteria"><span class="section">4.3</span> Satisfying Matching Criteria</a></li>
-        <li><a href="#selecting-nodes-distributed-to-insertion-points"><span class="section">4.4</span> Matching Children, Distributed To Insertion Points</a></li>
+        <li><a href="#distributed-pseudo-element"><span class="section">4.4</span> <code>::distributed()</code> pseudo-element</a></li>
         <li><a href="#multiple-shadow-trees"><span class="section">4.5</span> Hosting Multiple Shadow Trees</a></li>
         <li><a href="#reprojection"><span class="section">4.6</span> Reprojection</a></li>
         <li><a href="#composition"><span class="section">4.7</span> Composition</a></li>
@@ -303,14 +303,10 @@
     <li>a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> matches at least one <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set or the set is empty.</li>
 </ol>
 
-<h3 id="selecting-nodes-distributed-to-insertion-points">Matching Children, Distributed To Insertion Points</h3>
+<h3 id="distributed-pseudo-element"><code>::distributed()</code> pseudo-element</h3>
 
-
-<p>The <a href="http://dev.w3.org/csswg/selectors4/#structural-pseudos">tree-structural pseudo-classes</a> section in <a href="http://dev.w3.org/csswg/selectors4/">Selectors Level 4</a> is amended as follows:</p>
-<div class="monkeypatch">
-<h3>12.15 <a href="#dfn-distributed-pseudo-element"><code>::distributed()</code></a> pseudo-element</p></h3>
 <p>The <dfn id="dfn-distributed-pseudo-element">::distributed(selector)</dfn> is a functional pseudo-element taking a <a href="http://www.w3.org/TR/selectors-api2/#relative-selector">relative selector</a> as an argument. It represents a relationship between an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a>. The argument is <a href="http://dev.w3.org/csswg/selectors4/#scope-relative">scope-relative</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#contextual-reference-element-set">contextual reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-insertion-point">insertion point</a>.</p>
-</div>
+
 <div class="informative">
 <p>For example, the following selector represents the all <code>div</code> elements that that are descendants of an element, distributed into an insertion point</p>
 <pre><code class="prettyprint">
