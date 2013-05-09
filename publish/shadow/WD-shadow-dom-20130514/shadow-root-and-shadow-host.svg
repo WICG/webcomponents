@@ -1,0 +1,50 @@
+<svg viewbox="0 0 500 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <marker id="endArrow" viewBox="0 0 10 10" refX="1" refY="5" markerUnits="strokeWidth" orient="auto" markerWidth="5" markerHeight="4">
+            <polyline points="0,0 10,5 0,10 1,5" fill="black" />
+        </marker>
+
+        <symbol id="child" viewbox="0 0 100 50">
+            <desc>child element</desc>
+            <rect x="1" y="1" width="98" height="48" style="fill: white; stroke-width: 1; stroke: black"/>
+            <text x="50" y="30" fill="black" font-family="Helvetica" font-size="12" text-anchor="middle">child</text>
+        </symbol>
+    </defs>
+
+    <!-- line to host element -->
+    <line x1="110" y1="0" x2="110" y2="42" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+
+    <!-- lines from host element to its children -->
+    <line x1="90" y1="100" x2="50" y2="144" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+    <line x1="130" y1="100" x2="170" y2="144" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+    
+    <!-- line from host element to shadow root -->
+    <line x1="190" y1="75" x2="280" y2="75" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+
+    <!-- line from shadow root to host element -->
+    <path d="M290,50 S244,29 198,48" fill="none" stroke="navy" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#endArrow)"/>
+
+    <!-- line from shadow root to its children -->
+    <line x1="350" y1="100" x2="310" y2="144" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+    <line x1="390" y1="100" x2="430" y2="144" stroke="black" stroke-width="2" marker-end="url(#endArrow)"/>
+
+    <!-- host element -->
+    <g transform="translate(30,50)">
+        <title>host element</title>
+        <rect x="0" y="0" width="160" height="50" style="fill: white; stroke-width: 1; stroke: black"/>
+        <text x="80" y="30" fill="black" text-anchor="middle" font-family="Helvetica" font-size="12">shadow host</text>
+    </g>
+    <!-- children of host element -->
+    <use x="000" y="150" xlink:href="#child"/>
+    <use x="120" y="150" height="50" xlink:href="#child"/>
+
+    <!-- shadow root -->
+    <g transform="translate(290,50)">
+        <title>shadow root</title>
+        <rect x="0" y="0" width="160" height="50" style="fill: white; stroke-width: 1; stroke: black"/>
+        <text x="80" y="30" fill="black" text-anchor="middle" font-family="Helvetica" font-size="12">shadow root</text>
+    </g>
+    <!-- children of shadow root -->
+    <use x="260" y="150" xlink:href="#child"/>
+    <use x="380" y="150" xlink:href="#child"/>
+</svg>
