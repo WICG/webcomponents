@@ -611,6 +611,17 @@ Changing <a href="#markup-element-name"><code>name</code></a>, <a href="#markup-
 
 <div class="informative">This <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#represents">represent</a> content to the user.</div>
 
+<p>When an <a href="http://www.whatwg.org/specs/web-apps/current-work/#html-parser">HTML Parser</a> creates a <a href="#the-element-element"><code>element</code></a> element, the user agent <strong>must</strong> do the following:</p>
+<ul>
+    <li>The <a href="#dfn-last-completion-value">last completion value</a> be cleared</li>
+    <li>The element's <a href="#dfn-parser-inserted"><strong>parser-inserted</strong></a> flag be set</li>
+</ul>
+
+<p>Until the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> store the <a href="">completion value</a> of any <a href="http://www.whatwg.org/specs/web-apps/current-work/#execute-the-script-block">script block execution</a> as <a href="#dfn-last-completion-value">last completion value</a>, overwriting any previous value.</p>
+
+<p>When the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> run the following steps:</p>
+
+<div class="fixme" id="aw-snap">Well, this stinks. I was planning to just process a declaration here, but transferring callbacks may run script, which ain't being nice to Mr. Parser.</div>
 
 <!--
 
