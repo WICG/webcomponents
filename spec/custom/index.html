@@ -530,44 +530,6 @@ steps:</p>
     <li>Optional  <dfn id="dfn-declaration-property-bag">declaration property bag</dfn>, a <a href="http://www.w3.org/TR/WebIDL/#idl-dictionaries">dictionary</a>.</li>
 </ul>
 
-<p>To <dfn id="dfn-process-a-declaration">process</dfn> a <a href="#dfn-custom-element-declaration">custom element declaration</a>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>DOCUMENT</var>, the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> to which the <a href="#dfn-custom-element-declaration">custom element declaration</a> applies</dd>
-    <dd><var>NAME</var>, a <a href="#dfn-custom-element-name">custom element name</a></dd>
-    <dd><var>BASE</var>, <a href="#dfn-base-element-name">base element name</a>, optional</dd>
-<!--    <dd><var>CONSTRUCTOR</var>, <a href="#dfn-constructor-name">constructor name</a>, optional</dd> -->
-    <dd><var>PROPERTIES</var>, <a href="#dfn-declaration-property-bag">declaration property bag</a>, optional</dd>
-<dt>Output</dd>
-    <dd>None.</dd>
-</dl>
-<ol>
-    <li>If <var>BASE</var> is <strong>null</strong>, let <var>INTERFACE</var> be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a></li>
-    <li>Otherwise, let <var>INTERFACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>BASE</var> and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
-    <li>If such <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> does not exist, <strong>stop</strong>.</li>
-    <li>Let <var>DESCRIPTORS</var> be an empty <a href="http://es5.github.io/#x8.6"><code>Object</code></a></li>
-    <li>If <var>PROPERTIES</var> is not <strong>null</strong> and is an <a href="http://es5.github.io/#x8.6"><code>Object</code></a>:
-    <ol>
-        <li>Let <var>KEYS</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.4"><code>Object.getOwnPropertyNames</code></a> with <var>PROPERTIES</var> as argument</li>
-        <li>For each item <var>KEY</var> in <var>KEYS</var>
-        <ol>
-            <li>Let <var>DESCRIPTOR</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.3"><code>Object.getPropertyDescriptor</code></a> with <var>PROPERTIES</var> and <var>KEY</var> as arguments</li>
-            <li>Call <a href="http://es5.github.io/#x8.12.5"><code>[[Put]]</code></a> <a href="http://es5.github.io/#x8.6.2">internal method</a> of <var>DESCRIPTORS</var> with <var>KEY</var>, <var>DESCRIPTOR</var> and <strong>false</strong> as arguments</li>
-        </ol></li>
-    </ol></li>
-    <li>Let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <var>INTERFACE</var> and <var>DESCRIPTORS</var> as arguments</li>
-    <li>Run <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>NAME</var>, and <var>PROTOTYPE</var> as arguments.</li>
-</ol>
-</div>
-
-<div class="fixme">As designed now, declarations only provide a way to build elements in HTML namespace. Is this enough?</div>
-
-<div class="fixme">The algorithm currently does not use constructor name. It's tricky, because setting constructor on global object may run script, and we don't want to do that.</div>
-
-<p>The user agent <strong>may</strong> report any errors encountered while <a href="#dfn-process-a-declaration">processing a declaration</a> to the user (e.g. in a debugging console).</p>
-
 <h3 id="the-element-element">The <code>element</code> HTML element</h3>
 
 <p>The <a href="#the-element-element"><code>element</code></a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a> represents a <a href="#dfn-custom-element-declaration">custom element declaration</a>.</p>
@@ -611,17 +573,61 @@ Changing <a href="#markup-element-name"><code>name</code></a>, <a href="#markup-
 
 <div class="informative">This <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#represents">represent</a> content to the user.</div>
 
-<p>When an <a href="http://www.whatwg.org/specs/web-apps/current-work/#html-parser">HTML Parser</a> creates a <a href="#the-element-element"><code>element</code></a> element, the user agent <strong>must</strong> do the following:</p>
+<p>Every <a href="#the-element-element"><code>element</code></a> element has a <dfn id="dfn-parser-inserted">parser-inserted</dfn> flag, which indicates whether the element was inserted by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a>.</p>
+
+<p>Additionally, every <a href="">document</a> has a <dfn id="dfn-last-completion-value">last completion value</dfn>, associated with it. The user agent <strong>must</strong> store the <a href="http://es5.github.io/#x8.9">completion value</a> of any <a href="http://www.whatwg.org/specs/web-apps/current-work/#execute-the-script-block">script block execution</a> as <a href="#dfn-last-completion-value">last completion value</a>, overwriting any previous value.</p>
+
+<p>When an <a href="#the-element-element"><code>element</code></a> element gets <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> if the <a href="#dfn-parser-inserted">parser-inserted</a> flag is not set on this element, the user agent <strong>must</strong> synchronously run the <a href="#dfn-declaration-processing-algorithm">declaration processing algorithm</a> with the element as an argument, at the time <a href="http://dom.spec.whatwg.org/#node-is-inserted">node is inserted</a>, immediately after all <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> <a href="http://dom.spec.whatwg.org/#concept-node">nodes</a> are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into document</a>.</p>
+
+<p>The <dfn id="dfn-declaration-processing-algorithm">declaration processing algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> element</dd>
+<dt>Output</dd>
+    <dd>None.</dd>
+</dl>
+<ol>
+    <li>Let <var>DECLARATION</var> be the <a href="#dfn-custom-element-declaration">custom element declaration</a>, represented by <var>ELEMENT</var></li>
+    <li>Let <var>NAME</var> be the <a href="#dfn-custom-element-name">custom element name</a> in <var>DECLARATION</var></li>
+    <li>If <var>NAME</var> is <strong>null</strong>, <strong>stop</strong>.</li>
+    <li>Let <var>DOCUMENT</var> be <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a></li>
+    <li>Let <var>PROPERTIES</var> be <var>DOCUMENT</var>'s <a href="#dfn-last-completion-value">last completion value</a></li>
+    <li>Let <var>BASE</var> be the <a href="#dfn-base-element-name">base element name</a> in <var>DECLARATION</var></li>
+    <li>If <var>BASE</var> is <strong>null</strong>, let <var>INTERFACE</var> be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a></li>
+    <li>Otherwise, let <var>INTERFACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>BASE</var> and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
+    <li>If such <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> does not exist, <strong>stop</strong>.</li>
+    <li>Let <var>DESCRIPTORS</var> be an empty <a href="http://es5.github.io/#x8.6"><code>Object</code></a></li>
+    <li>If <var>PROPERTIES</var> is not <strong>null</strong> and is an <a href="http://es5.github.io/#x8.6"><code>Object</code></a>:
+    <ol>
+        <li>Let <var>KEYS</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.4"><code>Object.getOwnPropertyNames</code></a> with <var>PROPERTIES</var> as argument</li>
+        <li>For each item <var>KEY</var> in <var>KEYS</var>
+        <ol>
+            <li>Let <var>DESCRIPTOR</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.3"><code>Object.getPropertyDescriptor</code></a> with <var>PROPERTIES</var> and <var>KEY</var> as arguments</li>
+            <li>Call <a href="http://es5.github.io/#x8.12.5"><code>[[Put]]</code></a> <a href="http://es5.github.io/#x8.6.2">internal method</a> of <var>DESCRIPTORS</var> with <var>KEY</var>, <var>DESCRIPTOR</var> and <strong>false</strong> as arguments</li>
+        </ol></li>
+    </ol></li>
+    <li>Let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <var>INTERFACE</var> and <var>DESCRIPTORS</var> as arguments</li>
+    <li>Run <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>NAME</var>, and <var>PROTOTYPE</var> as arguments.</li>
+</ol>
+</div>
+
+<div class="fixme">As designed now, declarations only provide a way to build elements in HTML namespace. Is this enough?</div>
+
+<div class="fixme">The algorithm currently does not use constructor name. It's tricky, because setting constructor on global object may run script, and we don't want to do that.</div>
+
+<p>The user agent <strong>may</strong> report any errors encountered while <a href="#dfn-declaration-processing-algorithm">processing a declaration</a> to the user (e.g. in a debugging console).</p>
+
+<p>When the <a href="http://www.whatwg.org/specs/web-apps/current-work/#html-parser">HTML Parser</a> or the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a> creates a <a href="#the-element-element"><code>element</code></a> element, the user agent <strong>must</strong> do the following:</p>
 <ul>
-    <li>The <a href="#dfn-last-completion-value">last completion value</a> be cleared</li>
-    <li>The element's <a href="#dfn-parser-inserted"><strong>parser-inserted</strong></a> flag be set</li>
+    <li>Clear the <a href="#dfn-last-completion-value">last completion value</a></li>
+    <li>Set the element's <a href="#dfn-parser-inserted">parser-inserted</a> flag</li>
 </ul>
 
-<p>Until the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> store the <a href="">completion value</a> of any <a href="http://www.whatwg.org/specs/web-apps/current-work/#execute-the-script-block">script block execution</a> as <a href="#dfn-last-completion-value">last completion value</a>, overwriting any previous value.</p>
+<p>When the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> run the <a href="#dfn-declaration-processing-algorithm">declaration processing algorithm</a> with the element as arugment.</p>
 
-<p>When the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> run the following steps:</p>
-
-<div class="fixme" id="aw-snap">Well, this stinks. I was planning to just process a declaration here, but transferring callbacks may run script, which ain't being nice to Mr. Parser.</div>
+<div class="fixme" id="aw-snap">Processing a declaration invokes element registration algorithm, which in turn invokes definition construction algorith, which invokes transferring callback algorith, which has potential for running script (getting a property). The effect of is that this becomes another place where parser could run script.</div>
 
 <!--
 
