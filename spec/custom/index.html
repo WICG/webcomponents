@@ -280,6 +280,7 @@ The effect of this statement is that any element with a valid custom element nam
 </dl>
 <ol>
     <li>Let <var>ERROR</var> be <code>None</code></li>
+   <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>NAME</var> to lowercase</li>
     <li>If <var>NAME</var> is an invalid <a href="#dfn-custom-element-name">custom element name</a>, set <var>ERROR</var> to <code>InvalidName</code> and <strong>stop</strong>.</li>
     <li>If <var>PROTOTYPE</var> and <var>DOCUMENT</var> are from different <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing contexts</a>, set <var>ERROR</var> to <code>InvalidContext</code> and <strong>stop</strong>.</li>
     <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
@@ -294,7 +295,6 @@ The effect of this statement is that any element with a valid custom element nam
         <li>is <em>not</em> an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> of a <a href="#dfn-custom-element">custom element</a></li>
     </ul></li>
     <li>If <var>BASE</var> is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> or <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, associated with <var>BASE</var> <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a></li>
-    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var> and <var>NAMESPACE</var>, set <var>ERROR</var> to <code>DuplicateDefinition</code> and <strong>stop</strong>.</li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
