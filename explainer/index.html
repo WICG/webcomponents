@@ -528,7 +528,7 @@ function showTime(b) {
     <li><code>removed</code>&mdash;called after the custom element is removed from the tree. A custom element can stop timers that it does not need when it is not in the tree.
 </ul>
 
-<p>The callbacks are invoked with this as the instance element.</p>
+<p>The callbacks are invoked with <code>this</code> as the instance element.</p>
 
 <p>The inserted and removed callbacks may be called multiple times if the element as the element is inserted and removed from the tree.</p>
 
@@ -564,7 +564,7 @@ function showTime(b) {
 <p>There are several opportunities for error when setting up custom elements:</p>
 <ul>
     <li>The tag name of the element does not match the value of the <code>extends</code> attribute of the custom element, eg. <code>&lt;div is=&quot;x-fancybutton&quot;&gt;</code>, but <code>&lt;element name=&quot;x-fancybutton&quot; extends=&quot;button&quot;&gt;</code>. In this case, the is attribute is thrown away while parsing.</li>
-    <li>The value of the <code>is</code> attribute does not correspond to any currently defined element. This situation is treated as if the definitions hasn't been loaded yet, and the element will be upgraded as soon as the definition arrives.</li>
+    <li>The value of the <code>is</code> attribute does not correspond to any currently defined element. This situation is treated as if the definition hasn't been loaded yet, and the element will be upgraded as soon as the definition arrives.</li>
     <li>The value of the <code>extends</code> attribute does not correspond to any currently defined element. In this case, the element's definition is put on hold as if it hasn't loaded, until the element mentioned in the <code>extends</code> attribute is loaded.</li>
     <li>The value of the <code>is</code> attribute does not begin with an <code>x-</code>. This is resolved by dropping the <code>is</code> attribute altogether.</li>
     <li>The value of the <code>name</code> attribute does not begin with an <code>x-</code>. The definition is considered invalid and is ignored.</li>
@@ -693,7 +693,7 @@ function showTime(b) {
 
 <p>Those events that do cross the shadow DOM <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> are <a href="../spec/shadow/index.html#event-retargeting">retargeted</a>&mdash;their <code>target</code> and <code>relatedTarget</code> values are modified to point to the element that <a href="../spec/shadow/index.html#dfn-shadow-host">hosts</a> the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>.</p>
 
-<p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting (what? the element just reported that the mouse just moved from itself back to itself?!)</p>
+<p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting. (What? the element just reported that the mouse just moved from itself back to itself?!)</p>
 
 <h3 id="making-more-shadows">Making More Shadows</h3>
 
@@ -713,7 +713,7 @@ var shadow = new ShadowRoot(anyElement);
 
 <h2 id="decorators-vs-custom-elements">Decorators vs. Custom Elements</h2>
 
-<p>Decorator shadows are never accessible with DOM. When the decorator is created, the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.</p>
+<p>Decorator shadows are never accessible through the DOM. When the decorator is created, the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.</p>
 
 <p>An easy way to think of the decorator shadow is a projection. You can see it, but never can actually touch it.</p>
 
@@ -733,7 +733,7 @@ var shadow = new ShadowRoot(anyElement);
 
 <h2 id="isolation-confinement-and-encapsulation">Isolation, Confinement and Encapsulation</h2>
 
-<p><dfn id="component-isolation-definition">Component isolation</dfn> can be viewed as combination of two parts:</p>
+<p><dfn id="component-isolation-definition">Component isolation</dfn> can be viewed as a combination of two parts:</p>
 <ul>
     <li><dfn id="confinement-definition">confinement</dfn>, when the document wants to prevent a component from accessing document information, and</li>
     <li><dfn id="encapsulation-definition">encapsulation</dfn>, when the component wants to prevent the document from accessing inner state of the component.</li>
@@ -929,7 +929,7 @@ ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#node
 <dl>
 <dt><code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code></dt>
 <dd>
-    <p>Represents an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in a <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> is replaced with the elements' children at rendering time. The <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element itself is never rendered.</p>
+    <p>Represents an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in a <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> is replaced with the element's children at rendering time. The <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element itself is never rendered.</p>
     <p>Context: Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</p>
     <p>Children: anything (fallback content)</p>
     <p>Attributes:</p>
@@ -981,7 +981,7 @@ Object.getPrototypeOf(FancyButton.prototype) ===
 
 document.body.lastChild === b &rArr; true
 b.tagName &rArr; &quot;button&quot;
-b.outerHTML &rArr; &quot;&lt;button is=&quot;FancyButton&quot;&gt;&lt;/button.html&gt;&quot;
+b.outerHTML &rArr; &quot;&lt;button is=&quot;FancyButton&quot;&gt;&lt;/button&gt;&quot;
 b instanceof FancyButton &rArr; true
 b instanceof HTMLButtonElement &rArr; true
 </code></pre>
