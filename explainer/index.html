@@ -92,7 +92,6 @@
     </ol></li>
     <li><a href="#decorators-vs-custom-elements"><span class="section">7</span> Decorators vs. Custom Elements</a></li>
     <li><a href="#external-custom-elements-and-decorators"><span class="section">8</span> External Custom Elements and Decorators</a></li>
-    <li><a href="#isolation-confinement-and-encapsulation"><span class="section">9</span> Isolation, Confinement and Encapsulation</a></li>
     <li><a href="#example"><span class="section">10</span> Example</a></li>
     <li><a href="#appendix-a-interfaces">Appendix A. Interfaces</a></li>
     <li><a href="#appendix-b-html-elements">Appendix B. HTML Elements</a></li>
@@ -730,36 +729,6 @@ var shadow = new ShadowRoot(anyElement);
 </code></pre>
 
 <p>Only <code>decorator</code> elements, <code>element</code> elements and <code>script</code> elements are interpreted by the UA. The DOM of this document is not available to script. The origin of the embedding document is used as the origin of the embedded document. Script runs as though it was async defer. The custom element definitions and decorators are not made available until the scripts have run. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.</p>
-
-<h2 id="isolation-confinement-and-encapsulation">Isolation, Confinement and Encapsulation</h2>
-
-<p><dfn id="component-isolation-definition">Component isolation</dfn> can be viewed as a combination of two parts:</p>
-<ul>
-    <li><dfn id="confinement-definition">confinement</dfn>, when the document wants to prevent a component from accessing document information, and</li>
-    <li><dfn id="encapsulation-definition">encapsulation</dfn>, when the component wants to prevent the document from accessing inner state of the component.</li>
-</ul>
-
-<p>Component encapsulation is partially enforced with shadow DOM, ensuring that shadow DOM nodes never appear in the event dispatch, range, focus-related DOM accessors or any APIs that query DOM nodes. It is up the author of the component to choose whether the inner state is exposed.</p>
-
-<p>Component confinement is trickier, but possible using existing primitives, such as <code>iframe</code> or workers. The general solution would be to treat the component as the corruptible agent, which is responsible for the component user interface and interaction with the document. The component would then load a worker (or an <code>iframe</code>) and communicate with it using <code>postMessage</code>:</p>
-
-<pre class="prettyprint"><code>
-&lt;!--- located at http://example.com/adorable/button --&gt;
-&lt;element name=&quot;x-adore-button&quot; extends=&quot;button&quot;&gt;
-    &lt;script&gt;
-        var service = new Worker(&quot;http://example.com/adorable/service/worker.js&quot;);
-        service.onmessage = function(event) {
-            // process responses from the service.
-            &hellip;
-        }
-        // set up UI.
-        &hellip;
-        // start interacting with the worker.
-        service.postMessage(&quot;hello&quot;);
-    &lt;/script&gt;
-    &lt;template&gt;I adore this&lt;/template&gt;
-&lt;/element&gt;
-</code></pre>
 
 <h2 id="example">Example</h2>
 
