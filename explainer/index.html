@@ -131,7 +131,7 @@
 
 <h2 id="template-section">Templates</h2>
 
-<p>The <code id="#template-definition">&lt;template&gt;</code> element contains markup intended to be used later&mdash;by script or some other template-aware consumer (like <code>&lt;decorator&gt;</code> and <code>&lt;element&gt;</code> elements that are described later).</p>
+<p>The <code id="#template-definition">&lt;template&gt;</code> element contains markup intended to be used later by script or by a <code>&lt;decorator&gt;</code> element, which consumes a template.</p>
 
 <p>The content of the <code>&lt;template&gt;</code> element is parsed by the parser, but it is inert: scripts don't run, images aren't downloaded, and so on. The <code>&lt;template&gt;</code> element is not rendered.</p>
 
@@ -154,7 +154,7 @@ var t = document.querySelector("#commentTemplate");
 someElement.appendChild(t.content.cloneNode());
 </code></pre>
 
-<p>Appending inert DOM to a document node makes it go "live", as if the DOM tree was just parsed from markup (setting innerHTML).</p>
+<p>Because what is contained in the template is not in the document, but in the <code>content</code> document fragment, appending a copy of the template content in this way makes it &quot;live&quot; so scripts run and images are fetched at this point.</p>
 
 <h2 id="decorator-section">Decorators</h2>
 
