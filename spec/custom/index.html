@@ -578,10 +578,14 @@ Currently, the HTML spec has sequential processing of steps in <a href="http://w
     <li>Let <var>PROPERTIES</var> be the <a href="#dfn-declaration-property-bag">declaration property bag</a> in <var>DECLARATION</var></li>
     <li>Let <var>BASE</var> be the <a href="#dfn-base-element-name">base element name</a> in <var>DECLARATION</var></li>
     <li>Let <var>PROTOTYPE</var> be the result of <a href="#dfn-create-custom-element-prototype">creating custom element prototype</a> with <var>BASE</var> and <var>PROPERTIES</var> as arguments</li>
-    <li>If <var>PROTOTYPE</var> is not <strong>nothing</strong>, run <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>NAME</var>, and <var>PROTOTYPE</var> as arguments.</li>
+    <li>If <var>PROTOTYPE</var> is <strong>nothing</strong>, <strong>stop</strong>.</li>
+    <li>Run <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>NAME</var>, and <var>PROTOTYPE</var> as arguments</li>
+    <li>Let <var>KEY</var> be the <a href="#dfn-constructor-name">constructor name</a> in <var>DECLARATION</var></li>
+    <li>Let <var>CONSTRUCTOR</var> be the result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var> as argument</li>
+    <li>Let <var>DESCRIPTOR</var> be a <a href="http://es5.github.io/#x8.10">property descriptor</a> <code>{[[Value]]:</code><var>CONSTRUCTOR</var><code>, [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: true}</code></li>
+    <li>Call <a href="http://es5.github.io/#x8.12.9"><code>[[DefineOwnProperty]]</code></a> <a href="http://es5.github.io/#x8.6.2">internal method</a> of the <a href="http://es5.github.io/#x15.1">global object</a> with <var>KEY</var>, <var>CONSTRUCTOR</var>, and <strong>false</strong> as arguments</li>
 </ol>
 </div>
-
 
 <p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-declaration-processing-queue">declaration processing queue</dfn>, which is initially empty. Each item in the queue consists of a <a href="#dfn-custom-element-declaration">custom element declaration</a> and a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
@@ -677,13 +681,12 @@ Changing <a href="#markup-element-name"><code>name</code></a>, <a href="#markup-
     <li>If <var>BASE</var> is empty, let <var>INTERFACE</var> be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a></li>
     <li>Otherwise, let <var>INTERFACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>BASE</var> and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
     <li>If such <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> does not exist, <strong>stop</strong>.</li>
+    <li>Let <var>CONSTRUCTOR</var> be the value of <var>ELEMENT</var>'s <a href="#markup-element-constructor"><code>constructor</code></a> attribute</li>
     <li>Let <var>DOCUMENT</var> be <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a></li>
     <li>Let <var>PROPERTIES</var> be <var>DOCUMENT</var>'s <a href="#dfn-last-completion-value">last completion value</a></li>
-    <li>Let <var>DECLARATION</var> be the tuple of (<var>NAME</var>, <var>BASE</var>, and <var>PROPERTIES</var>)</li>
+    <li>Let <var>DECLARATION</var> be the set of (<var>NAME</var>, <var>BASE</var>, <var>CONSTRUCTOR</var>, <var>PROPERTIES</var>)</li>
 </ol>
 </div>
-
-<div class="fixme" id="bug-22077"><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=22077">Bug 22077</a>: The algorithm currently does not use constructor name. It's tricky, because setting constructor on global object may run script, and we don't want to do that.</div>
 
 <p>Every <a href="#the-element-element"><code>element</code></a> element has a <dfn id="dfn-parser-inserted">parser-inserted</dfn> flag, which indicates whether the element was inserted by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a>.</p>
 
