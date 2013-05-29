@@ -74,13 +74,13 @@
     </ol></li>
     <li><a href="#custom-element-section"><span class="section">5</span> Custom Elements</a>
     <ol>
-        <li><a href="#presentation"><span class="section">5.1</span> Presentation</a></li>
-        <li><a href="#using-custom-elements-in-markup"><span class="section">5.2</span> Using Custom Elements in Markup</a></li>
-        <li><a href="#using-custom-elements-in-script"><span class="section">5.3</span> Using Custom Elements in Script</a></li>
-        <li><a href="#element-upgrade"><span class="section">5.4</span> Element Upgrade</a></li>
-        <li><a href="#lifecycle-methods"><span class="section">5.5</span> Lifecycle Methods</a></li>
-        <li><a href="#extending-custom-elements"><span class="section">5.6</span> Extending Custom Elements</a></li>
-        <li><a href="#error-handling"><span class="section">5.7</span> Error Handling</a></li>
+        <li><a href="#defining-a-custom-element"><span class="section">5.1</span> Defining a Custom Element</a></li>
+        <li><a href="#methods-and-properties"><span class="section">5.2</span> Methods and Properties</a></li>
+        <li><a href="#lifecycle-callbacks"><span class="section">5.3</span> Lifecycle Callbacks</a></li>
+        <li><a href="#using-custom-elements-in-markup"><span class="section">5.4</span> Using Custom Elements in Markup</a></li>
+        <li><a href="#using-custom-elements-in-script"><span class="section">5.5</span> Using Custom Elements in Script</a></li>
+        <li><a href="#element-upgrade"><span class="section">5.6</span> Element Upgrade</a></li>
+        <li><a href="#extending-custom-elements"><span class="section">5.7</span> Extending Custom Elements</a></li>
     </ol></li>
     <li><a href="#shadow-dom-section"><span class="section">6</span> Shadow DOM</a>
     <ol>
@@ -329,245 +329,185 @@ details[open] {
 
 <h2 id="custom-element-section">Custom Elements</h2>
 
-<p>Custom elements are new types of DOM elements that can be defined by authors.</p>
+<p>Custom elements are new types of DOM elements that can be defined by authors. Unlike a decorator, which can be applied or unapplied to a given element, the element's type is fixed. This permanence means custom elements can also define new state and behavior, which decorators can't do because of their ephemeral nature.</p>
 
-<p>Custom elements can define presentation aspects like decorators. Unlike a decorator, which can be applied or unapplied to a given element, the element's type is fixed. So custom elements can also define new state and behavior, which decorators can't do because of their ephemeral nature.</p>
+<h3 id="defining-a-custom-element">Defining a Custom Element</h3>
 
-<p>The element element defines a custom element. It specifies the type of element it's a refinement of using the extends attribute:</p>
+<p>The <code>&lt;element&gt;</code> element defines a custom element. It specifies the type of element it's a refinement of using the <code>extends</code> attribute:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;
+&lt;element extends=&quot;button&quot; name=&quot;fancy-button&quot;&gt;
     &hellip;
 &lt;/element&gt;
 </code></pre>
 
-<p>The extends attribute specifies the tag name of the kind of element this element is an extension of. Instances of the custom element will have the tag name specified here.</p>
+<p>The <code>extends</code> attribute specifies the tag name of the kind of element this element is an extension of. Instances of the custom element will have the tag name specified here.</p>
 
-<p>The name attribute specifies the name of the custom element, by which it will be referred to in markup. The naming space of the name is the same as element tag names, and to avoid collisions, the <code>x-</code> prefix is required for custom element value.</p>
-
-<p>Different user agents interpret HTML elements differently, however all of their interpretations are guided by the semantics of HTML.</p>
+<p>The <code>name</code> attribute specifies the name of the custom element, by which it will be referred to in markup. These names must include a hyphen.</p>
 
 <p>Because not all user agents support custom elements, authors should extend the HTML element that has the closest meaning to their new kind of element. For example, if they are defining a custom element that is interactive and responds to clicks by doing some action, they should extend button.</p>
 
-<p>When there isn't a HTML element that is semantically close to their custom element authors should extend a semantically neutral element like span.</p>
+<p>When there isn't a HTML element that is semantically close to their custom element, authors can omit the <code>extends</code> attribute. These elements will use the value of the <code>name</code> attribute as a tag name. For this reason, these kinds of elements are called <i>custom tags.</i> A user agent that does not support custom elements will treat this as the semantically undifferentiated <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlunknownelement">HTMLUnknownElement</a>.</p>
 
-<h3 id="presentation">Presentation</h3>
+<h3 id="methods-and-properties">Methods and Properties</h3>
 
-<p>A custom element may optionally include a template:
+<p>You can define a custom element's script API by putting methods and properties on the custom element's prototype object using a nested <code>&lt;script&gt;</code> element:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;
-    &lt;template&gt;
-        &lt;style scoped&gt;
-            :host { display: contents; }
-            div.fancy {
-                &hellip;
-            }
-        &lt;/style&gt;
-        &lt;div class=&quot;fancy&quot;&gt;
-            &lt;content&gt;&lt;/content&gt;
-            &lt;div id=&quot;t&quot;&gt;&lt;/div&gt;
-            &lt;div id=&quot;l&quot;&gt;&lt;/div&gt;
-            &lt;div id=&quot;b&quot;&gt;&lt;/div&gt;
-            &lt;div id=&quot;r&quot;&gt;&lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/template&gt;
+&lt;element extends=&quot;button&quot; name=&quot;fancy-button&quot;&gt;
+  &lt;script&gt;
+    ({
+      razzle: function () {
+        &hellip;
+      },
+      dazzle: function () {
+        &hellip;
+      }
+    });
+  &lt;/script&gt;
 &lt;/element&gt;
 </code></pre>
 
-<p>If a custom element includes a template, a copy of the template content is inserted into the custom element's shadow DOM by the generated constructor. Shadow DOM is described below.</p>
+<p>The properties of the last value of the script will be copied to a prototype object created for you. In the above example, <code>fancy-button</code> elements will have methods <code>razzle</code> and <code>dazzle</code>.</p>
+
+<h3 id="lifecycle-callbacks">Lifecycle Callbacks</h3>
+
+<p>Custom elements have lifecycle callbacks which can be used to set up presentational aspects of a custom element. These are: <code>readyCallback</code>, which is called after a custom element is created; <code>insertedCallback</code>, which is called after a custom element is inserted into a document; and <code>removedCallback</code>, which is called after a custom element is removed from a document.</p>
+
+<p>The following example demonstrates using a template, Shadow DOM (described in detail below), and lifecycle callbacks to create a clock element:</p>
+
+<pre class="prettyprint"><code>
+&lt;element name=&quot;tick-tock-clock&quot;&gt;
+  &lt;template&gt;
+    &lt;span id=&quot;hh&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;sep&quot;&gt;:&lt;/span&gt;
+    &lt;span id=&quot;mm&quot;&gt;&lt;/span&gt;
+  &lt;/template&gt;
+  &lt;script&gt;
+    var template = document.currentScript.parentNode.querySelector('template');
+
+    function start() {
+      this.tick();
+      this._interval = window.setInterval(this.tick.bind(this), 1000);
+    }
+    function stop() {
+      window.clearInterval(this._interval);
+    }
+    function fmt(n) {
+      return (n < 10 ? '0' : '') + n;
+    }
+
+    ({
+      readyCallback: function () {
+        this._root = this.createShadowRoot();
+        this._root.appendChild(template.content.cloneNode());
+        if (this.parentElement) {
+          start.call(this);
+        }
+      },
+      insertedCallback: start,
+      removedCallback: stop,
+      tick: function () {
+        var now = new Date();
+        this._root.querySelector('hh').textContent = fmt(now.getHours());
+        this._root.querySelector('sep').style.visibility =
+            now.getSeconds() % 2 ? 'visible' : 'hidden';
+        this._root.querySelector('mm').textContent = fmt(now.getMinutes());
+      }
+    });
+  &lt;/script&gt;
+&lt;/element&gt;
+</code></pre>
 
 <h3 id="using-custom-elements-in-markup">Using Custom Elements in Markup</h3>
 
 <p>Because custom elements use existing HTML tag names&mdash;<code>div</code>, <code>button</code>, <code>option</code>, and so on&mdash;we need to use an attribute to specify when an author intends to use a custom element. The attribute name is <code>is</code>, and its value is the name of a custom element. For example:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot;&gt;  &lt;!-- definition --&gt;
+&lt;element extends=&quot;button&quot; name=&quot;fancy-button&quot;&gt;  &lt;!-- definition --&gt;
     &hellip;
 &lt;/element&gt;
 </code></pre>
 
 <pre class="prettyprint"><code>
-&lt;button is=&quot;x-fancybutton&quot; onclick=&quot;showTimeClicked(event);&quot;&gt;  &lt;!-- use --&gt;
+&lt;button is=&quot;fancy-button&quot; onclick=&quot;showTimeClicked(event);&quot;&gt;  &lt;!-- use --&gt;
     Show time
 &lt;/button&gt;
 </code></pre>
 
 <h3 id="using-custom-elements-in-script">Using Custom Elements in Script</h3>
 
-<p>You can instantiate a custom element from script using the standard <code>document.createElement</code> facility:</p>
+<p>As an alternative to the <code>&lt;element&gt;</code> element, you can also register custom elements from script using the <code>register</code> method. In this case you can set up the element's methods and properties by manipulating the prototype object directly. <code>register</code> returns a function that can be called to create an instance of the custom element:</p>
 
 <pre class="prettyprint"><code>
-var b = document.createElement("x-fancybutton");
-alert(b.outerHTML); // will display '&lt;button is=&quot;x-fancybutton&quot;&gt;&lt;/button&gt;'
-</code></pre>
-
-<p>Also, you can specify the <code>constructor</code> attribute on the <code>&lt;element&gt;</code> element to explicitly add a JavaScript property for the element constructor on the window object. That constructor can then be used to create instances of the custom element:</p>
-
-<pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot; constructor=&quot;FancyButton&quot;&gt;
-    &hellip;
-&lt;/element&gt;
-
-&hellip;
-
+var p = Object.create(HTMLButtonElement.prototype, {});
+p.razzle = function () { &hellip; };
+p.dazzle = function () { &hellip; };
+var FancyButton = document.register('button', 'fancy-button', {prototype: p});
 var b = new FancyButton();
 document.body.appendChild(b);
+b.addEventListener('click', function (event) {
+    event.target.dazzle();
+});
 </code></pre>
 
-<p>A custom element can expose API to script by putting properties on the constructor's prototype object, in a <code>&lt;script&gt;</code> that is nested inside the <code>&lt;element&gt;</code> element:</p>
+<p>Custom elements defined either using <code>&lt;element&gt;</code> or <code>register</code> can be instantiated from script using the standard <code>createElement</code> method:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;x-fancybutton&quot; constructor=&quot;FancyButton&quot;&gt;
-    &hellip;
-    &lt;script&gt;
-    FancyButton.prototype.razzle = function () {
-        &hellip;
-    };
-    FancyButton.prototype.dazzle = function () {
-        &hellip;
-    };
-    &lt;/script&gt;
-&lt;/element&gt;
-
-&hellip;
-
-&lt;script&gt;
-    var b = new FancyButton();
-    b.textContent = &quot;Show time&quot;;
-    document.body.appendChild(b);
-    b.addEventListener(&quot;click&quot;, function (event) {
-        event.target.dazzle();
-    });
-    b.razzle();
-&lt;/script&gt;
-</code></pre>
-
-<p>In order to provide graceful fallback behavior, the this pointer within the <code>&lt;script&gt;</code> element points to parent HTMLElementElement instance:</p>
-
-<pre class="prettyprint"><code>
-&lt;element extends=&quot;table&quot; name=&quot;x-chart&quot; constructor=&quot;Chart&quot;&gt;
-    &lt;script&gt;
-        if (this === window)
-            // Use polyfills to emulate custom elements.
-            // &hellip;
-        else {
-            // &hellip;
-        }
-    &lt;/script&gt;
-&lt;/element&gt;
-</code></pre>
-
-<p>Mechanically, the code inside of the <code>&lt;script&gt;</code> element when it is a child of either <code>&lt;element&gt;</code> or <code>&lt;decorator&gt;</code> elements is executed like this:</p>
-
-<pre class="prettyprint"><code>
-(function() {
-    // code goes here.
-}).call(parentInstance);
-</code></pre>
-
-<p>In situations where having constructors on window object is undesirable, the custom element author can use <code>generatedConstructor</code> property of the <code>HTMLElementElement</code>:</p>
-
-<pre class="prettyprint"><code>
-&lt;element extends=&quot;table&quot; name=&quot;x-chart&quot;&gt;
-    &lt;script&gt;
-        // &hellip;
-        var Chart = this.generatedConstructor;
-        Chart.prototype.shizzle = function() { /* &hellip; */ };
-        // &hellip;
-    &lt;/script&gt;
-&lt;/element&gt;
-</code></pre>
-
-<p>One cannot create a custom element by setting an <code>is</code> attribute on an existing DOM element. Doing so will result in a no-op:</p>
-
-<pre class="prettyprint"><code>
-var div = document.createElement("div");
-div.setAttribute("is", "foo");
-alert(div.is); // displays null
-alert(div.outerHTML); // displays &lt;div&gt;&lt;/div&gt;
+var b = document.createElement('button', 'fancy-button');
+alert(b.outerHTML); // will display '&lt;button is=&quot;fancy-button&quot;&gt;&lt;/button&gt;'
+var c = document.createElement('tick-tock-clock');
+alert(c.outerHTML); // will display '&lt;tick-tock-clock&gt;&lt;/tick-tock-clock&gt;'
 </code></pre>
 
 <h3 id="element-upgrade">Element Upgrade</h3>
 
-<p>As the definition of a custom element is loaded, each element with the <code>is</code> attribute set to the name of that custom element is upgraded to the custom element. The upgrade process should be perceptually equivalent to removal of the element from the document and its replacement by the custom element instance.</p>
+<p>As the definition of a custom element is loaded, each element that matches the definition is upgraded. The upgrade process updates the prototype of the element, which makes the element's API available to script, and invokes lifecycle callbacks.</p>
 
-<p>As each element is replaced, a non-bubbling, non-cancellable event is dispatched to the element that has been removed. Scripts that want to delay interacting with part of a document until the custom elements are present can listen to this event:</p>
-
-<pre class="prettyprint"><code>
-function showTimeClicked(event) {
-    // event.target may be an HTMLButtonElement or a FancyButton
-
-    if (!event.target.razzle) {
-        // razzle, part of the FancyButton API, is missing
-        // so upgrade has not happened yet
-        event.target.addEventListener('upgrade', function (upgradeEvent) {
-            showTime(upgradeEvent.replacement);
-        });
-        return;
-    }
-
-    showTime(event.target);
-}
-
-function showTime(b) {
-    // b is FancyButton
-}
-</code></pre>
-
-<p>Authors who want to avoid the flash of unstyled content can use CSS to change the presentation of the ordinary element until the custom element is loaded.</p>
-
-<h3 id="lifecycle-methods">Lifecycle Methods</h3>
-
-<p>A custom element can optionally subscribe to these four lifecycle callbacks:</p>
-<ul>
-    <li><code>created</code>&mdash;called by the generated constructor, passing a <code>ShadowRoot</code> instance, created from the <code>&lt;template&gt;</code> element or <code>null</code>, if there was no <code>&lt;template&gt;</code> element in the declaration.
-    <li><code>attributeChanged</code>&mdash;called whenever an attribute of the element is changed. The arguments are the name, old value and the new value.
-    <li><code>inserted</code>&mdash;called after the custom element is inserted into the tree. If a custom element needs to start loading resources or start timers, it can do that in this method.
-    <li><code>removed</code>&mdash;called after the custom element is removed from the tree. A custom element can stop timers that it does not need when it is not in the tree.
-</ul>
-
-<p>The callbacks are invoked with <code>this</code> as the instance element.</p>
-
-<p>The inserted and removed callbacks may be called multiple times if the element as the element is inserted and removed from the tree.</p>
-
-<p>You can subscribe to these callbacks by invoking <code>HTMLElementElement.lifecycle</code> method:</p>
+<p>You can avoid the flash of unstyled content by using the CSS <code>:unresolved</code> pseudoclass. This pseudoclass will match any custom element that does not have a definition available yet:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;time&quot; name=&quot;x-clock&quot;&gt;
-&lt;script&gt;
-// &hellip;
-
-        this.lifecycle({
-            inserted: function() { this.startUpdatingClock(); },
-            removed: function() { this.stopUpdatingClock(); }
-        });
-
-// &hellip;
-&lt;/script&gt;
-&lt;/element&gt;
+&lt;style&gt;
+tick-tock-clock:unresolved {
+  content: '??:??';  
+}
+button[is=fancy-button]:unresolved {
+  border: 1px solid gray;
+  background: lightgray;
+  color: gray;
+}
+&lt;/style&gt;
+&lt;tick-tock-clock&gt;&lt;/tick-tock-clock&gt; &lt;!-- will show ??:?? --&gt;
 </code></pre>
+
+<p>This pseudoclass can also be used by script to avoid interacting with elements that have not been upgraded yet:</p>
+
+<pre class="prettyprint"><code>
+// Chime ALL the clocks!
+Array.prototype.forEach.call(
+  document.querySelectorAll('tick-tock-clock<b>:not(:unresolved)</b>'),
+  function (clock) { clock.chime(); });
+</code></pre>
+
+<p>An element that wants to notify other components that it has been upgraded could dispatch a custom event to do so. Scripts that want to delay interacting with the element until it is upgraded can listen to this event.</p>
 
 <h3 id="extending-custom-elements">Extending Custom Elements</h3>
 
-<p>In addition to HTML elements, you can also extend a custom element by specifying the custom element's name as the value of the extends attribute in the <code>&lt;element&gt;</code> element:</p>
+<p>In addition to HTML elements, you can also extend a custom element by specifying the custom element's name as the value of the <code>extends</code> attribute in the <code>&lt;element&gt;</code> element, or by setting up a prototype chain that includes another custom element prototype:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;x-clock&quot; name=&quot;x-grandfatherclock&quot;&gt;
+&lt;element extends=&quot;tick-tock-clock&quot; name=&quot;grand-father-clock&quot;&gt;
     &hellip;
 &lt;/element&gt;
+&lt;script&gt;
+var p = Object.create(Object.getPrototypeOf(document.createElement('tick-tock-clock')));
+p.popOutBirdie = function () { &hellip; }
+var CuckooClock = document.register('cuckoo-clock', {prototype: p});
+var c = new CuckooClock();
+c.tick();         // inherited from tick-tock-clock
+c.popOutBirdie(); // specific to cuckoo-clock
+&lt;/script&gt;
 </code></pre>
-
-<h3 id="error-handling">Error Handling</h3>
-
-<p>There are several opportunities for error when setting up custom elements:</p>
-<ul>
-    <li>The tag name of the element does not match the value of the <code>extends</code> attribute of the custom element, eg. <code>&lt;div is=&quot;x-fancybutton&quot;&gt;</code>, but <code>&lt;element name=&quot;x-fancybutton&quot; extends=&quot;button&quot;&gt;</code>. In this case, the is attribute is thrown away while parsing.</li>
-    <li>The value of the <code>is</code> attribute does not correspond to any currently defined element. This situation is treated as if the definition hasn't been loaded yet, and the element will be upgraded as soon as the definition arrives.</li>
-    <li>The value of the <code>extends</code> attribute does not correspond to any currently defined element. In this case, the element's definition is put on hold as if it hasn't loaded, until the element mentioned in the <code>extends</code> attribute is loaded.</li>
-    <li>The value of the <code>is</code> attribute does not begin with an <code>x-</code>. This is resolved by dropping the <code>is</code> attribute altogether.</li>
-    <li>The value of the <code>name</code> attribute does not begin with an <code>x-</code>. The definition is considered invalid and is ignored.</li>
-</ul>
 
 <h2 id="shadow-dom-section">Shadow DOM</h2>
 
