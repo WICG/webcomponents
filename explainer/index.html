@@ -91,10 +91,7 @@
     </ol></li>
     <li><a href="#decorators-vs-custom-elements"><span class="section">7</span> Decorators vs. Custom Elements</a></li>
     <li><a href="#external-custom-elements-and-decorators"><span class="section">8</span> External Custom Elements and Decorators</a></li>
-    <li><a href="#example"><span class="section">10</span> Example</a></li>
-    <li><a href="#appendix-a-interfaces">Appendix A. Interfaces</a></li>
-    <li><a href="#appendix-b-html-elements">Appendix B. HTML Elements</a></li>
-    <li><a href="#appendix-c-custom-element-constructor-properties">Appendix C. Custom Element Constructor Properties</a></li>
+    <li><a href="#appendix-a-interfaces">Appendix A. Interfaces and Elements</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
 
@@ -614,134 +611,30 @@ var shadow = anyElement.createShadowRoot();
 
 <p>Only <code>&lt;decorator&gt;</code> elements and <code>&lt;element&gt;</code> elements are interpreted by the user agent, although the DOM of this document is available to script through the <a href="../spec/imports/index.html#dfn-html-link-element-import"><code>import</code></a> property. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.</p>
 
-<h2 id="appendix-a-interfaces">Appendix A. Interfaces</h2>
+<h2 id="appendix-a-interfaces">Appendix A. Interfaces and Elements</h2>
 
-<pre class="prettyprint"><code>
-partial interface HTMLElement {
-    readonly attribute DOMString is;
-}
+<p>This section provides an index of interfaces and elements defined
+by Web Components, with links to their normative definitions.</p>
 
-interface HTMLTemplateElement : HTMLElement {
-    readonly attribute DocumentFragment content;
-}
+<h3 id="interfaces">Interfaces</h3>
 
-interface HTMLDecoratorElement : HTMLElement {
-    attribute bool applyAuthorStyles;
-    void listen(ListenInit listenInitDict);
-}
-dictionary ListenInit {
-    DOMString type;
-    DOMString selector;
-    EventHandler handler;
-}
+<ul>
+<!-- CSSHostRule --> <li><a href="../spec/shadow/index.html#css-host-rule-interface">CSSHostRule</a></li>
+<!-- CSSRule --> <li><a href="../spec/shadow/index.html#css-host-rule-methods">CSSRule</a> (partial)</li>
+<!-- Document --> <li>Document (partial&mdash;<a href="../spec/custom/index.html#dfn-document-register">register,</a> <a href="../spec/custom/index.html#monkeypatch-create-element">createElement, createElementNS</a>)</li>
+<!-- Element --> <li><a href="../spec/shadow/index.html#extensions-to-element">Element</a> (partial)</li>
+<!-- HTMLLinkElement --> <li><a href="../spec/imports/index.html#interface-import">HTMLLinkElement</a> (partial)</li>
+<!-- ShadowRoot --> <li><a href="../spec/shadow/index.html#api-shadow-root">ShadowRoot</a></li>
+</ul>
 
-interface <a href="../spec/shadow/index.html#api-html-content-element">HTMLContentElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-    attribute DOMString <a href="../spec/shadow/index.html#api-html-content-element-select">select</a>;
-}
+<h3 id="elements">Elements</h3>
 
-interface HTMLElementElement : HTMLElement {
-    attribute DOMString extends;
-    attribute DOMString name;
-    attribute bool applyAuthorStyles;
-    readonly attribute Function generatedConstructor;
-    void lifecycle(LifecycleInit lifecycleInitDict);
-    void reflectAttribute(DOMString attributeName,
-    DOMString propertyName, ChangeCallback changeCallback);
-    void setupEvent(DOMString eventName);
-}
-dictionary LifecycleInit {
-    Function attributeChanged(
-            DOMString name,
-            DOMString newValue,
-            DOMString oldValue);
-    Function created(ShadowRoot shadowRoot);
-    Function inserted();
-    Function removed();
-}
-[Callback=FunctionOnly, NoInterfaceObject]
-interface ChangeCallback {
-    void handleEvent(DOMString name, DOMString newValue, DOMString oldValue);
-}
-
-interface <a href="../spec/shadow/index.html#api-html-shadow-element">HTMLShadowElement</a> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-}
-
-[Constructor(in HTMLElement element) raises (DOMException)]
-interface <a href="../spec/shadow/index.html#api-shadow-root">ShadowRoot</a> : <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> {
-    <a href="http://www.w3.org/TR/domcore/#element">Element</a> <a href="../spec/shadow/index.html#api-shadow-root-get-element-by-id">getElementById</a>(in DOMString elementId);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(in DOMString tagName);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(in DOMString className);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="../spec/shadow/index.html#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString namespace, DOMString localName);
-    attribute bool <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
-    attribute bool <a href="../spec/shadow/index.html#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
-    readonly attribute Element <a href="../spec/shadow/index.html#api-shadow-root-active-element">activeElement</a>;
-    readonly attribute <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a> <a href="../spec/shadow/index.html#api-shadow-root-selection">selection</a>;
-    attribute DOMString <a href="../spec/shadow/index.html#api-shadow-root-inner-html">innerHTML</a>;
-}
-ShadowRoot implements <a href="http://dev.w3.org/2006/webapi/selectors-api/#nodeselector">NodeSelector</a>;
-</code></pre>
-
-<h2 id="appendix-b-html-elements">Appendix B. HTML Elements</h2>
-
-<dl>
-<dt><code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code></dt>
-<dd>
-    <p>Represents an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in a <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>. The <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> is replaced with the element's children at rendering time. The <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element itself is never rendered.</p>
-    <p>Context: Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</p>
-    <p>Children: anything (fallback content)</p>
-    <p>Attributes:</p>
-    <p><code>select</code>&mdash;the value is a list of <a href="../spec/shadow/index.html#dfn-selector-fragment">selector fragments</a>, addressing immediate children of the element.</p>
-<!--    <p><code>apply-shadow-styles</code>&mdash;if <code>true</code>, the styles of the shadow DOM tree apply to the element children, rendered in place of the <code>&lt;content&gt;</code> element. if <code>false</code> (default), the styles of the shadow DOM tree do not apply. -->
-</dd>
-<dt><code>&lt;decorator&gt;</code></dt>
-<dd>
-    <p>Defines a new decorator. Typically, you would also give it an id attribute to make it addressable from CSS.
-    <p>Context: anywhere in the document.
-    <p>Children: <code>&lt;template&gt;</code> and <code>&lt;script&gt;</code>
-    <p>Attributes:
-    <p><code>apply-author-styles</code>&mdash;if <code>true</code>, the author styles of the document apply to the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> of the element. If <code>false</code> (default), the author styles do not apply.
-</dd>
-<dt><code>&lt;element&gt;</code></dt>
-<dd>
-    <p>Defines a new custom element.
-    <p>Context: anywhere in the document.
-    <p>Children: <code>&lt;template&gt;</code> and <code>&lt;script&gt;</code>
-    <p>Attributes:
-    <p><code>constructor</code>&mdash;name of the generated constructor function. If specified, a key by this name is added to the <code>window</code> object, referring to the element's generated constructor.
-    <p><code>extends</code>&mdash;tag name of the element or a defined custom element constructor name that the new custom element extends.
-    <p><code>name</code>&mdash;the name of the custom element constructor that is generated by this definition.
-    <p><code>apply-author-styles</code>&mdash;if <code>true</code>, the author styles of the document apply to the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> of the element. If <code>false</code> (default), the author styles do not apply.
-</dd>
-<dt><code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code></dt>
-<dd>
-    <p>Specifies a <a href="../spec/shadow/index.html#dfn-shadow-insertion-point">shadow insertion point</a>, where the older <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> in element's shadow DOM <a href="../spec/shadow/index.html#dfn-tree-stack">tree stack</a> is rendered. The <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element itself is never rendered.</p>
-    <p>Context: Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</p>
-    <p>Children: anything (fallback content).</p>
-</dd>
-<dt><code>&lt;template&gt;</code></dt>
-<dd>
-    <p>Defines an inert chunk of DOM that can then be used for creating DOM instances in an unknown parsing context.
-    <p>Context: anywhere in the document.
-    <p>Children: any element.
-</dd>
-</dl>
-
-<h2 id="appendix-c-custom-element-constructor-properties">Appendix C. Custom Element Constructor Properties</h2>
-
-<p>Here are some more properties of the generated constructor and FancyButton instances:</p>
-
-<pre class="prettyprint"><code>
-typeof FancyButton &rArr; &quot;function&quot;
-FancyButton.call({}) &rArr; throws
-Object.getPrototypeOf(FancyButton.prototype) ===
-   HTMLButtonElement.prototype &rArr; true
-
-document.body.lastChild === b &rArr; true
-b.tagName &rArr; &quot;button&quot;
-b.outerHTML &rArr; &quot;&lt;button is=&quot;FancyButton&quot;&gt;&lt;/button&gt;&quot;
-b instanceof FancyButton &rArr; true
-b instanceof HTMLButtonElement &rArr; true
-</code></pre>
+<ul>
+<!-- content --> <li><a href="../spec/shadow/index.html#content-element">content</a></li>
+<!-- element --> <li><a href="../spec/custom/index.html#the-element-element">element</a></li>
+<!-- shadow --> <li><a href="../spec/shadow/index.html#shadow-element">shadow</a></li>
+<!-- template --> <li><a href="../spec/templates/index.html#template-element">template</a></li>
+</ul>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
