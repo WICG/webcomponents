@@ -103,31 +103,31 @@
 
 <h2 id="about">About this Document</h2>
 
-<p>As mentioned earlier, this document is a work in progress. It was initially written as a thought exercise to tie up all concepts associated with Web Components into one coherent, non-normative narrative. Each concept will be refined and developed into a separate normative document, subsequently feeding back changes, concepts, and terms into this document. This iterative process produced the following specifications, and is still continuing today:</p>
+<p>As mentioned earlier, this document is a work in progress. It relates all concepts associated with Web Components into one coherent, non-normative narrative.</p>
 
-<ul>
-    <li><a href="../spec/templates/index.html">HTML Templates</a></li>
-    <li><a href="../spec/custom/index.html">Custom Elements</a></li>
-    <li><a href="../spec/shadow/index.html">Shadow DOM</a></li>
-    <li><a href="../spec/imports/index.html">HTML Imports</a></li>
-</ul>
+<p>Each concept is separately being refined and developed in a normative document.</p>
 
-<p>Once all information is extracted into the respective normative documents and this document is updated to accurately summarize the information in the normative documents, this document will be finalized and become the actual introduction for Web Components.</p>
+<p>This is an iterative process.</p>
+
+<p>What is described here may sometimes lag behind the normative documents, and may sometimes be pointing the way ahead for those documents. Once all of the forward-looking information is extracted into the respective normative documents, this document will undergo an ultimate update to accurately summarize the information in the normative documents.</p>
 
 <h2 id="introduction">Introduction</h2>
 
-<p>The component model for the Web (also known as Web Components) consists of five pieces designed to be used together to let Web application authors define widgets with a level of visual richness not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.</p>
+<p>The component model for the Web (&quot;Web Components&quot;) consists of five pieces:</p>
 
-<p>These pieces are:
-<ul>
-    <li><a href="#template-section">templates</a>, which define chunks of markup that are inert but can be activated for use later;</li>
-    <li><a href="#decorator-section">decorators</a>, which apply templates to let CSS affect rich visual and behavioral changes to documents;</li>
-    <li><a href="#custom-element-section">custom elements</a>, which let authors define their own elements, including new presentation and API, that can be used in HTML documents;</li>
-    <li><a href="#shadow-dom-section">shadow DOM</a> which defines how presentation and behavior of decorators and custom elements fit together in the DOM tree; and</li>
-    <li><a href="#external-custom-elements-and-decorators">imports</a> which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
-</ul>
+<ol>
+    <li><a href="#template-section">Templates</a>, which define chunks of markup that are inert but can be activated for use later.</li>
+    <li><a href="#decorator-section">Decorators</a>, which apply templates to let CSS affect rich visual and behavioral changes to documents.</li>
+    <li><a href="#custom-element-section">Custom Elements</a>, which let authors define their own elements, new tag names, and new script API.</li>
+    <li><a href="#shadow-dom-section">Shadow DOM</a>, which defines how presentation and behavior of decorators and custom elements fit together in the DOM tree.</li>
+    <li><a href="#external-custom-elements-and-decorators">Imports</a>, which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
+</ol>
+
+<p>Each of these pieces is useful individually. When used in combination, Web Components enable Web application authors to define widgets with a level of visual richness and interactivity not possible with CSS alone, and ease of composition and reuse not possible with script libraries today. This document illustrates how authors can use the pieces of Web Components in combination to achieve this.</p>
 
 <h2 id="template-section">Templates</h2>
+
+<p><a href="../spec/templates/index.html">The HTML Templates specification</a> is the normative description of this part of Web Components.</p>
 
 <p>The <code id="#template-definition">&lt;template&gt;</code> element contains markup intended to be used later by script or by a <code>&lt;decorator&gt;</code> element, which consumes a template.</p>
 
@@ -155,6 +155,8 @@ someElement.appendChild(t.content.cloneNode());
 <p>Because what is contained in the template is not in the document, but in the <code>content</code> document fragment, appending a copy of the template content in this way makes it &quot;live&quot; so scripts run and images are fetched at this point.</p>
 
 <h2 id="decorator-section">Decorators</h2>
+
+<p>There is not yet any normative description of this part of Web Components.</p>
 
 <p>A <dfn id="decorator-definition">decorator</dfn> is something that enhances or overrides the presentation of an existing element. Like all presentation aspects, the application of decorators is controlled by CSS. However, being able to specify the extra presentation using markup is unique to decorators.</p>
 
@@ -326,6 +328,8 @@ details[open] {
 <p>This uses two decorators. One presents the details view closed; the other presents the details view open. Each decorator uses an event handler to respond to clicks by toggling the open state of the element. The content element's select attribute will be explained in detail later.</p>
 
 <h2 id="custom-element-section">Custom Elements</h2>
+
+<p><a href="../spec/custom/index.html">The Custom Elements specification</a> is the normative description of this part of Web Components.</p>
 
 <p>Custom elements are new types of DOM elements that can be defined by authors. Unlike a decorator, which can be applied or unapplied to a given element, the element's type is fixed. This permanence means custom elements can also define new state and behavior, which decorators can't do because of their ephemeral nature.</p>
 
@@ -509,6 +513,8 @@ c.popOutBirdie(); // specific to cuckoo-clock
 
 <h2 id="shadow-dom-section">Shadow DOM</h2>
 
+<p><a href="../spec/shadow/index.html">The Shadow DOM specification</a> is the normative description of this part of Web Components.</p>
+
 <p>Shadow DOM is a tree of DOM nodes. Shadow DOM can be applied to a custom element declaratively, by including a template, or to any element imperatively using JavaScript.</p>
 
 <object data="../assets/images/shadow-trees.svg" width="800" height="430"></object>
@@ -659,6 +665,8 @@ var shadow = new ShadowRoot(anyElement);
 <p>Another important difference between the two is the fact that you can <em>unapply</em> a decorator. On the other hand, once you've instantiated a custom element, its qualities&mdash;including its <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>&mdash;are an inherent part of element's identity.</p>
 
 <h2 id="external-custom-elements-and-decorators">External Custom Elements and Decorators</h2>
+
+<p><a href="../spec/imports/index.html">The HTML Imports specification</a> is the normative description of this part of Web Components.</p>
 
 <p>Custom elements and decorators can be loaded from external files using the link tag:
 
