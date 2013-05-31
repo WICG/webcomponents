@@ -129,6 +129,10 @@
         </ol></li>
         <li><a href="#content-element"><span class="section">10.4</span> The <code>content</code> HTML element</a></li>
         <li><a href="#shadow-element"><span class="section">10.5</span> The <code>shadow</code> HTML element</a></li>
+        <li><a href="#extensions-to-event"><span class="section">10.6</span>  Extensions to <code>Event</code> Interface</a>
+        <ol>
+            <li><a href="#partial-event-attributes"><span class="section">10.6.1</span> Attributes</a></li>
+        </ol></li>
     </ol></li>
     <li><a href="#shadow-dom-example"><span class="section">11</span> Shadow DOM Example</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -1270,6 +1274,46 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
     </dl>
 </dd>
 </dl>
+
+<h3 id="extensions-to-event">Extensions to <code>Event</code> Interface</h3>
+
+<pre><code>
+partial interface <a href="http://dom.spec.whatwg.org/#event">Event</a> {
+    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-nodelist">NodeList</a> <a href="#api-partial-event-path">path</a>;
+}
+</code></pre>
+
+<h4 id="partial-event-attributes">Attributes</h4>
+<dl>
+<dt><dfn id="api-partial-event-path">path</dfn> of type <a href="http://www.w3.org/TR/dom/#interface-nodelist"><code>NodeList</code></a></dt>
+<dd>Represents the adjusted event path.</dd>
+<dd>To enforce upper-boundary encapsulation, some nodes must be excluded from the event path, depending on the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> would be invoked.</dd>
+<dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>PATH</var>, a populated event path with <a href="#dfn-adjusted-parent">adjusted parents</a></dd>
+    <dd><var>NODE</var>, the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners would be invoked</dd>
+<dt>Output</dt>
+    <dd><var>RESULT</var>, an adjusted event path</dd>
+</dl>
+<ol>
+    <li>Let <var>TREE1</var> be the <a href="http://www.w3.org/TR/domcore/#concept-tree">tree</a> that contains <var>NODE</var></li>
+    <li>Let <var>RESULT</var> be the empty list</li>
+    <li>For each item <var>NODE2</var> in <var>PATH</var>, repeat these steps:
+        <ol>
+            <li>Let <var>TREE2</var> be the <a href="http://www.w3.org/TR/domcore/#concept-tree">tree</a> that contains <var>NODE2</var></li>
+            <li>If <var>TREE1</var> and <var>TREE2</var> are the same, push <var>NODE2</var> to <var>RESULT</var></li>
+            <li>Otherwise, if <var>TREE1</var> is <a href="#dfn-enclosed-tree">enclosed</a> by <var>TREE2</var>, push <var>NODE2</var> to <var>RESULT</var></li>
+        </ol></li>
+    </li>
+</ol>
+</div>
+<p>These steps <strong>must</strong> run prior to invoking <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> on any <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> in <var>PATH</var>.</p>
+</dd>
+</dl>
+
 </section>
 
 <h2 id="shadow-dom-example">Shadow DOM Example</h2>
