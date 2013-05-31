@@ -83,8 +83,9 @@
     <ol>
         <li><a href="#event-retargeting"><span class="section">5.1</span> Event Retargeting</a></li>
         <li><a href="#retargeting-related-target"><span class="section">5.2</span> Retargeting <code>relatedTarget</code></a></li>
-        <li><a href="#retargeting-focus-events"><span class="section">5.3</span> Retargeting Focus Events</a></li>
-        <li><a href="#events-that-are-always-stopped"><span class="section">5.4</span> Events that are Always Stopped</a></li>
+        <li><a href="#retargeting-touch-events"><span class="section">5.3</span> Retargeting Touch Events</a></li>
+        <li><a href="#retargeting-focus-events"><span class="section">5.4</span> Retargeting Focus Events</a></li>
+        <li><a href="#events-that-are-always-stopped"><span class="section">5.5</span> Events that are Always Stopped</a></li>
         <li><a href="#event-dispatch"><span class="section">5.5</span> Event Dispatch</a></li>
         <li><a href="#event-retargeting-example"><span class="section">5.6</span> Event Retargeting Example</a></li>
     </ol></li>
@@ -161,6 +162,7 @@
     <li><a href="http://www.w3.org/TR/CSS2/">CSS Level 2 Revision 1</a></li>
     <li><a href="http://www.w3.org/TR/cssom/">CSSOM</a></li>
     <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
+    <li><a href="http://www.w3.org/TR/touch-events/">Touch Events version 1</a></li>
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
     <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
@@ -605,6 +607,10 @@ div::x-thumb {
 </ol>
 </div>
 
+<h3 id="retargeting-touch-events">Retargeting Touch Events</h3>
+
+<p>The <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> attribute must be adjusted in the same way as an event with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a>. Each <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> in the <a href="http://www.w3.org/TR/touch-events/#touchlist-interface"><code>TouchList</code></a> returned from <a href="http://www.w3.org/TR/touch-events/#touchevent-interface"><code>TouchEvent</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-touches"><code>touches()</code></a>, <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-changedTouches"><code>changedTouches()</code></a> and <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-targetTouches"><code>targetTouches()</code></a> must be the result of <a href="#dfn-related-target-algorithm">related target resolution algorithm</a>, given <var>NODE</var> and <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> as arguments.
+
 <h3 id="retargeting-focus-events">Retargeting Focus Events</h3>
 
 <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that is losing focus as a result of <code>target</code> gaining focus or the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
@@ -631,7 +637,8 @@ div::x-thumb {
     <li>The <a href="http://www.w3.org/TR/domcore/#event"><code>Event</code></a> <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-currenttarget"><code>currentTarget</code></a> attributes <strong>must</strong> return the <a href="#dfn-relative-target">relative target</a> for the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a></li>
     <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent"><code>MouseEvent</code></a> <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target">adjusted related target</a></li>
     <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent"><code>MouseEvent</code></a> <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetX"><code>offsetX</code></a> and <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetY"><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a href="http://dev.w3.org/csswg/cssom-view/#padding-edge">padding edge</a> of the <a href="#dfn-relative-target">relative target</a></li>
-    <li>If the <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked</li>
+    <li>The <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target">adjusted related target</a></li>
+    <li>If the <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> and <a href="http://www.w3.org/TR/domcore/#dom-event-target"><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked. <a href="http://www.w3.org/TR/touch-events/#touchevent-interface"><code>TouchEvent</code></a> is not subject to this rule.</li>
     <li>When <em>capturing</em>, which entails processing step 6 of the <a href="http://dom.spec.whatwg.org/#concept-event-dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a href="http://dom.spec.whatwg.org/#concept-event-listener-invoke">invoked</a> on a <a href="http://dom.spec.whatwg.org/#concept-node">node</a> <strong>if</strong> it is the same as its <a href="#dfn-relative-target">relative target</a></li>
     <li>When <em>bubbling</em>, which entails processing step 9 of the <a href="http://dom.spec.whatwg.org/#concept-event-dispatch">event dispatch algorithm</a>, the <a href="http://dom.spec.whatwg.org/#event"><code>Event</code></a> <a href="http://dom.spec.whatwg.org/#dom-event-eventphase">eventPhase</a> attribute <strong>must</strong> return <a href="http://dom.spec.whatwg.org/#dom-event-at_target">AT_TARGET</a> <strong>if</strong> the <a href="#dfn-relative-target">relative target</a> is same as the <a href="http://dom.spec.whatwg.org/#concept-node">node</a> on which event listeners are <a href="http://dom.spec.whatwg.org/#concept-event-listener-invoke">invoked</a></li>
     <li>If the event's <a href="http://dom.spec.whatwg.org/#dom-event-bubbles"><code>bubbles</code></a> attribute value is <strong>false</strong>, run these substeps:
