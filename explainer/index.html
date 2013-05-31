@@ -89,8 +89,7 @@
         <li><a href="#events"><span class="section">6.4</span> Events in Shadow DOM</a></li>
         <li><a href="#making-more-shadows"><span class="section">6.5</span> Making More Shadows</a></li>
     </ol></li>
-    <li><a href="#decorators-vs-custom-elements"><span class="section">7</span> Decorators vs. Custom Elements</a></li>
-    <li><a href="#external-custom-elements-and-decorators"><span class="section">8</span> External Custom Elements and Decorators</a></li>
+    <li><a href="#imports-section"><span class="section">7</span> Imports</a></li>
     <li><a href="#appendix-a-interfaces">Appendix A. Interfaces and Elements</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -116,7 +115,7 @@
     <li><a href="#decorator-section">Decorators</a>, which apply templates based on CSS selectors to affect rich visual and behavioral changes to documents.</li>
     <li><a href="#custom-element-section">Custom Elements</a>, which let authors define their own elements, with new tag names and new script interfaces.</li>
     <li><a href="#shadow-dom-section">Shadow DOM</a>, which encapsulates a DOM subtree for more reliable composition of user interface elements.</li>
-    <li><a href="#external-custom-elements-and-decorators">Imports</a>, which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
+    <li><a href="#imports-section">Imports</a>, which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
 </ol>
 
 <p>Each of these pieces is useful individually. When used in combination, Web Components enable Web application authors to define widgets with a level of visual richness and interactivity not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.</p>
@@ -279,7 +278,44 @@ details[open] {
 
 <p><a href="../spec/custom/index.html">The Custom Elements specification</a> is the normative description of this part of Web Components.</p>
 
-<p>Custom elements are new types of DOM elements that can be defined by authors. Unlike a decorator, which can be applied or unapplied to a given element, the element's type is fixed. This permanence means custom elements can also define new state and behavior, which decorators can't do because of their ephemeral nature.</p>
+<p>Custom elements are new types of DOM elements that can be defined by authors. Unlike decorators, which are stateless and ephemeral, custom elements can encapsulate state and provide script interfaces. The following table summarizes the key differences between decorators and custom elements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <td></td>
+      <th>Decorators</th>
+      <th>Custom Elements</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lifetime</td>
+      <td>Ephemeral, while a CSS selector matches</td>
+      <td>Stable, matches entire element lifetime</td>
+    </tr>
+    <tr>
+      <td>Applied, unapplied dynamically</td>
+      <td>Yes, based on CSS selectors</td>
+      <td>No, fixed at element creation time</td>
+    </tr>
+    <tr>
+      <td>Accessible through script</td>
+      <td>No, transparent to DOM; cannot add interfaces</td>
+      <td>Yes, accessible through DOM; can provide interfaces</td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>Stateless projection</td>
+      <td>Stateful DOM object</td>
+    </tr>
+    <tr>
+      <td>Behavior</td>
+      <td>Simulated by changing decorators</td>
+      <td>First-class using script and events</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="defining-a-custom-element">Defining a Custom Element</h3>
 
@@ -360,7 +396,8 @@ details[open] {
         this._root.querySelector('sep').style.visibility =
             now.getSeconds() % 2 ? 'visible' : 'hidden';
         this._root.querySelector('mm').textContent = fmt(now.getMinutes());
-      }
+      },
+      chime: function () { &hellip; }
     });
   &lt;/script&gt;
 &lt;/element&gt;
@@ -427,7 +464,7 @@ tick-tock-clock:unresolved {
 // Chime ALL the clocks!
 Array.prototype.forEach.call(
   document.querySelectorAll('tick-tock-clock<b>:not(:unresolved)</b>'),
-  function (clock) { clock.tick(); });
+  function (clock) { clock.chime(); });
 </code></pre>
 
 <p>An element that wants to notify other parts of the page that it has been upgraded could dispatch a custom event to do so. Scripts that want to delay interacting with the element until it has been upgraded can listen to this event.</p>
@@ -589,17 +626,7 @@ var shadow = anyElement.createShadowRoot();
 
 <p>The important thing to remember is that while you can add new <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtrees</a> this way, you can never remove them: they just keep stacking up.</p>
 
-<h2 id="decorators-vs-custom-elements">Decorators vs. Custom Elements</h2>
-
-<p>Decorator shadows are never accessible through the DOM. When the decorator is created, the <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is placed in a cold, dark place&mdash;for storage. Once the decorator is applied to an element, this <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> is used to produce the rendering, but its nodes are never accessible from script. You can, however listen to events that happen inside the decorator shadow using EventController.</p>
-
-<p>An easy way to think of the decorator shadow is a projection. You can see it, but never can actually touch it.</p>
-
-<p>On the other hand, the custom element shadow (or any <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a> created using script) is a real DOM tree that you as the custom element author can change as you please.</p>
-
-<p>Another important difference between the two is the fact that you can <em>unapply</em> a decorator. On the other hand, once you've instantiated a custom element, its qualities&mdash;including its <a href="../spec/shadow/index.html#dfn-shadow-dom-subtree">shadow DOM subtree</a>&mdash;are an inherent part of element's identity.</p>
-
-<h2 id="external-custom-elements-and-decorators">External Custom Elements and Decorators</h2>
+<h2 id="imports-section">Imports</h2>
 
 <p><a href="../spec/imports/index.html">The HTML Imports specification</a> is the normative description of this part of Web Components.</p>
 
