@@ -522,7 +522,7 @@ c.popOutBirdie(); // specific to cuckoo-clock
 
 <p>Elements in a shadow DOM subtree may have shadow roots of their own. When this happens, the insertion points of the nested shadow DOM subtree act on the nodes in the outer shadow DOM subtree's insertion points, as this example illustrates:</p>
 
-<pre class="prettyprint"><code>
+<pre class="prettyprint" id="example-news-no-styles"><code>
 &lt;!-- document --&gt;
 &lt;div id="news"&gt;
   &lt;h1&gt;Good day for kittens&lt;/h1&gt;
@@ -608,7 +608,7 @@ s.appendChild(u.content.cloneNode(true));
 
 <p>There is another kind of insertion point for this purpose: the <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, which pulls in the previously applied shadow DOM subtree (also known as the <a href="../spec/shadow/index.html#dfn-older-tree">older tree</a>). For example, here is a custom element which extends the <a href="#example-tick-tock-clock"><code>&lt;tick-tock-clock&gt;</code> element</a> and adds a direction indicator to it:</p>
 
-<pre class="prettyprint"><code>
+<pre class="prettyprint" id="example-sailing-watch"><code>
 &lt;element name="sailing-watch" extends="tick-tock-clock"&gt;
   &lt;template&gt;
     &lt;shadow&gt;&lt;/shadow&gt;
@@ -651,17 +651,17 @@ s.appendChild(u.content.cloneNode(true));
 
 <h3 id="css-and-shadow-dom">CSS and Shadow DOM</h3>
 
-<p>When building a custom element, you often want to prevent document styles from interfering with what you've painstakingly crafted.</p>
+<p>When building a custom element it is natural to think about its markup (attributes and content) and script interface. It is often just as important to think about how it interacts with the styles in the page. Shadow DOM gives authors a lot of control over how content in shadow DOM interacts with styles.</p>
 
-<p>Lucky for you, the shadow DOM subtree is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, only letting the user agent styles apply by default. (Inheritance still works as usual.) You can relax this boundary by setting the <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a> property of the shadow root. Then author styles start applying in the shadow DOM subtree.</p>
+<p>The shadow DOM subtree is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, which by default only applies user agent styles but not author styles. However inheritance still works as usual. This is usually what you want: In the <a href="#example-sailing-watch"><code>&lt;sailing-watch&gt;</code> example</a> above, if the page is styled so that the surrounding text is a beautiful sea green, in keeping with a nautical theme, the text inside the shadow DOM (for example the &quot;N&quot; of the direction indicator) will be sea green too because <a href="http://www.w3.org/TR/2011/REC-css3-color-20110607/#foreground"><code>color</code></a> is an inherited property. But if the author has styled all <code>&lt;div&gt;</code> elements to have orange borders, the direction indicator will <em>not</em> have an orange border because the <a href="http://www.w3.org/TR/css3-background/#borders">border properties</a> are not inherited properties.</p>
 
-<p>Conversely, you can make the <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a> even stronger by setting the <a href="../spec/shadow/index.html#api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code></a> property on the shadow root. Then <em>all</em> styles are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the shadow boundary.</p>
+<p>A shadow root has two properties to control this behavior. The first, <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a>, will apply the author stylesheet. Setting this property is appropriate when writing shadow DOM that should match the appearance of the surrounding content as closely as possible. There is one caveat: CSS selectors are matched against the shadow DOM subtree, not the flattened tree. Pay attention to child, descendant and sibling selectors when using this property.</p>
+
+<p>The second shadow root property which controls the effect of surrounding styles on content in a shadow DOM subtree is <a href="../spec/shadow/index.html#api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code></a>. If this property is set to <code>true</code> <em>all</em> styles are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the shadow boundary.</p>
 
 <p>If <code>applyAuthorStyles</code> is <code>false</code> and set <code>resetStyleInheritance</code> is <code>true</code>, you're back to a clean slate. Your element is insulated from the styles in the page&mdash;even inherited properties&mdash;and you can use a browser reset stylesheet to build up the exact style you want.</p>
 
 <p>There is a similar boundary at an insertion point. The styles from the shadow DOM subtree do not apply to the host element's children distributed into an insertion point, or to the older shadow DOM subtree.</p>
-
-<p>If the shadow DOM authors want to allow some styling of the shadow DOM subtree by the rest of the page, they can do so with <a href="../spec/shadow/index.html#css-variables">CSS variables</a>. The variable definitions specified on the shadow DOM host element are also resolved inside of the shadow DOM subtree.</p>
 
 <h3 id="events">Events in Shadow DOM</h3>
 
