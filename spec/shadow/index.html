@@ -171,8 +171,8 @@
     <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
     <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
-    <li><a href="http://www.w3.org/TR/selectors/">Selectors Level 3</a></li>
-    <li><a href="http://dev.w3.org/2006/webapi/selectors-api/">Selectors API Level 1</a></li>
+    <li><a href="http://www.w3.org/TR/selectors4/">Selectors Level 4</a></li>
+    <li><a href="http://www.w3.org/TR/selectors-api2/">Selectors API Level 2</a></li>
 </ul>
 
 </section>
@@ -226,7 +226,7 @@
     <li>The style sheets, represented by the <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> <strong>are not</strong> accessible using <a href="#dfn-shadow-host">shadow host</a> <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>'s <a href="http://www.w3.org/TR/cssom/#extensions-to-the-document-interface">CSSOM extensions</a></li>
     <li>The <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> <strong>are</strong> accessible using <a href="#dfn-shadow-root">shadow root</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods</li>
     <li>The <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> with a unique <a href="http://www.w3.org/TR/domcore/#concept-id">id</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-nameditem-filter">named elements</a> <strong>are</strong> addressable from any attributes of <a href="http://www.w3.org/TR/domcore/#element">elements</a> in the same <a href="#dfn-shadow-tree">shadow tree</a></li>
-    <li>The <a href="http://www.w3.org/TR/selectors/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from the <a href="#dfn-document-tree">document tree</a> into the <a href="#dfn-shadow-tree">shadow tree</a></li>
+    <li>The <a href="http://www.w3.org/TR/selectors4/">selectors</a> <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from the <a href="#dfn-document-tree">document tree</a> into the <a href="#dfn-shadow-tree">shadow tree</a></li>
 </ul>
 <p>For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods. No <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> other than <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</p>
 
@@ -769,7 +769,7 @@ div::x-thumb {
 
 <p>To enforce <a href="#dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#dfn-enclosed-tree">enclosing</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a href="#dfn-enclosed-tree">enclosing</a> trees are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
-<p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+<p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors4/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
 <p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a href="#dfn-shadow-tree">shadow trees</a> that have the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set <strong>must</strong> be treated as <a href="http://www.w3.org/TR/selectors4/#scoping">scoped</a> selectors with <a href="#dfn-shadow-root">shadow root</a> as their scope. In this context, for <a href="#dfn-shadow-tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a href="#dfn-shadow-root">shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a href="#dfn-shadow-root">shadow root</a> if <em>A</em> is <a href="#dfn-enclosed-tree">enclosed</a> by <em>B</em>.</p>
 
@@ -820,7 +820,7 @@ host
 
 <p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#dfn-shadow-tree">shadow tree</a> in which the style is specified, but only if this <a href="#dfn-shadow-tree">shadow tree</a> is <a href="#dfn-rendering">rendered</a>. When the <a href="#dfn-shadow-tree">shadow tree</a> is not <a href="#dfn-rendering">rendered</a> (when it's an older <a href="http://www.w3.org/TR/domcore/#trees">tree</a> that is not <a href="#dfn-assigned">assigned</a> to a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
 
-<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
+<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
 
 
 <section class="mechanics">
