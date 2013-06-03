@@ -653,15 +653,118 @@ s.appendChild(u.content.cloneNode(true));
 
 <p>When building a custom element it is natural to think about its markup (attributes and content) and script interface. It is often just as important to think about how it interacts with the styles in the page. Shadow DOM gives authors a lot of control over how content in shadow DOM interacts with styles.</p>
 
-<p>The shadow DOM subtree is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, which by default only applies user agent styles but not author styles. However inheritance still works as usual. This is usually what you want: In the <a href="#example-sailing-watch"><code>&lt;sailing-watch&gt;</code> example</a> above, if the page is styled so that the surrounding text is a beautiful sea green, in keeping with a nautical theme, the text inside the shadow DOM (for example the &quot;N&quot; of the direction indicator) will be sea green too because <a href="http://www.w3.org/TR/2011/REC-css3-color-20110607/#foreground"><code>color</code></a> is an inherited property. But if the author has styled all <code>&lt;div&gt;</code> elements to have orange borders, the direction indicator will <em>not</em> have an orange border because the <a href="http://www.w3.org/TR/css3-background/#borders">border properties</a> are not inherited properties.</p>
+<p>The shadow DOM subtree is surrounded by an invisible <a href="../spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, which by default applies user agent styles but not author styles. However inheritance still works as usual. This is usually what you want: In the <a href="#example-sailing-watch"><code>&lt;sailing-watch&gt;</code> example</a> above, if the page is styled so that the surrounding text is a beautiful sea green, in keeping with a nautical theme, the text inside the shadow DOM (for example the &quot;N&quot; of the direction indicator) will be sea green too because <a href="http://www.w3.org/TR/2011/REC-css3-color-20110607/#foreground"><code>color</code></a> is an inherited property. But if the author has styled all <code>&lt;div&gt;</code> elements to have orange borders, the direction indicator will <em>not</em> have an orange border because the <a href="http://www.w3.org/TR/css3-background/#borders">border properties</a> are not inherited properties.</p>
 
-<p>A shadow root has two properties to control this behavior. The first, <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a>, will apply the author stylesheet. Setting this property is appropriate when writing shadow DOM that should match the appearance of the surrounding content as closely as possible. There is one caveat: CSS selectors are matched against the shadow DOM subtree, not the flattened tree. Pay attention to child, descendant and sibling selectors when using this property.</p>
+<p>A shadow root has two properties to control this behavior. The first, <a href="../spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a>, will apply the author stylesheet. Setting this property is appropriate when writing shadow DOM that should match the appearance of the surrounding content as closely as possible. There is one caveat: CSS selectors are matched against the shadow DOM subtree, not the flattened tree. Pay attention to child, descendant, sibling and &quot;nth-of-x&quot; selectors when using this property.</p>
 
-<p>The second shadow root property which controls the effect of surrounding styles on content in a shadow DOM subtree is <a href="../spec/shadow/index.html#api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code></a>. If this property is set to <code>true</code> <em>all</em> styles are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the shadow boundary.</p>
+<p>The second shadow root property which controls the effect of surrounding styles on content in a shadow DOM subtree is <a href="../spec/shadow/index.html#api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code></a>. If this property is set to <code>true</code> <em>all</em> properties are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the shadow boundary.</p>
 
 <p>If <code>applyAuthorStyles</code> is <code>false</code> and set <code>resetStyleInheritance</code> is <code>true</code>, you're back to a clean slate. Your element is insulated from the styles in the page&mdash;even inherited properties&mdash;and you can use a browser reset stylesheet to build up the exact style you want.</p>
 
-<p>There is a similar boundary at an insertion point. The styles from the shadow DOM subtree do not apply to the host element's children distributed into an insertion point, or to the older shadow DOM subtree.</p>
+<p>There is a similar boundary at an insertion point. The styles from the shadow DOM subtree do not apply to the host element's children distributed into an insertion point. However some insertion points, particularly ones with very specific selectors and purpose, need to style the distributed content. Shadow DOM specifies a <a href="../spec/shadow/index.html#distributed-pseudo-element"><code>::distributed</code> pseudo-selector</a> for this purpose. To elaborate the <a href="#example-news-no-styles">news example</a>:</p>
+
+<pre class="prettyprint"><code>
+&lt;!-- #ticker's shadow --&gt;
+&lt;template id=&quot;u&quot;&gt;
+  &lt;style&gt;
+    <b>content::distributed(*)</b> {
+      display: inline-block;
+    }
+    <b>*::distributed(.breaking)</b> {
+      text-shadow: 0 0 0.2em maroon;
+      color: orange;
+    }
+  &lt;/style&gt;
+  &lt;content class=&quot;highlight&quot; select=&quot;.breaking&quot;&gt;&lt;/content&gt;
+  &lt;content&gt;&lt;/content&gt;
+&lt;/template&gt;
+</code></pre>
+
+<p>This contains two rules which use <code>::distributed</code>. The left half of the selector applies to the shadow DOM subtree; the part of the selector in parentheses applies to elements distributed to those insertion points. So the first <code>content::distributed(*)</code> selector applies to all elements distributed to <code>&lt;content&gt;</code> insertion points; while the second <code>*::distributed(.breaking)</code> selector applies to all elements with class <code>breaking</code> distributed to insertion points, giving them a healthy maroon glow. Given this specific shadow DOM the author could reduce redundancy by writing this selector <code>.highlight::distributed(*)</code> instead.</p>
+
+<p>Shadow DOM can also style its host element. It is natural for a custom element's shadow DOM to style the host because it is the outermost part of a widget. For example, to make the ticker to be a scrolling display instead of a static one, we can style it in an <a href="../spec/shadow/index.html#host-at-rule"><code>@host</code> @-rule</a>:</p>
+
+<pre class="prettyprint"><code>
+&lt;!-- #ticker's shadow --&gt;
+&lt;template id=&quot;u&quot;&gt;
+  &lt;style&gt;
+    <b>@host {
+      :scope {
+        white-space: nowrap;
+        overflow-style: marquee-line;
+        overflow-x: marquee;
+      }
+    }</b>
+    content::distributed(*) {
+      display: inline-block;
+    }
+    *::distributed(.breaking) {
+      text-shadow: 0 0 0.2em maroon;
+      color: orange;
+    }
+  &lt;/style&gt;
+  &lt;content class=&quot;highlight&quot; select=&quot;.breaking&quot;&gt;&lt;/content&gt;
+  &lt;content&gt;&lt;/content&gt;
+&lt;/template&gt;
+</code></pre>
+
+<p>Lastly, there are two ways to permit the page to style content in a shadow DOM subtree in a controlled way. The first exposes a specific element in the shadow DOM subtree by assigning it a pseudo ID. Author styles can then refer to it as a pseudo-element. For example, the outer &quot;news&quot; shadow DOM may want to let the author style the ticker part of the news display. It does this by setting the <a href="../spec/shadow/index.html#custom-pseudo-elements"><code>pseudo</code> property</a>. Author styles can then address that part of the widget:</p>
+
+<pre class="prettyprint"><code>
+&lt;script&gt;
+// Set up shadow DOM
+&hellip;
+var ticker = r.querySelector('#ticker');
+<b>ticker.pseudo = 'x-ticker';</b>
+&hellip;
+&lt;/script&gt;
+
+&lt;!-- change the appearance of the ticker part --&gt;
+&lt;style&gt;
+<b>#news::x-ticker</b> {
+  background: gray;
+  color: lightblue;
+}
+&lt;/style&gt;
+</code></pre>
+
+<p>The other way to let the page selectively style content in the shadow DOM subtree is to use CSS Variables. For example, instead of hardcoding orange with maroon tint, we could encode a pair of highlight colors:</p>
+
+<pre class="prettyprint"><code>
+&lt;!-- #ticker's shadow --&gt;
+&lt;template id=&quot;u&quot;&gt;
+  &lt;style&gt;
+    @host {
+      :scope {
+        white-space: nowrap;
+        overflow-style: marquee-line;
+        overflow-x: marquee;
+      }
+    }
+    content::distributed(*) {
+      display: inline-block;
+    }
+    *::distributed(.breaking) {
+      text-shadow: 0 0 0.2em <b>var(highlight-accent, maroon);</b>
+      color: <b>var(highlight-primary, orange);</b>
+    }
+  &lt;/style&gt;
+  &lt;content class=&quot;highlight&quot; select=&quot;.breaking&quot;&gt;&lt;/content&gt;
+  &lt;content&gt;&lt;/content&gt;
+&lt;/template&gt;
+
+&lt;!-- change the appearance of the ticker part --&gt;
+&lt;style&gt;
+#news::x-ticker {
+  background: gray;
+  color: lightblue;
+  <b>var-highlight-primary: green;
+  var-highlight-accent: yellow;</b>
+}
+&lt;/style&gt;
+</code></pre>
+
+<p>A pseudo-element is useful for opening up all of the properties of a specific element for styling by the author. CSS Variables are useful for letting the author style a narrow set of properties, but ones that are specified repetitively such as the colors in a theme.</p>
 
 <h3 id="events">Events in Shadow DOM</h3>
 
