@@ -84,10 +84,11 @@
     <li><a href="#shadow-dom-section"><span class="section">6</span> Shadow DOM</a>
     <ol>
         <li><a href="#insertion-points"><span class="section">6.1</span> Insertion Points</a></li>
-        <li><a href="#reprojection-and-fallback-content"><span class="section">6.2</span> Reprojection and Fallback Content</a></li>
-        <li><a href="#multiple-shadow-subtrees"><span class="section">6.3</span> Multiple Shadow Subtrees</a></li>
-        <li><a href="#css-and-shadow-dom"><span class="section">6.4</span> CSS and Shadow DOM</a></li>
-        <li><a href="#events"><span class="section">6.5</span> Events in Shadow DOM</a></li>
+        <li><a href="#reprojection"><span class="section">6.2</span> Reprojection</a></li>
+        <li><a href="#fallback-content"><span class="section">6.3</span> Fallback Content</a></li>
+        <li><a href="#multiple-shadow-subtrees"><span class="section">6.4</span> Multiple Shadow Subtrees</a></li>
+        <li><a href="#css-and-shadow-dom"><span class="section">6.5</span> CSS and Shadow DOM</a></li>
+        <li><a href="#events"><span class="section">6.6</span> Events in Shadow DOM</a></li>
     </ol></li>
     <li><a href="#imports-section"><span class="section">7</span> Imports</a></li>
     <li><a href="#appendix-a-interfaces">Appendix A. Interfaces and Elements</a></li>
@@ -517,7 +518,7 @@ c.popOutBirdie(); // specific to cuckoo-clock
 
 <p>Insertion points let you reordered or selectively omit rendering the host's children, but they will not cause something to be rendered multiple times. Tree order dictates when each of these elements takes a pass at selecting the children. Once the child is selected to be rendered at one insertion point, it can't be claimed by another one, which is why the <code>details-open</code> decorator only renders the summary once.</p>
 
-<h3 id="reprojection-and-fallback-content">Reprojection and Fallback Content</h3>
+<h3 id="reprojection">Reprojection</h3>
 
 <p>Elements in a shadow DOM subtree may have shadow roots of their own. When this happens, the insertion points of the nested shadow DOM subtree act on the nodes in the outer shadow DOM subtree's insertion points, as this example illustrates:</p>
 
@@ -534,7 +535,7 @@ c.popOutBirdie(); // specific to cuckoo-clock
 &lt;template id="t"&gt;
   &lt;content select="h1"&gt;&lt;/content&gt;
   &lt;div id="ticker"&gt;
-    &lt;content id="stories"&gt;No news today&lt;/content&gt;
+    &lt;content id="stories"&gt;&lt;/content&gt;
   &lt;/div&gt;
 &lt;/template&gt;
 
@@ -558,7 +559,7 @@ s.appendChild(u.content.cloneNode(true));
 &lt;/script&gt;
 </code></pre>
 
-<p>Conceptually, first the document and the first shadow root is combined to create the following virtual DOM tree. The insertion points have been erased and the host element's child nodes appear in their place. Note that the child content of the insertion point (&quot;No news today&quot;) has also been erased. This is called <a href="../spec/shadow/index.html#dfn-fallback-content">fallback content.</a> Fallback content appears only if the insertion point fails to match any nodes from the host.</p>
+<p>Conceptually, first the document and the first shadow root is combined to create the following virtual DOM tree. The insertion points have been erased and the host element's child nodes appear in their place.</p>
 
 <pre class="prettyprint"><code>
 &lt;div id="news"&gt;
@@ -577,11 +578,28 @@ s.appendChild(u.content.cloneNode(true));
 &lt;div id="news"&gt;
   &lt;h1&gt;Good day for kittens&lt;/h1&gt;
   &lt;div id="ticker"&gt;
-    &lt;div class="breaking"&gt;Kitten rescued from tree&lt;/div&gt;
-    <b>&lt;div class="breaking"&gt;Jiggled piece of yarn derails kitten kongress&lt;/div&gt;
-    &lt;div&gt;Area kitten "adorable"&amp;mdash;owner&lt;/div&gt;</b>
+    <b>&lt;div class="breaking"&gt;Kitten rescued from tree&lt;/div&gt;
+    &lt;div class="breaking"&gt;Jiggled piece of yarn derails kitten kongress&lt;/div&gt;</b>
+    &lt;div&gt;Area kitten "adorable"&amp;mdash;owner&lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
+</code></pre>
+
+<h3 id="fallback-content">Fallback Content</h3>
+
+<p>An insertion point may have content. This is called <a href="../spec/shadow/index.html#dfn-fallback-content">fallback content</a> because it is only displayed if nothing is distributed to an insertion point. For example, the news ticker shadow DOM could be modified to display default text if no heading and/or stories are available:</p>
+
+<pre class="prettyprint"><code>
+&lt;!-- #news' shadow --&gt;
+&lt;template id="t"&gt;
+  &lt;content select="h1"&gt;<b>Today's top headlines</b>&lt;/content&gt;
+  &lt;div id="ticker"&gt;
+    &lt;content id="stories"&gt;
+      <b>No news
+      &lt;button onclick=&quot;window.location.reload(true);&quot;&gt;Reload&lt;/button&gt;</b>
+    &lt;/content&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
 </code></pre>
 
 <h3 id="multiple-shadow-subtrees">Multiple Shadow Subtrees</h3>
