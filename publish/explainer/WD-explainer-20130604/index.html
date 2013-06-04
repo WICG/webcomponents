@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<title>Introduction to Web Components</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<link rel="stylesheet" href="spec.css" type="text/css">
+<link rel="stylesheet" href="prettify.css" type="text/css">
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-WD" type="text/css">
+</head>
+<body>
+
+<div class="head">
+
+
+<div class="logo">
+    <a href="http://www.w3.org/"><img width="72" height="48" src="http://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+</div>
+
+<h1>Introduction to Web Components</h1>
+<h2 id="working-draft">W3C Working Draft 4 June 2013</h2>
+<dl>
+<dt>This version</dt>
+    <dd><a href="https://www.w3.org/TR/2013/WD-explainer-20130604/index.html">https://www.w3.org/TR/2013/WD-explainer-20130604/index.html</a></dd>
+<dt>Latest editor's draft</dt>
+    <dd><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">https://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html</a></dd>
+<dt>Previous version</dt>
+    <dd>none</dd>
+<dt>Revision history</dt>
+    <dd><a id="log" href="https://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html">https://dvcs.w3.org/hg/webcomponents/log/tip/explainer/index.html</a></dd>
+<dt>Participate</dt>
+    <dd>Discuss on <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps@w3.org</a> (<a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a>)</dd>
+    <dd><a href="https://www.w3.org/Bugs/Public/enter_bug.cgi?comment=&amp;blocked=14949&amp;short_desc=%5BExplainer%5D%3A%20&amp;product=WebAppsWG&amp;component=Component%20Model">File bugs</a> (w3.org's <a href="https://www.w3.org/Bugs/Public/">Bugzilla</a>)</dd>
+<dt>Editors</dt>
+    <dd class="vcard"><span class="fn">Dominic Cooney</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dominicc@google.com</a>&gt;</dd>
+    <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
+</dl>
+
+<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2012 <a href="http://www.w3.org/"><acronym title="World Wide Web Consortium">W3C</acronym></a><sup>©</sup> (<a href="http://www.csail.mit.edu/"><acronym title="Massachusetts Institute of Technology">MIT</acronym></a>, <a href="http://www.ercim.eu/"><acronym title="European Research Consortium for Informatics and Mathematics">ERCIM</acronym></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <acronym title="World Wide Web Consortium">W3C</acronym> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p>
+
+<hr>
+
+<h2 id="abstract">Abstract</h2>
+
+<p>This document is a non-normative reference, which provides an overview of Web Components. It summarizes the normative information in the respective specifications in easy-to-digest prose with illustrations.</p>
+
+
+<h2 id="status">Status of this Document</h2>
+
+<p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <acronym title="World Wide Web Consortium">W3C</acronym> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><acronym title="World Wide Web Consortium">W3C</acronym> technical reports index</a> at http://www.w3.org/TR/.</em></p>
+
+<p>This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>). All feedback is welcome.</p><p>Publication as an Editor's Draft does not imply endorsement by the <acronym title="World Wide Web Consortium">W3C</acronym> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
+
+<p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>. This document is informative only. <acronym title="World Wide Web Consortium">W3C</acronym> maintains a <a href="http://www.w3.org/2004/01/pp-impl/45559/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <acronym title="World Wide Web Consortium">W3C</acronym> Patent Policy</a>.</p>
+
+</div>
+
+<section class="toc">
+<h2 id="toc">Table of Contents</h2>
+<ol>
+    <li><a href="#about"><span class="section">1</span> About this Document</a></li>
+    <li><a href="#introduction"><span class="section">2</span> Introduction</a></li>
+    <li><a href="#template-section"><span class="section">3</span> Templates</a></li>
+    <li><a href="#decorator-section"><span class="section">4</span> Decorators</a>
+    <ol>
+        <li><a href="#events-in-decorators"><span class="section">4.1</span> Events in Decorators</a></li>
+    </ol></li>
+    <li><a href="#custom-element-section"><span class="section">5</span> Custom Elements</a>
+    <ol>
+        <li><a href="#defining-a-custom-element"><span class="section">5.1</span> Defining a Custom Element</a></li>
+        <li><a href="#methods-and-properties"><span class="section">5.2</span> Methods and Properties</a></li>
+        <li><a href="#lifecycle-callbacks"><span class="section">5.3</span> Lifecycle Callbacks</a></li>
+        <li><a href="#using-custom-elements-in-markup"><span class="section">5.4</span> Using Custom Elements in Markup</a></li>
+        <li><a href="#using-custom-elements-in-script"><span class="section">5.5</span> Using Custom Elements in Script</a></li>
+        <li><a href="#element-upgrade"><span class="section">5.6</span> Element Upgrade</a></li>
+        <li><a href="#extending-custom-elements"><span class="section">5.7</span> Extending Custom Elements</a></li>
+    </ol></li>
+    <li><a href="#shadow-dom-section"><span class="section">6</span> Shadow DOM</a>
+    <ol>
+        <li><a href="#insertion-points"><span class="section">6.1</span> Insertion Points</a></li>
+        <li><a href="#reprojection"><span class="section">6.2</span> Reprojection</a></li>
+        <li><a href="#fallback-content"><span class="section">6.3</span> Fallback Content</a></li>
+        <li><a href="#multiple-shadow-subtrees"><span class="section">6.4</span> Multiple Shadow Subtrees</a></li>
+        <li><a href="#css-and-shadow-dom"><span class="section">6.5</span> CSS and Shadow DOM</a></li>
+        <li><a href="#events"><span class="section">6.6</span> Events in Shadow DOM</a></li>
+    </ol></li>
+    <li><a href="#imports-section"><span class="section">7</span> Imports</a></li>
+    <li><a href="#appendix-a-interfaces">Appendix A. Interfaces and Elements</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+</ol>
+
+</section>
+
+<h2 id="about"><span class="section">1</span> About this Document</h2>
+
+<p>As mentioned earlier, this document is a work in progress. It relates all concepts associated with Web Components into one coherent, non-normative narrative.</p>
+
+<p>Each concept is separately being refined and developed in a normative document.</p>
+
+<p>This is an iterative process.</p>
+
+<p>What is described here may sometimes lag behind the normative documents, and may sometimes be pointing the way ahead for those documents. Once all of the forward-looking information is extracted into the respective normative documents, this document will undergo an ultimate update to accurately summarize the information in the normative documents.</p>
+
+<h2 id="introduction"><span class="section">2</span> Introduction</h2>
+
+<p>The component model for the Web ("Web Components") consists of five pieces:</p>
+
+<ol>
+    <li><a href="#template-section">Templates</a>, which define chunks of markup that are inert but can be activated for use later.</li>
+    <li><a href="#decorator-section">Decorators</a>, which apply templates based on CSS selectors to affect rich visual and behavioral changes to documents.</li>
+    <li><a href="#custom-element-section">Custom Elements</a>, which let authors define their own elements, with new tag names and new script interfaces.</li>
+    <li><a href="#shadow-dom-section">Shadow DOM</a>, which encapsulates a DOM subtree for more reliable composition of user interface elements.</li>
+    <li><a href="#imports-section">Imports</a>, which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
+</ol>
+
+<p>Each of these pieces is useful individually. When used in combination, Web Components enable Web application authors to define widgets with a level of visual richness and interactivity not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.</p>
+
+<p>This document discusses each of these pieces. Each section builds on the last to illustrate how authors can use the pieces of Web Components in combination.</p>
+
+<h2 id="template-section"><span class="section">3</span> Templates</h2>
+
+<p><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html">The HTML Templates specification</a> is the normative description of this part of Web Components.</p>
+
+<p>The <code id="#template-definition">&lt;template&gt;</code> element contains markup intended to be used later. The content of the <code>&lt;template&gt;</code> element is parsed by the parser, but it is inert: scripts aren't processed, images aren't downloaded, and so on. The <code>&lt;template&gt;</code> element is not rendered.</p>
+
+<p>The <code>&lt;template&gt;</code> element has property called <code>content</code> which holds the content of the template in a document fragment. When the author wants to use the the content they can move or copy the nodes from this property:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"commentTemplate"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div&gt;</span><span class="pln">
+        </span><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">""</span><span class="tag">&gt;</span><span class="pln">
+        </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"comment-text"</span><span class="tag">&gt;&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span><span class="pln">
+</span><span class="tag">&lt;script&gt;</span><span class="pln">
+</span><span class="kwd">function</span><span class="pln"> addComment</span><span class="pun">(</span><span class="pln">imageUrl</span><span class="pun">,</span><span class="pln"> text</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> t </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">"#commentTemplate"</span><span class="pun">);</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> comment </span><span class="pun">=</span><span class="pln"> t</span><span class="pun">.</span><span class="pln">content</span><span class="pun">.</span><span class="pln">cloneNode</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+  </span><span class="com">// Populate content.</span><span class="pln">
+  comment</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'img'</span><span class="pun">).</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> imageUrl</span><span class="pun">;</span><span class="pln">
+  comment</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.comment-text'</span><span class="pun">).</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> text</span><span class="pun">;</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">body</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">comment</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/script&gt;</span></code></pre>
+
+<p>Because what is contained in the template is not in the document, but in the <code>content</code> document fragment, appending a copy of the template content in this way makes it "live" so scripts run and images are fetched at this point. For example, templates can be used to store large scripts inline in the document, but not incur the cost of parsing them until they are needed.</p>
+
+<h2 id="decorator-section"><span class="section">4</span> Decorators</h2>
+
+<p>Decorators, unlike other parts of Web Components, do not have a specification yet. One concept for Decorators that could be pursued is sketched in this section. There is no normative description of this part of Web Components.</p>
+
+<p>A <dfn id="decorator-definition" title="#decorator-definition">decorator</dfn> is something that enhances or overrides the presentation of an existing element. Like all presentation aspects, the application of decorators is controlled by CSS. However, being able to specify the extra presentation using markup is unique to decorators.</p>
+
+<p id="example-details-open-decorator">The <code>&lt;decorator&gt;</code> element contains a <code>&lt;template&gt;</code> element, which specifies the markup to use for rendering the decoration.</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;decorator</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"details-open"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;template&gt;</span><span class="pln">
+        </span><span class="tag">&lt;a</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;</span><span class="pln">
+          &amp;blacktriangledown;
+          </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+        </span><span class="tag">&lt;/a&gt;</span><span class="pln">
+        </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/template&gt;</span><span class="pln">
+</span><span class="tag">&lt;/decorator&gt;</span></code></pre>
+
+<p>The <code>&lt;content&gt;</code> element is the point where the content of the decorated element (the element's children) should appear in the rendering.</p>
+
+<p>Decorators are applied using the <code>decorator</code> CSS property:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+details</span><span class="pun">[</span><span class="pln">open</span><span class="pun">]</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    decorator</span><span class="pun">:</span><span class="pln"> url</span><span class="pun">(</span><span class="com">#details-open);</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>This decorator and stylesheet would cause the following markup:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;details</span><span class="pln"> </span><span class="atn">open</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;summary&gt;</span><span class="pln">Timepieces</span><span class="tag">&lt;/summary&gt;</span><span class="pln">
+    </span><span class="tag">&lt;ul&gt;</span><span class="pln">
+      </span><span class="tag">&lt;li&gt;</span><span class="pln">Sundial
+      </span><span class="tag">&lt;li&gt;</span><span class="pln">Cuckoo clock
+      </span><span class="tag">&lt;li&gt;</span><span class="pln">Wristwatch
+    </span><span class="tag">&lt;/ul&gt;</span><span class="pln">
+</span><span class="tag">&lt;/details&gt;</span></code></pre>
+
+<p>To be rendered like this:</p>
+
+<a>
+  ▾ Timepieces
+</a>
+<ul>
+  <li>Sundial
+  </li><li>Cuckoo clock
+  </li><li>Wristwatch
+</li></ul>
+
+<p>Even though the <code>decorator</code> CSS property can point to any resource on the Web, the decorator will not be applied unless its definition is loaded by this document. The markup that generates the presentation is limited to be purely presentational: it may never run script (including inline event handlers) and it cannot be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#editing-0">editable</a>.</p>
+
+<h3 id="events-in-decorators"><span class="section">4.1</span> Events in Decorators</h3>
+
+<p>Decorators can also attach event handlers to implement interactivity.</p>
+
+<p>Because the decorators are transient, it is not useful for the decorator to attach event listeners to the nodes in the template or rely on any state, since it perishes any time the decorator is applied or unapplied. Instead, decorator events are mediated by an event controller.</p>
+
+<figure>
+    <img src="event-handler-registration.png">
+    <figcaption>Fig. Event handler registration</figcaption>
+</figure>
+
+<p>To register an event listener with an event controller, the template includes a <code>&lt;script&gt;</code> element. The script is run <em>once</em> when the <code>decorator</code> element is inserted into the document, or loaded as part of an external document. The script must evaluate to an array of registrations:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;decorator</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"details-open"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;script&gt;</span><span class="pln">
+        </span><span class="kwd">function</span><span class="pln"> clicked</span><span class="pun">(</span><span class="pln">event</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            event</span><span class="pun">.</span><span class="pln">target</span><span class="pun">.</span><span class="pln">removeAttribute</span><span class="pun">(</span><span class="str">'open'</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">[{</span><span class="pln">selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'#summary'</span><span class="pun">,</span><span class="pln"> type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'click'</span><span class="pun">,</span><span class="pln"> handler</span><span class="pun">:</span><span class="pln"> clicked</span><span class="pun">}];</span><span class="pln">
+    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+    </span><span class="tag">&lt;template&gt;</span><span class="pln">
+        </span><span class="tag">&lt;a</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;</span><span class="pln">
+        </span><span class="com">&lt;!-- as illustrated above --&gt;</span></code></pre>
+
+<p>The event controller interprets the array and routes events originating in any of the places that the decorator is applied to the event handler.</p>
+
+<figure>
+    <img src="event-routing-retargeting.png">
+    <figcaption>Fig. Event routing and retargeting</figcaption>
+</figure>
+
+<p>When the event listener is called, the target of the event is the content that the decorator was applied to, not content from the template. In the above example, clicks on the ▾ (which is defined in the template) are delivered to the <code>clicked</code> function (which is registered to the <code>#summary</code> element, also defined in the template) but the <code>event.target</code> property refers to the decorated <code>&lt;details&gt;</code> element. This retargeting is necessary because the decorator specifies presentation; it does not affect the DOM structure of the document.</p>
+
+<p id="example-details-closed-decorator">By removing the <code>open</code> attribute, this decorator will no longer apply because the selector with the <code>decorator</code> property no longer matches. The decorator is unapplied, returning the rendering of the element back to the pre-decoration state. However the author could write a second decorator to affect a "closed" rendering and in this way implement stateless interactivity simply by triggering different decorators:</p>
+
+<pre class="prettyprint"><code class="language-html"><span class="pln">
+</span><span class="tag">&lt;style&gt;</span><span class="pln">
+details </span><span class="pun">{</span><span class="pln">
+    decorator</span><span class="pun">:</span><span class="pln"> url</span><span class="pun">(</span><span class="com">#details-closed);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+details</span><span class="pun">[</span><span class="pln">open</span><span class="pun">]</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    decorator</span><span class="pun">:</span><span class="pln"> url</span><span class="pun">(</span><span class="com">#details-open);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;decorator</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"details-closed"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;script&gt;</span><span class="pln">
+        </span><span class="kwd">function</span><span class="pln"> clicked</span><span class="pun">(</span><span class="pln">event</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            event</span><span class="pun">.</span><span class="pln">target</span><span class="pun">.</span><span class="pln">setAttribute</span><span class="pun">(</span><span class="str">'open'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'open'</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">[{</span><span class="pln">selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'#summary'</span><span class="pun">,</span><span class="pln"> type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'click'</span><span class="pun">,</span><span class="pln"> handler</span><span class="pun">:</span><span class="pln"> clicked</span><span class="pun">}];</span><span class="pln">
+    </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+    </span><span class="tag">&lt;template&gt;</span><span class="pln">
+        </span><span class="tag">&lt;a</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;</span><span class="pln">
+            &amp;blacktriangleright; </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+        </span><span class="tag">&lt;/a&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/template&gt;</span><span class="pln">
+</span><span class="tag">&lt;/decorator&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;decorator</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"details-open"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="com">&lt;!-- as illustrated above --&gt;</span></code></pre>
+
+<p>This uses two decorators. One presents the details view closed; the other presents the details view open. Each decorator uses an event handler to respond to clicks by toggling the open state of the element. The content element's select attribute will be explained in detail later.</p>
+
+<h2 id="custom-element-section"><span class="section">5</span> Custom Elements</h2>
+
+<p><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/custom/index.html">The Custom Elements specification</a> is the normative description of this part of Web Components.</p>
+
+<p>Custom elements are new types of DOM elements that can be defined by authors. Unlike decorators, which are stateless and ephemeral, custom elements can encapsulate state and provide script interfaces. The following table summarizes the key differences between decorators and custom elements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <td></td>
+      <th>Decorators</th>
+      <th>Custom Elements</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lifetime</td>
+      <td>Ephemeral, while a CSS selector matches</td>
+      <td>Stable, matches entire element lifetime</td>
+    </tr>
+    <tr>
+      <td>Applied, unapplied dynamically</td>
+      <td>Yes, based on CSS selectors</td>
+      <td>No, fixed at element creation time</td>
+    </tr>
+    <tr>
+      <td>Accessible through script</td>
+      <td>No, transparent to DOM; cannot add interfaces</td>
+      <td>Yes, accessible through DOM; can provide interfaces</td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>Stateless projection</td>
+      <td>Stateful DOM object</td>
+    </tr>
+    <tr>
+      <td>Behavior</td>
+      <td>Simulated by changing decorators</td>
+      <td>First-class using script and events</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="defining-a-custom-element"><span class="section">5.1</span> Defining a Custom Element</h3>
+
+<p>The <code>&lt;element&gt;</code> element defines a custom element. It specifies the type of element it's a refinement of using the <code>extends</code> attribute:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">extends</span><span class="pun">=</span><span class="atv">"button"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"fancy-button"</span><span class="tag">&gt;</span><span class="pln">
+    …
+</span><span class="tag">&lt;/element&gt;</span></code></pre>
+
+<p>The <code>extends</code> attribute specifies the tag name of the kind of element this element is an extension of. Instances of the custom element will have the tag name specified here.</p>
+
+<p>The <code>name</code> attribute specifies the name of the custom element, by which it will be referred to in markup. These names must include a hyphen.</p>
+
+<p>Because not all user agents support custom elements, authors should extend the HTML element that has the closest meaning to their new kind of element. For example, if they are defining a custom element that is interactive and responds to clicks by doing some action, they should extend button.</p>
+
+<p>When there isn't a HTML element that is semantically close to their custom element, authors can omit the <code>extends</code> attribute. These elements will use the value of the <code>name</code> attribute as a tag name. For this reason, these kinds of elements are called <i>custom tags.</i> A user agent that does not support custom elements will treat this as the semantically undifferentiated <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlunknownelement">HTMLUnknownElement</a>.</p>
+
+<h3 id="methods-and-properties"><span class="section">5.2</span> Methods and Properties</h3>
+
+<p>You can define a custom element's script API by putting methods and properties on the custom element's prototype object using a nested <code>&lt;script&gt;</code> element:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"tick-tock-clock"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;script&gt;</span><span class="pln">
+    </span><span class="pun">({</span><span class="pln">
+      tick</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">…</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+  </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+</span><span class="tag">&lt;/element&gt;</span></code></pre>
+
+<p>The properties of the last value of the script will be copied to a prototype object created for you. In the above example, <code>&lt;tick-tock-clock&gt;</code> elements will have a <code>tick</code> method.</p>
+
+<h3 id="lifecycle-callbacks"><span class="section">5.3</span> Lifecycle Callbacks</h3>
+
+<p>Custom elements have lifecycle callbacks which can be used to set up presentational aspects of a custom element. These are: <code>readyCallback</code>, which is called after a custom element is created; <code>insertedCallback</code>, which is called after a custom element is inserted into a document; and <code>removedCallback</code>, which is called after a custom element is removed from a document.</p>
+
+<p id="example-tick-tock-clock">The following example demonstrates using a template, shadow DOM (<a href="#shadow-dom-section">described in detail below</a>), and lifecycle callbacks to create a working clock element:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"tick-tock-clock"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;template&gt;</span><span class="pln">
+    </span><span class="tag">&lt;span</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"hh"</span><span class="tag">&gt;&lt;/span&gt;</span><span class="pln">
+    </span><span class="tag">&lt;span</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"sep"</span><span class="tag">&gt;</span><span class="pln">:</span><span class="tag">&lt;/span&gt;</span><span class="pln">
+    </span><span class="tag">&lt;span</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"mm"</span><span class="tag">&gt;&lt;/span&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/template&gt;</span><span class="pln">
+  </span><span class="tag">&lt;script&gt;</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> template </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">currentScript</span><span class="pun">.</span><span class="pln">parentNode</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'template'</span><span class="pun">);</span><span class="pln">
+
+    </span><span class="kwd">function</span><span class="pln"> start</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">tick</span><span class="pun">();</span><span class="pln">
+      </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_interval </span><span class="pun">=</span><span class="pln"> window</span><span class="pun">.</span><span class="pln">setInterval</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">tick</span><span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">),</span><span class="pln"> </span><span class="lit">1000</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="kwd">function</span><span class="pln"> stop</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      window</span><span class="pun">.</span><span class="pln">clearInterval</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_interval</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="kwd">function</span><span class="pln"> fmt</span><span class="pun">(</span><span class="pln">n</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> </span><span class="pun">(</span><span class="pln">n </span><span class="pun">&lt;</span><span class="pln"> </span><span class="lit">10</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="str">'0'</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="str">''</span><span class="pun">)</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> n</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="pun">({</span><span class="pln">
+      readyCallback</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_root </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">createShadowRoot</span><span class="pun">();</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">template</span><span class="pun">.</span><span class="pln">content</span><span class="pun">.</span><span class="pln">cloneNode</span><span class="pun">());</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">parentElement</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          start</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+      </span><span class="pun">},</span><span class="pln">
+      insertedCallback</span><span class="pun">:</span><span class="pln"> start</span><span class="pun">,</span><span class="pln">
+      removedCallback</span><span class="pun">:</span><span class="pln"> stop</span><span class="pun">,</span><span class="pln">
+      tick</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">var</span><span class="pln"> now </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Date</span><span class="pun">();</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_root</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'hh'</span><span class="pun">).</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> fmt</span><span class="pun">(</span><span class="pln">now</span><span class="pun">.</span><span class="pln">getHours</span><span class="pun">());</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_root</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'sep'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">visibility </span><span class="pun">=</span><span class="pln">
+            now</span><span class="pun">.</span><span class="pln">getSeconds</span><span class="pun">()</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="lit">2</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="str">'visible'</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="str">'hidden'</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">_root</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'mm'</span><span class="pun">).</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> fmt</span><span class="pun">(</span><span class="pln">now</span><span class="pun">.</span><span class="pln">getMinutes</span><span class="pun">());</span><span class="pln">
+      </span><span class="pun">},</span><span class="pln">
+      chime</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">…</span><span class="pln"> </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+  </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+</span><span class="tag">&lt;/element&gt;</span></code></pre>
+
+<h3 id="using-custom-elements-in-markup"><span class="section">5.4</span> Using Custom Elements in Markup</h3>
+
+<p>Because custom elements use existing HTML tag names—<code>div</code>, <code>button</code>, <code>option</code>, and so on—we need to use an attribute to specify when an author intends to use a custom element. The attribute name is <code>is</code>, and its value is the name of a custom element. For example:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">extends</span><span class="pun">=</span><span class="atv">"button"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"fancy-button"</span><span class="tag">&gt;</span><span class="pln">  </span><span class="com">&lt;!-- definition --&gt;</span><span class="pln">
+    …
+</span><span class="tag">&lt;/element&gt;</span></code></pre>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;button</span><span class="pln"> </span><b><span class="atn">is</span><span class="pun">=</span><span class="atv">"fancy-button"</span></b><span class="tag">&gt;</span><span class="pln">  </span><span class="com">&lt;!-- use --&gt;</span><span class="pln">
+    Do something fancy
+</span><span class="tag">&lt;/button&gt;</span></code></pre>
+
+<h3 id="using-custom-elements-in-script"><span class="section">5.5</span> Using Custom Elements in Script</h3>
+
+<p>As an alternative to the <code>&lt;element&gt;</code> element, you can also register custom elements from script using the <code>register</code> method. In this case you can set up the element's methods and properties by manipulating the prototype object directly. <code>register</code> returns a function that can be called to create an instance of the custom element:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> p </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Object</span><span class="pun">.</span><span class="pln">create</span><span class="pun">(</span><span class="typ">HTMLButtonElement</span><span class="pun">.</span><span class="pln">prototype</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{});</span><span class="pln">
+p</span><span class="pun">.</span><span class="pln">dazzle </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">…</span><span class="pln"> </span><span class="pun">};</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> </span><span class="typ">FancyButton</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="kwd">register</span><span class="pun">(</span><span class="str">'button'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'fancy-button'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">prototype</span><span class="pun">:</span><span class="pln"> p</span><span class="pun">});</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> b </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">FancyButton</span><span class="pun">();</span><span class="pln">
+document</span><span class="pun">.</span><span class="pln">body</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">b</span><span class="pun">);</span><span class="pln">
+b</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'click'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">event</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">event</span><span class="pun">.</span><span class="pln">target</span><span class="pun">.</span><span class="pln">dazzle</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>Custom elements defined either using <code>&lt;element&gt;</code> or <code>register</code> can be instantiated from script using the standard <code>createElement</code> method:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> b </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'button'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'fancy-button'</span><span class="pun">);</span><span class="pln">
+alert</span><span class="pun">(</span><span class="pln">b</span><span class="pun">.</span><span class="pln">outerHTML</span><span class="pun">);</span><span class="pln"> </span><span class="com">// will display '&lt;button is="fancy-button"&gt;&lt;/button&gt;'</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> c </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'tick-tock-clock'</span><span class="pun">);</span><span class="pln">
+alert</span><span class="pun">(</span><span class="pln">c</span><span class="pun">.</span><span class="pln">outerHTML</span><span class="pun">);</span><span class="pln"> </span><span class="com">// will display '&lt;tick-tock-clock&gt;&lt;/tick-tock-clock&gt;'</span></code></pre>
+
+<h3 id="element-upgrade"><span class="section">5.6</span> Element Upgrade</h3>
+
+<p>As the definition of a custom element is loaded, each element that matches the definition is upgraded. The upgrade process updates the prototype of the element, which makes the element's API available to script, and invokes lifecycle callbacks.</p>
+
+<p>You can avoid the flash of unstyled content by using the CSS <code>:unresolved</code> pseudoclass. This pseudoclass will match any custom element that does not have a definition available yet:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;style&gt;</span><span class="pln">
+tick</span><span class="pun">-</span><span class="pln">tock</span><span class="pun">-</span><span class="pln">clock</span><span class="pun">:</span><span class="pln">unresolved </span><span class="pun">{</span><span class="pln">
+  content</span><span class="pun">:</span><span class="pln"> </span><span class="str">'??:??'</span><span class="pun">;</span><span class="pln">  
+</span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span><span class="pln">
+</span><span class="tag">&lt;tick-tock-clock&gt;&lt;/tick-tock-clock&gt;</span><span class="pln"> </span><span class="com">&lt;!-- will show ??:?? --&gt;</span></code></pre>
+
+<p>This pseudoclass can also be used by script to avoid interacting with elements that have not been upgraded yet:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">// Chime ALL the clocks!</span><span class="pln">
+</span><span class="typ">Array</span><span class="pun">.</span><span class="pln">prototype</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelectorAll</span><span class="pun">(</span><span class="str">'tick-tock-clock</span><b><span class="str">:not(:unresolved)</span></b><span class="str">'</span><span class="pun">),</span><span class="pln">
+  </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="pln">clock</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> clock</span><span class="pun">.</span><span class="pln">chime</span><span class="pun">();</span><span class="pln"> </span><span class="pun">});</span></code></pre>
+
+<p>An element that wants to notify other parts of the page that it has been upgraded could dispatch a custom event to do so. Scripts that want to delay interacting with the element until it has been upgraded can listen to this event.</p>
+
+<h3 id="extending-custom-elements"><span class="section">5.7</span> Extending Custom Elements</h3>
+
+<p>In addition to HTML elements, you can also extend a custom element by specifying the custom element's name as the value of the <code>extends</code> attribute in the <code>&lt;element&gt;</code> element, or by setting up a prototype chain that includes another custom element prototype:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">extends</span><span class="pun">=</span><span class="atv">"tick-tock-clock"</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"grand-father-clock"</span><span class="tag">&gt;</span><span class="pln">
+    …
+</span><span class="tag">&lt;/element&gt;</span><span class="pln">
+</span><span class="tag">&lt;script&gt;</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> p </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Object</span><span class="pun">.</span><span class="pln">create</span><span class="pun">(</span><span class="typ">Object</span><span class="pun">.</span><span class="pln">getPrototypeOf</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'tick-tock-clock'</span><span class="pun">)));</span><span class="pln">
+p</span><span class="pun">.</span><span class="pln">popOutBirdie </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">…</span><span class="pln"> </span><span class="pun">}</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> </span><span class="typ">CuckooClock</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="kwd">register</span><span class="pun">(</span><span class="str">'cuckoo-clock'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">prototype</span><span class="pun">:</span><span class="pln"> p</span><span class="pun">});</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> c </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">CuckooClock</span><span class="pun">();</span><span class="pln">
+c</span><span class="pun">.</span><span class="pln">tick</span><span class="pun">();</span><span class="pln">         </span><span class="com">// inherited from tick-tock-clock</span><span class="pln">
+c</span><span class="pun">.</span><span class="pln">popOutBirdie</span><span class="pun">();</span><span class="pln"> </span><span class="com">// specific to cuckoo-clock</span><span class="pln">
+</span><span class="tag">&lt;/script&gt;</span></code></pre>
+
+<h2 id="shadow-dom-section"><span class="section">6</span> Shadow DOM</h2>
+
+<p><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html">The Shadow DOM specification</a> is the normative description of this part of Web Components.</p>
+
+<p>Shadow DOM is an adjunct tree of DOM nodes. These shadow DOM subtrees can be associated with an element, but do not appear as child nodes of the element. Instead the subtrees form their own scope. For example, a shadow DOM subtree can contain IDs and styles that overlap with IDs and styles in the document, but because the shadow DOM subtree (unlike the child node list) is separate from the document, the IDs and styles in the shadow DOM subtree do not clash with those in the document.</p>
+
+<p>Shadow DOM can be applied to an element by calling the <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#api-partial-element-create-shadow-root"><code>createShadowRoot</code></a> method. This returns a <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#shadow-root-object">ShadowRoot</a> node which can then be populated with DOM nodes.</p>
+
+<object data="shadow-trees.svg" width="800" height="430"></object>
+
+<p>An element with shadow DOM is called a <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-shadow-host">shadow host</a>. When an element has shadow DOM, the element's children are not rendered; the content of the shadow DOM is rendered instead.</p>
+
+<object data="shadow-rendering.svg" width="450" height="400"></object>
+
+<h3 id="insertion-points"><span class="section">6.1</span> Insertion Points</h3>
+
+<p>A shadow DOM subtree can use a <code><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element to specify an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-insertion-point">insertion point</a> in the rendered output. The host's children are displayed at the insertion point. The <code>&lt;content&gt;</code> element acts as an insertion point for rendering only—it does not change where the elements appear in DOM.</p>
+
+<p>You can have more than one insertion point in the shadow DOM subtree! The <code><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#markup-content-select">select</a></code> attribute lets you choose which children appear at which insertion point, as illustrated in the <a href="#xample-details-open-decorator"><code>details-open</code> decorator example</a>:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;a</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"#summary"</span><span class="tag">&gt;</span><span class="pln">
+  &amp;blacktriangledown;
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">"summary"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+</span><span class="tag">&lt;/a&gt;</span><span class="pln">
+</span><span class="tag">&lt;content&gt;&lt;/content&gt;</span></code></pre>
+
+<p>Insertion points let you reordered or selectively omit rendering the host's children, but they will not cause something to be rendered multiple times. Tree order dictates when each of these elements takes a pass at selecting the children. Once the child is selected to be rendered at one insertion point, it can't be claimed by another one, which is why the <code>details-open</code> decorator only renders the summary once.</p>
+
+<h3 id="reprojection"><span class="section">6.2</span> Reprojection</h3>
+
+<p>Elements in a shadow DOM subtree may have shadow roots of their own. When this happens, the insertion points of the nested shadow DOM subtree act on the nodes in the outer shadow DOM subtree's insertion points, as this example illustrates:</p>
+
+<pre class="prettyprint" id="example-news-no-styles"><code><span class="pln">
+</span><span class="com">&lt;!-- document --&gt;</span><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"news"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;h1&gt;</span><span class="pln">Good day for kittens</span><span class="tag">&lt;/h1&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Kitten rescued from tree</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div&gt;</span><span class="pln">Area kitten "adorable"&amp;mdash;owner</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Jiggled piece of yarn derails kitten kongress</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+
+</span><span class="com">&lt;!-- #news' shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"t"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">"h1"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"ticker"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"stories"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span><span class="pln">
+
+</span><span class="com">&lt;!-- #ticker's shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"u"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"highlight"</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;script&gt;</span><span class="pln">
+</span><span class="com">// Set up shadow DOM</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> news </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'#news'</span><span class="pun">);</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> r </span><span class="pun">=</span><span class="pln"> news</span><span class="pun">.</span><span class="pln">webkitCreateShadowRoot</span><span class="pun">();</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> t </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'#t'</span><span class="pun">);</span><span class="pln">
+r</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">t</span><span class="pun">.</span><span class="pln">content</span><span class="pun">.</span><span class="pln">cloneNode</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">));</span><span class="pln">
+
+</span><span class="kwd">var</span><span class="pln"> ticker </span><span class="pun">=</span><span class="pln"> r</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'#ticker'</span><span class="pun">);</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> s </span><span class="pun">=</span><span class="pln"> ticker</span><span class="pun">.</span><span class="pln">webkitCreateShadowRoot</span><span class="pun">();</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> u </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'#u'</span><span class="pun">);</span><span class="pln">
+s</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">u</span><span class="pun">.</span><span class="pln">content</span><span class="pun">.</span><span class="pln">cloneNode</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">));</span><span class="pln">
+</span><span class="tag">&lt;/script&gt;</span></code></pre>
+
+<p>Conceptually, first the document and the first shadow root is combined to create the following virtual DOM tree. The insertion points have been erased and the host element's child nodes appear in their place.</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"news"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;h1&gt;</span><span class="pln">Good day for kittens</span><span class="tag">&lt;/h1&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"ticker"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Kitten rescued from tree</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div&gt;</span><span class="pln">Area kitten "adorable"&amp;mdash;owner</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Jiggled piece of yarn derails kitten kongress</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></code></pre>
+
+<p>Next, this intermediate virtual tree is combined with the second shadow root to create another virtual DOM tree. All of the breaking news is now at the top. This is because of the <code>&lt;content class="highlight" select=".breaking"&gt;</code> insertion point. Note that the elements are reordered despite the fact that the <code>breaking</code> class does not appear in the <code>#ticker</code> element's children, because insertion points pick from the intermediate virtual tree. Projecting a node through multiple insertion points in this way is called <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#reprojection">reprojection</a>.</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"news"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;h1&gt;</span><span class="pln">Good day for kittens</span><span class="tag">&lt;/h1&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"ticker"</span><span class="tag">&gt;</span><span class="pln">
+    </span><b><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Kitten rescued from tree</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">Jiggled piece of yarn derails kitten kongress</span><span class="tag">&lt;/div&gt;</span></b><span class="pln">
+    </span><span class="tag">&lt;div&gt;</span><span class="pln">Area kitten "adorable"&amp;mdash;owner</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></code></pre>
+
+<h3 id="fallback-content"><span class="section">6.3</span> Fallback Content</h3>
+
+<p>An insertion point may have content. This is called <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-fallback-content">fallback content</a> because it is only displayed if nothing is distributed to an insertion point. For example, the news ticker shadow DOM could be modified to display default text if no heading and/or stories are available:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">&lt;!-- #news' shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"t"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">"h1"</span><span class="tag">&gt;</span><b><span class="pln">Today's top headlines</span></b><span class="tag">&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"ticker"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"stories"</span><span class="tag">&gt;</span><span class="pln">
+      </span><b><span class="pln">No news
+      </span><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">onclick</span><span class="pun">=</span><span class="atv">"</span><span class="pln">window</span><span class="pun">.</span><span class="pln">location</span><span class="pun">.</span><span class="pln">reload</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">Reload</span><span class="tag">&lt;/button&gt;</span></b><span class="pln">
+    </span><span class="tag">&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span></code></pre>
+
+<h3 id="multiple-shadow-subtrees"><span class="section">6.4</span> Multiple Shadow Subtrees</h3>
+
+<p>Any element can have more than one shadow DOM subtree. Don't look so puzzled! In fact, this is common when you are extending a custom element that already has a shadow DOM subtree. What happens to that poor old tree? We could just ditch it for the new arboreal hotness, but what if you don't want to? What if you want reuse it?</p>
+
+<p>There is another kind of insertion point for this purpose: the <code><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, which pulls in the previously applied shadow DOM subtree (also known as the <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-older-tree">older tree</a>). For example, here is a custom element which extends the <a href="#example-tick-tock-clock"><code>&lt;tick-tock-clock&gt;</code> element</a> and adds a direction indicator to it:</p>
+
+<pre class="prettyprint" id="example-sailing-watch"><code><span class="pln">
+</span><span class="tag">&lt;element</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"sailing-watch"</span><span class="pln"> </span><span class="atn">extends</span><span class="pun">=</span><span class="atv">"tick-tock-clock"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;template&gt;</span><span class="pln">
+    </span><span class="tag">&lt;shadow&gt;&lt;/shadow&gt;</span><span class="pln">
+    </span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"compass"</span><span class="tag">&gt;</span><span class="pln">N</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+  </span><span class="tag">&lt;/template&gt;</span><span class="pln">
+  </span><span class="tag">&lt;script&gt;</span><span class="pln">
+    </span><span class="pun">…</span><span class="pln">
+  </span><span class="tag">&lt;/script&gt;</span><span class="pln">
+</span><span class="tag">&lt;/element&gt;</span></code></pre>
+
+<p>Since an element can have multiple shadows, we need to understand how these shadows interact with each other and what effect these interactions have on rendering of the element's children.</p>
+
+<p>First, the order in which the shadow DOM subtrees are applied is important. Because you cannot remove a shadow root, the order is:</p>
+<ol>
+    <li>User agent shadow DOM (I got here first, nyah!)</li>
+    <li>The base custom element's shadow DOM.</li>
+    <li>The first derived custom element's shadow DOM.</li>
+    <li>…</li>
+    <li>Ad-hoc shadow DOM added using script.</li>
+    <li>Decorator shadow (applied and removed with CSS rules—not technically shadow <strong>DOM</strong>, but its insertion points work similarly to shadow DOM.)</li>
+</ol>
+
+<p>Next, we take this <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-tree-stack">stack</a> of shadow DOM subtrees and traverse it backwards, starting with the last-applied (or <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-youngest-tree">youngest</a>) subtree. Each <code>&lt;content&gt;</code> insertion point, encountered in tree order, grabs the host element's children that it needs as usual.</p>
+
+<p>This is where things get interesting. Once we're done shuffling the children into their right places to render, we check and see if we have a <code>&lt;shadow&gt;</code> element. If we don't, we're done.</p>
+
+<p>If we do, we plop the next shadow subtree in our list in place of the <code>&lt;shadow&gt;</code> element, and rinse-repeat first replacing <code>&lt;content&gt;</code> insertion points, then the first <code>&lt;shadow&gt;</code>, until we reach the end of the stack.</p>
+
+<p>And then—ta-da!—we have our wondrous shadow DOM Yggdrasil, ready for rendering.</p>
+
+<object data="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/assets/images/shadow-stack.svg" width="500" height="600"></object>
+
+<p>Here's an easy way to remember how this works:</p>
+<ul>
+    <li>The most recently applied shadow DOM subtree has the best shot of getting fresh children for its <code>&lt;content&gt;</code> insertion points.</li>
+    <li>Once it's had its way, the next most recent shadow DOM subtree—if even allowed to—can rummage through the remaining children.</li>
+    <li>Cycle repeats until either the current shadow DOM subtree has no <code>&lt;shadow&gt;</code> element, or we've processed the oldest DOM subtree for this element.</li>
+</ul>
+
+<h3 id="css-and-shadow-dom"><span class="section">6.5</span> CSS and Shadow DOM</h3>
+
+<p>When building a custom element it is natural to think about its markup (attributes and content) and script interface. It is often just as important to think about how it interacts with the styles in the page. Shadow DOM gives authors a lot of control over how content in shadow DOM interacts with styles.</p>
+
+<p>The shadow DOM subtree is surrounded by an invisible <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-shadow-boundary">boundary</a>, which by default applies user agent styles but not author styles. However inheritance still works as usual. This is usually what you want: In the <a href="#example-sailing-watch"><code>&lt;sailing-watch&gt;</code> example</a> above, if the page is styled so that the surrounding text is a beautiful sea green, in keeping with a nautical theme, the text inside the shadow DOM (for example the "N" of the direction indicator) will be sea green too because <a href="http://www.w3.org/TR/2011/REC-css3-color-20110607/#foreground"><code>color</code></a> is an inherited property. But if the author has styled all <code>&lt;div&gt;</code> elements to have orange borders, the direction indicator will <em>not</em> have an orange border because the <a href="http://www.w3.org/TR/css3-background/#borders">border properties</a> are not inherited properties.</p>
+
+<p>A shadow root has two properties to control this behavior. The first, <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code></a>, will apply the author stylesheet. Setting this property is appropriate when writing shadow DOM that should match the appearance of the surrounding content as closely as possible. There is one caveat: CSS selectors are matched against the shadow DOM subtree, not the flattened tree. Pay attention to child, descendant, sibling and "nth-of-x" selectors when using this property.</p>
+
+<p>The second shadow root property which controls the effect of surrounding styles on content in a shadow DOM subtree is <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code></a>. If this property is set to <code>true</code> <em>all</em> properties are reset to <a href="http://www.w3.org/TR/CSS21/about.html#initial-value">initial</a> values at the shadow boundary.</p>
+
+<p>If <code>applyAuthorStyles</code> is <code>false</code> and set <code>resetStyleInheritance</code> is <code>true</code>, you're back to a clean slate. Your element is insulated from the styles in the page—even inherited properties—and you can use a browser reset stylesheet to build up the exact style you want.</p>
+
+<p>There is a similar boundary at an insertion point. The styles from the shadow DOM subtree do not apply to the host element's children distributed into an insertion point. However some insertion points, particularly ones with very specific selectors and purpose, need to style the distributed content. Shadow DOM specifies a <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#distributed-pseudo-element"><code>::distributed</code> pseudo-selector</a> for this purpose. To elaborate the <a href="#example-news-no-styles">news example</a>:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">&lt;!-- #ticker's shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"u"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;style&gt;</span><span class="pln">
+    </span><b><span class="pln">content</span><span class="pun">::</span><span class="pln">distributed</span><span class="pun">(*)</span></b><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      display</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">inline</span><span class="pun">-</span><span class="pln">block</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><b><span class="pun">*::</span><span class="pln">distributed</span><span class="pun">(.</span><span class="pln">breaking</span><span class="pun">)</span></b><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      text</span><span class="pun">-</span><span class="pln">shadow</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0.2em</span><span class="pln"> maroon</span><span class="pun">;</span><span class="pln">
+      color</span><span class="pun">:</span><span class="pln"> orange</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="tag">&lt;/style&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"highlight"</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span></code></pre>
+
+<p>This contains two rules which use <code>::distributed</code>. The left half of the selector applies to the shadow DOM subtree; the part of the selector in parentheses applies to elements distributed to those insertion points. So the first <code>content::distributed(*)</code> selector applies to all elements distributed to <code>&lt;content&gt;</code> insertion points; while the second <code>*::distributed(.breaking)</code> selector applies to all elements with class <code>breaking</code> distributed to insertion points, giving them a healthy maroon glow. Given this specific shadow DOM the author could reduce redundancy by writing this selector <code>.highlight::distributed(*)</code> instead.</p>
+
+<p>Shadow DOM can also style its host element. It is natural for a custom element's shadow DOM to style the host because it is the outermost part of a widget. For example, to make the ticker to be a scrolling display instead of a static one, we can style it in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#host-at-rule"><code>@host</code> @-rule</a>:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">&lt;!-- #ticker's shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"u"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;style&gt;</span><span class="pln">
+    </span><b><span class="lit">@host</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="pun">:</span><span class="pln">scope </span><span class="pun">{</span><span class="pln">
+        white</span><span class="pun">-</span><span class="pln">space</span><span class="pun">:</span><span class="pln"> nowrap</span><span class="pun">;</span><span class="pln">
+        overflow</span><span class="pun">-</span><span class="pln">style</span><span class="pun">:</span><span class="pln"> marquee</span><span class="pun">-</span><span class="pln">line</span><span class="pun">;</span><span class="pln">
+        overflow</span><span class="pun">-</span><span class="pln">x</span><span class="pun">:</span><span class="pln"> marquee</span><span class="pun">;</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span></b><span class="pln">
+    content</span><span class="pun">::</span><span class="pln">distributed</span><span class="pun">(*)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      display</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">inline</span><span class="pun">-</span><span class="pln">block</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">*::</span><span class="pln">distributed</span><span class="pun">(.</span><span class="pln">breaking</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      text</span><span class="pun">-</span><span class="pln">shadow</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0.2em</span><span class="pln"> maroon</span><span class="pun">;</span><span class="pln">
+      color</span><span class="pun">:</span><span class="pln"> orange</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="tag">&lt;/style&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"highlight"</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span></code></pre>
+
+<p>Lastly, there are two ways to permit the page to style content in a shadow DOM subtree in a controlled way. The first exposes a specific element in the shadow DOM subtree by assigning it a pseudo ID. Author styles can then refer to it as a pseudo-element. For example, the outer "news" shadow DOM may want to let the author style the ticker part of the news display. It does this by setting the <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#custom-pseudo-elements"><code>pseudo</code> property</a>. Author styles can then address that part of the widget:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;script&gt;</span><span class="pln">
+</span><span class="com">// Set up shadow DOM</span><span class="pln">
+</span><span class="pun">…</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> ticker </span><span class="pun">=</span><span class="pln"> r</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'#ticker'</span><span class="pun">);</span><span class="pln">
+</span><b><span class="pln">ticker</span><span class="pun">.</span><span class="pln">pseudo </span><span class="pun">=</span><span class="pln"> </span><span class="str">'x-ticker'</span><span class="pun">;</span></b><span class="pln">
+</span><span class="pun">…</span><span class="pln">
+</span><span class="tag">&lt;/script&gt;</span><span class="pln">
+
+</span><span class="com">&lt;!-- change the appearance of the ticker part --&gt;</span><span class="pln">
+</span><span class="tag">&lt;style&gt;</span><span class="pln">
+</span><b><span class="com">#news::x-ticker</span></b><span class="com"> {</span><span class="pln">
+  background</span><span class="pun">:</span><span class="pln"> gray</span><span class="pun">;</span><span class="pln">
+  color</span><span class="pun">:</span><span class="pln"> lightblue</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span></code></pre>
+
+<p>The other way to let the page selectively style content in the shadow DOM subtree is to use CSS Variables. For example, instead of hardcoding orange with maroon tint, we could encode a pair of highlight colors:</p>
+
+<pre class="prettyprint"><code><span class="pln">
+</span><span class="com">&lt;!-- #ticker's shadow --&gt;</span><span class="pln">
+</span><span class="tag">&lt;template</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"u"</span><span class="tag">&gt;</span><span class="pln">
+  </span><span class="tag">&lt;style&gt;</span><span class="pln">
+    </span><span class="lit">@host</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="pun">:</span><span class="pln">scope </span><span class="pun">{</span><span class="pln">
+        white</span><span class="pun">-</span><span class="pln">space</span><span class="pun">:</span><span class="pln"> nowrap</span><span class="pun">;</span><span class="pln">
+        overflow</span><span class="pun">-</span><span class="pln">style</span><span class="pun">:</span><span class="pln"> marquee</span><span class="pun">-</span><span class="pln">line</span><span class="pun">;</span><span class="pln">
+        overflow</span><span class="pun">-</span><span class="pln">x</span><span class="pun">:</span><span class="pln"> marquee</span><span class="pun">;</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    content</span><span class="pun">::</span><span class="pln">distributed</span><span class="pun">(*)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      display</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">inline</span><span class="pun">-</span><span class="pln">block</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">*::</span><span class="pln">distributed</span><span class="pun">(.</span><span class="pln">breaking</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      text</span><span class="pun">-</span><span class="pln">shadow</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0.2em</span><span class="pln"> </span><b><span class="kwd">var</span><span class="pun">(</span><span class="pln">highlight</span><span class="pun">-</span><span class="pln">accent</span><span class="pun">,</span><span class="pln"> maroon</span><span class="pun">);</span></b><span class="pln">
+      color</span><span class="pun">:</span><span class="pln"> </span><b><span class="kwd">var</span><span class="pun">(</span><span class="pln">highlight</span><span class="pun">-</span><span class="pln">primary</span><span class="pun">,</span><span class="pln"> orange</span><span class="pun">);</span></b><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="tag">&lt;/style&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"highlight"</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln">
+  </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln">
+</span><span class="tag">&lt;/template&gt;</span><span class="pln">
+
+</span><span class="com">&lt;!-- change the appearance of the ticker part --&gt;</span><span class="pln">
+</span><span class="tag">&lt;style&gt;</span><span class="pln">
+</span><span class="com">#news::x-ticker {</span><span class="pln">
+  background</span><span class="pun">:</span><span class="pln"> gray</span><span class="pun">;</span><span class="pln">
+  color</span><span class="pun">:</span><span class="pln"> lightblue</span><span class="pun">;</span><span class="pln">
+  </span><b><span class="kwd">var</span><span class="pun">-</span><span class="pln">highlight</span><span class="pun">-</span><span class="pln">primary</span><span class="pun">:</span><span class="pln"> green</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pun">-</span><span class="pln">highlight</span><span class="pun">-</span><span class="pln">accent</span><span class="pun">:</span><span class="pln"> yellow</span><span class="pun">;</span></b><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span></code></pre>
+
+<p>A pseudo-element is useful for opening up all of the properties of a specific element for styling by the author. CSS Variables are useful for letting the author style a narrow set of properties, but ones that are specified repetitively such as the colors in a theme.</p>
+
+<h3 id="events"><span class="section">6.6</span> Events in Shadow DOM</h3>
+
+<p>To ensure that the elements of the shadow DOM subtree are not exposed outside of the subtree, there's a fair bit of work that happens while dispatching an event from inside of the subtree.</p>
+
+<p>First, some events (like mutation and selectstart events) are just plain <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#events-that-are-always-stopped">prevented</a> from escaping out of the shadow DOM subtree—they are never heard from the outside.</p>
+
+<p>Those events that do cross the shadow DOM <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-shadow-boundary">boundary</a> are <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#event-retargeting">retargeted</a>—their <code>target</code> and <code>relatedTarget</code> values are modified to point to the element that <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#dfn-shadow-host">hosts</a> the shadow DOM subtree.</p>
+
+<p>In some cases, like <code>DOMFocusIn</code>, <code>mouseover</code>, <code>mouseout</code> events have to be given extra attention: if you're moving a mouse between two elements inside of the shadow subtree, you don't want to be spamming the document with these events, since they will appear as non-sensical babbling after the retargeting. (What? the element just reported that the mouse just moved from itself back to itself?!)</p>
+
+<h2 id="imports-section"><span class="section">7</span> Imports</h2>
+
+<p><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html">The HTML Imports specification</a> is the normative description of this part of Web Components.</p>
+
+<p>Custom elements and decorators can be loaded from external files using the link tag:
+
+</p><pre class="prettyprint"><code><span class="pln">
+</span><span class="tag">&lt;link</span><span class="pln"> </span><span class="atn">rel</span><span class="pun">=</span><span class="atv">"import"</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"goodies.html"</span><span class="tag">&gt;</span></code></pre>
+
+<p>Only <code>&lt;decorator&gt;</code> elements and <code>&lt;element&gt;</code> elements are interpreted by the user agent, although the DOM of this document is available to script through the <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-html-link-element-import"><code>import</code></a> property. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.</p>
+
+<h2 id="appendix-a-interfaces">Appendix A. Interfaces and Elements</h2>
+
+<p>This section provides an index of interfaces and elements defined
+by Web Components, with links to their normative definitions.</p>
+
+<h3 id="interfaces">Interfaces</h3>
+
+<ul>
+<!-- CSSHostRule --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#css-host-rule-interface">CSSHostRule</a></li>
+<!-- CSSRule --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#css-host-rule-methods">CSSRule</a> (partial)</li>
+<!-- Document --> <li>Document (partial—<a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/custom/index.html#dfn-document-register">register,</a> <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/custom/index.html#monkeypatch-create-element">createElement, createElementNS</a>)</li>
+<!-- Element --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#extensions-to-element">Element</a> (partial)</li>
+<!-- HTMLLinkElement --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#interface-import">HTMLLinkElement</a> (partial)</li>
+<!-- ShadowRoot --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#api-shadow-root">ShadowRoot</a></li>
+</ul>
+
+<h3 id="elements">Elements</h3>
+
+<ul>
+<!-- content --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#content-element">content</a></li>
+<!-- element --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/custom/index.html#the-element-element">element</a></li>
+<!-- shadow --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#shadow-element">shadow</a></li>
+<!-- template --> <li><a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html#template-element">template</a></li>
+</ul>
+
+<h2 id="acknowledgements">Acknowledgements</h2>
+
+<p>Thanks to <span class="vcard">Alex Komoroske</span>, <span class="vcard">Alex Russell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Dirk Pranke</span>, <span class="vcard">Divya Manian</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Hajime Morita</span>, <span class="vcard">Ian Hickson</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Roland Steiner</span>, and <span class="vcard">Tab Atkins</span> for their comments and contributions to this document.</p>
+
+
+
+</body></html>
