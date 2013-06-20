@@ -162,6 +162,7 @@ Conceptually, all these associations of custom elements with a registration cont
     <li><a href="#dfn-custom-element">Custom element</a> instance is created after its <a href="#dfn-element-definition">definition</a> was <a href="#dfn-element-registration">registered</a></li>
     <li><a href="#dfn-custom-element">Custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a></li>
     <li><a href="#dfn-custom-element">Custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document</a></li>
+    <li>A <a href="#dfn-custom-element">Custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is created, removed, or modified</li>
     <li><a href="#dfn-custom-element">Custom element</a> is garbage-collected.</li>
 </ol>
 
@@ -201,7 +202,7 @@ Conceptually, all these associations of custom elements with a registration cont
 </ol>
 </div>
 
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback and the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>, which is an <a href="http://dom.spec.whatwg.org/#concept-element">element</a>.</p>
+<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself, the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>, which is an <a href="http://dom.spec.whatwg.org/#concept-element">element</a>, and zero or more string values that are used as callback arguments.</p>
 
 <p>Also, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-running-lifecycle-callbacks">running lifecycle callbacks</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the algorithm to <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a>.</p>
 
@@ -224,7 +225,7 @@ Conceptually, all these associations of custom elements with a registration cont
         <li>Empty <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.
         <li>For each <var>INVOCATION</var> in <var>INVOCATIONS</var>:
         <ol>
-            <li>Invoke callback in <var>INVOCATION</var> with the corresponding <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a></li>
+            <li>Invoke callback in <var>INVOCATION</var> with the corresponding <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, use string values supplied in <var>INVOCATION</var> as arguments</li>
         </ol></li>
         <li>Let <var>INVOCATIONS</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a></li>
     </ol></li>
@@ -239,9 +240,20 @@ Conceptually, all these associations of custom elements with a registration cont
 <dt>ready</dt>
     <dd>invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
 <dt>inserted</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
 <dt>removed</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+<dt>attributeChanged</dt>
+    <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
+    <dl>
+    <dt><a href="http://dom.spec.whatwg.org/#attribute-is-added">attribute is set</a></dt>
+        <dd><strong>null</strong> and new <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a></dd>
+    <dt><a href="http://dom.spec.whatwg.org/#attribute-is-changed">attribute is changed</a></dt>
+        <dd>old <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a> and new <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a></dd>
+    <dt><a href="http://dom.spec.whatwg.org/#attribute-is-removed">attribute is removed</a>
+        <dd>old <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a> and <strong>null</strong></dd>
+    </dl>
+    <dfn id="#dfn-attribute-changed-exception">attribute change via DOM API exception</dfn>: when the <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is modified with <a href="http://dom.spec.whatwg.org/#dom-element-setattribute"><code>setAttribute</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-setattributens"><code>setAttributeNS</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-removeattribute"><code>removeAttribute</code></a>, or <a href="http://dom.spec.whatwg.org/#dom-element-removeattributens"><code>removeAttributeNS</code></a> methods of the <a href="#dfn-custom-element">custom element</a>, as well as setting the <a href="http://dom.spec.whatwg.org/#dom-attr-value"><code>value</code></a> property of the <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a>, the callback <strong>must</strong> be invoked immediately.</dd> 
 </dl>
 
 <h2 id="registering-custom-elements">Registering Custom Elements</h2>
@@ -318,6 +330,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>inserted</em> to <var>LIFECYCLE</var> from property named <em>insertedCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>removed</em> to <var>LIFECYCLE</var> from property named <em>removedCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>attributeChanged</em> to <var>LIFECYCLE</var> from property named <em>attributeChangedCallback</em> on <var>PROTOTYPE</var></li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> with <a href="#dfn-custom-element-type">custom element type</a> set to <var>TYPE</var>, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <var>NAMESPACE</var>, <a href="#dfn-custom-element-prototype">custom element prototype</a> to <var>PROTOTYPE</var>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> to <var>LIFECYCLE</var>.</li>
 </ol>
 </div>
@@ -759,7 +772,6 @@ Changing <a href="#markup-element-name"><code>name</code></a>, <a href="#markup-
 <p><span class="fixme">Explain how inheritance in custom elements can be extended to other languages.</span></p>
 
 -->
-
 </section>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
