@@ -164,6 +164,16 @@ partial interface <a href="http://www.whatwg.org/specs/web-apps/current-work/mul
 
 <p>The same object <strong>must</strong> be returned each time.</p>
 
+<div class="informative">
+<p>Here's how one could access the imported document, mentioned in the previous example:</p>
+<pre><code class="prettyprint">
+var link = document.querySelector('link[rel=import]');
+var heart = link.import;
+// access DOM of the document in /imports/heart.html
+var pulse = heart.querySelector('div.pulse');
+</code></pre>
+</div>
+
 <p>All <a href="#dfn-import">imports</a> have an <dfn id="dfn-import-ready-flag">import ready flag</dfn>, which is initially unset. When an <a href="#dfn-import">import</a> is ready to be used, its <a href="#dfn-import-ready-flag">import ready flag</a> <strong>must</strong> be set.</p>
 
 <p>An <a href="#dfn-import">import</a> in the context of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a> is said to be <dfn id="dfn-an-import-that-is-blocking-scripts">an import that is blocking scripts</dfn> if the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>'s parser, and the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> of type <A href="#link-type-import"><code>import</code></a> when the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by the parser, and the <a href="http://dom.spec.whatwg.org/#concept-element">element</a>'s <a href="#dfn-import-ready-flag">import ready flag</a> is not yet set, and, the last time the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#event-loop">event loop</a> has reached step 1, the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in that <code>Document</code></a>, and the user agent hasn't given up on that <a href="#dfn-import">import</a> yet. A user agent may give up on an <a href="#dfn-import">import</a> at any time.</p>
