@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Spec Assist</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:700|Droid+Sans+Mono|Ovo" type="text/css">
+<link rel="stylesheet" href="../../assets/styles/main.css" type="text/css">
+<link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
+<link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css">
+<script src="../../assets/scripts/spec-assist.js"></script>
+<script src="../../assets/scripts/spec-assist_unittests.js"></script>
+<script src="../../assets/scripts/prettify.js"></script>
+</head>
+
+<body>
+
+<div class="head">
+
+<h1>Shadow DOM</h1>
+<h2 id="editors-draft">Spec Assist</h2>
+<dl>
+<dt>Revision history</dt>
+    <dd><a id="log" href="https://dvcs.w3.org/hg/webcomponents/log/tip/assets/docs/spec-assist.html">https://dvcs.w3.org/hg/webcomponents/log/tip/assets/docs/spec-assist.html</a></dd>
+</dl>
+
+<section class="toc">
+<h2 id="toc">Table of Contents</h2>
+<ol>
+    <li><a href="#what-is-spec-assist"><span class="section">1</span> What is Spec Assist?</a></li>
+    <li><a href="#last-updated-date-fetcher"><span class="section">2</span> Last Updated Date Fetcher</a></li>
+    <li><a href="#toc-enumerator"><span class="section">3</span> Table of Contents Enumerator</a></li>
+    <li><a href="#definitions-cross-linker"><span class="section">4</span> Definitions Cross-linker</a></li>
+    <li><a href="#tests"><span class="section">5</span> Tests</a></li>
+</ol>
+</section>
+
+<section class="math">
+
+<h2 id="what-is-spec-assist">What is Spec Assist?</h2>
+
+<p><dfn id="dfn-spec-assist">Spec Assist</dfn> is a simple tool that was made specifically for easing the pain of writing Web Components specs in plain HTML. It is an assortment of independent utilities, each fixing its own bit of tediousness. All these utilities are completely client-side, require little configuration, and stay out of the way.</p>
+
+<p>When you need to publish the spec, just serialize the DOM tree and save it as new file. A simple way to do this is to open DevTools in Chrome, right-click on the <code>html</code> element, and select "Copy as HTML".</p>
+
+<p class="note">You will still need to tweak the contents of the new file before publishing, like changing the stylesheet to Working Draft, etc.</p>
+
+<h2 id="last-updated-date-fetcher">Last Updated Date Fetcher</h2>
+
+<p>The <dfn id="dfn-ast-updated-date-fetcher">Last Updated Date Fetcher</dfn> appends the date on which the current spec was last updated to the end of the main title, like the <a href="http://www.w3.org/2005/07/pubrules?uimode=filter&amp;uri=">PubRules</a> require.</p>
+
+<p>To start using Last Updated Date Fetcher, you need two hints in your spec markup:</p>
+
+<ol>
+	<li>An element that matches <code>h2#editors-draft</code>, which is where the date will be appended</li>
+	<li>An hyperlink that matches <code>a#log</code>, which <strong>must</strong> contain the URL of the Mercurial commit log.</li>
+</ol>
+
+<p>The utility assumes that you are loading the spec from the Mercurial repository, and will attempt to fetch the ATOM feed of the commits, grab the last one and its date. If it fails at doing any of this, the utility will use today's date.</p>
+
+<h2 id="toc-enumerator">Table of Contents Enumerator</h2>
+
+<p>The <dfn id="dfn-table-of-contents-enumerator">Table of Contents Enumerator</dfn> creates sequentially-running numbers for each item in the specification's table of contents, and prefixes all corresponding titles with this number</p>
+
+<p>To activate Table of Contents Enumerator, make sure that you wrap the table of contents in a <code>section.toc</code> element</p>
+
+<h2 id="definitions-cross-linker">Definitions Cross-linker</h2>
+
+<p>The <dfn id="dfn-definitions-cross-linker">Definitions Cross-linker</dfn> is very primitive at the moment. It simply looks for all <code>dfn[id]</code> and sticks the value of the id as the <code>title</code> attribute. When the users hover over the definition, they can see the id for the defnition.</p>
+
+<h2 id="tests">Tests</h2>
+
+<p>Eventually, there will be tests :)</p>
+
+</body>
+</html>
