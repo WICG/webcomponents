@@ -1,17 +1,48 @@
 (function() {
 
-function TableOfContentsEnumerator() {}
+function TableOfContentsEnumerator()
+{
+}
 
 TableOfContentsEnumerator.prototype.initialize = function()
 {
-    [].forEach.call(document.querySelectorAll('section.toc li span.section'), function(sectionNumber) {
-        var href = sectionNumber.parentElement.getAttribute('href');
-        var target = href && document.querySelector(href);
-        if (target) {
-            target.insertBefore(document.createTextNode(' '), target.firstChild);
-            target.insertBefore(sectionNumber.cloneNode(true), target.firstChild);
-        }
-    });    
+    var top = document.querySelector('section.toc');
+    if (!top)
+        return;
+
+    this.prefix = [];
+    this.enumerateList(top);
+}
+
+TableOfContentsEnumerator.prototype.enumerateList = function(top)
+{
+    var list = top.querySelector('ol,ul');
+    if (!list)
+        return;
+
+    this.prefix.push(1);
+    [].forEach.call(list.children, this.processListItem, this);
+    this.prefix.pop();
+}
+
+TableOfContentsEnumerator.prototype.processListItem = function(item)
+{
+    if (!(item instanceof HTMLLIElement))
+        return;
+    
+    var indexText = this.prefix.join('.') + " ";
+    var a = item.querySelector('a');
+    var href = a.getAttribute('href');
+    var target = href && document.querySelector(href);
+    if (!target || a.classList.contains('no-number'))
+        return;
+
+    a.insertBefore(document.createTextNode(indexText), a.firstChild);
+    target.insertBefore(document.createTextNode(indexText), target.firstChild);
+
+    this.enumerateList(item);
+
+    this.prefix[this.prefix.length - 1]++;
 }
 
 function LastUpdatedDateFetcher() {}
