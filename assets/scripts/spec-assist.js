@@ -1,8 +1,8 @@
 (function() {
 
-function TableOfContentsHelper() {}
+function TableOfContentsEnumerator() {}
 
-TableOfContentsHelper.prototype.help = function()
+TableOfContentsEnumerator.prototype.initialize = function()
 {
     [].forEach.call(document.querySelectorAll('section.toc li span.section'), function(sectionNumber) {
         var href = sectionNumber.parentElement.getAttribute('href');
@@ -14,26 +14,24 @@ TableOfContentsHelper.prototype.help = function()
     });    
 }
 
-function LastUpdatedHelper()
+function LastUpdatedDateFetcher() {}
+
+LastUpdatedDateFetcher.prototype.initialize = function()
 {
     this.title = document.querySelector('h2#editors-draft');
-}
-
-LastUpdatedHelper.prototype.help = function()
-{
     if (!this.title)
         return;
 
     this.fetchLastUpdated(this.appendDate.bind(this));
 }
 
-LastUpdatedHelper.prototype.appendDate = function(date)
+LastUpdatedDateFetcher.prototype.appendDate = function(date)
 {
     var prettyDate = this.prettyDate(date);
     this.title.appendChild(document.createTextNode(prettyDate));
 }
 
-LastUpdatedHelper.prototype.fetchLastUpdated = function(callback)
+LastUpdatedDateFetcher.prototype.fetchLastUpdated = function(callback)
 {
     var lastUpdated = new Date();
     var logAnchorNode = document.querySelector('a#log');
@@ -61,25 +59,25 @@ LastUpdatedHelper.prototype.fetchLastUpdated = function(callback)
     xhr.send();
 }
 
-LastUpdatedHelper.prototype.prettyDate = function(date)
+LastUpdatedDateFetcher.prototype.prettyDate = function(date)
 {
     return ' ' + date.getDate() + ' ' + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][date.getMonth()] + ' ' + date.getFullYear();
 }
 
-function DefinitionsHelper() {}
+function DefinitionsCrossLinker() {}
 
-DefinitionsHelper.prototype.help = function()
+DefinitionsCrossLinker.prototype.initialize = function()
 {
     [].forEach.call(document.querySelectorAll('dfn[id]'), function(definition) {
         definition.setAttribute('title', '#' + definition.id);
     });
 }
 
-var helpers = [ LastUpdatedHelper, TableOfContentsHelper, DefinitionsHelper ];
+var assistants = [ new LastUpdatedDateFetcher(), new TableOfContentsEnumerator(), new DefinitionsCrossLinker() ];
 
 document.addEventListener('DOMContentLoaded', function() {
-    helpers.forEach(function(helperConstructor) {
-        (new helperConstructor()).help();
+    assistants.forEach(function(assistant) {
+        assistant.initialize();
     });
 });
 
