@@ -165,45 +165,6 @@
     <li><a href="http://www.w3.org/TR/selectors-api2/">Selectors API Level 2</a></li>
 </ul>
 
-<div class="deprecated">
-
-<h2 id="shadow-trees">Shadow Trees</h2>
-
-<p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="deprecated-dfn-shadow-dom">shadow DOM</dfn> allows multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees (in addition to the <a href="#dfn-document-tree">document tree</a>) to be composed into one larger <a href="http://www.w3.org/TR/domcore/#trees">tree</a> when rendered. The existence of multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-document-tree">document tree</a> to host one or more additional <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees. These <dfn id="deprecated-dfn-shadow-tree">shadow trees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> composability semantics.</p>
-
-<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between the <a href="#dfn-document-tree">document tree</a> and <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-host">shadow hosts</dfn>, and the <a href="http://www.w3.org/TR/domcore/#concept-tree-root">roots</a> of the <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-root">shadow roots</dfn>.</p>
-
-<object data="../../assets/images/shadow-trees.svg" width="800" height="430"></object>
-
-<p>When rendered, the <a href="#dfn-shadow-tree">shadow tree</a> takes place of the <a href="#dfn-shadow-host">shadow host</a>'s content.</p>
-
-<object data="../../assets/images/shadow-rendering.svg" width="450" height="400"></object>
-
-<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the <a href="#dfn-shadow-tree">shadow tree</a>, a notion of insertion points is added to the abstraction. An <dfn id="deprecated-dfn-insertion-point">insertion point</dfn> is a defined location in the <a href="#dfn-shadow-tree">shadow tree</a>, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="deprecated-dfn-distribution">distribution</dfn>.</p>
-
-<object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
-
-<p>Thus, the encapsulation of a <a href="#dfn-shadow-tree">shadow tree</a> can be viewed as a two-fold problem:
-<ol>
-    <li>the <dfn id="deprecated-dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
-    <li>the <dfn id="deprecated-dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
-</ol>
-</p>
-
-<h3 id="nested-shadow-trees">Nested Shadow Trees</h3>
-
-<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested <a href="#dfn-shadow-tree">shadow trees</a>. A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-nested-tree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-tree">shadow tree</a>. Conversely, a <a href="#dfn-shadow-tree">shadow tree</a> <em>A</em> is said to be <dfn id="deprecated-dfn-nesting-tree">nesting</dfn> the <a href="#dfn-shadow-tree">shadow tree</a> <em>B</em> if <em>B</em> is <a href="#dfn-nested-tree">nested</a> by <em>A</em>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> is the <a href="#deprecated-dfn-nesting-tree">nesting</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-tree">shadow trees</a>.</p>
-
-<p>A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-enclosed-tree">enclosed</dfn> by another <a href="#dfn-shadow-tree">shadow tree</a> when the enclosing <a href="http://www.w3.org/TR/domcore/#trees">tree</a> nests the enclosed <a href="http://www.w3.org/TR/domcore/#trees">tree</a> through one or more levels of nesting. All <a href="#dfn-shadow-tree">shadow trees</a> are <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by the <a href="#dfn-document-tree">document tree</a>.</p>
-
-<h3 id="rendering-shadow-trees">Rendering Shadow Trees</h3>
-
-<p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees, including the <a href="#dfn-document-tree">document tree</a>. The term "<dfn id="deprecated-dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
-
-</div>
-
-<div class="fixme">Remove this deprecated parts after the refactoring is finished.</div>
-
 <h2 id="terminology">Terminology</h2>
 
 <h3>Shadow trees</h3>
@@ -1586,6 +1547,47 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 // TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
 </code></pre>
 <p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers&mdash;without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow tree composition in such a cool way.</p>
+
+<h2 id="deprecated">Deprecated parts</h2>
+
+<div class="deprecated">
+
+<h2 id="shadow-trees">Shadow Trees</h2>
+
+<p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="deprecated-dfn-shadow-dom">shadow DOM</dfn> allows multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees (in addition to the <a href="#dfn-document-tree">document tree</a>) to be composed into one larger <a href="http://www.w3.org/TR/domcore/#trees">tree</a> when rendered. The existence of multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-document-tree">document tree</a> to host one or more additional <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees. These <dfn id="deprecated-dfn-shadow-tree">shadow trees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> composability semantics.</p>
+
+<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between the <a href="#dfn-document-tree">document tree</a> and <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-host">shadow hosts</dfn>, and the <a href="http://www.w3.org/TR/domcore/#concept-tree-root">roots</a> of the <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-root">shadow roots</dfn>.</p>
+
+<object data="../../assets/images/shadow-trees.svg" width="800" height="430"></object>
+
+<p>When rendered, the <a href="#dfn-shadow-tree">shadow tree</a> takes place of the <a href="#dfn-shadow-host">shadow host</a>'s content.</p>
+
+<object data="../../assets/images/shadow-rendering.svg" width="450" height="400"></object>
+
+<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the <a href="#dfn-shadow-tree">shadow tree</a>, a notion of insertion points is added to the abstraction. An <dfn id="deprecated-dfn-insertion-point">insertion point</dfn> is a defined location in the <a href="#dfn-shadow-tree">shadow tree</a>, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="deprecated-dfn-distribution">distribution</dfn>.</p>
+
+<object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
+
+<p>Thus, the encapsulation of a <a href="#dfn-shadow-tree">shadow tree</a> can be viewed as a two-fold problem:
+<ol>
+    <li>the <dfn id="deprecated-dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
+    <li>the <dfn id="deprecated-dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
+</ol>
+</p>
+
+<h3 id="nested-shadow-trees">Nested Shadow Trees</h3>
+
+<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested <a href="#dfn-shadow-tree">shadow trees</a>. A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-nested-tree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-tree">shadow tree</a>. Conversely, a <a href="#dfn-shadow-tree">shadow tree</a> <em>A</em> is said to be <dfn id="deprecated-dfn-nesting-tree">nesting</dfn> the <a href="#dfn-shadow-tree">shadow tree</a> <em>B</em> if <em>B</em> is <a href="#dfn-nested-tree">nested</a> by <em>A</em>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> is the <a href="#deprecated-dfn-nesting-tree">nesting</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-tree">shadow trees</a>.</p>
+
+<p>A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-enclosed-tree">enclosed</dfn> by another <a href="#dfn-shadow-tree">shadow tree</a> when the enclosing <a href="http://www.w3.org/TR/domcore/#trees">tree</a> nests the enclosed <a href="http://www.w3.org/TR/domcore/#trees">tree</a> through one or more levels of nesting. All <a href="#dfn-shadow-tree">shadow trees</a> are <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by the <a href="#dfn-document-tree">document tree</a>.</p>
+
+<h3 id="rendering-shadow-trees">Rendering Shadow Trees</h3>
+
+<p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees, including the <a href="#dfn-document-tree">document tree</a>. The term "<dfn id="deprecated-dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
+
+</div>
+
+<div class="fixme">Remove this deprecated parts after the refactoring is finished.</div>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
