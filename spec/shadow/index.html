@@ -84,6 +84,7 @@
         <li><a href="#css-variables">CSS Variables</a></li>
         <li><a href="#text-decoration-property"><code>text-decoration</code> Property</a></li>
         <li><a href="#host-at-rule"><code>@host</code> @-rule</a></li>
+        <li><a href="#custom-pseudo-elements">Custom Pseudo-Elements</a></li>
     </ol></li>
     <li><a href="#user-interaction">User Interaction</a>
     <ol>
@@ -263,47 +264,6 @@ The exact algorithm of constructing a composed tree is specified later.</p>
 <div class="informative">For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods. No <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> other than the <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</div>
 
 <p class="fixme">This secion is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
-
-<h3 id="custom-pseudo-elements">Custom Pseudo-Elements</h3>
-
-<p>In certain situations, the author of a <a href="#dfn-shadow-tree">shadow tree</a> may wish to designate one or more <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> from that <a href="http://www.w3.org/TR/domcore/#trees">tree</a> as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
-
-<p class="fixme">This section seems out of place.</p>
-
-<div class="informative">
-For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
-</div>
-
-<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.</p>
-
-<div class="informative">
-
-<p>In the case of the aforementioned 2-dimensional slider widget, the author could build the widget's shadow tree as follows:</p>
-
-<pre><code class="prettyprint">
-var widget = document.createElement('div');
-var root = widget.createShadowRoot();
-var thumb = document.createElement('div');
-thumb.pseudo = 'x-thumb';
-root.appendChild(thumb);
-</code></pre>
-
-<p>Once the <code>pseudo</code> property is set, the consumer of the widget could style the widget's thumb using <code>x-thumb</code> pseudo-element, reaching into the widget's shadow tree directly to the thumb:</p>
-
-<pre><code class="prettyprint">
-div::x-thumb {
-    width: 10px;
-    height: 10px;
-    color: bisque;
-}
-</code></pre>
-
-<p></p>
-</div>
-
-<div class="fixme">
-    Using the <code>x-</code> prefix was raised as a problem (see <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20600">bug 20600</a>), but no one presented better alternatives yet.
-</div>
 
 <h2 id="distributions">Distributions</h2>
 
@@ -962,6 +922,43 @@ host
 
 <p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
 
+<h3 id="custom-pseudo-elements">Custom Pseudo-Elements</h3>
+
+<p>In certain situations, the author of a <a href="#dfn-shadow-tree">shadow tree</a> may wish to designate one or more <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> from that <a href="http://www.w3.org/TR/domcore/#trees">tree</a> as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+
+<div class="informative">
+For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
+</div>
+
+<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.</p>
+
+<div class="informative">
+
+<p>In the case of the aforementioned 2-dimensional slider widget, the author could build the widget's shadow tree as follows:</p>
+
+<pre><code class="prettyprint">
+var widget = document.createElement('div');
+var root = widget.createShadowRoot();
+var thumb = document.createElement('div');
+thumb.pseudo = 'x-thumb';
+root.appendChild(thumb);
+</code></pre>
+
+<p>Once the <code>pseudo</code> property is set, the consumer of the widget could style the widget's thumb using <code>x-thumb</code> pseudo-element, reaching into the widget's shadow tree directly to the thumb:</p>
+
+<pre><code class="prettyprint">
+div::x-thumb {
+    width: 10px;
+    height: 10px;
+    color: bisque;
+}
+</code></pre>
+
+</div>
+
+<div class="fixme">
+    Using the <code>x-</code> prefix was raised as a problem (see <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20600">bug 20600</a>), but no one presented better alternatives yet.
+</div>
 
 <h2 id="user-interaction">User Interaction</h2>
 
