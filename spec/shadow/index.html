@@ -559,11 +559,11 @@ The <a href="dfn-distribution-result">distribution result</a> <strong>must</stro
     <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
 </dl>
 <ol>
-  <li>Let the <var>PATH</var> be the empty ordered list of nodes</li>
-  <li>Let the <var>CURRENT</var> be NODE</li>
+  <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+  <li>Let <var>CURRENT</var> be <var>NODE</var></li>
+  <li>Add <var>CURRENT</var> to <var>PATH</var></li>
   <li><dfn id="event-path-calculation-algorithm-repeat">Repeat</dfn> while <var>CURRENT</var> exists:
   <ol>
-    <li>Add <var>CURRENT</var> to <var>PATH</var></li>
     <li>If the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
     <ol>
       <li>If the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
@@ -571,17 +571,22 @@ The <a href="dfn-distribution-result">distribution result</a> <strong>must</stro
         <li>Add the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> to PATH</li>
       </ol></li>
       <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
-      <li>Let <var>CURRENT</var> be the last item of the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var></li>
+      <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination">final destination</a> of <var>CURRENT</var></li>
     </ol></li>
     <li>Otherwise:
     <ol>
       <li>If <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
       <ol>
         <li>Let <var>CURRENT</var> be the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> <var>CURRENT</var></li>
+        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
       </ol></li>
       <li>Otherwise:
       <ol>
         <li>Let <var>CURRENT</var> be the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var></li>
+        <li>If <var>CURRENT</var> exists:
+          <ol>
+            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+          </ol></li>
       </ol></li>
     </ol></li>
   </ol></li>
