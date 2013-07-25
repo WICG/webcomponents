@@ -264,23 +264,23 @@ The exact algorithm of constructing a composed tree is specified later.</p>
 
 <h2 id="distributions">Distributions</h2>
 
-<p>A <dfn id="dfn-content-insertion-point">content insertion point</dfn> is an insertion point to where the shadow host's children are distributed.
+<p>A <dfn id="dfn-content-insertion-point">content insertion point</dfn> is an <a href="#dfn-insertion-point">insertion point</a> to where the child <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> of the <a href="#dfn-shadow-host">shadow host</a> are distributed.
 The <a href="#dfn-content-element">content HTML element</a> that satisfies all of the following conditions represents a <a href="#dfn-content-insertion-point">content insertion point</a>.
   <ul>
-    <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the content HTML element is a shadow root</li>
-    <li>There is at most one <a href="#dfn-shadow-element">shadow HTML element</a> in the ancestors of the content HTML element</li>
-    <li>There is no <a href="#dfn-content-element">content HTML element</a> in the ancestors of the content HTML element</li>
+    <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-content-element">content HTML element</a> is a <a href="#dfn-shadow-root">shadow root</a></li>
+    <li>There is at most one <a href="#dfn-shadow-element">shadow HTML element</a> in the <a href="http://dom.spec.whatwg.org/#concept-tree-ancestor">ancestors</a> of the <a href="#dfn-content-element">content HTML element</a></li>
+    <li>There is no other <a href="#dfn-content-element">content HTML element</a> in the <a href="http://dom.spec.whatwg.org/#concept-tree-ancestor">ancestors</a> of the <a href="#dfn-content-element">content HTML element</a></li>
   </ul>
 </p>
 
 <p class="fixme">Bring in HTML element and interface definitions here</p>
 
-<p>A <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> is an insertion point to where the older shadow root's children are distributed.
+<p>A <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> is an <a href="#dfn-insertion-point">insertion point</a> to where the children of the <a href="#dfn-older-shadow-root">older shadow root</a> are distributed.
 The <a href="#dfn-shadow-element">shadow HTML element</a> that satisfies of the following conditions represents a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>.
   <ul>
-    <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the shadow HTML element is a shadow root</li>
-    <li>There is no <a href="http://dom.spec.whatwg.org/#concept-tree-preceding">preceding</a> <a href="#dfn-shadow-element">shadow HTML element</a></li>
-    <li>There is no <a href="#dfn-content-element">content HTML element</a> in the ancestors of the shadow HTML element</li>
+    <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-shadow-element">shadow HTML element</a> is a <a href="#dfn-shadow-root">shadow root</a></li>
+    <li>There is no other <a href="#dfn-shadow-element">shadow HTML element</a> which is <a href="http://dom.spec.whatwg.org/#concept-tree-preceding">preceding</a> the <a href="#dfn-shadow-element">shadow HTML element</a></li>
+    <li>There is no other <a href="#dfn-content-element">content HTML element</a> in the <a href="http://dom.spec.whatwg.org/#concept-tree-ancestor">ancestors</a> of the <a href="#dfn-shadow-element">shadow HTML element</a></li>
   </ul>
 </p>
 
