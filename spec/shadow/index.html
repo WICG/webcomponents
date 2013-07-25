@@ -173,11 +173,11 @@
 
 <p>A <dfn id="dfn-document-tree">document tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
-<p>Each element has an associated ordered list of zero or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
+<p>Any element can have an associated ordered list of zero or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
 
-<p>An element <dfn id="dfn-verb-host">hosts</dfn> a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> if the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> is a member of the ordered list which the element has.</p>
+<p>An element <dfn id="dfn-verb-host">hosts</dfn> a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> if the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> is a member of this associated list.</p>
 
-<p>A <dfn id="dfn-shadow-host">shadow host</dfn> is an element which <a href="#dfn-verb-host">hosts</a> one or more node <a href="http://dom.spec.whatwg.org/#trees">trees</a>.</p>
+<p>A <dfn id="dfn-shadow-host">shadow host</dfn> is an element that <a href="#dfn-verb-host">hosts</a> one or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
 
 <p>A <dfn id="dfn-shadow-tree">shadow tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> <a href="#dfn-verb-host">hosted</a> by a <a href="#dfn-shadow-host">shadow host</a>.</p>
 
@@ -193,18 +193,18 @@ the <a href="#dfn-shadow-root">shadow root</a> is called the <dfn id="dfn-younge
 
 <h3>Trees of trees</h3>
 
-<p>A <dfn id="dfn-tree-of-trees">tree of trees</dfn> is a <a href="http://dom.spec.whatwg.org/#trees">tree</a> which is used to define a relationship between <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
+<p>A <dfn id="dfn-tree-of-trees">tree of trees</dfn> is a <a href="http://dom.spec.whatwg.org/#trees">tree</a> of <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
 
 <figure>
   <object data="../../assets/images/tree-of-trees.svg" width="650" height="823"></object>
   <figcaption>Fig. A tree of trees</figcaption>
 </figure>
 
-<p>As a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> is defined as a <a href="http://dom.spec.whatwg.org/#trees">relationship</a> between <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a>,
-a <a href="#dfn-tree-of-trees">tree of trees</a> is defined as a relationship between <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a> in the similar way as follows:
+<p>Just like a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> is defined as <a href="http://dom.spec.whatwg.org/#trees">a set of relationships</a> between <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a>,
+a <a href="#dfn-tree-of-trees">tree of trees</a> is similarly defined as a set of relationships between <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>:
   <ul>
     <li>A <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> <var>A</var> is called a <dfn id="dfn-parent-tree-root">parent tree</dfn> of a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> <var>B</var> if the <a href="#dfn-shadow-host">shadow host</a> of <var>B</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in <var>A</var>.</li>
-    <li>If there are more than one <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a> that share the same <a href="#dfn-parent-tree">parent tree</a>, the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> between them in the <a href="#dfn-tree-of-trees">tree of trees</a> is defined as follows:
+    <li>If there is more than one <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that shares the same <a href="#dfn-parent-tree">parent tree</a>, the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> between them in the <a href="#dfn-tree-of-trees">tree of trees</a> is defined as follows:
       <ol>
         <li>Let <var>A</var> and <var>B</var> be <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a> that share the same <a href="#dfn-parent-tree">parent tree</a>.</li>
         <li><var>A</var> comes before <var>B</var> if either of the following conditions is satisfied:
@@ -215,7 +215,7 @@ a <a href="#dfn-tree-of-trees">tree of trees</a> is defined as a relationship be
         </li>
       </ol>
     </li>
-    <li>Other relationships and terminologies, such as <dfn id="dfn-root-tree">root tree</dfn>, <dfn id="dfn-child-tree">child tree</dfn>,
+    <li>Other relationships and terms, such as <dfn id="dfn-root-tree">root tree</dfn>, <dfn id="dfn-child-tree">child tree</dfn>,
       <dfn id="dfn-descendant-tree">descendant tree</dfn>, <dfn id="dfn-inclusive-descendant-tree">inclusive descendant tree</dfn>,
       <dfn id="dfn-ancestor-tree">ancestor tree</dfn>, <dfn id="dfn-inclusive-ancestor-tree">inclusive ancestor tree</dfn>,
       <dfn id="dfn-preceding-tree">preceding tree</dfn>
@@ -223,7 +223,7 @@ a <a href="#dfn-tree-of-trees">tree of trees</a> is defined as a relationship be
   </ul>
 </p>
 
-<div class="informative">A <a href="#dfn-document-tree">document tree</a> is always the <a href="#dfn-root-tree">root tree</a> of a <a href="#dfn-tree-of-trees">tree of trees</a>.</div>
+<div class="informative">The <a href="#dfn-document-tree">document tree</a> is always the <a href="#dfn-root-tree">root tree</a> of a <a href="#dfn-tree-of-trees">tree of trees</a>.</div>
 
 <h3>Composed trees</h3>
 
@@ -235,7 +235,7 @@ The exact algorithm of constructing a composed tree is specified later.</p>
   <figcaption>Fig. A composed tree</figcaption>
 </figure>
 
-<p>In <dfn id="dfn-rendering">rendering</dfn> a <a href="#dfn-document-tree">document tree</a>, or presenting it visually, the <a href="#dfn-composed-tree">composed tree</a> <strong>must</strong> be used in <a href="#dfn-rendering">rendering</a> instead of the <a href="#dfn-document-tree">document tree</a>.</p>
+<p>In <dfn id="dfn-rendering">rendering</dfn> a <a href="#dfn-document-tree">document tree</a>, or presenting it visually, the <a href="#dfn-composed-tree">composed tree</a> <strong>must</strong> be used instead of the <a href="#dfn-document-tree">document tree</a>.</p>
 
 <p>If any condition which affects a <a href="#dfn-distribution-map">composed tree</a> has changed, the <a href="#dfn-distribution-map">composed tree</a> <strong>must</strong> be updated before the <a href="#dfn-rendering">rendering</a> occurs.</p>
 
