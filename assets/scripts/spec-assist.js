@@ -148,33 +148,36 @@ DefinitionsCrossLinker.prototype.createCrossLink = function(backId, title)
 DefinitionsCrossLinker.prototype.createCrossLinks = function(dfn)
 {
     var id = dfn.id;
-    var headings = {};
-    [].forEach.call(document.querySelectorAll('a[href="#' + id + '"]'), function(a, i) {
-        var backId;
-        if (a.id) {
-            backId = a.id;
-        } else {
-            backId = 'back-' + id + '-' + i;
-            a.id = backId;
-        }
-        var heading = this.findCrossLinkHeading(a);
-        var titles = headings[heading.id];
-        if (titles)
-            titles.push(this.createCrossLink(backId, '(' + (titles.length + 1) + ')'));
-        else
-            titles = headings[heading.id] = [ this.createCrossLink(backId, heading.textContent) ];
-    }, this);
+    var links = ['No references.'];
 
-    var keys = Object.keys(headings);
-    var links = [];
-    if (!keys.length) {
-        links = ['No references.'];
-    } else  {
-        links = keys.map(function(key) {
-            return '<li>' + headings[key].join('') + '</li>';
-        });
+    if (!dfn.classList.contains('no-backreference')) {
+        var headings = {};
+        [].forEach.call(document.querySelectorAll('a[href="#' + id + '"]'), function(a, i) {
+            var backId;
+            if (a.id) {
+                backId = a.id;
+            } else {
+                backId = 'back-' + id + '-' + i;
+                a.id = backId;
+            }
+            var heading = this.findCrossLinkHeading(a);
+            var titles = headings[heading.id];
+            if (titles)
+                titles.push(this.createCrossLink(backId, '(' + (titles.length + 1) + ')'));
+            else
+                titles = headings[heading.id] = [ this.createCrossLink(backId, heading.textContent) ];
+        }, this);
+
+        var keys = Object.keys(headings);
+        if (!keys.length) {
+            dfn.classList.add('no-references');
+        } else  {
+            links = keys.map(function(key) {
+                return '<li>' + headings[key].join('') + '</li>';
+            });
+        }
     }
-    dfn.crossLinkContent = '<div class="title">#' + dfn.id + '</div><ol>' + links.join('') + '</ol>';
+    dfn.crossLinkContent = '<div class="title">#' + id + '</div><ol>' + links.join('') + '</ol>';
 }
 
 var assistants = [ new LastUpdatedDateFetcher(), new TableOfContentsEnumerator(), new DefinitionsCrossLinker() ];
