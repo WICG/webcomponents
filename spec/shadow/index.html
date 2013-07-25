@@ -979,19 +979,33 @@ div::x-thumb {
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p><a href="#dfn-shadow-tree">Shadow trees</a> participate in <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential</a> or <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional</a> focus navigation as part of the <a href="#dfn-document-tree">document tree</a>. The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a href="#dfn-shadow-tree">shadow tree</a> <strong>must</strong> be computed as a list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a> <a href="#deprecated-dfn-as-rendered">as-rendered</a>, with the exception of any <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a>, <a href="#dfn-distribution">distributed</a> into <a href="#dfn-insertion-point">insertion points</a>, and is called <dfn id="dfn-shadow-dom-navigation-order">shadow DOM navigation order</dfn>.</p>
+<p>A <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <dfn id="dfn-inert">inert</dfn> if the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> doesn’t participate in the <a href="#dfn-composed-tree">composed tree</a>.</p>
 
-<div class="informative">
-Since the elements, distributed into insertion points are not part of the shadow tree, their order remains to be controlled by the navigation order of the nesting tree.
-</div>
+<p>If a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <a href="#dfn-inert">inert</a>, the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <strong>must</strong> be skipped from the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> sequence.</p>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> sequence <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>:</p>
+<p>The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a href="#dfn-shadow-tree">shadow tree</a> <strong>must</strong> be computed as a list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>, and is called <dfn id="dfn-shadow-tree-navigation-order">shadow tree navigation order</dfn>.</p>
+
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation order</a> sequence for a given <a href="#dfn-shadow-tree">shadow tree</a> <var>A</var> <strong>must</strong> be inserted into other <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> as follow:
 <ol>
-    <li>immediately after the <a href="#dfn-shadow-host">shadow host</a>, if the shadow host is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
-    <li>in place of the <a href="#dfn-shadow-host">shadow host</a> as if the shadow host were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+  <li>If the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>A</var> is the <a href="#dfn-youngest-shadow-root">youngest shadow root</a>:
+  <ol>
+    <li>Let <var>B</var> be the <a href="#dfn-parent-tree">parent tree</a> of <var>A</var></li>
+    <li>Let <var>HOST</var> be the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> A</li>
+    <li>The <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation order</a> for A <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var>:
+    <ol>
+      <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
+      <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+    </ol></li>
+  </ol></li>
+  <li>Otherwise:
+  <ol>
+    <li>Let <var>B</var> be the <a href="#dfn-younger-shadow-root">younger shadow root</a> relative to <var>A</var></li>
+    <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>B</var></li>
+    <li>If <var>SHADOW</var> exists, the <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var> immediattely after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+  </ol></li>
 </ol>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-dom-navigation-order">shadow DOM navigation order</a> into the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation orders</a> into the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 
 <h3 id="active-element">Active Element</h3>
 
