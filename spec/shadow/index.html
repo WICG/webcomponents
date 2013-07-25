@@ -1009,26 +1009,21 @@ div::x-thumb {
 
 <h3 id="active-element">Active Element</h3>
 
-<p>To maintain <a href="#deprecated-dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+<p>To maintain encapsulation, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
-<p>The <dfn id="active-element-adjustment-algorithm">active <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> adjustment algorithm</dfn> is used to determine the values of the respective <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> properties, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+<p>The <dfn id="active-element-adjustment-algorithm">active <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> adjustment algorithm</dfn> is used to determine the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> property, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>ELEMENT</var>, the focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a></dd>
+    <dd><var>ROOT</var>, either a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> or a <a href="#dfn-shadow-root">shadow root</a></dd>
 <dt>Output</dt>
-    <dd>Adjusted values of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> properties.</dd>
+    <dd><var>ADJUSTED</var>, an adjusted <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> property of <var>ROOT</var>.</dd>
 </dl>
 <ol>
-    <li>Run the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>ELEMENT</var> as input</li>
-    <li>For each <var>TUPLE</var> in the resulting list of tuples:
-    <ol>
-        <li>Let <var>ADJUSTED</var> be the first value of the <var>TUPLE</var></li>
-        <li>Let <var>NODE</var> be the second value of the <var>TUPLE</var></li>
-        <li>If <var>NODE</var> is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> or a <a href="#dfn-shadow-root">shadow root</a>, set the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> to <var>ADJUSTED</var>.</li>
-    </ol>
-    </li>
+    <li>Let <var>PATH</var> be the result of the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>ELEMENT</var> as input</li>
+    <li>Let <var>ADJUSTED</var> be the result of the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <var>ROOT</var> as input</li>
 </ol>
 </div>
 
