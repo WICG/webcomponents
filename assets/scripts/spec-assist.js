@@ -99,9 +99,82 @@ function DefinitionsCrossLinker() {}
 
 DefinitionsCrossLinker.prototype.initialize = function()
 {
-    [].forEach.call(document.querySelectorAll('dfn[id]'), function(definition) {
-        definition.setAttribute('title', '#' + definition.id);
-    });
+    document.addEventListener('click', this.onClick.bind(this));
+    this.hovercard = document.createElement('b');
+    this.hovercard.className = 'hovercard';
+    [].forEach.call(document.querySelectorAll('dfn[id]'), this.createCrossLinks, this);
+}
+
+DefinitionsCrossLinker.prototype.onClick = function(event)
+{
+    var element = event.target;
+    if (element.tagName != 'DFN' || element.contains(this.hovercard)) {
+        this.closeHovercard();
+        return;
+    }
+
+    this.openHovercard(element);
+}
+
+DefinitionsCrossLinker.prototype.openHovercard = function(dfn)
+{
+    this.hovercard.innerHTML = dfn.crossLinkContent;
+    dfn.appendChild(this.hovercard);
+}
+
+DefinitionsCrossLinker.prototype.closeHovercard = function(dfn)
+{
+    if (!this.hovercard.parentElement)
+        return;
+
+    this.hovercard.parentElement.removeChild(this.hovercard);
+}
+
+DefinitionsCrossLinker.prototype.findCrossLinkHeading = function(a)
+{
+    var element = a;
+    while(element = element.previousSibling || element.parentElement) {
+        if (element instanceof HTMLHeadingElement && element.id)
+            break;
+    }
+    return element;
+}
+
+DefinitionsCrossLinker.prototype.createCrossLink = function(backId, title)
+{
+    return '<a href="#' + backId + '">' + title + '</a> ';
+}
+
+DefinitionsCrossLinker.prototype.createCrossLinks = function(dfn)
+{
+    var id = dfn.id;
+    var headings = {};
+    [].forEach.call(document.querySelectorAll('a[href="#' + id + '"]'), function(a, i) {
+        var backId;
+        if (a.id) {
+            backId = a.id;
+        } else {
+            backId = 'back-' + id + '-' + i;
+            a.id = backId;
+        }
+        var heading = this.findCrossLinkHeading(a);
+        var titles = headings[heading.id];
+        if (titles)
+            titles.push(this.createCrossLink(backId, '(' + (titles.length + 1) + ')'));
+        else
+            titles = headings[heading.id] = [ this.createCrossLink(backId, heading.textContent) ];
+    }, this);
+
+    var keys = Object.keys(headings);
+    var links = [];
+    if (!keys.length) {
+        links = ['No references.'];
+    } else  {
+        links = keys.map(function(key) {
+            return '<li>' + headings[key].join('') + '</li>';
+        });
+    }
+    dfn.crossLinkContent = '<div class="title">#' + dfn.id + '</div><ol>' + links.join('') + '</ol>';
 }
 
 var assistants = [ new LastUpdatedDateFetcher(), new TableOfContentsEnumerator(), new DefinitionsCrossLinker() ];
