@@ -1057,7 +1057,7 @@ div::x-thumb {
 
 <h2 id="html-elements-and-their-shadow-trees">HTML Elements and Their Shadow Trees</h2>
 
-<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a href="#deprecated-dfn-shadow-dom">shadow DOM</a> <a href="#dfn-tree-composition">tree composition</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-tree">shadow tree</a> that is created and populated at the time of <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a href="#dfn-composed-tree">composed tree</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a href="#dfn-processing-equivalence">equivalent</a> of a <a href="#dfn-shadow-tree">shadow tree</a> that is created and populated at the time of <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
 <table>
 <thead>
@@ -1069,11 +1069,11 @@ div::x-thumb {
 <tbody>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element"><code>iframe</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element"><code>embed</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element"><code>object</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element"><code>video</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element"><code>audio</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element"><code>canvas</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element"><code>map</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element"><code>input</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element"><code>textarea</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element"><code>progress</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element"><code>meter</code></a></td>
-        <td>If the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-insertion-point">insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-insertion-point">insertion points</a> or an <a href="#dfn-insertion-point">insertion point</a> that matches nothing.</td>
+        <td>If the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a href="#dfn-content-insertion-point">content insertion point</a>. The <a href="#dfn-matching-criteria">matching criteria</a> value is the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a href="#dfn-content-insertion-point">content insertion points</a> or an <a href="#dfn-content-insertion-point">content insertion point</a> that matches nothing.</td>
     </tr>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-fieldset-element"><code>fieldset</code></a></td>
-        <td>Contains two <a href="#dfn-insertion-point">insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
+        <td>Contains two <a href="#dfn-content-insertion-point">content insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
         <ol>
             <li><code>legend:first-of-type</code></li>
             <li><a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
@@ -1082,7 +1082,7 @@ div::x-thumb {
     </tr>
     <tr>
         <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element"><code>details</code></a></td>
-        <td>Contains two <a href="#dfn-insertion-point">insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
+        <td>Contains two <a href="#dfn-content-insertion-point">content insertion points</a> with the following <a href="#dfn-matching-criteria">matching criteria</a>:
         <ol>
             <li><code>summary:first-of-type</code></li>
             <li><a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a></li>
@@ -1091,7 +1091,7 @@ div::x-thumb {
     </tr>
     <tr>
         <td>All other <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a></td>
-        <td>Contains one <a href="#dfn-insertion-point">insertion point</a> with the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> as the <a href="#dfn-matching-criteria">matching criteria</a></td>
+        <td>Contains one <a href="#dfn-content-insertion-point">content insertion point</a> with the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> as the <a href="#dfn-matching-criteria">matching criteria</a></td>
     </tr>
 </tbody>
 </table>
