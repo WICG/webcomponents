@@ -1435,27 +1435,25 @@ partial interface <a href="http://dom.spec.whatwg.org/#event">Event</a> {
 <dl>
 <dt><dfn id="api-partial-event-path">path</dfn> of type <a href="http://www.w3.org/TR/dom/#interface-nodelist"><code>NodeList</code></a></dt>
 <dd>Represents the adjusted event path.</dd>
-<dd>To enforce upper-boundary encapsulation, some nodes must be excluded from the event path, depending on the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> would be invoked.</dd>
+<dd>To maintain encapsulation, the <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="#dfn-iclusive-ancestor-tree">inclusive ancestor trees</a> <strong>must</strong> be included in the event path, relative to the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> would be invoked.</dd>
 <dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>PATH</var>, a populated event path with <a href="#dfn-adjusted-parent">adjusted parents</a></dd>
+    <dd><var>PATH</var>, the event path for an event</dd>
     <dd><var>NODE</var>, the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners would be invoked</dd>
 <dt>Output</dt>
     <dd><var>RESULT</var>, an adjusted event path</dd>
 </dl>
 <ol>
-    <li>Let <var>TREE1</var> be the <a href="http://www.w3.org/TR/domcore/#concept-tree">tree</a> that contains <var>NODE</var></li>
-    <li>Let <var>RESULT</var> be the empty list</li>
-    <li>For each item <var>NODE2</var> in <var>PATH</var>, repeat these steps:
+    <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> participates in</li>
+    <li>Let <var>RESULT</var> be the empty ordered list</li>
+    <li>For each node, <var>NODE2</var>, in <var>PATH</var>:
         <ol>
-            <li>Let <var>TREE2</var> be the <a href="http://www.w3.org/TR/domcore/#concept-tree">tree</a> that contains <var>NODE2</var></li>
-            <li>If <var>TREE1</var> and <var>TREE2</var> are the same, push <var>NODE2</var> to <var>RESULT</var></li>
-            <li>Otherwise, if <var>TREE1</var> is <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by <var>TREE2</var>, push <var>NODE2</var> to <var>RESULT</var></li>
+            <li>Let <var>TREE2</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE2</var> participate in</li>
+            <li>If <var>TREE2</var> is an <a href="#dfn-iclusive-ancestor-tree">inclusive ancestor tree</a> of <var>TREE1</var>, add <var>NODE2</var> to <var>RESULT</var></li>
         </ol></li>
-    </li>
 </ol>
 </div>
 <p>These steps <strong>must</strong> run prior to invoking <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> on any <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> in <var>PATH</var>.</p>
