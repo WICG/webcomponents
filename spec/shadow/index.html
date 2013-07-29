@@ -1179,9 +1179,8 @@ When invoked, it <strong>must</strong> return result of running the following st
     <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
     <li>If either argument is negative, <code>x</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
     <li>Let <var>HIT</var> be the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
-    <li>Let <var>TARGETS</var> be the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>HIT</var> as its argument</li>
-    <li>Let <var>TUPLE</var> be the tuple in <var>TARGETS</var>, whose <em>second</em> value is <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a></li>
-    <li>Return <em>first</em> value of <var>TUPLE</var>.</li>
+    <li>Let <var>PATH</var> be the result of running the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>HIT</var> as input</li>
+    <li>Return the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as input</li>
 </ol></dd>
 <!--
 <dt id="api-shadow-root-add-style-sheet"><code>addStyleSheet</code></dt>
