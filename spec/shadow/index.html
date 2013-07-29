@@ -539,7 +539,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 <p>For a given <a href="#dfn-tree-of-trees">tree of trees</a> <var>TREE-OF-TREES</var>, the <a href="#dfn-composed-tree">composed tree</a> costructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to the following tree:
 <ul>
   <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-composed-tree">composed tree</a> is the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-root-tree">root tree</a> of <var>TREE-OF-TREES</var>.</li>
-  <li>For a given <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which participates in the <a href="#dfn-composed-tree">composed tree</a>, the child <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> of the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is the resulf of the <a href="#dfn-composed-tree-children-calculation-algorithm">composed tree children calculation algorithm</a> with the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> as input.
+  <li>For a given <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in the <a href="#dfn-composed-tree">composed tree</a>, the child <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> of the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is the resulf of the <a href="#dfn-composed-tree-children-calculation-algorithm">composed tree children calculation algorithm</a> with the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> as input.
   </li>
 </ul>
 </p>
@@ -674,13 +674,13 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     <dd><var>RELATIVE-TARGET</var>, adjusted target</dd>
 </dl>
 <ol>
-    <li>Let <var>CURRENT-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which <var>CURRENT-TARGET</var> participates in</li>
+    <li>Let <var>CURRENT-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which <var>CURRENT-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
     <li>Let <var>TARGET</var> be the first item in PATH</li>
-    <li>Let <var>TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which ORIGINAL-TARGET participates in</li>
+    <li>Let <var>TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which ORIGINAL-TARGET <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
     <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> tree of CURRENT-TARGET-TREE and TARGET-TREE</li>
     <li>Let <var>RELATIVE-TARGET</var> be the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfie all the following conditions:
     <ol>
-        <li>The <a href="http://www.3.org/TR/domcore/#concept-node">node</a> participates in RELATIVE-TARGET-TREE</li>
+        <li>The <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in RELATIVE-TARGET-TREE</li>
         <li>The <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is a member of PATH</li>
         <li>There is no other decendant <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfies the conditions.</li>
     </ol></li>
@@ -716,11 +716,11 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 <ol>
   <li>Let <var>ADJUSTED-RELATED-TARGET</var> be null</li>
   <li>Let <var>RELATED-TARGET-PATH</var> be the result of the event path calculation algorithm with <var>RELATED-TARGET</var> as input</li>
-  <li>For each <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> tree, <var>CURRENT-TREE</var>, of the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which <var>CURRENT-TARGET</var> participates in, in ascending order:
+  <li>For each <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> tree, <var>CURRENT-TREE</var>, of the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which <var>CURRENT-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in, in ascending order:
   <ol>
     <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>RELATED-PATH-ANCESTOR</var>, in the <var>RELATED-PATH</var>:
     <ol>
-      <li>If <var>RELATED-PATH-ANCESTOR</var> participates in <var>CURRENT-TREE</var>:
+      <li>If <var>RELATED-PATH-ANCESTOR</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in <var>CURRENT-TREE</var>:
       <ol>
         <li>Let <var>ADJUSTED-RELATED-TARGET</var> be RELATED-PATH-ANCESTOR</li>
         <li>Stops</li>
@@ -979,7 +979,7 @@ div::x-thumb {
 
 <h3 id="focus-navigation">Focus Navigation</h3>
 
-<p>A <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <dfn id="dfn-inert">inert</dfn> if the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> doesn’t participate in the <a href="#dfn-composed-tree">composed tree</a>.</p>
+<p>A <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <dfn id="dfn-inert">inert</dfn> if the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> doesn’t <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participate</a> in the <a href="#dfn-composed-tree">composed tree</a>.</p>
 
 <p>If a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <a href="#dfn-inert">inert</a>, the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <strong>must</strong> be skipped from the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> sequence.</p>
 
@@ -1447,11 +1447,11 @@ partial interface <a href="http://dom.spec.whatwg.org/#event">Event</a> {
     <dd><var>RESULT</var>, an adjusted event path for <var>NODE</var></dd>
 </dl>
 <ol>
-    <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> participates in</li>
+    <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
     <li>Let <var>RESULT</var> be the empty ordered list</li>
     <li>For each node, <var>NODE2</var>, in <var>PATH</var>:
         <ol>
-            <li>Let <var>TREE2</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE2</var> participate in</li>
+            <li>Let <var>TREE2</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE2</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participate</a> in</li>
             <li>If <var>TREE2</var> is an <a href="#dfn-iclusive-ancestor-tree">inclusive ancestor tree</a> of <var>TREE1</var>, add <var>NODE2</var> to <var>RESULT</var></li>
         </ol></li>
 </ol>
