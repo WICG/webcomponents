@@ -173,7 +173,7 @@
 
 <p>A <dfn id="dfn-document-tree">document tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
-<p>Any element can have an associated ordered list of zero or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
+<p>Any element can have an <dfn id="dfn-shadow-roots-list">associated ordered list</dfn> of zero or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
 
 <p>An element <dfn id="dfn-verb-host">hosts</dfn> a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> if the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> is a member of this associated list.</p>
 
@@ -1272,8 +1272,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#element">Element</a> {
 <dd>When invoked, these steps <strong>must</strong> be run:
 <ol>
   <li>Create a new instance of the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
-  <li>Establish the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as the <a href="#dfn-shadow-host">shadow host</a> of the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object</li>
-  <li>Add the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object at the top of the <a href="#dfn-tree-stack">tree stack</a> of its <a href="#dfn-shadow-host">host</a></li>
+  <li>Add the <a href="#api-shadow-root"><code>ShadowRoot</code></a> object to the <a href="#dfn-shadow-roots-list">ordered list of shadow roots</a> associated with the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as the <a href="#dfn-youngest-shadow-root">youngest shadow root</a>
   <li>Return <a href="#api-shadow-root"><code>ShadowRoot</code></a> object.</li>
 </ol></dd>
 </dl>
