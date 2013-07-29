@@ -290,7 +290,7 @@ The <a href="#dfn-shadow-element">shadow HTML element</a> that satisfies of the 
 The <a href="#dfn-distribution-result">distribution result</a> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> of the following:
   <ol>
     <li>Each <a href="#dfn-insertion-point">insertion point</a> has an ordered list, called <dfn id="dfn-distributed-nodes">distributed nodes</dfn>, which consists of <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> which are distributed into the <a href="#dfn-insertion-point">insertion point</a>.</li>
-    <li>Each <a href="http://www.3.org/TR/domcore/#concept-node">node</a> that is not an <a href="#dfn-insertion-point">insertion point</a> has an ordered list, called <dfn id="dfn-destination-insertion-point">destination insertion points</dfn>, which consists of <a href="#dfn-insertion-point">insertion points</a> to where the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is distributed</li>
+    <li>Each <a href="http://www.3.org/TR/domcore/#concept-node">node</a> that is not an <a href="#dfn-insertion-point">insertion point</a> has an ordered list, called <dfn id="dfn-destination-insertion-points">destination insertion points</dfn>, which consists of <a href="#dfn-insertion-point">insertion points</a> to where the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is distributed</li>
   </ol>
 </p>
 
@@ -309,12 +309,12 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <p>When a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <var>A</var> is <dfn id="dfn-distribute">distributed</dfn> into an <a href="#dfn-insertion-point">insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:
   <ul>
-    <li>Add <var>A</var> to the <a href="dfn-distributed-nodes">distributed nodes</a> of <var>B</var></li>
-    <li>Add <var>B</var> to the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>A</var></li>
+    <li>Add <var>A</var> to the <a href="#dfn-distributed-nodes">distributed nodes</a> of <var>B</var></li>
+    <li>Add <var>B</var> to the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>A</var></li>
   </ul>
 </p>
 
-<p>An <a href="#dfn-insertion-point">insertion point</a> <var>A</var> is the <dfn id="dfn-final-destination">final destination</dfn> of a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <var>B</var> if <var>A</var> is the last item of the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>B</var>.</p>
+<p>An <a href="#dfn-insertion-point">insertion point</a> <var>A</var> is the <dfn id="dfn-final-destination">final destination</dfn> of a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <var>B</var> if <var>A</var> is the last item of the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>B</var>.</p>
 
 
 <p>The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> <strong>must</strong> be used to determine the <a href="#dfn-distribution-result">distribution result</a> for a <a href="#dfn-tree-of-trees">tree of trees</a> and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
@@ -392,7 +392,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   <ol>
     <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point">insertion point</a>:
     <ol>
-      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="dfn-distributed-nodes">distributed nodes</a> of <var>CHILD</var> to <var>POOL</var></li>
+      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="#dfn-distributed-nodes">distributed nodes</a> of <var>CHILD</var> to <var>POOL</var></li>
     </ol></li>
     <li>Otherwise:
     <ol>
@@ -522,7 +522,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   <ol>
     <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point">insertion point</a>:
     <ol>
-      <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>DISTRIBUTED-NODE</var>, in the <a href="dfn-distributed-nodes">distributed nodes</a> of the <a href="#dfn-insertion-point">insertion point</a> <var>CHILD</var>:
+      <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>DISTRIBUTED-NODE</var>, in the <a href="#dfn-distributed-nodes">distributed nodes</a> of the <a href="#dfn-insertion-point">insertion point</a> <var>CHILD</var>:
       <ol>
         <li>If <var>CHILD</var> is the <a href="#dfn-final-destination">final destination</a> of <var>DISTRIBUTED-NODE</var>, add <var>DISTRIBUTED-NODE</var> to <var>CHILDREN</var></li>
       </ol></li>
@@ -565,13 +565,13 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   <li>Add <var>CURRENT</var> to <var>PATH</var></li>
   <li><dfn id="event-path-calculation-algorithm-repeat">Repeat</dfn> while <var>CURRENT</var> exists:
   <ol>
-    <li>If the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
+    <li>If the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
     <ol>
       <li>If the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
       <ol>
         <li>Add the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> to PATH</li>
       </ol></li>
-      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
+      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
       <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination">final destination</a> of <var>CURRENT</var></li>
     </ol></li>
     <li>Otherwise:
@@ -626,13 +626,13 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   <li>Add <var>CURRENT</var> to <var>PATH</var></li>
   <li><dfn id="event-path-calculation-algorithm-repeat">Repeat</dfn> while <var>CURRENT</var> exists:
   <ol>
-    <li>If the <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
+    <li>If the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
     <ol>
       <li>If the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
       <ol>
         <li>Add the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> to PATH</li>
       </ol></li>
-      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
+      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
       <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination">final destination</a> of <var>CURRENT</var></li>
     </ol></li>
     <li>Otherwise:
@@ -1444,7 +1444,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#event">Event</a> {
     <dd><var>PATH</var>, the event path for an event</dd>
     <dd><var>NODE</var>, the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners would be invoked</dd>
 <dt>Output</dt>
-    <dd><var>RESULT</var>, an adjusted event path</dd>
+    <dd><var>RESULT</var>, an adjusted event path for <var>NODE</var></dd>
 </dl>
 <ol>
     <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> participates in</li>
