@@ -322,7 +322,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-  <dd><var>TREE-OF-TREES</var>, a tree of trees</dd>
+  <dd><var>TREE-OF-TREES</var>, a <a href="#dfn-tree-of-trees">tree of trees</a></dd>
 <dt>Output</dt>
   <dd>The <a href="#dfn-distribution-result">distribution result</a> of <var>TREE-OF-TREES</var> is updated</dd>
 </dl>
@@ -333,41 +333,45 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 </ol>
 </div>
 
-<p>The <dfn id="dfn-distribution-resolution-algorithm">distribution resolution algorithm</dfn> <strong>must</strong> be used to determine which <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> are distributed into which <a href="#dfn-insertion-point">insertion points</a> and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+<p>The <dfn id="dfn-distribution-resolution-algorithm">distribution resolution algorithm</dfn> <strong>must</strong> be used to determine the <a href="#dfn-distribution-result">distribution result</a> for a given <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> and its <a href="#dfn-descendant-tree">descendant trees</a>, and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-  <dd><var>ROOT</var>, the root node of a node tree</dd>
+  <dd><var>ROOT</var>, the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a></dd>
 <dt>Output</dt>
-  <dd>The <a href="#dfn-distribution-result">distribution result</a> is updated for <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="#dfn-inclusive-descendant-tree">inclusive descendant trees</a>.</dd>
+  <dd>The <a href="#dfn-distribution-result">distribution result</a> is updated for the <a href="#dfn-inclusive-descendant-tree">inclusive descendant trees</a> of <var>ROOT</var></dd>
 </dl>
 
 <ol>
-  <li>For each <a href="#dfn-shadow-host">shadow host</a>, <var>SHADOW-HOST</var>, which is descendant of <var>ROOT</var>, in the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>:
+  <li>For each <a href="#dfn-shadow-host">shadow host</a>, <var>SHADOW-HOST</var>, that is a <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> of <var>ROOT</var>, in <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>:
   <ol>
     <li>Let <var>POOL</var> be the result of the <a href="dfn-pool-population-algorithm">pool population algorithm</a> with <var>SHADOW-HOST</var> as input</li>
-    <li>Let <var>LAST-VISITED-SHADOW-ROOT</var> be the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> which <var>SHADOW-HOST</var> <a href="#dfn-verb-host">hosts</a>.</li>
-    <li>For each <a href="#dfn-shadow-root">shadow root</a>, <var>SHADOW-ROOT</var>, which <var>HOST</var> <a href="#dfn-verb-host">hosts</a>, in order from the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> to the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>:
+    <li>For each <a href="#dfn-shadow-root">shadow root</a>, <var>SHADOW-ROOT</var>, which <var>SHADOW-HOST</var> <a href="#dfn-verb-host">hosts</a>, in order from the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> to the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>:
     <ol>
-      <li>Let <var>LAST-VISITED-SHADOW-ROOT</var> be <var>SHADOW-ROOT</var>.</li>
       <li>Run the <a href="#dfn-pool-distribution-algorithm">pool distribution algorithm</a> with <var>SHADOW-ROOT</var> and <var>POOL</var> as input</li>
-      <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in the <a href="#dfn-shadow-tree">shadow tree</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <var>SHADOW-ROOT</var>.</li>
-      <li>If such a <var>SHADOW</var> does not exit:
+      <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> which is a <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> of <var>SHADOW-ROOT</var></li>
+      <li>If such a <var>SHADOW</var> exits:
       <ol>
-        <li>Break this loop</li>
+        <li>Let <var>POOL</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with <var>SHADOW</var> as input</li>
       </ol></li>
-      <li>Let <var>POOL</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with <var>SHADOW</var> as input.</li>
-    </ol></li>
-    <li>For each <a href="#dfn-shadow-root">shadow root</a>, <var>SHADOW-ROOT</var>, which <var>SHADOW-HOST</var> <a href="#dfn-verb-host">hosts</a>, in order from <a href="#dfn-oldest-shadow-root">oldest shadow root</a> to the <a href="#dfn-youngest-shadow-root">youngest shadow root</a>, starting from <var>LAST-VISITED-SHADOW-ROOT</var>:
-    <ol>
-      <li>If <var>SHADOW-ROOT</var> is not <var>LAST-VISITED-SHADOW-ROOT</var>.
+      <li>Otherwise:
       <ol>
-        <li>let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in the <a href="#dfn-shadow-tree">shadow tree</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is <var>SHADOW-ROOT</var>.</li>
-        <li>Let <var>OLDER-SHADOW-ROOT-CHILDREN</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with the <a href="#dfn-older-shadow-root">older</a> <a href="#dfn-shadow-root">shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
-        <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>CHILD</var>, in <var>OLDER-SHADOW-ROOT-CHILDREN</var>
+        <li>Let <var>POOL</var> be an empty ordered list.</li>
+      </ol></li>
+    </ol></li>
+    <li>For each <a href="#dfn-shadow-root">shadow root</a>, <var>SHADOW-ROOT</var>, that <var>SHADOW-HOST</var> <a href="#dfn-verb-host">hosts</a>, in order from the <a href="#dfn-oldest-shadow-root">oldest shadow root</a> to the <a href="#dfn-youngest-shadow-root">youngest shadow root</a>:
+    <ol>
+      <li>If <var>SHADOW-ROOT</var> is not the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>:
+      <ol>
+        <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> which is a <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> of <var>SHADOW-ROOT</var></li>
+        <li>If such a <var>SHADOW</var> exits:
         <ol>
-          <li><a href="#dfn-distribute">Distribute</a> <var>CHILD</var> into <var>SHADOW</var>.</li>
+          <li>Let <var>OLDER-SHADOW-ROOT-CHILDREN</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with the <a href="#dfn-older-shadow-root">older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
+          <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>CHILD</var>, in <var>OLDER-SHADOW-ROOT-CHILDREN</var>
+          <ol>
+            <li><a href="#dfn-distribute">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
+          </ol></li>
         </ol></li>
       </ol></li>
       <li>Run the <a href="dfn-distribution-resolution-algorithm">distribution resolution algorithm</a>, recursively, with <var>SHADOW-ROOT</var> as input</li>
