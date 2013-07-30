@@ -480,24 +480,22 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     <li>a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> matches at least one <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set or the set is empty.</li>
 </ol>
 
-<h3 id="distributed-pseudo-element"><code>::distributed()</code> pseudo-element</h3>
+<h3 id="content-pseudo-element"><code>::content</code> pseudo-element</h3>
 
-<p>The <dfn id="dfn-distributed-pseudo-element">::distributed(selector)</dfn> is a functional pseudo-element taking a <a href="http://www.w3.org/TR/selectors-api2/#relative-selector">relative selector</a> as an argument. It represents a relationship between an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-insertion-point">insertion point</a>. The argument is <a href="http://dev.w3.org/csswg/selectors4/#scope-contained-selectors">scope-contained</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#reference-element-set">reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-insertion-point">insertion point</a>.</p>
+<p>The <dfn id="dfn-content-pseudo-element">::content</dfn> is a pseudo-element that represents a relationship between a <a href="#dfn-content-insertion-point">content insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> is <a href="#dfn-distribution">distributed</a> into that <a href="#dfn-content-insertion-point">content insertion point</a>. The <a href="http://dev.w3.org/csswg/selectors4/#relative-selectors">relative selector</a> following <a href="#dfn-content-pseudo-element"><code>::content</code></a> pseudo-element is <a href="http://dev.w3.org/csswg/selectors4/#scope-contained-selectors">scope-contained</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#reference-element-set">reference element set</a> initialized to the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> of the <a href="">element</a>, distributed to the <a href="#dfn-content-insertion-point">content insertion point</a>.</p>
 
 <div class="informative">
-<p>For example, the following selector represents the all <code>div</code> elements that are descendants of an element, distributed into an insertion point</p>
+<p>For example, the following selector represents the all <code>div</code> elements that are descendants of an element, distributed into a <a href="#dfn-content-insertion-point">content insertion point</a></p>
 <pre><code class="prettyprint">
-    ::distributed(div)
+    ::content div
 </code></pre>
-<p>This selector represents all child <code>span</code> elements that are distrubted into insertion points with class attribute <code>victory</code></p>
+<p>This selector represents all child <code>span</code> elements that are distrubted into <a href="#dfn-content-insertion-point">content insertion points</a> with class attribute <code>victory</code></p>
 <pre><code class="prettyprint">
-    .victory::distributed(>span)
+    .victory::content > span
 </code></pre>
 </div>
 
 <p class="fixme">Should reference element set be insertion point or parent?</p>
-
-<p>All other types of selectors <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> from a <a href="#dfn-shadow-tree">shadow tree</a> to the <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-host">shadow host</a>.</p>
 
 
 <h2 id="composition">Composition</h2>
@@ -1320,7 +1318,7 @@ partial interface <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface"
     <dd>When the value of the <code>type</code> attribute is <code>HOST_RULE</code>, then the object that implements this interface <strong>must</strong> implement <a href="#api-css-host-rule"><code>CSSHostRule</code></a> interface.</dd>
 </dl>
 
-<h3 id="content-element">The <code>content</code> HTML element</h3>
+h3 id="content-element">The <code>content</code> HTML element</h3>
 
 <p>The <dfn id="dfn-content-element"><code>content</code></dfn> HTML element represents a <a href="#dfn-insertion-point">insertion point</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
