@@ -238,7 +238,8 @@ Conceptually, all these associations of custom elements with a registration cont
 <p>The following callbacks are recognized:</p>
 <dl>
 <dt id="dfn-created-callback">created</dt>
-    <dd>invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
+    <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
+    <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
 <dt>inserted</dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
 <dt>removed</dt>
@@ -255,6 +256,22 @@ Conceptually, all these associations of custom elements with a registration cont
     </dl>
     <dfn id="#dfn-attribute-changed-exception">attribute change via DOM API exception</dfn>: when the <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is modified with <a href="http://dom.spec.whatwg.org/#dom-element-setattribute"><code>setAttribute</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-setattributens"><code>setAttributeNS</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-removeattribute"><code>removeAttribute</code></a>, or <a href="http://dom.spec.whatwg.org/#dom-element-removeattributens"><code>removeAttributeNS</code></a> methods of the <a href="#dfn-custom-element">custom element</a>, as well as setting the <a href="http://dom.spec.whatwg.org/#dom-attr-value"><code>value</code></a> property of the <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a>, the callback <strong>must</strong> be invoked immediately.</dd> 
 </dl>
+
+<p>To <dfn id="dfn-set-prototype">set custom element prototype</dfn> on a <a href="#dfn-custom-element">custom element</a>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>ELEMENT</var>, <a href="#dfn-custom-element">element</a></dd>
+<dt>Output</dt>
+    <dd>None</dd>
+</dl>
+<ol>
+    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
+    <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
+</ol>
+</div>
+
 
 <h2 id="registering-custom-elements">Registering Custom Elements</h2>
 
@@ -347,12 +364,10 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 </dl>
 <ol>
     <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
-    <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>DEFINITION</var></li>
     <li>Let <var>MAP</var> be <var>CONTEXT</var>'s <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
     <li>Let <var>CANDIDATES</var> be the list of all <a href="#dfn-unresolved-element">unresolved elements</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
-        <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
         <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
         <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
         <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#in-a-document">in a document</a>:
