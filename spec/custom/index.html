@@ -464,8 +464,8 @@ document.register('x-foo', {
     <li>Let <var>CONTEXT</var> be the <a href="#dfn-registration-context">registration context</a> of <var>DOCUMENT</var></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
+        <li>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">script's browsing context</a> is not <var>CONTEXT</var>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> an <a href="http://dom.spec.whatwg.org/#invalidstateerror"><code>InvalidStateError</code></a> and <strong>stop</strong>.</li>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
-        <li>If the <a href="#dfn-registration-context">registration context</a> of <var>ELEMENT</var>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> is different from <var>CONTEXT</var>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> an <a href="http://dom.spec.whatwg.org/#invalidstateerror"><code>InvalidStateError</code></a> and <strong>stop</strong>.</li>
         <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
         <li>Let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in <var>DEFINITION</var></li>
         <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
