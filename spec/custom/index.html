@@ -237,7 +237,7 @@ Conceptually, all these associations of custom elements with a registration cont
 
 <p>The following callbacks are recognized:</p>
 <dl>
-<dt>ready</dt>
+<dt>created</dt>
     <dd>invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
 <dt>inserted</dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
@@ -327,7 +327,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
         <li>Let <var>NAME</var> be <var>TYPE</var></li>
     </ol></li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>ready</em> to <var>LIFECYCLE</var> from property named <em>readyCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>created</em> to <var>LIFECYCLE</var> from property named <em>createdCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>inserted</em> to <var>LIFECYCLE</var> from property named <em>insertedCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>removed</em> to <var>LIFECYCLE</var> from property named <em>removedCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>attributeChanged</em> to <var>LIFECYCLE</var> from property named <em>attributeChangedCallback</em> on <var>PROTOTYPE</var></li>
@@ -353,8 +353,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
         <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
-        <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em>.</li>
-        <li>Place <var>READY</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+        <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
+        <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
         <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#in-a-document">in a document</a>:
         <ol>
             <li>Let <var>INSERTED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>inserted</em>.</li>
@@ -514,8 +514,8 @@ steps:</p>
 </dl>
 <ol>
     <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em></li>
-    <li>If it is not <code>null</code>, invoke <var>READY</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
+    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em></li>
+    <li>If it is not <code>null</code>, invoke <var>CREATED</var> callback with <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var></li>
 </ol>
 </div>
 
@@ -539,8 +539,8 @@ steps:</p>
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
     <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
-    <li>Let <var>READY</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>ready</em>.</li>
-    <li>Place <var>READY</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
+    <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
 </ol>
 </div>
 
