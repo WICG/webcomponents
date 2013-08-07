@@ -237,7 +237,7 @@ Conceptually, all these associations of custom elements with a registration cont
 
 <p>The following callbacks are recognized:</p>
 <dl>
-<dt>created</dt>
+<dt id="dfn-created-callback">created</dt>
     <dd>invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
 <dt>inserted</dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
@@ -431,7 +431,7 @@ document.register('x-foo', {
 
 <h3 id="unresolved-element-pseudoclass">Unresolved Element Pseudoclass</h3>
 
-<p>The <code>:unresolved</code> <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudoclass</a> <strong>must</strong> match all <a href="#dfn-unresolved-element">unresolved elements</a>.</p>
+<p>The <code>:unresolved</code> <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudoclass</a> <strong>must</strong> match all <a href="#dfn-custom-element">custom elements</a> whose <a href="#dfn-created-callback">created</a> callback has yet not been invoked.</p>
 
 <div class="informative">
 <p>The <code>:unresolved</code> <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudoclass</a> could be used to mitigate the <a href="http://en.wikipedia.org/wiki/Flash_of_unstyled_content">Flash of Unstyled Content</a> (FOUC) issues with <a href="#dfn-custom-element">custom elements</a>.
