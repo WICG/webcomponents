@@ -68,9 +68,14 @@
     <li><a href="#custom-element-lifecycle">Custom Element Lifecycle</a></li>
     <li><a href="#registering-custom-elements">Registering Custom Elements</a>
     <ol>
+        <li><a href="#extensions-to-document-interface-to-register">Extensions to <code>Document</code> Interface</a></li>
         <li><a href="#unresolved-element-pseudoclass">Unresolved Element Pseudoclass</a></li>
     </ol></li>
-    <li><a href="#instantiating-custom-elements">Instantiating Custom Elements</a></li>
+    <li><a href="#instantiating-custom-elements">Instantiating Custom Elements</a>
+    <ol>
+        <li><a href="#extensions-to-document-interface-to-instantiate">Extensions to <code>Document</code> Interface</a></li>
+    </ol>
+    </li>
     <li><a href="#serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
@@ -373,6 +378,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 </ol>
 </div>
 
+<h3 id="extensions-to-document-interface-to-register">Extensions to <a href="http://www.w3.org/TR/domcore/#document"><code>Document</code></a> Interface</h3>
+
 <p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
 <pre><code>
@@ -485,7 +492,7 @@ document.register('x-foo', {
 </ol>
 </div>
 
-<div class="monkeypatch" id="monkeypatch-create-element">
+<h3 id="extensions-to-document-interface-to-instantiate">Extensions to <a href="http://www.w3.org/TR/domcore/#document"><code>Document</code></a> Interface</h3>
 
 <p>To allow creating both <a href="#dfn-custom-tag">custom tag</a> and <a href="#dfn-type-extension">type extension</a>-style <a href="#dfn-custom-element">custom elements</a>, the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods have an optional <code>typeExtension</code> argument:</p>
 
@@ -495,6 +502,9 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
     <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
 };
 </code></pre>
+<p></p>
+
+<div class="monkeypatch" id="monkeypatch-create-element">
 
 <p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following 
 steps:</p>
