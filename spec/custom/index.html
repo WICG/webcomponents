@@ -206,11 +206,45 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself, the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>, which is an <a href="http://dom.spec.whatwg.org/#concept-element">element</a>, and zero or more string values that are used as callback arguments.</p>
+<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments. Every <a href="#dfn-callback-queue">callback queue</a> has a <dfn id="dfn-last-invoked-callback">last invoked callback</dfn> reference, which initially points at the start (the position just before the first item) of the <a href="#dfn-callback-queue">callback queue</a>.</p>
 
-<p>Also, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-running-lifecycle-callbacks">running lifecycle callbacks</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the algorithm to <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a>.</p>
+<p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a>, and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
 
-<p>To <dfn id="dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+<p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#clean-up-after-running-a-callback">cleaning up after running a callback</a>, the user agent <strong>must</strong> run the <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> using <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> that was just popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a> as argument.</p>
+
+<p>The <dfn id="dfn-callbacks-processing-algorithm">callbacks processing algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>QUEUE</var>, an <a href="#dfn-element-queue">element queue</a></li>
+<dt>Output</dt>
+    <dd>None</dd>
+<ol>
+    <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var></a>:
+    <ol>
+        <li>Let <var>CALLBACKS</var> be the <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
+        <li>Repeat until <var>CALLBACKS</var>' <a href="#dfn-last-invoked-callback">last invoked callback</a> <var>LAST</var> points at the at the last item in <var>CALLBACKS</var>:
+        <ol>
+            <li>Move <var>LAST</var> one position forward in <var>CALLBACKS</var></li>
+            <li>Let <var>CALLBACK</var> be the callback in <var>CALLBACKS</var> to which <var>LAST</var> points</li>
+            <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
+        </ol></li>
+    </ol></li>
+</ol>
+</div>
+
+<p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> also has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
+
+<p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
+
+<p>To prevent reentrance while <a href="#dfn-process-base-element-queue">processing base element queue</a>, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-processing-base-element-queue">processing base element queue</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>.</p>
+
+<div class="informative">
+Currently, the HTML spec has sequential processing of steps in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>. Since every step may potentially generate additional microtasks for past steps, this may lead to incomplete fulfillment of microtask checkpoint objectives. This specification assumes that this deficiency has been addressed and adding a new step to microtask checkpoint guarantees exhaustion of microtasks for all types of steps.
+</div>
+
+<p>To <dfn id="dfn-process-base-element-queue">process base element queue</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
 <dl>
@@ -220,24 +254,31 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <dd>None</dd>
 </dl>
 <ol>
-    <li>Let <var>RUNNING</var> be the <a href="#dfn-running-lifecycle-callbacks">running lifecycle callbacks</a> flag</li>
-    <li>If <var>RUNNING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
-    <li>Set <var>RUNNING</var> to <strong>true</strong>.</li>
-    <li>Let <var>INVOCATIONS</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a></li>
-    <li>While <var>INVOCATIONS</var> is not empty:
-    <ol>
-        <li>Empty <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.
-        <li>For each <var>INVOCATION</var> in <var>INVOCATIONS</var>:
-        <ol>
-            <li>Invoke callback in <var>INVOCATION</var> with the corresponding <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, use string values supplied in <var>INVOCATION</var> as arguments</li>
-        </ol></li>
-        <li>Let <var>INVOCATIONS</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a></li>
-    </ol></li>
-    <li>Set <var>RUNNING</var> to <strong>false</strong>.</li>
+    <li>Let <var>PROCESSING</var> be the <a href="#dfn-processing-base-element-queue">processing base element queue</a> flag</li>
+    <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
+    <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
+    <li>Run <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> with <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a> as argument</li>
+    <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
 
-<p><a href="http://dom.spec.whatwg.org/#concept-element">Elements</a> have a <a href="http://en.wikipedia.org/wiki/Strong_reference">strong reference</a> to their <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> in the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> in the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> have a <a href="http://en.wikipedia.org/wiki/Weak_reference">weak reference</a> to their <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>.</p>
+<p>In the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> or the <a href="#dfn-base-element-queue">base element queue</a> if <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> is empty.</p>
+
+To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>CALLBACK</var>, the callback</dd>
+    <dd><var>ELEMENT</var>, the <a href="dfn-custom-element">custom element</a> for which the callback is enqueued</dd>
+<dt>Output</dt>
+    <dd>None</dd>
+</dl>
+<ol>
+    <li>Append <var>CALLBACK</var> to the end of <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
+    <li>Append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
+</ol>
+</div>
 
 <p>The following callbacks are recognized:</p>
 <dl>
@@ -245,11 +286,11 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
 <dt>inserted</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
 <dt>removed</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
 <dt>attributeChanged</dt>
-    <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
+    <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
     <dl>
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-added">attribute is set</a></dt>
         <dd><a href="http://dom.spec.whatwg.org/#concept-attribute-name">attribute name</a>, <strong>null</strong> and new <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a></dd>
@@ -258,7 +299,6 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-removed">attribute is removed</a>
         <dd><a href="http://dom.spec.whatwg.org/#concept-attribute-name">attribute name</a>, old <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a> and <strong>null</strong></dd>
     </dl>
-    <dfn id="#dfn-attribute-changed-exception">attribute change via DOM API exception</dfn>: when the <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is modified with <a href="http://dom.spec.whatwg.org/#dom-element-setattribute"><code>setAttribute</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-setattributens"><code>setAttributeNS</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-removeattribute"><code>removeAttribute</code></a>, or <a href="http://dom.spec.whatwg.org/#dom-element-removeattributens"><code>removeAttributeNS</code></a> methods of the <a href="#dfn-custom-element">custom element</a>, as well as setting the <a href="http://dom.spec.whatwg.org/#dom-attr-value"><code>value</code></a> property of the <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a>, the callback <strong>must</strong> be invoked immediately.</dd> 
 </dl>
 
 <p>To <dfn id="dfn-set-prototype">set custom element prototype</dfn> on a <a href="#dfn-custom-element">custom element</a>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
@@ -386,14 +426,14 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
         <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-        <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
         <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#in-a-document">in a document</a>:
         <ol>
             <li>Let <var>INSERTED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>inserted</em>.</li>
-            <li>Place <var>INSERTED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+            <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>INSERTED</var></li>
         </ol></li>
     </ol></li>
-    <li>Set <var>CANDIDATES</var> to empty list</li>
+    <li>Set <var>CANDIDATES</var> to empty list.</li>
 </ol>
 </div>
 
@@ -439,10 +479,6 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 
 <div class="informative">
 <p><code>ElementRegistrationOptions</code> is an abstraction that enables using function objects and ES6 classes as the second argument of <code>document.register</code> method.</p>
-</div>
-
-<div class="informative">
-<p>The element upgrade and invoking lifecycle callbacks is intentionally decoupled to provide slightly more sensible outcomes of callbacks trying to access methods and properties of custom elements of the same kind. Also, because of when lifecycle callbacks are added to the lifecycle callbacks queue, the queue should be empty when <code>document.register</code> is invoked.</p>
 </div>
 
 <div class="informative">
@@ -576,18 +612,12 @@ steps:</p>
     <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
     <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-    <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
 </ol>
 </div>
 
 <div class="informative">
 <p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
-</div>
-
-<p>In addition, as part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
-
-<div class="informative">
-Currently, the HTML spec has sequential processing of steps in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>. Since every step may potentially generate additional microtasks for past steps, this may lead to incomplete fulfillment of microtask checkpoint objectives. This specification assumes that this deficiency has been addressed and adding a new step to microtask checkpoint guarantees exhaustion of microtasks for all types of steps.
 </div>
 
 </section>
