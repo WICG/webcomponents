@@ -263,6 +263,55 @@ All of loaded imports and imports under loading are in the <a href="#dfn-import-
 </ol>
 </div>
 
+<h2 id="scripts-imports">Scripting in Imports</h2>
+
+<p>Scripting in <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#scripting">HTML Scripting</a>.</p>
+
+<h3 id="additions-to-script-enabling-criteria">Additions to Script Enabling Criteria</h3>
+
+<p>Add following condition to the list of <a href="">Enabling and disabling scripting</a> criteria:</p>
+
+<div class="monkeypatch">
+<ul>
+  <li>Scripting is enabled for a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#node">node</a> if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object of the node is in the <a href="#dfn-import-tree">import tree</a>.</li>
+</ul>
+</div>
+
+<h3 id="additions-to-script-enabling-criteria">Additions to The script settings determined from the node</h3>
+
+<p>Add following at the end of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#the-script-settings-determined-from-the-node">the script settings determined from the node</a>:</p>
+
+<div class="monkeypatch">
+If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object of the <var>node</var> is in the <a href="#dfn-import-tree">import tree</a>, the setting is computed as follows:
+<ol>
+  <li>
+    <p>Let <var title="">elementDocument</var> be the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> of <var>node</var> (or <var title="">node</var> itself if it is a <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code>).</p>
+  </li>
+  <li><p>Let <var title="">masterDocument</var> be the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import-tree">import tree</a>.</li>
+   <li><p>The global object is the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window">Window</a></code> object of <var>masterDocument</var>.</p></li>
+   <li><p>The browsing context is the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> of <var>masterDocument</var>.</p>
+   </li><li><p>The document is <var title="">masterDocument</var>.</p>
+   </li><li><p>The referrer source is <var>elementDocument</var>.</p>
+   </li><li><p>The URL character encoding is the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#document's-character-encoding" title="document's character encoding">character encoding</a> of <var>elementDocument</var>. (<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#sce-not-copy">This is a reference, not a copy</a>.)</p></li>
+   <li><p>The base URL is the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/urls.html#document-base-url" title="document base URL">base URL</a> of <var>elementDocument</var>. (<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#sbu-not-copy">This is a reference, not a copy</a>.)</p></li>
+</ol>
+</div>
+
+<h2 id="events-imports">Events in Imports</h2>
+
+<p>Events in <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#events">HTML Events</a>.</p>
+
+<h3 id="additions-to-event-handlers">Additions to Event Handlers</h3>
+
+<p>
+Modify the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#event-handler-content-attributes">event handler content attribute</a>'s
+script creation criteria by expanding the first paragraph:
+
+<div class="monkeypatch">
+<p>When an event handler content attribute is set, if the element is owned by a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> that is in a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> or
+in an <a href="#dfn-import-tree">import tree</a>, ...</a></p>
+</div>
+
 <h2 id="acknowledgements">Acknowledgements</h2>
 
 <p><span class="vcard">David Hyatt</span> developed <a href="http://dev.w3.org/2006/xbl2/">XBL 1.0</a>, and <span class="vcard">Ian Hickson</span> co-wrote <a href="http://dev.w3.org/2006/xbl2/">XBL 2.0</a>. These documents provided tremendous insight into the problem of behavior attachment and greatly influenced this specification.</p>
