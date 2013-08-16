@@ -64,21 +64,20 @@
 <ol>
     <li><a href="#about">About this Document</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
-    <li><a href="#terminology">Terminology</a></li>
+    <li><a href="#concepts">Concepts</a></li>
     <li><a href="#custom-element-lifecycle">Custom Element Lifecycle</a></li>
+    <li><a href="#creating-and-passing-registries">Creating and Passing Registries</a></li>
     <li><a href="#registering-custom-elements">Registering Custom Elements</a>
     <ol>
+        <li><a href="#extensions-to-document-interface-to-register">Extensions to <code>Document</code> Interface</a></li>
         <li><a href="#unresolved-element-pseudoclass">Unresolved Element Pseudoclass</a></li>
     </ol></li>
-    <li><a href="#instantiating-custom-elements">Instantiating Custom Elements</a></li>
-    <li><a href="#serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</a></li>
-    <li><a href="#declaring-custom-elements">Declaring Custom Elements</a>
+    <li><a href="#instantiating-custom-elements">Instantiating Custom Elements</a>
     <ol>
-        <li><a href="#the-element-element">The <code>element</code> HTML element</a></li>
-    </ol></li>
-<!--
-    <li><a href="#elements-and-dom-interfaces"><span class="section">10</span> Elements and DOM Interfaces</a>
-    <li><a href="#other-languages"><span class="section">11</span> Other Languages</a></li> -->
+        <li><a href="#extensions-to-document-interface-to-instantiate">Extensions to <code>Document</code> Interface</a></li>
+    </ol>
+    </li>
+    <li><a href="#serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
 
@@ -115,7 +114,7 @@
 
 <section class="physics">
 
-<h2 id="terminology">Terminology</h2>
+<h2 id="concepts">Concepts</h2>
 
 <p><dfn id="dfn-custom-element">Custom element</dfn> is <a href="http://www.w3.org/TR/WebIDL/#dfn-platform-object">platform object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is defined by the author. This <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherit</a> from the <a href="http://dom.spec.whatwg.org/#interface-element"><code>Element</code></a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of a <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p>
 
@@ -144,14 +143,19 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li><a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a>.</li>
 </ul>
 
-<p>Whenever created, each <a href="http://dom.spec.whatwg.org/#concept-document">document</a> <strong>must</strong> retain a <a href="http://en.wikipedia.org/wiki/Weak_reference">weak reference</a> to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#active-document">active document</a>. This referenced <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object is called the <dfn id="dfn-registration-context">registration context</dfn>.</p>
+<p>At the time of creation, a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> could be associated with a <a href="#dfn-registry">registry</a>. A <dfn id="dfn-registry">registry</dfn> is a <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of <a href="#dfn-element-definition">element definitions</a>.</p>
 
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of associating an <a href="#dfn-element-definition">element definition</a> with a <a href="#dfn-registration-context">registration context</a>. An <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="#dfn-registration-context">registration context</a>. Once <a href="#dfn-element-registration">registered</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> values of <a href="#dfn-custom-element-type">custom element type</a> and the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <a href="#dfn-element-definition">custom element definition</a>, respectively.</p>
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of adding an <a href="#dfn-element-definition">element definition</a> to a <a href="#dfn-registry">registry</a>. One <a href="#dfn-element-definition">element definition</a> can only be <a href="#dfn-element-registration">registered</a> with one <a href="#dfn-registry">registry</a>.</p>
+
+<p>If a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="#dfn-registry">registry</a> associated with it, then for this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> and a given <a href="#dfn-element-definition">element definition</a> in the <a href="#dfn-registry">registry</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> values of <a href="#dfn-custom-element-type">custom element type</a> and the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> of the <a href="#dfn-element-definition">element definition</a>, respectively.</p>
 
 <div class="informative">
-Conceptually, all these associations of custom elements with a registration context form a <em>registry</em>, which is consulted whenever a new DOM element is created, whether imperatively or by the parser. Whenever a matching element definition is found in the registry, the information in this definition is used to create a new instance of a custom element.</p>
-<p>Whenever the <code>Window</code> object (aka the registration context) goes away, so does its registry, thus preventing further creation of custom elements on a document without a <code>Window</code> (for instance, the documents of an iframe that was navigated away).</p>
+Effectively, the registry is consulted whenever a new DOM element is created, whether imperatively or by the parser. Whenever a matching element definition is found in the registry, the information in this definition is used to create a new instance of a custom element.</p>
 </div>
+
+<p>If a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> does not have a <a href="#dfn-registry">registry</a> associated with it, all attempts of <a href="#dfn-element-registration">element registration</a> will fail.</p>
+
+<p>The exact nature of creating <a href="#dfn-registry">registries</a>, their association with  <a href="http://dom.spec.whatwg.org/#concept-document">documents</a>, and <a href="#dfn-element-registration">element registration</a> are defined further in this specification.</p>
 
 <h2 id="custom-element-lifecycle">Custom Element Lifecycle</h2>
 
@@ -202,11 +206,45 @@ Conceptually, all these associations of custom elements with a registration cont
 </ol>
 </div>
 
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself, the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a>, which is an <a href="http://dom.spec.whatwg.org/#concept-element">element</a>, and zero or more string values that are used as callback arguments.</p>
+<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments. Every <a href="#dfn-callback-queue">callback queue</a> has a <dfn id="dfn-last-invoked-callback">last invoked callback</dfn> reference, which initially points at the start (the position just before the first item) of the <a href="#dfn-callback-queue">callback queue</a>.</p>
 
-<p>Also, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-running-lifecycle-callbacks">running lifecycle callbacks</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the algorithm to <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a>.</p>
+<p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a>, and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
 
-<p>To <dfn id="dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+<p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#clean-up-after-running-a-callback">cleaning up after running a callback</a>, the user agent <strong>must</strong> run the <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> using <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> that was just popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a> as argument.</p>
+
+<p>The <dfn id="dfn-callbacks-processing-algorithm">callbacks processing algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>QUEUE</var>, an <a href="#dfn-element-queue">element queue</a></li>
+<dt>Output</dt>
+    <dd>None</dd>
+<ol>
+    <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var></a>:
+    <ol>
+        <li>Let <var>CALLBACKS</var> be the <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
+        <li>Repeat until <var>CALLBACKS</var>' <a href="#dfn-last-invoked-callback">last invoked callback</a> <var>LAST</var> points at the at the last item in <var>CALLBACKS</var>:
+        <ol>
+            <li>Move <var>LAST</var> one position forward in <var>CALLBACKS</var></li>
+            <li>Let <var>CALLBACK</var> be the callback in <var>CALLBACKS</var> to which <var>LAST</var> points</li>
+            <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
+        </ol></li>
+    </ol></li>
+</ol>
+</div>
+
+<p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> also has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
+
+<p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
+
+<p>To prevent reentrance while <a href="#dfn-process-base-element-queue">processing base element queue</a>, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-processing-base-element-queue">processing base element queue</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>.</p>
+
+<div class="informative">
+Currently, the HTML spec has sequential processing of steps in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>. Since every step may potentially generate additional microtasks for past steps, this may lead to incomplete fulfillment of microtask checkpoint objectives. This specification assumes that this deficiency has been addressed and adding a new step to microtask checkpoint guarantees exhaustion of microtasks for all types of steps.
+</div>
+
+<p>To <dfn id="dfn-process-base-element-queue">process base element queue</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
 <dl>
@@ -216,36 +254,43 @@ Conceptually, all these associations of custom elements with a registration cont
     <dd>None</dd>
 </dl>
 <ol>
-    <li>Let <var>RUNNING</var> be the <a href="#dfn-running-lifecycle-callbacks">running lifecycle callbacks</a> flag</li>
-    <li>If <var>RUNNING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
-    <li>Set <var>RUNNING</var> to <strong>true</strong>.</li>
-    <li>Let <var>INVOCATIONS</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a></li>
-    <li>While <var>INVOCATIONS</var> is not empty:
-    <ol>
-        <li>Empty <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.
-        <li>For each <var>INVOCATION</var> in <var>INVOCATIONS</var>:
-        <ol>
-            <li>Invoke callback in <var>INVOCATION</var> with the corresponding <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, use string values supplied in <var>INVOCATION</var> as arguments</li>
-        </ol></li>
-        <li>Let <var>INVOCATIONS</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a></li>
-    </ol></li>
-    <li>Set <var>RUNNING</var> to <strong>false</strong>.</li>
+    <li>Let <var>PROCESSING</var> be the <a href="#dfn-processing-base-element-queue">processing base element queue</a> flag</li>
+    <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
+    <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
+    <li>Run <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> with <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a> as argument</li>
+    <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
 
-<p><a href="http://dom.spec.whatwg.org/#concept-element">Elements</a> have a <a href="http://en.wikipedia.org/wiki/Strong_reference">strong reference</a> to their <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> in the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> in the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> have a <a href="http://en.wikipedia.org/wiki/Weak_reference">weak reference</a> to their <a href="http://dom.spec.whatwg.org/#concept-element">elements</a>.</p>
+<p>In the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> or the <a href="#dfn-base-element-queue">base element queue</a> if <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> is empty.</p>
+
+To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>CALLBACK</var>, the callback</dd>
+    <dd><var>ELEMENT</var>, the <a href="dfn-custom-element">custom element</a> for which the callback is enqueued</dd>
+<dt>Output</dt>
+    <dd>None</dd>
+</dl>
+<ol>
+    <li>Append <var>CALLBACK</var> to the end of <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
+    <li>Append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
+</ol>
+</div>
 
 <p>The following callbacks are recognized:</p>
 <dl>
 <dt id="dfn-created-callback">created</dt>
-    <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is associated with the <a href="#dfn-registration-context">registration context</a>. The actual timing of this callback is defined further in this specification.</dd>
+    <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
 <dt>inserted</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
 <dt>removed</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
 <dt>attributeChanged</dt>
-    <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be placed into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a> with the <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of the <a href="#dfn-custom-element">custom element</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
+    <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
     <dl>
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-added">attribute is set</a></dt>
         <dd><a href="http://dom.spec.whatwg.org/#concept-attribute-name">attribute name</a>, <strong>null</strong> and new <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a></dd>
@@ -254,7 +299,6 @@ Conceptually, all these associations of custom elements with a registration cont
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-removed">attribute is removed</a>
         <dd><a href="http://dom.spec.whatwg.org/#concept-attribute-name">attribute name</a>, old <a href="http://dom.spec.whatwg.org/#concept-attribute-value">attribute value</a> and <strong>null</strong></dd>
     </dl>
-    <dfn id="#dfn-attribute-changed-exception">attribute change via DOM API exception</dfn>: when the <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is modified with <a href="http://dom.spec.whatwg.org/#dom-element-setattribute"><code>setAttribute</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-setattributens"><code>setAttributeNS</code></a>, <a href="http://dom.spec.whatwg.org/#dom-element-removeattribute"><code>removeAttribute</code></a>, or <a href="http://dom.spec.whatwg.org/#dom-element-removeattributens"><code>removeAttributeNS</code></a> methods of the <a href="#dfn-custom-element">custom element</a>, as well as setting the <a href="http://dom.spec.whatwg.org/#dom-attr-value"><code>value</code></a> property of the <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a>, the callback <strong>must</strong> be invoked immediately.</dd> 
 </dl>
 
 <p>To <dfn id="dfn-set-prototype">set custom element prototype</dfn> on a <a href="#dfn-custom-element">custom element</a>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
@@ -268,10 +312,23 @@ Conceptually, all these associations of custom elements with a registration cont
 </dl>
 <ol>
     <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var></li>
+    <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var>.</li>
 </ol>
 </div>
 
+<h2 id="creating-and-passing-registries">Creating and Passing Registries</h2>
+
+<p>When an <a href="http://dom.spec.whatwg.org/#html-document">HTML Document</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/history.html#read-html">loaded</a> in a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>, a new <a href="#dfn-registry">registry</a> <strong>must</strong> be created and associated with this <a href="http://dom.spec.whatwg.org/#html-document">document</a>.</p>
+
+<p>A new <a href="http://dom.spec.whatwg.org/#concept-document">document</a> instance <strong>must</strong> be associated with an existing <a href="#dfn-registry">registry</a> in these cases:</p>
+
+<ul>
+    <li>When <a href="http://dom.spec.whatwg.org/#interface-domimplementation"><code>DOMImplementation</code></a>'s <a href="http://dom.spec.whatwg.org/#dom-domimplementation-createdocument"><code>createDocument</code></a> method is invoked with <em>namespace</em> set to <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a> or when the <a href="http://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createHTMLDocument</code></a> method is invoked, use the <a href="#dfn-registry">registry</a> of the associated <a href="http://dom.spec.whatwg.org/#concept-document">document</a> to the new instance.</li>
+    <li>When creating a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> for <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#template-contents">template contents</a>, use the <a href="#dfn-registry">registry</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-template-element"><code>template</code></a>'s <a href="http://dom.spec.whatwg.org/#concept-node-document">document</a>.</li>
+    <li>When creating an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a>, use the <a href="#dfn-registry">registry</a> of the <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-master-document">master document</a>.</li>
+</ul>
+
+<p>In all other cases, new <a href="http://dom.spec.whatwg.org/#concept-document">documents</a> <strong>must not</strong> have a <a href="#dfn-registry">registry</a>.</p>
 
 <h2 id="registering-custom-elements">Registering Custom Elements</h2>
 
@@ -286,11 +343,11 @@ Conceptually, all these associations of custom elements with a registration cont
 The effect of this statement is that any HTML (or SVG) element with the local name that is a valid custom element type will have HTMLElement (or SVGElement) as element interface, rather than HTMLUnknownElement.
 </div>
 
-<p>Each <a href="#dfn-registration-context">registration context</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty.</p>
+<p>Each <a href="#dfn-registry">registry</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty.</p>
 
 <p>Whenever an <a href="#dfn-unresolved-element">unresolved element</a> is created, it <strong>must</strong> be added at the front of the <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a>.</p>
 
-<p>An <a href="#dfn-element-definition">element definition</a> is created and associated with a <a href="#dfn-registration-context">registration context</a> by the <dfn id="dfn-element-registration-algorithm">element registration algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p><a href="#dfn-element-registration">Registering</a> an <a href="#dfn-element-definition">element definition</a> is the responsibility of the <dfn id="dfn-element-registration-algorithm">element registration algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -300,15 +357,16 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <dd><var>PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a></dd>
     <dd><var>NAME</var>, a <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, optional</dd>
 <dt>Output</dt>
-    <dd><var>ERROR</var>, a variable that holds one of these values: <code>None</code>, <code>InvalidType</code>, <code>InvalidName</code>, <code>InvalidContext</code>, or <code>DuplicateDefinition</code></dd>
+    <dd><var>ERROR</var>, a variable that holds one of these values: <code>None</code>, <code>InvalidType</code>, <code>InvalidName</code>, <code>NoRegistry</code>, or <code>DuplicateDefinition</code></dd>
 </dl>
 <ol>
     <li>Let <var>ERROR</var> and <var>DEFINITION</var> be the result of running <a href="#dfn-definition-construction-algorithm">definition construction algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
     <li>If <var>ERROR</var> is not <code>None</code>, <strong>stop</strong>.</li>
-    <li>Let <var>CONTEXT</var> be <var>DOCUMENT</var>'s <a href="#dfn-registration-context">registration context</a></li>
-    <li>If <var>CONTEXT</var> does not exist, set <var>ERROR</var> to <code>InvalidContext</code> and <strong>stop</strong>.</li>
-    <li>Associate <var>DEFINITION</var> with <var>CONTEXT</var></li>
-    <li>Run <a href="#dfn-element-upgrade-algorithm">element upgrade algorithm</a> with <var>CONTEXT</var> and <var>DEFINITION</var> as arguments.</li>
+    <li>Let <var>REGISTRY</var> be <var>DOCUMENT</var>'s <a href="#dfn-registry">registry</a></li>
+    <li>If <var>REGISTRY</var> does not exist, set <var>ERROR</var> to <code>NoRegistry</code> and <strong>stop</strong>.</li>
+    <li>Add <var>DEFINITION</var> to <var>REGISTRY</var></li>
+    <li>Let <var>MAP</var> be <var>REGISTRY</var>'s <a href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
+    <li>Run <a href="#dfn-element-upgrade-algorithm">element upgrade algorithm</a> with <var>MAP</var> and <var>DEFINITION</var> as arguments.</li>
 </ol>
 </div>
 
@@ -357,28 +415,29 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>CONTEXT</var>, the <a href="#dfn-registration-context">registration context</a></dd>
+    <dd>Let <var>MAP</var>, an <a href="#dfn-upgrade-candidates-map">upgrade candidates map</a></dd>
     <dd><var>DEFINITION</var>, <a href="#dfn-element-definition">element definition</a></dd>
 <dt>Output</dt>
     <dd>None</dd>
 </dl>
 <ol>
     <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
-    <li>Let <var>MAP</var> be <var>CONTEXT</var>'s <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
     <li>Let <var>CANDIDATES</var> be the list of all <a href="#dfn-unresolved-element">unresolved elements</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
         <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-        <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
         <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#in-a-document">in a document</a>:
         <ol>
             <li>Let <var>INSERTED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>inserted</em>.</li>
-            <li>Place <var>INSERTED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> into the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+            <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>INSERTED</var></li>
         </ol></li>
     </ol></li>
-    <li>Set <var>CANDIDATES</var> to empty list</li>
+    <li>Set <var>CANDIDATES</var> to empty list.</li>
 </ol>
 </div>
+
+<h3 id="extensions-to-document-interface-to-register">Extensions to <a href="http://www.w3.org/TR/domcore/#document"><code>Document</code></a> Interface</h3>
 
 <p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://www.w3.org/TR/domcore/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
@@ -420,10 +479,6 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 
 <div class="informative">
 <p><code>ElementRegistrationOptions</code> is an abstraction that enables using function objects and ES6 classes as the second argument of <code>document.register</code> method.</p>
-</div>
-
-<div class="informative">
-<p>The element upgrade and invoking lifecycle callbacks is intentionally decoupled to provide slightly more sensible outcomes of callbacks trying to access methods and properties of custom elements of the same kind. Also, because of when lifecycle callbacks are added to the lifecycle callbacks queue, the queue should be empty when <code>document.register</code> is invoked.</p>
 </div>
 
 <div class="informative">
@@ -476,10 +531,9 @@ document.register('x-foo', {
 <ol>
     <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> <strong>or</strong> <var>PROTOTYPE</var> has a <a href="http://es5.github.io/#x8.6.1">non-configurable</a> property named <code>constructor</code>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
-    <li>Let <var>CONTEXT</var> be the <a href="#dfn-registration-context">registration context</a> of <var>DOCUMENT</var></li>
+    <li>Let <var>REGISTRY</var> be the <var>DOCUMENT</var>'s <a href="#dfn-registry">registry</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
-        <li>If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">script's browsing context</a> is not <var>CONTEXT</var>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> an <a href="http://dom.spec.whatwg.org/#invalidstateerror"><code>InvalidStateError</code></a> and <strong>stop</strong>.</li>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
         <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
         <li>Let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in <var>DEFINITION</var></li>
@@ -492,7 +546,7 @@ document.register('x-foo', {
 </ol>
 </div>
 
-<div class="monkeypatch" id="monkeypatch-create-element">
+<h3 id="extensions-to-document-interface-to-instantiate">Extensions to <a href="http://www.w3.org/TR/domcore/#document"><code>Document</code></a> Interface</h3>
 
 <p>To allow creating both <a href="#dfn-custom-tag">custom tag</a> and <a href="#dfn-type-extension">type extension</a>-style <a href="#dfn-custom-element">custom elements</a>, the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods have an optional <code>typeExtension</code> argument:</p>
 
@@ -502,6 +556,9 @@ partial interface <a href="http://www.w3.org/TR/domcore/#document">Document</a> 
     <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
 };
 </code></pre>
+<p></p>
+
+<div class="monkeypatch" id="monkeypatch-create-element">
 
 <p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following 
 steps:</p>
@@ -555,7 +612,7 @@ steps:</p>
     <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
     <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
     <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-    <li>Place <var>CREATED</var> and <a href="http://www.w3.org/TR/WebIDL/#dfn-callback-this-value">callback this value</a> of <var>ELEMENT</var> at the front of the <a href="#dfn-lifecycle-callbacks-queue">lifecycle callbacks queue</a>.</li>
+    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
 </ol>
 </div>
 
@@ -563,238 +620,6 @@ steps:</p>
 <p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
 </div>
 
-<p>In addition, as part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-invoke-lifecycle-callbacks">invoke lifecycle callbacks</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
-
-<div class="informative">
-Currently, the HTML spec has sequential processing of steps in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>. Since every step may potentially generate additional microtasks for past steps, this may lead to incomplete fulfillment of microtask checkpoint objectives. This specification assumes that this deficiency has been addressed and adding a new step to microtask checkpoint guarantees exhaustion of microtasks for all types of steps.
-</div>
-
-<p>The <a href="#dfn-custom-element">custom elements</a> <strong>must</strong> be serialized like <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#serializing-html-fragments">any HTML elements</a>.</p>
-
-<h2 id="declaring-custom-elements">Declaring Custom Elements</h2>
-
-<div class="warning">This section needs more work, specifically resolution of <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=22833">bug 22833</a>.</div>
-
-<p><a href="#dfn-custom-element">Custom elements</a> can also be <a href="#dfn-element-registration">registered</a> using <a href="#dfn-custom-element-declaration">custom element declarations</a>. A <dfn id="dfn-custom-element-declaration">custom element declaration</dfn> consists of:</p>
-<ul>
-    <li><a href="#dfn-custom-element-type">custom element type</a> for the new <a href="#dfn-custom-element">custom element</a></li>
-    <li>Optional <dfn id="dfn-base-element-name">base element name</dfn>, which is either:
-    <ol>
-        <li>A <a href="#dfn-custom-element-type">custom element type</a>, or</li>
-        <li>A <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a></li>
-    </ol></li>
-    <li>Optional <dfn id="dfn-constructor-name">constructor name</dfn>, a valid <a href="http://ecma-international.org/ecma-262/5.1/#sec-7.6">IdentifierName</a></li>
-    <li>Optional  <dfn id="dfn-declaration-property-bag">declaration property bag</dfn>, a <a href="http://www.w3.org/TR/WebIDL/#idl-dictionaries">dictionary</a>.</li>
-</ul>
-
-<p>The <a href="#dfn-base-element-name">base element name</a> and <a href="#dfn-declaration-property-bag">declaration property bag</a> are used to create the <a href="#dfn-custom-element-prototype">custom element prototype</a> of a new <a href="#dfn-custom-element">custom element</a>. To <dfn id="dfn-create-custom-element-prototype">create custom element prototype</dfn>, the user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>BASE</var>, the <a href="#dfn-base-element-name">base element name</a></dd>
-    <dd><var>PROPERTIES</var>, the <a href="#dfn-declaration-property-bag">declaration property bag</a></dd>
-<dt>Output</dt>
-    <dd><var>PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a>, or <strong>nothing</strong></dd>
-</dl>
-<ol>
-    <li>If <var>BASE</var> is <strong>null</strong>, let <var>INTERFACE</var> be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a></li>
-    <li>Otherwise, let <var>INTERFACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>BASE</var> and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
-    <li>If such <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> does not exist, <strong>stop</strong>, returning <strong>nothing</strong>.</li>
-    <li>Let <var>DESCRIPTORS</var> be an empty <a href="http://es5.github.io/#x8.6"><code>Object</code></a></li>
-    <li>If <var>PROPERTIES</var> is not <strong>null</strong> and is an <a href="http://es5.github.io/#x8.6"><code>Object</code></a>:
-    <ol>
-        <li>Let <var>KEYS</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.4"><code>Object.getOwnPropertyNames</code></a> with <var>PROPERTIES</var> as argument</li>
-        <li>For each item <var>KEY</var> in <var>KEYS</var>
-        <ol>
-            <li>Let <var>DESCRIPTOR</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.3"><code>Object.getPropertyDescriptor</code></a> with <var>PROPERTIES</var> and <var>KEY</var> as arguments</li>
-            <li>Call <a href="http://es5.github.io/#x8.12.5"><code>[[Put]]</code></a> <a href="http://es5.github.io/#x8.6.2">internal method</a> of <var>DESCRIPTORS</var> with <var>KEY</var>, <var>DESCRIPTOR</var> and <strong>false</strong> as arguments</li>
-        </ol></li>
-    </ol></li>
-    <li>Let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <var>INTERFACE</var> and <var>DESCRIPTORS</var> as arguments</li>
-</ol>
-</div>
-
-<p>To <dfn id="dfn-register-custom-element-from-declaration">register custom element from declaration</dfn>, a user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>DECLARATION</var>, a <a href="#dfn-custom-element-declaration">custom element declaration</a></dd>
-    <dd><var>DOCUMENT</var>, a <a href="http://dom.spec.whatwg.org/#concept-document">document</a></dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol>
-    <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DECLARATION</var></li>
-    <li>Let <var>PROPERTIES</var> be the <a href="#dfn-declaration-property-bag">declaration property bag</a> in <var>DECLARATION</var></li>
-    <li>Let <var>BASE</var> be the <a href="#dfn-base-element-name">base element name</a> in <var>DECLARATION</var></li>
-    <li>Let <var>PROTOTYPE</var> be the result of <a href="#dfn-create-custom-element-prototype">creating custom element prototype</a> with <var>BASE</var> and <var>PROPERTIES</var> as arguments</li>
-    <li>If <var>PROTOTYPE</var> is <strong>nothing</strong>, <strong>stop</strong>.</li>
-    <li>Run <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>BASE</var> as arguments</li>
-    <li>Let <var>KEY</var> be the <a href="#dfn-constructor-name">constructor name</a> in <var>DECLARATION</var></li>
-    <li>Let <var>CONSTRUCTOR</var> be the result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>DOCUMENT</var> and <var>PROTOTYPE</var> as arguments</li>
-    <li>Let <var>DESCRIPTOR</var> be a <a href="http://es5.github.io/#x8.10">property descriptor</a> <code>{[[Value]]:</code><var>CONSTRUCTOR</var><code>, [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: true}</code></li>
-    <li>Call <a href="http://es5.github.io/#x8.12.9"><code>[[DefineOwnProperty]]</code></a> <a href="http://es5.github.io/#x8.6.2">internal method</a> of the <a href="http://es5.github.io/#x15.1">global object</a> with <var>KEY</var>, <var>CONSTRUCTOR</var>, and <strong>false</strong> as arguments</li>
-</ol>
-</div>
-
-<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an associated <dfn id="dfn-declaration-processing-queue">declaration processing queue</dfn>, which is initially empty. Each item in the queue consists of a <a href="#dfn-custom-element-declaration">custom element declaration</a> and a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
-
-<p>Also, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-processing-declarations">processing declarations</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>. It is used to prevent reentrant invocation of the <a href="#dfn-declaration-processing-algorithm">declaration processing algorithm</a>.</p>
-
-<p>The <dfn id="dfn-declaration-processing-algorithm">declaration processing algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ENVIRONMENT</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a></dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol>
-    <li>Let <var>PROCESSING</var> be the <a href="#dfn-processing-declarations">processing declarations</a> flag</li>
-    <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
-    <li>Set <var>PROCESSING</var> to <strong>true</strong></li>
-    <li>Let <var>QUEUE</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-declaration-processing-queue">declaration processing queue</a></li>
-    <li>While <var>QUEUE</var> is not empty:
-    <ol>
-        <li>Empty <var>QUEUE</var>'s <a href="#dfn-declaration-processing-queue">declaration processing queue</a></li>
-        <li>For each <var>ITEM</var> in <var>QUEUE</var>:
-        <ol>
-            <li>Let <var>DOCUMENT</var> be the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> in <var>ITEM</var></li>
-            <li>Let <var>DECLARATION</var> be the <a href="#dfn-custom-element-declaration">custom element declaration</a> in <var>ITEM</var></li>
-            <li><a href="#dfn-register-custom-element-from-declaration">Register custom element from declaration</a> using <var>DECLARATION</var> and <var>DOCUMENT</var> as arguments</li>
-        </ol></li>
-        <li>Let <var>QUEUE</var> be a copy of the <var>ENVIRONMENT</var>'s <a href="#dfn-declaration-processing-queue">declaration processing queue</a></li>
-    </ol></li>
-    <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
-</ol>
-</div>
-
-<p><a href="http://dom.spec.whatwg.org/#concept-document">Documents</a> have a <a href="http://en.wikipedia.org/wiki/Strong_reference">strong reference</a> to respective items in <a href="#dfn-declaration-processing-queue">declaration processing queue</a>, and items in the <a href="#dfn-declaration-processing-queue">declaration processing queue</a> have a <a href="http://en.wikipedia.org/wiki/Weak_reference">weak reference</a> to their <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
-
-<p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> run <a href="http://parkour.mtv/webcomponents/spec/custom/index.html#dfn-declaration-processing-algorithm">declaration processing algorithm</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
-
-<h3 id="the-element-element">The <code>element</code> HTML element</h3>
-
-<p>The <a href="#the-element-element"><code>element</code></a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a> represents a <a href="#dfn-custom-element-declaration">custom element declaration</a>.</p>
-
-<dl>
-<dt>Context</dt>
-<dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
-<dt>Content model</dt>
-<dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#metadata-content">Metadata content</a></dd>
-<dt>Children</dt>
-<dd><!-- One <code>template</code> element and z-->Zero or more <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> elements</dd>
-<dt>Content attributes</dt>
-<dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
-<dd><a href="#markup-element-constructor"><code>constructor</code></a></dd>
-<dd><a href="#markup-element-extends"><code>extends</code></a></dd>
-<dd><a href="#markup-element-name"><code>name</code></a></dd>
-<dt>DOM Interface</dt>
-<dd>
-    <pre><code class="prettyprint">
-interface <dfn id="api-html-element-element" class="no-backreference">HTMLElementElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-    attribute DOMString? <a href="#dfn-html-element-element-constructor-name">constructorName</a>;
-    attribute DOMString? <a href="#dfn-html-element-element-extends">extends</a>;
-    attribute DOMString? <a href="#dfn-html-element-element-name">name</a>;
-};</code></pre>
-</dd>
-</dl>
-
-<p>The <dfn id="markup-element-constructor"><code>constructor</code></dfn> attribute represents <a href="#dfn-constructor-name">constructor name</a> in <a href="#dfn-custom-element-declaration">custom element declaration</a>. The value of the attribute is expected to be a valid <a href="http://ecma-international.org/ecma-262/5.1/#sec-7.6">IdentifierName</a>.</p>
-
-<p>The <dfn id="markup-element-extends"><code>extends</code></dfn> attribute represents <a href="#dfn-base-element-name">base element name</a> in <a href="#dfn-custom-element-declaration">custom element declaration</a>.</p>
-
-<p>The <dfn id="markup-element-name"><code>name</code></dfn> attribute represents <a href="#dfn-custom-element-type">custom element type</a> in <a href="#dfn-custom-element-declaration">custom element declaration</a>.</p>
-
-<p>The <dfn id="dfn-html-element-element-constructor-name"><code>constructorName</code></dfn> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html">IDL attribute</a> <strong>must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-element-constructor">constructor</a> content attribute.</p>
-
-<p>The <dfn id="dfn-html-element-element-extends"><code>extends</code></dfn> and <dfn id="dfn-html-element-element-name"><code>name</code></dfn> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html">IDL attributes</a> <strong>must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the respective content attributes of the same name.</p>
-
-<div class="informative">
-Changing <a href="#markup-element-name"><code>name</code></a>, <a href="#markup-element-constructor"><code>constructor</code></a>, or <a href="#markup-element-extends"><code>extends</code></a> attributes dynamically has no direct effect; these attributes are only used at specific times, described below.
-</div>
-
-<div class="informative">This <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML element</a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#represents">represent</a> content to the user.</div>
-
-<p>Every <a href="#the-element-element"><code>element</code></a> element has a <dfn id="dfn-parser-inserted">parser-inserted</dfn> flag, which indicates whether the element was inserted by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a>.</p>
-
-<p>Additionally, every <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <dfn id="dfn-last-completion-value">last completion value</dfn>, associated with it. The user agent <strong>must</strong> store the <a href="http://es5.github.io/#x8.9">completion value</a> of type <strong>normal</strong> for any <a href="http://www.whatwg.org/specs/web-apps/current-work/#execute-the-script-block">script block execution</a> as <a href="#dfn-last-completion-value">last completion value</a> <em>and</em> clear <a href="#dfn-last-completion-value">last completion value</a> prior to executing another <a href="http://www.whatwg.org/specs/web-apps/current-work/#execute-the-script-block">script block</a>.</p>
-
-<p>To <dfn id="dfn-create-custom-element-declaration">create custom element declaration</dfn> from an <a href="#the-element-element"><code>element</code></a> element, the user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> element</dd>
-<dt>Output</dd>
-    <dd><var>DECLARATION</var>, the <a href="#dfn-custom-element-declaration">custom element declaration</a> or <strong>nothing</strong></dd>
-</dl>
-<ol>
-    <li>Let <var>TYPE</var> be the value of <var>ELEMENT</var>'s <a href="#markup-element-name"><code>name</code></a> attribute, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">converted</a> to lowercase</li>
-    <li>If <var>TYPE</var> is empty or is an invalid <a href="#dfn-custom-element-type">custom element type</a>, <strong>stop</strong>.</li>
-    <li>Let <var>BASE</var> be the value of <var>ELEMENT</var>'s <a href="#markup-element-extends"><code>extends</code></a> attribute, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">converted</a> to lowercase</li>
-    <li>If <var>BASE</var> is empty, let <var>INTERFACE</var> be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a></li>
-    <li>Otherwise, let <var>INTERFACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>BASE</var> and <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
-    <li>If such <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> does not exist, <strong>stop</strong>.</li>
-    <li>Let <var>CONSTRUCTOR</var> be the value of <var>ELEMENT</var>'s <a href="#markup-element-constructor"><code>constructor</code></a> attribute</li>
-    <li>Let <var>DOCUMENT</var> be <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a></li>
-    <li>Let <var>PROPERTIES</var> be <var>DOCUMENT</var>'s <a href="#dfn-last-completion-value">last completion value</a></li>
-    <li>Let <var>DECLARATION</var> be a <a href="#dfn-custom-element-declaration">custom element declaration</a> with <a href="#dfn-custom-element-type">custom element type</a> set to <var>TYPE</var>, <a href="#dfn-base-element-name">base element name</a> to <var>BASE</var>, <a href="#dfn-constructor-name">constructor name</a> to <var>CONSTRUCTOR</var>, and <a href="#dfn-declaration-property-bag">declaration property bag</a> to <var>PROPERTIES</var></li>
-</ol>
-</div>
-
-<p class="fixme" id="bug-22833"><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=22833">Bug 22833</a>: This algorithm does not account for out-of-order declarations. Suppose that the BASE is also a custom element, and its declaration hasn't been loaded yet. This will turn this declaration into a dud.</p>
-
-<p>When an <a href="#the-element-element"><code>element</code></a> element gets <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> if the <a href="#dfn-parser-inserted">parser-inserted</a> flag is not set on this element, the user agent <strong>must</strong> synchronously run the following steps at the time <a href="http://dom.spec.whatwg.org/#node-is-inserted">node is inserted</a>, immediately after all <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> <a href="http://dom.spec.whatwg.org/#concept-node">nodes</a> are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into document</a>:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> element</dd>
-<dt>Output</dd>
-    <dd>None.</dd>
-</dl>
-<ol>
-    <li>Let <var>DECLARATION</var> be the result of <a href="#dfn-create-custom-element-declaration">creating custom element declaration</a> with <var>ELEMENT</var> as argument</li>
-    <li>If <var>DECLARATION</var> is <strong>nothing</strong>, <strong>stop</strong>.</li>
-    <li><a href="#dfn-register-custom-element-from-declaration">Register custom element from declaration</a> using <var>DECLARATION</var> and <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> as arguments</li>
-</ol>
-</div>
-
-<div class="fixme" id="bug-22126"><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=22126">Bug 22126</a>: As designed now, declarations only provide a way to build elements in HTML namespace. Is this enough?</div>
-
-<p>The user agent <strong>may</strong> report any errors encountered while <a href="#dfn-declaration-processing-algorithm">processing a declaration</a> to the user (e.g. in a debugging console).</p>
-
-<p>When the <a href="http://www.whatwg.org/specs/web-apps/current-work/#html-parser">HTML Parser</a> or the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a> creates an <a href="#the-element-element"><code>element</code></a> element, the user agent <strong>must</strong> do the following:</p>
-<ul>
-    <li>Clear the <a href="#dfn-last-completion-value">last completion value</a></li>
-    <li>Set the element's <a href="#dfn-parser-inserted">parser-inserted</a> flag</li>
-</ul>
-
-<p>When the <a href="#the-element-element"><code>element</code></a> element's end tag is parsed, the user agent <strong>must</strong> run the following steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, the <a href="#the-element-element"><code>element</code></a> being processed</dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol>
-    <li>Let <var>DECLARATION</var> be the result of <a href="#dfn-create-custom-element-declaration">creating custom element declaration</a> with <var>ELEMENT</var> as argument</li>
-    <li>If <var>DECLARATION</var> is not <strong>nothing</strong>, add <var>DECLARATION</var> and <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> to <a href="#dfn-declaration-processing-queue">declaration processing queue</a></li>
-</ol>
-</div>
-
-<!--
-
-<div class="informative">The term "JavaScript" is used to refer to ECMA262, rather than the official term ECMAScript, since the term JavaScript is more widely known.</div>
-
-<h2 id="other-languages">Supporting Other Languages</h2>
-
-<p><span class="fixme">Explain how inheritance in custom elements can be extended to other languages.</span></p>
-
--->
 </section>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
