@@ -856,18 +856,18 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-tree-stack">tree stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.</p>
 
-<p>To enforce <a href="#deprecated-dfn-upper-boundary-encapsulation">upper-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#deprecated-dfn-enclosed-tree">enclosing</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a href="#deprecated-dfn-enclosed-tree">enclosing</a> trees are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+<a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#dfn-ancestor-tree">ancestor tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a href="#dfn-ancestor-tree">ancestor trees</a> are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
 <p>Even when the <a href="#dfn-apply-author-styles">apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors4/">selectors</a> still <strong>must not</strong> cross the <a href="#dfn-shadow-boundary">shadow boundary</a> per <a href="#dfn-scoping-constraints">scoping constraints</a>. In other words, with <a href="#dfn-apply-author-styles">apply-author-styles</a> set, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> CSS rules only match wholly inside or outside of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
-<p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a href="#dfn-shadow-tree">shadow trees</a> that have the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set <strong>must</strong> be treated as <a href="http://www.w3.org/TR/selectors4/#scoping">scoped</a> selectors with <a href="#dfn-shadow-root">shadow root</a> as their scope. In this context, for <a href="#dfn-shadow-tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a href="#dfn-shadow-root">shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a href="#dfn-shadow-root">shadow root</a> if <em>A</em> is <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by <em>B</em>.</p>
+<p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a href="#dfn-shadow-tree">shadow trees</a> that have the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set <strong>must</strong> be treated as <a href="http://www.w3.org/TR/selectors4/#scoping">scoped</a> selectors with <a href="#dfn-shadow-root">shadow root</a> as their scope. In this context, for <a href="#dfn-shadow-tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a href="#dfn-shadow-root">shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a href="#dfn-shadow-root">shadow root</a> if <em>A</em> is a <a href="#dfn-descendant-tree">descendant tree</a> of <em>B</em>.</p>
 
 <p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in the parent tree ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="#dfn-part-pseudo-element">part pseudo-element</a> whose parameter value equals to a <a href="#dfn-part-pseudo-element-value">value</a> of a <a href="#dfn-part-pseudo-element">part pseudo-element</a> that exists in a <a href="#dfn-shadow-tree">shadow tree</a>, this <a href="#dfn-part-pseudo-element">part pseudo-element</a> <strong>must</strong> match the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, associated with this <a href="#dfn-part-pseudo-element">part pseudo-element</a>.</p>
 
-<p>Conversely, to enforce <a href="#deprecated-dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the <a href="#dfn-document-tree">document tree</a>, with two exceptions:</p>
+<p>Conversely, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the <a href="#dfn-ancestor-tree">ancestor trees</a>, with two exceptions:</p>
 <ol>
-    <li>Rules that contain <code>select</code> <a href="#dfn-distributed-pseudo-element"><code>::distributed()</code> pseudo-element</a> match <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#deprecated-dfn-enclosed-tree">enclosing</a> trees;</li>
-    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#deprecated-dfn-nesting-tree">nesting</a> tree.</li>
+    <li>Rules that contain a <a href="#dfn-content-pseudo-element"><code>::content</code> pseudo-element</a> match <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> in the <a href="#dfn-ancestor-tree">ancestor</a> trees;</li>
+    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a href="#dfn-shadow-host">shadow host</a> in the <a href="#dfn-parent-tree">parent tree</a>.</li>
 </ol>
 
 <p>In a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> that contains <a href="#dfn-shadow-tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a href="#dfn-parent-calculation-algorithm">parent calculation algorithm</a>. This requirement has the following effects:</p>
@@ -877,9 +877,9 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     <li>the styles of the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> are inherited by the child <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> of the <a href="#dfn-shadow-root">shadow root</a> of the <a href="#dfn-shadow-tree">shadow tree</a>, <a href="#dfn-distribution">distributed</a> to this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></li>
 </ul>
 
-<p>If the <dfn id="dfn-reset-style-inheritance">reset-style-inheritance</dfn> flag is set for a <a href="#dfn-shadow-tree">shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the upper boundary of the tree.</p>
+<p>If the <dfn id="dfn-reset-style-inheritance">reset-style-inheritance</dfn> flag is set for a <a href="#dfn-shadow-tree">shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the <a href="#dfn-shadow-root">shadow root</a>.</p>
 
-<p>If the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag is set for an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the lower boundary of the tree.</p>
+<p>If the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag is set for an <a href="#dfn-insertion-point">insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the <a href="#dfn-insertion-point">insertion point</a>.</p>
 
 <h3 id="css-variables">CSS Variables</h3>
 
@@ -1332,7 +1332,7 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
         <dt>Attributes</dt>
         <dd><dl>
             <dt id="api-html-shadow-element-older-shadow-root"><code>olderShadowRoot</code> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a></dt>
-            <dd>Represents the <a href="#dfn-shadow-tree">shadow tree</a> that is <a href="#deprecated-dfn-as-rendered">rendered</a> in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></dd>
+            <dd>Represents the <a href="#dfn-shadow-tree">shadow tree</a> that is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></dd>
             <dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
             <ol>
                 <li>If <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, return <strong>null</strong>.</li>
@@ -1491,45 +1491,6 @@ if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
 // TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
 </code></pre>
 <p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers&mdash;without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow tree composition in such a cool way.</p>
-
-<div class="deprecated">
-
-<h2 id="shadow-trees">Shadow Trees</h2>
-
-<p>To solve this problem at its core, a new abstraction is introduced. The <dfn id="deprecated-dfn-shadow-dom">shadow DOM</dfn> allows multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees (in addition to the <a href="#dfn-document-tree">document tree</a>) to be composed into one larger <a href="http://www.w3.org/TR/domcore/#trees">tree</a> when rendered. The existence of multiple <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees is enabled by letting any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-document-tree">document tree</a> to host one or more additional <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees. These <dfn id="deprecated-dfn-shadow-tree">shadow trees</dfn> are governed by a set of rules that establish encapsulation <a href="#dfn-boundary">boundaries</a> while retaining the standard <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> composability semantics.</p>
-
-<p>The encapsulation <a href="#dfn-boundary">boundaries</a> between the <a href="#dfn-document-tree">document tree</a> and <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-boundary">shadow boundaries</dfn>. The <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> that host <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-host">shadow hosts</dfn>, and the <a href="http://www.w3.org/TR/domcore/#concept-tree-root">roots</a> of the <a href="#dfn-shadow-tree">shadow trees</a> are called <dfn id="deprecated-dfn-shadow-root">shadow roots</dfn>.</p>
-
-<object data="../../assets/images/shadow-trees.svg" width="800" height="430"></object>
-
-<p>When rendered, the <a href="#dfn-shadow-tree">shadow tree</a> takes place of the <a href="#dfn-shadow-host">shadow host</a>'s content.</p>
-
-<object data="../../assets/images/shadow-rendering.svg" width="450" height="400"></object>
-
-<p>To enable composition of <a href="#dfn-shadow-host">shadow host</a>'s children and the <a href="#dfn-shadow-tree">shadow tree</a>, a notion of insertion points is added to the abstraction. An <dfn id="deprecated-dfn-insertion-point">insertion point</dfn> is a defined location in the <a href="#dfn-shadow-tree">shadow tree</a>, to which the <a href="#dfn-shadow-host">shadow host</a>'s children are transposed when rendering. The mechanism that determines which <a href="#dfn-shadow-host">shadow host</a>'s children are transposed into which <a href="#dfn-insertion-point">insertion points</a> is called <dfn id="deprecated-dfn-distribution">distribution</dfn>.</p>
-
-<object data="../../assets/images/insertion-points.svg" width="800" height="900"></object>
-
-<p>Thus, the encapsulation of a <a href="#dfn-shadow-tree">shadow tree</a> can be viewed as a two-fold problem:
-<ol>
-    <li>the <dfn id="deprecated-dfn-upper-boundary-encapsulation">upper-boundary encapsulation</dfn>, or governing the boundary between the shadow root and the shadow host; and</li>
-    <li>the <dfn id="deprecated-dfn-lower-boundary-encapsulation">lower-boundary encapsulation</dfn>, or governing the boundary between the insertion points and the shadow host's children.</li>
-</ol>
-</p>
-
-<h3 id="nested-shadow-trees">Nested Shadow Trees</h3>
-
-<p>Any <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> can be a <a href="#dfn-shadow-host">shadow host</a>, thus producing nested <a href="#dfn-shadow-tree">shadow trees</a>. A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-nested-tree">nested</dfn> when its <a href="#dfn-shadow-host">shadow host</a> is itself a part of a <a href="#dfn-shadow-tree">shadow tree</a>. Conversely, a <a href="#dfn-shadow-tree">shadow tree</a> <em>A</em> is said to be <dfn id="deprecated-dfn-nesting-tree">nesting</dfn> the <a href="#dfn-shadow-tree">shadow tree</a> <em>B</em> if <em>B</em> is <a href="#dfn-nested-tree">nested</a> by <em>A</em>. If a <a href="#dfn-shadow-host">shadow host</a> is declared in the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> is the <a href="#deprecated-dfn-nesting-tree">nesting</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> of its <a href="#dfn-shadow-tree">shadow trees</a>.</p>
-
-<p>A <a href="#dfn-shadow-tree">shadow tree</a> is <dfn id="deprecated-dfn-enclosed-tree">enclosed</dfn> by another <a href="#dfn-shadow-tree">shadow tree</a> when the enclosing <a href="http://www.w3.org/TR/domcore/#trees">tree</a> nests the enclosed <a href="http://www.w3.org/TR/domcore/#trees">tree</a> through one or more levels of nesting. All <a href="#dfn-shadow-tree">shadow trees</a> are <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by the <a href="#dfn-document-tree">document tree</a>.</p>
-
-<h3 id="rendering-shadow-trees">Rendering Shadow Trees</h3>
-
-<p>This process of <a href="#dfn-rendering">rendering</a> produces a structure that is a composition of several <a href="http://www.w3.org/TR/domcore/#introduction-to-the-dom">DOM</a> trees, including the <a href="#dfn-document-tree">document tree</a>. The term "<dfn id="deprecated-dfn-as-rendered">as rendered</dfn>" is used to refer to this structure.</p>
-
-</div>
-
-<div class="fixme">Remove this deprecated parts after the refactoring is finished.</div>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
