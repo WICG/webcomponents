@@ -84,7 +84,7 @@
         <li><a href="#css-variables">CSS Variables</a></li>
         <li><a href="#text-decoration-property"><code>text-decoration</code> Property</a></li>
         <li><a href="#host-at-rule"><code>@host</code> @-rule</a></li>
-        <li><a href="#custom-pseudo-elements">Custom Pseudo-Elements</a></li>
+        <li><a href="#part-pseudo-elements">Part pseudo-Elements</a></li>
     </ol></li>
     <li><a href="#user-interaction">User Interaction</a>
     <ol>
@@ -882,7 +882,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a href="#dfn-shadow-tree">shadow trees</a> that have the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag set <strong>must</strong> be treated as <a href="http://www.w3.org/TR/selectors4/#scoping">scoped</a> selectors with <a href="#dfn-shadow-root">shadow root</a> as their scope. In this context, for <a href="#dfn-shadow-tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a href="#dfn-shadow-root">shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a href="#dfn-shadow-root">shadow root</a> if <em>A</em> is <a href="#deprecated-dfn-enclosed-tree">enclosed</a> by <em>B</em>.</p>
 
-<p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in a <a href="#deprecated-dfn-nesting-tree">nesting</a> <a href="http://www.w3.org/TR/domcore/#trees">tree</a> ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> whose name equals to a <a href="#dfn-valid-custom-pseudo-element-value">valid</a> <a href="#dfn-custom-pseudo-element-value">value</a> of a <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> that exists in this <a href="#dfn-shadow-tree">shadow tree</a>, this <a href="http://www.w3.org/TR/selectors4/#pseudo-elements">pseudo-element</a> <strong>must</strong> match the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, associated with this <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>.</p>
+<p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in the parent tree ends with a <a href="http://www.w3.org/TR/selectors4/#compound">compound selector</a> that contains a <a href="#dfn-part-pseudo-element">part pseudo-element</a> whose parameter value equals to a <a href="#dfn-part-pseudo-element-value">value</a> of a <a href="#dfn-part-pseudo-element">part pseudo-element</a> that exists in a <a href="#dfn-shadow-tree">shadow tree</a>, this <a href="#dfn-part-pseudo-element">part pseudo-element</a> <strong>must</strong> match the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, associated with this <a href="#dfn-part-pseudo-element">part pseudo-element</a>.</p>
 
 <p>Conversely, to enforce <a href="#deprecated-dfn-lower-boundary-encapsulation">lower-boundary encapsulation</a>, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a> <strong>must not</strong> apply in the <a href="#dfn-document-tree">document tree</a>, with two exceptions:</p>
 <ol>
@@ -931,7 +931,7 @@ host
 
 <p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
 
-<h3 id="custom-pseudo-elements">Custom Pseudo-Elements</h3>
+<h3 id="part-pseudo-elements">Part Pseudo-Elements</h3>
 
 <p>In certain situations, the author of a <a href="#dfn-shadow-tree">shadow tree</a> may wish to designate one or more <a href="http://www.w3.org/TR/domcore/#concept-element">elements</a> from that <a href="http://www.w3.org/TR/domcore/#trees">tree</a> as a structural abstraction that provides additional information about the contents of the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
@@ -939,7 +939,7 @@ host
 For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
 </div>
 
-<p>The <dfn id="dfn-custom-pseudo-element">custom pseudo-elements</dfn> enable this scenario. A <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> is an association between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and a string value. This string value is called a <dfn id="dfn-custom-pseudo-element-value">custom pseudo-element value</dfn>. The <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered <dfn id="dfn-valid-custom-pseudo-element-value">valid</dfn> if it starts with a <var>U+0078 LATIN SMALL LETTER X</var>, followed by  <var>U+002D HYPHEN-MINUS</var>. Otherwise, the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> <strong>must</strong> be considered invalid.</p>
+<p>The <dfn id="dfn-part-pseudo-element">part pseudo-elements</dfn> enable this scenario. A <a href="#dfn-part-pseudo-element">part pseudo-element</a> is an association between an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in a <a href="#dfn-shadow-tree">shadow tree</a> and a string value. This string value is called a <dfn id="dfn-part-pseudo-element-value">part pseudo-element value</dfn>.</p>
 
 <div class="informative">
 
@@ -949,24 +949,20 @@ For example, when developing a 2-dimensional range slider widget, which offers a
 var widget = document.createElement('div');
 var root = widget.createShadowRoot();
 var thumb = document.createElement('div');
-thumb.pseudo = 'x-thumb';
+thumb.part = 'thumb';
 root.appendChild(thumb);
 </code></pre>
 
-<p>Once the <code>pseudo</code> property is set, the consumer of the widget could style the widget's thumb using <code>x-thumb</code> pseudo-element, reaching into the widget's shadow tree directly to the thumb:</p>
+<p>Once the <code>part</code> property is set, the consumer of the widget could style the widget's thumb using the part pseudo-element with <code>thumb</code> as a parameter, reaching into the widget's shadow tree directly to the thumb:</p>
 
 <pre><code class="prettyprint">
-div::x-thumb {
+div::part(thumb) {
     width: 10px;
     height: 10px;
     color: bisque;
 }
 </code></pre>
 
-</div>
-
-<div class="fixme">
-    Using the <code>x-</code> prefix was raised as a problem (see <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20600">bug 20600</a>), but no one presented better alternatives yet.
 </div>
 
 <h2 id="user-interaction">User Interaction</h2>
@@ -1250,13 +1246,13 @@ partial interface <a href="http://dom.spec.whatwg.org/#element">Element</a> {
 <h4 id="partial-element-attributes">Attributes</h4>
 
 <dl>
-<dt><dfn id="api-partial-element-pseudo">pseudo</dfn> of type <code>DOMString</code></dt>
-<dd>Represents the <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-custom-pseudo-element-value">custom pseudo-element value</a> or <strong>empty string</strong> if there is no <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
+<dt><dfn id="api-partial-element-part">part</dfn> of type <code>DOMString</code></dt>
+<dd>Represents the <a href="#dfn-part-pseudo-element-value">part pseudo-element value</a>, associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the current <a href="#dfn-part-pseudo-element-value">part pseudo-element value</a> or <strong>empty string</strong> if there is no <a href="#dfn-part-pseudo-element">part pseudo-element</a> associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>.</dd>
 <dd>On setting, these steps <strong>must</strong> be run:
 <ol>
-    <li>If the <a href="#dfn-custom-pseudo-element">custom pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
-    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-custom-pseudo-element">custom pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-custom-pseudo-element-value">value</a>.</li>
+    <li>If the <a href="#dfn-part-pseudo-element">part pseudo-element</a>, associated with this <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> already exists, discard it</li>
+    <li>If the new value is not <strong>null</strong>, create a new <a href="#dfn-part-pseudo-element">part pseudo-element</a> with <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> and the new value as its <a href="#dfn-part-pseudo-element-value">value</a>.</li>
 </ol></dd>
 <dt><dfn id="api-partial-element-shadow-root">shadowRoot</dfn> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a><dt>
 <dd>Represents the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a href="#dfn-verb-host">hosts</a>.</dd>
