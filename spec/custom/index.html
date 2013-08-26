@@ -206,7 +206,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments. Every <a href="#dfn-callback-queue">callback queue</a> has a <dfn id="dfn-last-invoked-callback">last invoked callback</dfn> reference, which initially points at the start (the position just before the first item) of the <a href="#dfn-callback-queue">callback queue</a>.</p>
+<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments.</p>
 
 <p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a>, and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
 
@@ -224,10 +224,10 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var></a>:
     <ol>
         <li>Let <var>CALLBACKS</var> be the <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
-        <li>Repeat until <var>CALLBACKS</var>' <a href="#dfn-last-invoked-callback">last invoked callback</a> <var>LAST</var> points at the last item in <var>CALLBACKS</var>:
+        <li>Repeat until <var>CALLBACKS</var> is empty:
         <ol>
-            <li>Move <var>LAST</var> one position forward in <var>CALLBACKS</var></li>
-            <li>Let <var>CALLBACK</var> be the callback in <var>CALLBACKS</var> to which <var>LAST</var> points</li>
+            <li>Let <var>CALLBACK</var> be the first item in <var>CALLBACKS</var></li>
+            <li>Remove the first item from <var>CALLBACKS</var></li>
             <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
         </ol></li>
     </ol></li>
