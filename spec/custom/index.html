@@ -208,7 +208,9 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments.</p>
 
-<p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a>, and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
+<p>Each <a href="#dfn-custom-element">custom element</a> also has an associated <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag, which is initially set to <strong>false</strong>.</p>
+
+<p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
 
 <p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#clean-up-after-running-a-callback">cleaning up after running a callback</a>, the user agent <strong>must</strong> run the <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> using <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> that was just popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a> as argument.</p>
 
@@ -233,7 +235,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> also has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
+<p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
 <p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
 
@@ -275,7 +277,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 </dl>
 <ol>
     <li>Append <var>CALLBACK</var> to the end of <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
-    <li>Append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
+    <li>If <a href="#dfn-element-is-being-created-flag">element is being created</a> flag is <strong>false</strong>, append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
 </ol>
 </div>
 
@@ -284,6 +286,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 <dt id="dfn-created-callback">created</dt>
     <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
+    <dd>For the duration of this callback invocation, the <a href="#dfn-element-is-being-created-flag">element is being created</a> flag <strong>must</strong> be set to <strong>true</strong>. In all other cases, the flag <strong>must</strong> be set to <strong>false</strong>.</dd>
 <dt>enteredDocument</dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> <em>and</em> <strong>created</strong> callback has already been invoked for this <a href="#dfn-custom-element">custom element</a>.</dd>
 <dt>leftDocument</dt>
