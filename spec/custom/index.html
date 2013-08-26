@@ -285,10 +285,10 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 <dt id="dfn-created-callback">created</dt>
     <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
-<dt>inserted</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a>.</dd>
-<dt>removed</dt>
-    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document.</a>
+<dt>enteredDocument</dt>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
+<dt>leftDocument</dt>
+    <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#remove-an-element-from-a-document">removed from the document</a> <em>and</em> this  <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
 <dt>attributeChanged</dt>
     <dd>With one <a href="#dfn-attribute-changed-exception">exception</a>, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
     <dl>
@@ -403,8 +403,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     </ol></li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>created</em> to <var>LIFECYCLE</var> from property named <em>createdCallback</em> on <var>PROTOTYPE</var></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>inserted</em> to <var>LIFECYCLE</var> from property named <em>insertedCallback</em> on <var>PROTOTYPE</var></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>removed</em> to <var>LIFECYCLE</var> from property named <em>removedCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>enteredDocument</em> to <var>LIFECYCLE</var> from property named <em>enteredDocumentCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>leftDocument</em> to <var>LIFECYCLE</var> from property named <em>leftDocumentCallback</em> on <var>PROTOTYPE</var></li>
     <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>attributeChanged</em> to <var>LIFECYCLE</var> from property named <em>attributeChangedCallback</em> on <var>PROTOTYPE</var></li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> with <a href="#dfn-custom-element-type">custom element type</a> set to <var>TYPE</var>, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <var>NAMESPACE</var>, <a href="#dfn-custom-element-prototype">custom element prototype</a> to <var>PROTOTYPE</var>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> to <var>LIFECYCLE</var>.</li>
 </ol>
@@ -429,8 +429,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
         <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
         <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/#in-a-document">in a document</a>:
         <ol>
-            <li>Let <var>INSERTED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>inserted</em>.</li>
-            <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>INSERTED</var></li>
+            <li>Let <var>ENTERED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>enteredDocument</em>.</li>
+            <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>ENTERED</var></li>
         </ol></li>
     </ol></li>
     <li>Set <var>CANDIDATES</var> to empty list.</li>
