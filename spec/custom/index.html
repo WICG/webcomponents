@@ -65,7 +65,11 @@
     <li><a href="#about">About this Document</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
     <li><a href="#concepts">Concepts</a></li>
-    <li><a href="#custom-element-lifecycle">Custom Element Lifecycle</a></li>
+    <li><a href="#custom-element-lifecycle">Custom Element Lifecycle</a>
+    <ol>
+        <li><a href="#enqueuing-and-invoking-callbacks">Enqueueing and Invoking Callbacks</a></li>
+        <li><a href="#types-of-callbacks">Types of Callbacks</a></li>
+    </ol></li>
     <li><a href="#creating-and-passing-registries">Creating and Passing Registries</a></li>
     <li><a href="#registering-custom-elements">Registering Custom Elements</a>
     <ol>
@@ -206,15 +210,13 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn>, which is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments.</p>
+<h3 id="enqueuing-and-invoking-callbacks">Enqueuing and Invoking Callbacks</h3>
 
-<p>Each <a href="#dfn-custom-element">custom element</a> also has an associated <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag, which is initially set to <strong>false</strong>.</p>
+<p>To facilitate invoking callbacks, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-processing-stack">processing stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>.</p>
 
-<p>Each entry in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> has an associated <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>. New <a href="#dfn-element-queue">element queue</a> is created once a script enters the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> and the <a href="#dfn-element-queue">element queue</a> is discarded once script leaves the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a>.</p>
+<p>Each <a href="#dfn-custom-element">custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn> and an <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag. The flag is initially set to <strong>false</strong> and the <a href="#dfn-callback-queue">callback queue</a> is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments.</p>
 
-<p>When <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#clean-up-after-running-a-callback">cleaning up after running a callback</a>, the user agent <strong>must</strong> run the <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> using <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> that was just popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack</a> as argument.</p>
-
-<p>The <dfn id="dfn-callbacks-processing-algorithm">callbacks processing algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p>To <dfn id="dfn-invoke-callbacks-in-element-queue">invoke callbacks</dfn> in an <a href="#dfn-element-queue">element queue</a>, the user agent <strong>must</strong> run these steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
 <dl>
@@ -234,6 +236,15 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     </ol></li>
 </ol>
 </div>
+
+<p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions <strong>must</strong> occur:
+<ul>
+    <li>When transitioning from script to the user agent code, push a new <a href="#dfn-element-queue">element queue</a> to the <a href="#dfn-processing-stack">processing stack</a></li>
+    <li>When transitioning back from the user code to script, pop the <a href="#dfn-element-queue">element queue</a> from the <a href="#dfn-processing-stack">processing stack</a> and <a href="#dfn-invoke-callbacks-in-element-queue">invoke callbacks</a> in that queue.</li>
+</ul>
+</p>
+
+<div class="informative">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a lifecycle callback, the user agent could choose not to wrap it as a performance optimization.</div>
 
 <p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
@@ -258,12 +269,12 @@ Currently, the HTML spec has sequential processing of steps in <a href="http://w
     <li>Let <var>PROCESSING</var> be the <a href="#dfn-processing-base-element-queue">processing base element queue</a> flag</li>
     <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
     <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
-    <li>Run <a href="#dfn-callbacks-processing-algorithm">callbacks processing algorithm</a> with <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a> as argument</li>
+    <li><a href="#dfn-invoke-callbacks-in-element-queue">Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a></li>
     <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
 
-<p>In the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#incumbent-script">incumbent script</a> or the <a href="#dfn-base-element-queue">base element queue</a> if <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#stack-of-incumbent-scripts">stack of incumbent scripts</a> is empty.</p>
+<p>In the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> at the top of the <a href="#dfn-processing-stack">processing stack</a> or the <a href="#dfn-base-element-queue">base element queue</a> if the <a href="#dfn-processing-stack">processing stack</a> is empty.</p>
 
 To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
@@ -280,6 +291,8 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
     <li>If <a href="#dfn-element-is-being-created-flag">element is being created</a> flag is <strong>false</strong>, append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
 </ol>
 </div>
+
+<h3 id="types-of-callbacks">Types of Callbacks</h3>
 
 <p>The following callbacks are recognized:</p>
 <dl>
