@@ -609,31 +609,30 @@ steps:</p>
 
 <h2 id="serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</h2>
 
-<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run these steps when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a>:</p>
+<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run these steps when popping an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>:</p>
 
 <div class="monkeypatch">
 <dl>
 <dt>Input</dt>
-    <dd><var>DOCUMENT</var>, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> in which the element is being created</dd>
-    <dd><var>TOKEN</var>, token tag name</dd>
-    <dd><var>NAMESPACE</var>, token <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a></dd>
+    <dd><var>ELEMENT</var>, an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that was popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></dd>
 <dt>Output</dt>
-    <dd><var>ELEMENT</var>, an element</dd>
+    <dd>None</dd>
 </dl>
 <ol>
-    <li>Let <var>NAME</var> be the tag name of the <em>token</em></li>
-    <li>Let <var>NAMESPACE</var> be the <em>token</em>'s namespace</li>
-    <li>Let <var>TYPE</var> be the value of <code>is</code> attribute for the <em>token</em> or <var>NAME</var>, if this attribute is not present</li>
-    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> both <var>NAME</var> and <var>TYPE</var> to lowercase</li>
-    <li>If an <a href="#dfn-element-definition">element definition</a> with matching <var>NAME</var>, <var>NAMESPACE</var>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <var>NAME</var></li>
-    <li>Let <var>ELEMENT</var> be the result of creating a node implementing the interface appropriate for the element type corresponding to <var>TYPE</var> and <var>NAMESPACE</var></li>
-    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
+    <li>If <var>ELEMENT</var> is not a <a href="#dfn-custom-element">custom element</a>, <strong>stop</strong>.</li>
+    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
+    <li>If <var>DEFINITION</var> does not exist, move <var>ELEMENT</var> to the back of <a href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
+    <li>Otherwise, let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
     <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
 </ol>
 </div>
 
 <div class="informative">
-<p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating an element for a token</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
+<p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Moving unresolved elements in the upgrade canidates map has the same effect on the order of element upgrade.</p>
+</div>
+
+<div class="informative">
+<p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
 </div>
 
 </section>
