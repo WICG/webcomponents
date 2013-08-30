@@ -246,7 +246,17 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <div class="informative">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a lifecycle callback, the user agent could choose not to wrap it as a performance optimization.</div>
 
-<p>In addition, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-element-queue">element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
+<p>In addition to an <a href="#dfn-element-queue">element queue</a>, there is also <dfn id="dfn-sorted-element-queue">sorted element queue</dfn>. The <a href="#dfn-custom-element">custom elements</a> are kept in the order of increasing <a href="#dfn-custom-element-order">custom element order</a>.</p>
+
+<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a numerical value, associated with every <a href="#dfn-custom-element">custom element</a>. This value is as a result of <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned as the <a href="#dfn-custom-element-order">custom element order</a> whenever the following occurs:</p>
+<ul>
+    <li>A <a href="#dfn-custom-element">custom element</a> is popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>.</li>
+    <li>A <a href="#dfn-custom-element">custom element</a> is created with means other than  <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML</a> parsers.</li>
+</ul>
+
+<p>With <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html">HTML Imports</a>, the <a href="#dfn-custom-element-order">custom element order</a> also accommodates the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> of an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a>. For any given <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a>, any of its <a href="#dfn-custom-element">custom elements</a> have a higher <a href="#dfn-custom-element-order">custom element order</a> than any <a href="#dfn-custom-element">custom element</a> in a <a href="http://dom.spec.whatwg.org/#concept-tree-preceding">preceeding</a> <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a>. Conversely, any <a href="#dfn-custom-element">custom element</a> <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> has lower <a href="#dfn-custom-element-order">custom element order</a> than any <a href="#dfn-custom-element">custom elements</a> in the <a href="http://dom.spec.whatwg.org/#concept-tree-following">following</a> <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a>.</p>
+
+<p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-sorted-element-queue">sorted element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
 <p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
 
@@ -287,8 +297,8 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
     <dd>None</dd>
 </dl>
 <ol>
-    <li>Append <var>CALLBACK</var> to the end of <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
-    <li>If <a href="#dfn-element-is-being-created-flag">element is being created</a> flag is <strong>false</strong>, append <var>ELEMENT</var> to the end of the <a href="#dfn-current-element-queue">current element queue</a>.</li>
+    <li>Add <var>CALLBACK</var> to <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
+    <li>If <a href="#dfn-element-is-being-created-flag">element is being created</a> flag is <strong>false</strong>, add <var>ELEMENT</var> to <a href="#dfn-current-element-queue">current element queue</a>.</li>
 </ol>
 </div>
 
@@ -364,9 +374,9 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 The effect of this statement is that any HTML (or SVG) element with the local name that is a valid custom element type will have HTMLElement (or SVGElement) as element interface, rather than HTMLUnknownElement.
 </div>
 
-<p>Each <a href="#dfn-registry">registry</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty.</p>
+<p>Each <a href="#dfn-registry">registry</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty. Each item in this data structure is an <a href="#dfn-sorted-element-queue">sorted element queue</a>.</p>
 
-<p>Whenever an <a href="#dfn-unresolved-element">unresolved element</a> is created, it <strong>must</strong> be added at the front of the <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a>.</p>
+<p>Whenever an <a href="#dfn-unresolved-element">unresolved element</a> is created, it <strong>must</strong> be added to the respective <a href="#dfn-sorted-element-queue">sorted element queue</a> in <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a>.</p>
 
 <p><a href="#dfn-element-registration">Registering</a> an <a href="#dfn-element-definition">element definition</a> is the responsibility of the <dfn id="dfn-element-registration-algorithm">element registration algorithm</dfn>, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
@@ -442,13 +452,13 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 </dl>
 <ol>
     <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
-    <li>Let <var>CANDIDATES</var> be the list of all <a href="#dfn-unresolved-element">unresolved elements</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
+    <li>Let <var>CANDIDATES</var> be the <a href="#dfn-sorted-element-queue">sorted element queue</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
         <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
         <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
     </ol></li>
-    <li>Set <var>CANDIDATES</var> to empty list.</li>
+    <li>Set <var>CANDIDATES</var> to empty <a href="#dfn-sorted-element-queue">sorted element queue</a>.</li>
 </ol>
 </div>
 
@@ -619,9 +629,7 @@ steps:</p>
 </dl>
 <ol>
     <li>If <var>ELEMENT</var> is not a <a href="#dfn-custom-element">custom element</a>, <strong>stop</strong>.</li>
-    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>If <var>DEFINITION</var> does not exist, move <var>ELEMENT</var> to the back of <a href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
-    <li>Otherwise, let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
+    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
     <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <var>CREATED</var>.</li>
 </ol>
 </div>
