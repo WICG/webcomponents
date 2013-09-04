@@ -332,7 +332,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 </dl>
 <ol>
     <li>Let <var>PROTOTYPE</var> be the <a href="#dfn-custom-element-prototype">custom element prototype</a> in <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.com/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var>.</li>
+    <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.io/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var>.</li>
     <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a document</a> and this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>:
     <ol>
         <li>Let <var>ENTERED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>enteredView</em>.</li>
@@ -359,7 +359,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 
 <p>Because <a href="#dfn-element-registration">element registration</a> can occur at any time, a <a href="#dfn-custom-element">custom element</a> could be created before its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. Such <a href="#dfn-custom-element">custom element</a> instances are called <dfn id="dfn-unresolved-element">unresolved elements</dfn>. When an <a href="#dfn-unresolved-element">unresolved element</a> is created, <strong>and</strong> if its  <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> was not defined by <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#other-applicable-specifications">other applicable specifications</a>, the <a href="#dfn-unresolved-element">unresolved element</a>'s <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> <strong>must</strong> be:</p>
 <ul>
-    <li>the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>, if the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a>;</li>
+    <li>the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>, if the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a>;</li>
     <li>the <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, if <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is <a href="http://www.w3.org/2000/svg">SVG Namespace</a>; or</li>
     <li>unknown, otherwise.</li>
 </ul>
@@ -412,7 +412,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>Let <var>ERROR</var> be <code>None</code></li>
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>TYPE</var> and <var>NAME</var> to lowercase</li>
     <li>If <var>TYPE</var> is an invalid <a href="#dfn-custom-element-type">custom element type</a>, set <var>ERROR</var> to <code>InvalidType</code> and <strong>stop</strong>.</li>
-    <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a></li>
+    <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a></li>
     <li>If <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var>, set <var>ERROR</var> to <code>DuplicateDefinition</code> and <strong>stop</strong>.</li>
     <li>If <var>NAME</var> was provided and is not <strong>null</strong>:
@@ -485,13 +485,11 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.com/#x15.2.3.5"><code>Object.create</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
+    <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.5"><code>Object.create</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
     <li>Let <var>NAME</var> be <var>EXTENDS</var></li>
     <li>Let <var>ERROR</var> be the result of running the <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
     <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#syntaxerror"><code>SyntaxError</code></a> and <strong>stop</strong>.</li>
     <li>If <var>ERROR</var> is not <code>None</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
-    <li>Let <var>ENVIRONMENT</var> be the <var>DOCUMENT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a></dd>
-    <li><a href="#dfn-invoke-lifecycle-callbacks">Invoke lifecycle callbacks</a> with <var>ENVIRONMENT</var> as argument</li>
     <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>DOCUMENT</var> and <var>PROTOTYPE</var> as arguments.</li>
 </ol>
 </div>
@@ -584,7 +582,7 @@ steps:</p>
 <ol>
     <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
     <li>If an <a href="#dfn-element-definition">element definition</a> with matching <em>localName</em>, <em>namespace</em>, and <var>TYPE</var> is <strong>not</strong> <a href="#dfn-element-registration">registered</a> with <em>token</em>'s document, set <var>TYPE</var> to <em>localName</em></li>
-    <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
+    <li>Let <em>interface</em> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>TYPE</var> as <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <em>namespace</em> (<a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a> for <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a>)</li>
 </ol>
 
 <p>Additionally, both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the following steps just <em>before</em> returning the result:</p>
