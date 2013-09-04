@@ -234,7 +234,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 <p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions <strong>must</strong> occur:
 <ul>
     <li>When transitioning from script to the user agent code, push a new <a href="#dfn-element-queue">element queue</a> to the <a href="#dfn-processing-stack">processing stack</a></li>
-    <li>When transitioning back from the user code to script, pop the <a href="#dfn-element-queue">element queue</a> from the <a href="#dfn-processing-stack">processing stack</a> and <a href="#dfn-invoke-callbacks-in-element-queue">invoke callbacks</a> in that queue.</li>
+    <li>When transitioning back from the user agent code to script, pop the <a href="#dfn-element-queue">element queue</a> from the <a href="#dfn-processing-stack">processing stack</a> and <a href="#dfn-invoke-callbacks-in-element-queue">invoke callbacks</a> in that queue.</li>
 </ul>
 </p>
 
@@ -242,13 +242,13 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>In addition to an <a href="#dfn-element-queue">element queue</a>, there is also a <dfn id="dfn-sorted-element-queue">sorted element queue</dfn>. The <a href="#dfn-custom-element">custom elements</a> are kept in the order of increasing <a href="#dfn-custom-element-order">custom element order</a>.</p>
 
-<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a numerical value, associated with every <a href="#dfn-custom-element">custom element</a>. This value is as a result of <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned as the <a href="#dfn-custom-element-order">custom element order</a> whenever the following occurs:</p>
+<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a numerical value, associated with every <a href="#dfn-custom-element">custom element</a>. This value is as a result of <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned to <a href="#dfn-custom-element">custom element</a> as its <a href="#dfn-custom-element-order">custom element order</a> whenever the following occurs:</p>
 <ul>
     <li>A <a href="#dfn-custom-element">custom element</a> is popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></li>
     <li>A <a href="#dfn-custom-element">custom element</a> is created with means other than a parser</li>
 </ul>
 
-<p>The <a href="#dfn-custom-element-order">custom element order</a> of a given <a href="#dfn-custom-element">custom element</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> is determined as a <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
+<p>The <a href="#dfn-custom-element-order">custom element order</a> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> is determined by <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
 
 <p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-sorted-element-queue">sorted element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
@@ -368,7 +368,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 The effect of this statement is that any HTML (or SVG) element with the local name that is a valid custom element type will have HTMLElement (or SVGElement) as element interface, rather than HTMLUnknownElement.
 </div>
 
-<p>Each <a href="#dfn-registry">registry</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty. Each item in this data structure is an <a href="#dfn-sorted-element-queue">sorted element queue</a>.</p>
+<p>Each <a href="#dfn-registry">registry</a> has an associated <a href="http://en.wikipedia.org/wiki/Associative_array">map</a> of all instances of <a href="#dfn-unresolved-element">unresolved elements</a> for a given pair of <a href="#dfn-custom-element-type">custom element type</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>. This data structure is called the <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> and is initially empty. Each value item in this map is a <a href="#dfn-sorted-element-queue">sorted element queue</a>.</p>
 
 <p>Whenever an <a href="#dfn-unresolved-element">unresolved element</a> is created, it <strong>must</strong> be added to the respective <a href="#dfn-sorted-element-queue">sorted element queue</a> in <A href="#dfn-upgrade-candidates-map">upgrade candidates map</a>.</p>
 
@@ -627,7 +627,7 @@ steps:</p>
 </div>
 
 <div class="informative">
-<p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Moving unresolved elements in the upgrade canidates map has the same effect on the order of element upgrade.</p>
+<p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Keeping  unresolved elements in a sorted element queue has the same effect on the order of element upgrade.</p>
 </div>
 
 <div class="informative">
