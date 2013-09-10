@@ -287,16 +287,16 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 
 <p>The following callbacks are recognized:</p>
 <dl>
-<dt id="dfn-created-callback">created</dt>
+<dt><dfn id="dfn-created-callback">created</dfn></dt>
     <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
     <dd>For the duration of this callback invocation, the <a href="#dfn-element-is-being-created-flag">element is being created</a> flag <strong>must</strong> be set to <strong>true</strong>. In all other cases, the flag <strong>must</strong> be set to <strong>false</strong>.</dd>
     <dd>All other callbacks <strong>must not</strong> be enqueued until after the <a href="#dfn-created-callback">created</a> callback's invocation had started.</dd>
-<dt>enteredView</dt>
+<dt><dfn id="dfn-entered-view-callback">enteredView</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
-<dt>leftView</dt>
+<dt><dfn id="dfn-left-view-callback">leftView</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#remove-an-element-from-a-document">removed from the document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
-<dt>attributeChanged</dt>
+<dt><dfn id="dfn-attribute-changed-callback">attributeChanged</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
     <dl>
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-added">attribute is set</a></dt>
@@ -322,7 +322,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
     <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.io/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var>.</li>
     <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a document</a> and this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>:
     <ol>
-        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>enteredView</em> callback for <var>ELEMENT</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <a href="#dfn-entered-view-callback"><em>enteredView</em></a> callback for <var>ELEMENT</var></li>
     </ol></li>
 </ol>
 </div>
@@ -412,10 +412,10 @@ The effect of this statement is that any HTML (or SVG) element with the local na
         <li>Let <var>NAME</var> be <var>TYPE</var></li>
     </ol></li>
     <li>Let <var>LIFECYCLE</var> be <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>created</em> to <var>LIFECYCLE</var> from property named <em>createdCallback</em> on <var>PROTOTYPE</var></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>enteredView</em> to <var>LIFECYCLE</var> from property named <em>enteredViewCallback</em> on <var>PROTOTYPE</var></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>leftView</em> to <var>LIFECYCLE</var> from property named <em>leftViewCallback</em> on <var>PROTOTYPE</var></li>
-    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <em>attributeChanged</em> to <var>LIFECYCLE</var> from property named <em>attributeChangedCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <a href="#dfn-created-callback"><em>created</em></a> to <var>LIFECYCLE</var> from property named <em>createdCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <a href="#dfn-entered-view-callback"><em>enteredView</em></a> to <var>LIFECYCLE</var> from property named <em>enteredViewCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <a href="#dfn-left-view-callback"><em>leftView</em></a> to <var>LIFECYCLE</var> from property named <em>leftViewCallback</em> on <var>PROTOTYPE</var></li>
+    <li><a href="#dfn-transfer-callback">Transfer callback</a> named <A href="#dfn-attribute-changed-callback"><em>attributeChanged</em></a> to <var>LIFECYCLE</var> from property named <em>attributeChangedCallback</em> on <var>PROTOTYPE</var></li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> with <a href="#dfn-custom-element-type">custom element type</a> set to <var>TYPE</var>, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <var>NAMESPACE</var>, <a href="#dfn-custom-element-prototype">custom element prototype</a> to <var>PROTOTYPE</var>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> to <var>LIFECYCLE</var>.</li>
 </ol>
 </div>
@@ -435,7 +435,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>Let <var>CANDIDATES</var> be the <a href="#dfn-sorted-element-queue">sorted element queue</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
-        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> callback <em>created</em> for <var>ELEMENT</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> callback <a href="#dfn-created-callback"><em>created</em></a> for <var>ELEMENT</var></li>
     </ol></li>
     <li>Set <var>CANDIDATES</var> to empty <a href="#dfn-sorted-element-queue">sorted element queue</a>.</li>
 </ol>
@@ -542,7 +542,7 @@ document.register('x-foo', {
         <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
         <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to <var>DOCUMENT</var></li>
         <li>If <var>TYPE</var> is not the same as <var>NAME</var>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
-        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for <var>ELEMENT</var></li>
         <li>Return <var>ELEMENT</var>.</li>
     </ol></li>
 </ol>
@@ -573,13 +573,13 @@ steps:</p>
 <p>Additionally, both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the following steps just <em>before</em> returning the result:</p>
 <ol>
     <li>If <var>TYPE</var> is not the same as <em>localName</em>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
-    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var></li>
+    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for <var>ELEMENT</var></li>
 </ol>
 </div>
 
 <h2 id="parsing">Parsing Custom Elements</h2>
 
-<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <em>created</em> callback for any <a href="#dfn-custom-element">custom element</a> when popping it from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>.</p>
+<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for any <a href="#dfn-custom-element">custom element</a> when popping it from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>.</p>
 
 <div class="informative">
 <p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Keeping  unresolved elements in a sorted element queue has the same effect on the order of element upgrade.</p>
