@@ -81,7 +81,7 @@
         <li><a href="#extensions-to-document-interface-to-instantiate">Extensions to <code>Document</code> Interface</a></li>
     </ol>
     </li>
-    <li><a href="#serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</a></li>
+    <li><a href="#parsing">Parsing Custom Elements</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
 
@@ -577,22 +577,9 @@ steps:</p>
 </ol>
 </div>
 
-<h2 id="serializing-and-parsing">Serializing and Parsing Custom Elements in HTML</h2>
+<h2 id="parsing">Parsing Custom Elements</h2>
 
-<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run these steps when popping an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>:</p>
-
-<div class="monkeypatch">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that was popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol>
-    <li>If <var>ELEMENT</var> is not a <a href="#dfn-custom-element">custom element</a>, <strong>stop</strong>.</li>
-    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var>.</li>
-</ol>
-</div>
+<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <em>created</em> callback for any <a href="#dfn-custom-element">custom element</a> when popping it from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>.</p>
 
 <div class="informative">
 <p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Keeping  unresolved elements in a sorted element queue has the same effect on the order of element upgrade.</p>
