@@ -542,7 +542,7 @@ document.register('x-foo', {
         <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
         <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to <var>DOCUMENT</var></li>
         <li>If <var>TYPE</var> is not the same as <var>NAME</var>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
-        <li>Run the <a href="#dfn-element-initialization">element initialization algorithm</a> with <var>ELEMENT</var> as argument</li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var></li>
         <li>Return <var>ELEMENT</var>.</li>
     </ol></li>
 </ol>
@@ -573,20 +573,6 @@ steps:</p>
 <p>Additionally, both <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods <strong>must</strong> run the following steps just <em>before</em> returning the result:</p>
 <ol>
     <li>If <var>TYPE</var> is not the same as <em>localName</em>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
-    <li>Run <a href="#dfn-element-initialization">element initialization algorithm</a> with the newly created <a href="http://dom.spec.whatwg.org/#concept-element">element</a></li>
-</ol>
-</div>
-
-<p>The <dfn id="dfn-element-initialization">element initialization algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>ELEMENT</var>, an <a href="http://dom.spec.whatwg.org/#concept-element">element</a> being initialized</dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol>
     <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var></li>
 </ol>
 </div>
