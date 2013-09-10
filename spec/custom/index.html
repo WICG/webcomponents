@@ -187,23 +187,6 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>To <dfn id="dfn-retrieve-callback">retrieve a callback named <em>name</em></dfn> for an <a href="http://dom.spec.whatwg.org/#concept-element">element</a>, the user agent <strong>must</strong> run the following steps:</p>
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>NAME</var>, name of the callback</dd>
-    <dd><var>ELEMENT</var>, the <a href="http://dom.spec.whatwg.org/#concept-element">element</a></dd>
-<dt>Output</dt>
-    <dd><var>CALLBACK</var>, the callback</dd>
-</dl>
-<ol>
-    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>If <var>DEFINITION</var> does not exist, let <var>CALLBACK</var> be <strong>null</strong> and <strong>stop</strong>.</li>
-    <li>Let <var>CALLBACKS</var> be the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> from <var>DEFINITION</var>
-    <li>Let <var>CALLBACK</var> be the callback, associated with the key <var>NAME</var> in <var>CALLBACKS</var>, or <strong>null</strong> if there is no such callback.</li>
-</ol>
-</div>
-
 <h3 id="enqueuing-and-invoking-callbacks">Enqueuing and Invoking Callbacks</h3>
 
 <p>To facilitate invoking callbacks, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-processing-stack">processing stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a href="#dfn-element-queue">element queue</a> is a <a href="#dfn-custom-element">custom element</a>.</p>
@@ -283,14 +266,18 @@ Currently, the HTML spec has sequential processing of steps in <a href="http://w
 To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
-<dl>
 <dt>Input</dt>
-    <dd><var>CALLBACK</var>, the callback</dd>
+    <dd><var>NAME</var>, name of the callback</dd>
     <dd><var>ELEMENT</var>, the <a href="#dfn-custom-element">custom element</a> for which the callback is enqueued</dd>
 <dt>Output</dt>
     <dd>None</dd>
 </dl>
 <ol>
+    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
+    <li>If <var>DEFINITION</var> does not exist, let <var>CALLBACK</var> be <strong>null</strong> and <strong>stop</strong>.</li>
+    <li>Let <var>CALLBACKS</var> be the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> from <var>DEFINITION</var>
+    <li>Let <var>CALLBACK</var> be the callback, associated with the key <var>NAME</var> in <var>CALLBACKS</var></li>
+    <li>If there is no such callback, <strong>stop.</strong></li>
     <li>Add <var>CALLBACK</var> to <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
     <li>If <a href="#dfn-element-is-being-created-flag">element is being created</a> flag is <strong>false</strong>, add <var>ELEMENT</var> to <a href="#dfn-current-element-queue">current element queue</a>.</li>
 </ol>
@@ -335,8 +322,7 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
     <li>Set the value of the <code>[[Prototype]]</code> <a href="http://es5.github.io/#x8.6.2">internal property</a> of <var>ELEMENT</var> to <var>PROTOTYPE</var>.</li>
     <li>If <var>ELEMENT</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a document</a> and this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>:
     <ol>
-        <li>Let <var>ENTERED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>enteredView</em>.</li>
-        <li>If <var>ENTERED</var> is not <strong>null</strong>, <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <var>ENTERED</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>enteredView</em> callback for <var>ELEMENT</var></li>
     </ol></li>
 </ol>
 </div>
@@ -449,8 +435,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>Let <var>CANDIDATES</var> be the <a href="#dfn-sorted-element-queue">sorted element queue</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
-        <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-        <li>If <var>CREATED</var> is not <strong>null</strong>, <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <var>CREATED</var>.</li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> callback <em>created</em> for <var>ELEMENT</var></li>
     </ol></li>
     <li>Set <var>CANDIDATES</var> to empty <a href="#dfn-sorted-element-queue">sorted element queue</a>.</li>
 </ol>
@@ -602,9 +587,7 @@ steps:</p>
     <dd>None</dd>
 </dl>
 <ol>
-    <li>Let <var>DEFINITION</var> be <var>ELEMENT</var>'s <a href="#dfn-element-definition">definition</a></li>
-    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em></li>
-    <li>If it is not <code>null</code>, <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <var>CREATED</var></li>
+    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var></li>
 </ol>
 </div>
 
@@ -621,8 +604,7 @@ steps:</p>
 </dl>
 <ol>
     <li>If <var>ELEMENT</var> is not a <a href="#dfn-custom-element">custom element</a>, <strong>stop</strong>.</li>
-    <li>Let <var>CREATED</var> be the result of <a href="#dfn-retrieve-callback">retrieving a callback</a> named <em>created</em>.</li>
-    <li>If <var>CREATED</var> is not <strong>null</strong>, <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <var>CREATED</var>.</li>
+    <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <em>created</em> callback for <var>ELEMENT</var>.</li>
 </ol>
 </div>
 
