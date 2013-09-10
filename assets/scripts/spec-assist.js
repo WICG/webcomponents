@@ -177,7 +177,7 @@ DefinitionsCrossLinker.prototype.createCrossLinks = function(dfn)
             });
         }
     }
-    dfn.crossLinkContent = '<div class="title">#' + id + '</div><ol>' + links.join('') + '</ol>';
+    dfn.crossLinkContent = '<div class="title"><a href="#' + id + '">#' + id + '</a></div><ol>' + links.join('') + '</ol>';
 }
 
 var assistants = [ new LastUpdatedDateFetcher(), new TableOfContentsEnumerator(), new DefinitionsCrossLinker() ];
