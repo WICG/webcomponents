@@ -233,6 +233,25 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>The <a href="#dfn-custom-element-order">custom element order</a> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> is determined by <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
 
+<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value, preceeding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> from an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> whose <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-ready-flag">ready flag</a> is not yet set. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a>.</p>
+
+<div class="informative">
+<p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
+
+<pre><code class="prettyprint">
+<strong class="nocode">index.html</strong>:
+&lt;me-first&gt;&lt;/me-first&gt;
+&lt;link rel="import" href="import.html"&gt;
+&lt;me-third&gt;&lt;/me-third&gt;
+
+<strong class="nocode">import.html</strong>:
+&lt;me-second&gt;&lt;/me-second&gt;
+</code></pre>
+
+<p>The order of custom elements in the flattened import tree is <code>me-first</code> (1), <code>me-second</code> (2), <code>me-third</code> (3). However, it's very likely that the parser will find out about <code>me-third</code> sooner than <code>me-second</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order the higest stable order stays at <code>me-first</code> (1). When <code>import.html</code> is ready, the order jumps all the way to <code>me-third</code> (3).</p>
+
+</div>
+
 <p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-sorted-element-queue">sorted element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
 <p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
@@ -256,7 +275,7 @@ Currently, the HTML spec has sequential processing of steps in <a href="http://w
     <li>Let <var>PROCESSING</var> be the <a href="#dfn-processing-base-element-queue">processing base element queue</a> flag</li>
     <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
     <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
-    <li><a href="#dfn-invoke-callbacks-in-element-queue">Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a></li>
+    <li><a href="#dfn-invoke-callbacks-in-element-queue">Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a href="#dfn-base-element-queue">base element queue</a> up to <a href="#dfn-highest-stable-order">highest stable order</a>, inclusively</li>
     <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
