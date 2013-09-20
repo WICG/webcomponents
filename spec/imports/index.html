@@ -68,7 +68,10 @@
     <li><a href="#terminology">Terminology</a></li>
     <li><a href="#link-type-import">Link Type "<code>import</code>"</a></li>
     <li><a href="#interface-import">Extensions to <code>HTMLLinkElement</code> interface</a></li>
-    <li><a href="#loading-imports">Loading Imports</a></li>
+    <li><a href="#loading-imports">Loading Imports</a>
+    <ol>
+      <li><a href="#imports-and-csp">Imports and Content Security Policy</a>
+    </ol></li>
     <li><a href="#parsing-imports">Parsing Imports</a>
     <ol>
         <li><a href="#additions-to-prepare-a-script-algorithm">Additions to Prepare A Script Algorithm</a></li>
@@ -157,9 +160,8 @@ partial interface <a href="http://www.whatwg.org/specs/web-apps/current-work/mul
 <p>On getting, the <dfn id="dfn-html-link-element-import"><code>import</code></dfn> attribute <strong>must</strong> return <strong>null</strong>, if:</p>
 <ul>
     <li>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> does not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#represents">represent</a> an <a href="#dfn-import">import</a></li>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#downloading-resources">downloading</a> the resource has failed</li>
     <li>the user agent does not support <a href="#dfn-import">imports</a></li>
-    <li>the resource is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#cors-cross-origin">CORS-cross-origin</a></li>
+    <li>the resource is <a href="http://fetch.spec.whatwg.org/#cors-cross-origin">CORS-cross-origin</a></li>
     <li>the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element is not <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in a <code>Document</code></a></li>
 </ul>
 <p>Otherwise, the attribute <strong>must</strong> return the <a href="#dfn-imported-document">imported document</a> for the <a href="#dfn-import">import</a>, represented by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element.</p>
@@ -193,9 +195,9 @@ Giving up an import before it loads, even if the import eventually does still lo
 
 <h2 id="loading-imports">Loading Imports</h2>
 
-<p>All <a href="#dfn-import">imports</a> linked from documents that is in an <a href="#dfn-import-tree">import tree</a> <strong>must</strong> be loaded using <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#potentially-cors-enabled-fetch">potentially CORS-enabled fetch</a> with <em>mode</em> set to "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#attr-crossorigin-anonymous">Anonymous</a>".</p>
+<p>All <a href="#dfn-import">imports</a> linked from documents that is in an <a href="#dfn-import-tree">import tree</a> <strong>must</strong> be loaded using <a href="http://fetch.spec.whatwg.org/#concept-legacy-potentially-cors-enabled-fetch">potentially CORS-enabled fetch</a> with <em>mode</em> set to "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#attr-crossorigin-anonymous">Anonymous</a>".</p>
 
-<p>When an <a href="#dfn-import">import</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">fetched</a>, the user agent <strong>must</strong> run the <dfn id="dfn-import-fetching">import fetching</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p>When an <a href="#dfn-import">import</a> is <a href="http://fetch.spec.whatwg.org/#concept-fetch">fetched</a>, the user agent <strong>must</strong> run the <dfn id="dfn-import-fetching">import fetching</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
@@ -209,22 +211,40 @@ Giving up an import before it loads, even if the import eventually does still lo
     <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
     <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
     <li>Add <var>LOCATION</var> and <var>IMPORT</var> to the <a href="#dfn-import-tree">import tree</a> as the last child of <var>PARENT</var>.</li>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>override referrer source</em> and <em>block cookies</em> flag set:
+    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>override referrer source</em> and <em>block cookies</em> flag set:
     <ol>
         <li>For each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">task</a> that the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">networking task source</a> places on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#task-queue">task queue</a> while fetching:
         <ol>
-            <li>Fill <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with the fetched byts</li>
+            <li>Fill <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with the fetched bytes</li>
             <li>Let <var>PARSER</var> process the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with <a href="http://encoding.spec.whatwg.org/#utf-8">utf-8</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#a-known-definite-encoding">a known definite encoding</a></li>
         </ol></li>
         <li>When no more bytes are available:
         <ol>
             <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">Queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
+        </ol>
+        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>, let <var>PARSER</var> be <strong>null</strong> and <strong>stop</strong>.
     </ol></li>
 </ol>
 </div>
 
 <div class="informative">
 All of loaded imports and imports under loading are in the <a href="#dfn-import-tree">import tree</a>, thus every <a href="#dfn-import">import</a> which is linked from these imports will also be loaded using the <a href="#dfn-import-fetching">import fetching</a> algorithm, with <var>PARENT</var> be the import and <var>LOCATION</var> be the <a href="#dfn-import-location">import location</a> of the import.
+</div>
+
+<h3 id="imports-and-csp">Imports and Content Security Policy</h3>
+
+<div class="informative">
+
+<p>
+<a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html">Content Security Policy</a> restricts import loading through
+the <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#script-src">script-src</a> directive.
+</p>
+
+<p>
+Each import is restricted by its own Content Security Policy.
+For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#enforce">enforce</a> the policy to the imported document.</a>
+</p>
+
 </div>
 
 <h2 id="parsing-imports">Parsing Imports</h2>
