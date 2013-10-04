@@ -326,6 +326,19 @@ If the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.
 </ol>
 </div>
 
+<h3 id="additions-to-dom-document-currentscript">Additions to document.currentScript</h3>
+
+<p>
+Modify the definition of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-currentscript"><code>document.currentScript</code></a>
+as follows:
+</p>
+<div class="monkeypatch">
+The <dfn id="dom-document-currentscript" title="dom-document-currentScript"><code>currentScript</code></dfn> attribute, on getting,
+must return the value to which it was most recently initialized in the document or the <a href="#dfn-import-tree">import tree</a> of the document.
+When the Document is created, the <code>currentScript</code> must be initialized to null.
+If the Document is an <a href="#dfn-imported-document">imported document</a>, its <code>currentScript</code> is always null.
+</div>
+
 <h2 id="events-imports">Events in Imports</h2>
 
 <p>Events in <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#events">HTML Events</a>.</p>
