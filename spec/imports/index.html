@@ -231,6 +231,15 @@ Giving up an import before it loads, even if the import eventually does still lo
 All of loaded imports and imports under loading are in the <a href="#dfn-import-tree">import tree</a>, thus every <a href="#dfn-import">import</a> which is linked from these imports will also be loaded using the <a href="#dfn-import-fetching">import fetching</a> algorithm, with <var>PARENT</var> be the import and <var>LOCATION</var> be the <a href="#dfn-import-location">import location</a> of the import.
 </div>
 
+<p>
+If <var>IMPORT</var> is not null on the algorithm completion, the loading attempt is successful. Otherwise it is failed.
+</p>
+
+<div class="informative">
+<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">The link element</a> fires a simple event called <code>load</code>
+for successful loading attempt. For failed attempt, it fires a simple event named <code>error</code>.
+</div>
+
 <h3 id="imports-and-csp">Imports and Content Security Policy</h3>
 
 <div class="informative">
