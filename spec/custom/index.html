@@ -64,6 +64,7 @@
 <ol>
     <li><a href="#about">About this Document</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
+    <li><a href="#motivations">Motivations</a></li>
     <li><a href="#concepts">Concepts</a></li>
     <li><a href="#custom-element-lifecycle">Custom Element Lifecycle</a>
     <ol>
@@ -82,6 +83,7 @@
     </ol>
     </li>
     <li><a href="#parsing">Parsing Custom Elements</a></li>
+    <li><a href="#appendix-a">Appendix A: All Algorithms in One Diagram</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
 
@@ -113,11 +115,22 @@
 
 <section>
 
+<h2 id="motivations">Motivations</h2>
+
+<div class="informative">
+<p>There are two motivations that fueled the development of this specification:</p>
+<ol>
+    <li><dfn id="dfn-help-web-developers" class="no-backreference">Provide a way for Web developers to build their own, fully-featured DOM elements</dfn>. Though it was long possible to create DOM elements with any tag names in HTML, these elements weren't very functional. By giving Web developers the means to both inform the parser on how to properly construct an element and to react to lifecycle changes of an element, the specification eliminates the need for DOM-as-a-render-view scaffolding that has to exist today in most web frameworks or libraries.</li>
+    <li><dfn id="dfn-rationalize-the-platform" class="no-backreference">Rationalize the platform</dfn>. The specification ensures that all of its new features and abilities are in concert with how the relevant bits of the Web platform work today, so that these new features could be used to explain the functionality of existing Web platform features, such as HTML elements.</p>
+</ol>
+<p>Most of the effort went into finding the right balance between the two motivations, driven by the hope that these motivations do not run counter to each other, but are rather complementary parts of the same larger story. For example, though the scope of the spec is currently limited to only creating custom elements by authors, it is designed to shorten the distance to a much more ambitious goal of rationalizing all HTML, SVG, and MathML elements into one coherent system.</p>
+</div>
+
 <h2 id="concepts">Concepts</h2>
 
 <p><dfn id="dfn-custom-element">Custom element</dfn> is <a href="http://www.w3.org/TR/WebIDL/#dfn-platform-object">platform object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is defined by the author. The <a href="http://www.w3.org/TR/WebIDL/#interface-prototype-object">interface prototype object</a> of a <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> is called the <dfn id="dfn-custom-element-prototype">custom element prototype</dfn>.</p>
 
-<p>The <dfn id="dfn-custom-element-type">custom element type</dfn> identifies a <a href="#dfn-custom-element">custom element</a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> and is a sequence of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#alphanumeric-ascii-characters">alphanumeric ASCII characters</a> that <strong>must</strong> match the <a href="http://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName">NCName</a> production and contain a <var>U+002D HYPHEN-MINUS</var> character. The <a href="#dfn-custom-element-type">custom element type</a> <strong>must not</strong> be one of the following values:</p>
+<p>The <dfn id="dfn-custom-element-type">custom element type</dfn> identifies a <a href="#dfn-custom-element">custom element</a> <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> and is a sequence of characters that <strong>must</strong> match the <a href="http://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName">NCName</a> production and contain a <var>U+002D HYPHEN-MINUS</var> character. The <a href="#dfn-custom-element-type">custom element type</a> <strong>must not</strong> be one of the following values:</p>
 <ul>
     <li><code>annotation-xml</code></li>
     <li><code>color-profile</code></li>
@@ -225,13 +238,15 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>In addition to an <a href="#dfn-element-queue">element queue</a>, there is also a <dfn id="dfn-sorted-element-queue">sorted element queue</dfn>. The <a href="#dfn-custom-element">custom elements</a> are kept in the order of increasing <a href="#dfn-custom-element-order">custom element order</a>.</p>
 
-<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a numerical value, associated with every <a href="#dfn-custom-element">custom element</a>. This value is as a result of <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned to <a href="#dfn-custom-element">custom element</a> as its <a href="#dfn-custom-element-order">custom element order</a> whenever the following occurs:</p>
+<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a sum of <a href="#dfn-document-custom-element-order">document custom element order</a> and <a href="#dfn-import-tree-order">import tree order</a>, in which the <a href="#dfn-import-tree-order">import tree order</a> is scaled so that its lowest value is always larger than the highest possible value of <a href="#dfn-document-custom-element-order">document custom element order</a>.</p>
+
+<p>The <dfn id="dfn-document-custom-element-order">document custom element order</dfn>  is a numerical value, associated with every <a href="#dfn-custom-element">custom element</a>. This value is as a result of <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned to <a href="#dfn-custom-element">custom element</a> as its <a href="#dfn-custom-element-order">custom element order</a> whenever the following occurs:</p>
 <ul>
     <li>A <a href="#dfn-custom-element">custom element</a> is popped from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a></li>
     <li>A <a href="#dfn-custom-element">custom element</a> is created with means other than a parser</li>
 </ul>
 
-<p>The <a href="#dfn-custom-element-order">custom element order</a> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> is determined by <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
+<p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> is determined by <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
 
 <p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceeding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> in the first encountered <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import">import</a>, in <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, whose <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-ready-flag">ready flag</a> is not yet set. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/imports/index.html#dfn-import-tree">import tree</a>.</p>
 
@@ -415,7 +430,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 </dl>
 <ol>
     <li>Let <var>ERROR</var> be <code>None</code></li>
-    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>TYPE</var> and <var>NAME</var> to lowercase</li>
+    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">Convert</a> <var>TYPE</var> to lowercase</li>
+    <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>NAME</var> to lowercase</li>
     <li>If <var>TYPE</var> is an invalid <a href="#dfn-custom-element-type">custom element type</a>, set <var>ERROR</var> to <code>InvalidType</code> and <strong>stop</strong>.</li>
     <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a></li>
     <li>If <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
@@ -608,6 +624,18 @@ steps:</p>
 <p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
 </div>
 
+<h2 id="appendix-a">Appendix A: All Algorithms in One Diagram</h2>
+
+<div class="informative">
+<p>To help navigate through various parts of the spec and their interactions, here is a diagram that attempts to put all algorithms actions that trigger them in one space. Click on each box to go to the corresponding algorithm or action.</p>
+
+<figure>
+  <object data="custom-elements-whole-world.svg" width="100%"></object>
+  <figcaption>Fig. All algorithms in one diagram</figcaption>
+</figure>
+
+</div>
+
 </section>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
@@ -618,7 +646,7 @@ steps:</p>
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem within the confines of the Web platform and provided a solid foundation for this document.</p>
 
-<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Boris Zbarsky</span>, <span class="vcard">Daniel Buchner</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Elliott Sprehn</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Scott Miles</span>, <span class="vcard">Steve Orvell</span>, <span class="vcard">Tab Atkins</span>, and <span class="vcard">William Chen</span> for their comments and contributions to this specification.</p>
+<p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Boris Zbarsky</span>, <span class="vcard">Daniel Buchner</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Elliott Sprehn</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Scott Miles</span>, <span class="vcard">Simon Pieters</span>, <span class="vcard">Steve Orvell</span>, <span class="vcard">Tab Atkins</span>, and <span class="vcard">William Chen</span> for their comments and contributions to this specification.</p>
 
 <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
 
