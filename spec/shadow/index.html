@@ -362,20 +362,24 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     </ol></li>
     <li>For each <a href="#dfn-shadow-root">shadow root</a>, <var>SHADOW-ROOT</var>, that <var>SHADOW-HOST</var> <a href="#dfn-verb-host">hosts</a>, in order from the <a href="#dfn-oldest-shadow-root">oldest shadow root</a> to the <a href="#dfn-youngest-shadow-root">youngest shadow root</a>:
     <ol>
-      <li>If <var>SHADOW-ROOT</var> is not the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>:
-      <ol>
         <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> which is a <a href="http://dom.spec.whatwg.org/#concept-tree-descendant">descendant</a> of <var>SHADOW-ROOT</var></li>
         <li>If such a <var>SHADOW</var> exits:
         <ol>
-          <li>Let <var>OLDER-SHADOW-ROOT-CHILDREN</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with the <a href="#dfn-older-shadow-root">older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
-          <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>CHILD</var>, in <var>OLDER-SHADOW-ROOT-CHILDREN</var>
+          <li>If <var>SHADOW-ROOT</var> is the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>:
+          <ol>
+            <li>Let <var>SHADOW-POOL</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with <var>SHADOW</var> as input.</li>
+          </ol></li>
+          <li>Otherwise:
+          <ol>
+            <li>Let <var>SHADOW-POOL</var> be the result of the <a href="#dfn-pool-population-algorithm">pool population algorithm</a> with the <a href="#dfn-older-shadow-root">older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
+          </ol></li>
+          <li>For each <a href="http://www.3.org/TR/domcore/#concept-node">node</a>, <var>CHILD</var>, in <var>SHADOW-POOL</var>
           <ol>
             <li><a href="#dfn-distribute">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
           </ol></li>
         </ol></li>
+        <li>Run the <a href="dfn-distribution-resolution-algorithm">distribution resolution algorithm</a>, recursively, with <var>SHADOW-ROOT</var> as input</li>
       </ol></li>
-      <li>Run the <a href="dfn-distribution-resolution-algorithm">distribution resolution algorithm</a>, recursively, with <var>SHADOW-ROOT</var> as input</li>
-    </ol></li>
   </ol></li>
 </ol>
 </div>
