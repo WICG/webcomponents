@@ -72,6 +72,7 @@
     <li><a href="#events">Events</a>
     <ol>
         <li><a href="#events-that-are-always-stopped">Events that are Always Stopped</a></li>
+        <li><a href="#event-paths">Event Paths</a></li>
         <li><a href="#event-retargeting">Event Retargeting</a></li>
         <li><a href="#retargeting-related-target">Retargeting <code>relatedTarget</code></a></li>
         <li><a href="#retargeting-touch-events">Retargeting Touch Events</a></li>
@@ -535,52 +536,6 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a href="#dfn-shadow-tree">shadow tree</a>, its path either crosses the <a href="#dfn-shadow-boundary">shadow boundary</a> or is terminated at the <a href="#dfn-shadow-boundary">shadow boundary</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
-<p>The <dfn id="dfn-event-path-calculation-algorithm">event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
-
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>NODE</var>, a node</dd>
-<dt>Output</dt>
-    <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
-</dl>
-<ol>
-  <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
-  <li>Let <var>CURRENT</var> be <var>NODE</var></li>
-  <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-  <li><dfn id="event-path-calculation-algorithm-repeat">Repeat</dfn> while <var>CURRENT</var> exists:
-  <ol>
-    <li>If the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
-    <ol>
-      <li>If the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
-      <ol>
-        <li>Add the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> to PATH</li>
-      </ol></li>
-      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
-      <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination">final destination</a> of <var>CURRENT</var></li>
-    </ol></li>
-    <li>Otherwise:
-    <ol>
-      <li>If <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
-      <ol>
-        <li>Let <var>CURRENT</var> be the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> <var>CURRENT</var></li>
-        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-      </ol></li>
-      <li>Otherwise:
-      <ol>
-        <li>Let <var>CURRENT</var> be the <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var></li>
-        <li>If <var>CURRENT</var> exists:
-          <ol>
-            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-          </ol></li>
-      </ol></li>
-    </ol></li>
-  </ol></li>
-</ol>
-</div>
-
-<div class="informative">For convenience, an event path may include shadow roots or <a href="#dfn-insertion-point">insertion points</a> so that event listeners registered on the shadow roots or the <a href="#dfn-insertion-point">insertion points</a> would be invoked.</div>
 
 <h3 id="events-that-are-always-stopped">Events that are Always Stopped</h3>
 
@@ -597,12 +552,15 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     <li><code>selectstart</code></li>
 </ul>
 
-<p>The <dfn id="dfn-vent-epath-calculation-algorithm">modified event path calculation algorithm</dfn> must be used to calculate an event path for the <a href="#dfn-events-always-stopped">those events</a> and must be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
+<h3 id="event-paths">Event Paths</h3>
+
+<p>The <dfn id="dfn-event-path-calculation-algorithm">event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
     <dd><var>NODE</var>, a node</dd>
+    <dd><var>EVENT</var>, an event</dd>
 <dt>Output</dt>
     <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
 </dl>
@@ -614,18 +572,25 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   <ol>
     <li>If the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> is not empty:
     <ol>
-      <li>If the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
+      <li>For each <a href="#dfn-insertion-point">insertion point</a>, <var>INSERTION-POINT</var>, in the <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var>:
       <ol>
-        <li>Add the parent <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>CURRENT</var> to PATH</li>
-      </ol></li>
-      <li>Add all <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in <a href="#dfn-destination-insertion-points">destination insertion points</a> of <var>CURRENT</var> to <var>PATH</var></li>
+        <li>If <var>INSERTION-POINT</var> is a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+        <ol>
+          <li>Let <var>SHADOW-ROOT</var> be the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of <var>INSERTION-POINT</var></li>
+          <li>If <var>SHADOW-ROOT</var> is not the olderst <a href="#dfn-shadow-root">shadow root</a>:
+          <ol>
+            <li>Add the <a href="#dfn-older-shadow-root">older shadow root</a> relative to <var>SHADOW-ROOT</var> to <var>PATH</var></li>
+          </ol></li>
+        </ol></li>
+        <li>Add <var>INSERTION-POINT</var> to <var>PATH</var></li>
+        </ol></li>
       <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination">final destination</a> of <var>CURRENT</var></li>
     </ol></li>
     <li>Otherwise:
     <ol>
       <li>If <var>CURRENT</var> is a <a href="#dfn-shadow-root">shadow root</a>:
       <ol>
-        <li>If <var>NODE</var> and <var>CURRENT</var> are in the same <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a>:
+        <li>If <var>NODE</var> and <var>CURRENT</var> are in the same <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> and <var>EVENT</var> is one of the <a href="#dfn-events-always-stopped">events which must be stopped</a>:
         <ol>
           <li>Stop this algorithm</li>
         </ol></li>
@@ -644,6 +609,8 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
   </ol></li>
 </ol>
 </div>
+
+<div class="informative">For convenience, an event path may include shadow roots or <a href="#dfn-insertion-point">insertion points</a> so that event listeners registered on the shadow roots or the <a href="#dfn-insertion-point">insertion points</a> would be invoked.</div>
 
 <h3 id="event-retargeting">Event Retargeting</h3>
 
@@ -1004,7 +971,7 @@ div::part(thumb) {
     <dd><var>ADJUSTED</var>, an adjusted <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> property of <var>ROOT</var>.</dd>
 </dl>
 <ol>
-    <li>Let <var>PATH</var> be the result of the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>ELEMENT</var> as input</li>
+    <li>Let <var>PATH</var> be the result of the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>ELEMENT</var> and null as input</li>
     <li>Let <var>ADJUSTED</var> be the result of the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <var>ROOT</var> as input</li>
 </ol>
 </div>
