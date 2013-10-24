@@ -1179,7 +1179,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#element">Element</a> {
 
 <dl>
 <dt><dfn id="api-partial-element-get-destination-insertion-points"><code>getDestinationInsertionPoints</code></dfn></dt>
-<dd><strong>Must</strong> return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of <a href="#dfn-insertion-point">insertion points</a> in the <a href="#dfn-destination-insertion-points">destination insertion points</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
+<dd>When invoked, the method <strong>must</strong> return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of <a href="#dfn-insertion-point">insertion points</a> in the <a href="#dfn-destination-insertion-points">destination insertion points</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
 </dl>
 
 
@@ -1274,7 +1274,17 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
         <dt>Methods</dt>
         <dd><dl>
             <dt id="api-html-content-element-get-distributed-nodes"><code>getDistributedNodes</code></dt>
-            <dd><strong>Must</strong> return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes, currently <a href="#dfn-distribution">distributed</a> into this <a href="#dfn-insertion-point">insertion point</a>.</dd>
+            <dd>When invoked, it <strong>must</strong> return result of running the following steps:
+              <ol>
+                <li>If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a href="#dfn-content-insertion-point">content insertion point</a>:
+                <ol>
+                  <li>Return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes in the <a href="#dfn-distributed-nodes">distributed nodes</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+                </ol></li>
+                <li>Otherwise:
+                <ol>
+                  <li>Return an empty <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a>.</li>
+                </ol></li>
+              </ol></dd>
         </dl></dd>
     </dl>
 </dd>
@@ -1305,6 +1315,7 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
     <pre><code>
 interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
     attribute boolean <a href="#api-html-shadow-element-reset-style-inheritance">resetStyleInheritance</a>;
+    <a href="http://www.w3.org/TR/domcore/#interface-nodelist">NodeList</a> <a href="#api-html-content-element-get-distributed-nodes">getDistributedNodes</a>();
 }
     </code></pre>
     <dl>
@@ -1313,6 +1324,23 @@ interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="h
             <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>boolean</code></dt>
             <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
         </dl></dd>
+    <dl>
+        <dt>Methods</dt>
+        <dd><dl>
+            <dt id="api-html-shadow-element-get-distributed-nodes"><code>getDistributedNodes</code></dt>
+            <dd>When invoked, it <strong>must</strong> return result of running the following steps:
+              <ol>
+                <li>If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+                <ol>
+                  <li>Return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes in the <a href="#dfn-distributed-nodes">distributed nodes</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+                </ol></li>
+                <li>Otherwise:
+                <ol>
+                  <li>Return an empty <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a>.</li>
+                </ol></li>
+              </ol></dd>
+        </dl></dd>
+    </dl>
     </dl>
 </dd>
 </dl>
