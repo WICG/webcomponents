@@ -1062,6 +1062,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
     readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a>? <a href="#api-shadow-root-active-element">activeElement</a>;
+    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-html-shadow-element-older-shadow-root">olderShadowRoot</a>;
     attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
     readonly attribute <a href="http://www.w3.org/TR/cssom/#the-stylesheet-interface">StyleSheetList</a> <a href="#api-shadow-root-style-sheets">styleSheets</a>;
 }
@@ -1081,6 +1082,14 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <dt id="api-shadow-root-active-element"><code>activeElement</code> of type <code>Element</code>, readonly</dt>
 <dd>Represents the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a> or <code>null</code>, if there is none.</dd>
+<dt id="api-html-shadow-element-older-shadow-root"><code>olderShadowRoot</code> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a></dt>
+<dd>Represents the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a></dd>
+<dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
+  <ol>
+    <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>, return <strong>null</strong>.</li>
+    <li>Return the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+</ol></dd>
+<dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
 <dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
 <dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a>.</dd>
@@ -1295,21 +1304,12 @@ interface <dfn id="api-html-content-element">HTMLContentElement</dfn> : <a href=
 <dd>
     <pre><code>
 interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-html-shadow-element-older-shadow-root">olderShadowRoot</a>;
     attribute boolean <a href="#api-html-shadow-element-reset-style-inheritance">resetStyleInheritance</a>;
 }
     </code></pre>
     <dl>
         <dt>Attributes</dt>
         <dd><dl>
-            <dt id="api-html-shadow-element-older-shadow-root"><code>olderShadowRoot</code> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a></dt>
-            <dd>Represents the <a href="#dfn-shadow-tree">shadow tree</a> that is rendered in place of this <a href="#dfn-shadow-insertion-point">shadow insertion point</a></dd>
-            <dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
-            <ol>
-                <li>If <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is not a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>, return <strong>null</strong>.</li>
-                <li>Return the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-root">shadow root</a> is accessible.</li>
-            </ol></dd>
-            <dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
             <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>boolean</code></dt>
             <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
         </dl></dd>
