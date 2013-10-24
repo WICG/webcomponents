@@ -261,7 +261,7 @@ The exact algorithm of constructing a composed tree is specified later.</p>
 
 <div class="informative">For convenience, the <a href="#dfn-shadow-root">shadow root</a> provides its own set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods. No <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> other than the <a href="#dfn-shadow-root">shadow root</a> descendants are accessible with these methods.</div>
 
-<p class="fixme">This secion is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
+<p class="fixme">This section is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
 
 <h2 id="distributions">Distributions</h2>
 
@@ -490,7 +490,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-  <dd><var>NODE</var>, a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which partitipates in a composed tree</dd>
+  <dd><var>NODE</var>, a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which participates in a composed tree</dd>
 <dt>Output</dt>
   <dd><var>CHILDREN</var>, the child nodes of <var>NODE</var> in the <a href="#dfn-composed-tree">composed tree</a>.</dd>
 </dl>
@@ -523,10 +523,10 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 </div>
 
-<p>For a given <a href="#dfn-tree-of-trees">tree of trees</a> <var>TREE-OF-TREES</var>, the <a href="#dfn-composed-tree">composed tree</a> costructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to the following tree:
+<p>For a given <a href="#dfn-tree-of-trees">tree of trees</a> <var>TREE-OF-TREES</var>, the <a href="#dfn-composed-tree">composed tree</a> constructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to the following tree:
 <ul>
   <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-composed-tree">composed tree</a> is the <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> of the <a href="#dfn-root-tree">root tree</a> of <var>TREE-OF-TREES</var>.</li>
-  <li>For a given <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in the <a href="#dfn-composed-tree">composed tree</a>, the child <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> of the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is the resulf of the <a href="#dfn-composed-tree-children-calculation-algorithm">composed tree children calculation algorithm</a> with the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> as input.
+  <li>For a given <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in the <a href="#dfn-composed-tree">composed tree</a>, the child <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> of the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is the result of the <a href="#dfn-composed-tree-children-calculation-algorithm">composed tree children calculation algorithm</a> with the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> as input.
   </li>
 </ul>
 </p>
@@ -614,7 +614,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <h3 id="event-retargeting">Event Retargeting</h3>
 
-<p>In the cases where event path is across multiple node trees, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-encapsulation">encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-encapsulation">ncapsulation</a>.
+<p>In the cases where event path is across multiple node trees, the event's information about the target of the event is adjusted in order to maintain <a href="#dfn-encapsulation">encapsulation</a>. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the <a href="#dfn-encapsulation">encapsulation</a>.
 
 <p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -631,11 +631,11 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
     <li>Let <var>TARGET</var> be the first item in PATH</li>
     <li>Let <var>TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> which ORIGINAL-TARGET <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
     <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a href="http://dom.spec.whatwg.org/#concept-tree-inclusive-ancestor">inclusive ancestor</a> tree of CURRENT-TARGET-TREE and TARGET-TREE</li>
-    <li>Let <var>RELATIVE-TARGET</var> be the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfie all the following conditions:
+    <li>Let <var>RELATIVE-TARGET</var> be the <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfies all the following conditions:
     <ol>
         <li>The <a href="http://www.3.org/TR/domcore/#concept-node">node</a> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in RELATIVE-TARGET-TREE</li>
         <li>The <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is a member of PATH</li>
-        <li>There is no other decendant <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfies the conditions.</li>
+        <li>There is no other descendant <a href="http://www.3.org/TR/domcore/#concept-node">node</a> which satisfies the conditions.</li>
     </ol></li>
 </ol>
 </div>
@@ -825,7 +825,7 @@ The <a href="#dfn-distribution-result">distribution result</a> <strong>must</str
 
 <p>Each <a href="#dfn-shadow-root">shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, named <dfn id="dfn-shadow-root-style-sheets">shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a href="#dfn-shadow-root">shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
-<p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow roow style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-tree-stack">tree stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.</p>
+<p>When a <a href="#dfn-shadow-host">shadow host</a> has multiple <a href="#dfn-shadow-root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a href="#dfn-tree-stack">tree stack</a>, ending with the <a href="#dfn-youngest-tree">youngest tree</a>.</p>
 
 <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a href="#dfn-ancestor-tree">ancestor tree</a> <strong>must not</strong> apply in a <a href="#dfn-shadow-tree">shadow tree</a>, except when the <dfn id="dfn-apply-author-styles">apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a href="#dfn-ancestor-tree">ancestor trees</a> are applicable in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
 
@@ -950,7 +950,7 @@ div::part(thumb) {
   <ol>
     <li>Let <var>B</var> be the <a href="#dfn-younger-shadow-root">younger shadow root</a> relative to <var>A</var></li>
     <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in <var>B</var></li>
-    <li>If <var>SHADOW</var> exists, the <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var> immediattely after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+    <li>If <var>SHADOW</var> exists, the <a href="#dfn-shadow-tree-navigation-order">shadow tree navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var> immediately after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
   </ol></li>
 </ol>
 
@@ -1118,7 +1118,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 When invoked, it <strong>must</strong> return result of running the following steps:
 <ol>
     <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
-    <li>If either argument is negative, <code>x</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greated than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
+    <li>If either argument is negative, <code>x</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
     <li>Let <var>HIT</var> be the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
     <li>Let <var>PATH</var> be the result of running the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>HIT</var> as input</li>
     <li>Return the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as input</li>
@@ -1152,7 +1152,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#element">Element</a> {
 </ol></dd>
 <dt><dfn id="api-partial-element-shadow-root">shadowRoot</dfn> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a><dt>
 <dd>Represents the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a href="#dfn-verb-host">hosts</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a href="#dfn-verb-host">hosts</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-root">shadow root</a> is accesible.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-shadow-root">youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a href="#dfn-verb-host">hosts</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-root">shadow root</a> is accessible.</dd>
 <dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
 </dl>
 
