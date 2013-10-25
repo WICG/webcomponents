@@ -1062,6 +1062,7 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
     attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
     attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
     readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a>? <a href="#api-shadow-root-active-element">activeElement</a>;
+    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> <a href="#api-html-shadow-element-older-shadow-root">host</a>;
     readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-html-shadow-element-older-shadow-root">olderShadowRoot</a>;
     attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
     readonly attribute <a href="http://www.w3.org/TR/cssom/#the-stylesheet-interface">StyleSheetList</a> <a href="#api-shadow-root-style-sheets">styleSheets</a>;
@@ -1082,6 +1083,9 @@ interface <dfn id="api-shadow-root">ShadowRoot</dfn> : <a href="http://www.w3.or
 <dt id="api-shadow-root-active-element"><code>activeElement</code> of type <code>Element</code>, readonly</dt>
 <dd>Represents the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
 <dd>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a> or <code>null</code>, if there is none.</dd>
+<dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
+<dd>Represents the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
+<dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
 <dt id="api-html-shadow-element-older-shadow-root"><code>olderShadowRoot</code> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a></dt>
 <dd>Represents the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a></dd>
 <dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
