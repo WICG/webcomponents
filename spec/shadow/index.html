@@ -1300,62 +1300,61 @@ div::part(thumb) {
     </dl>
   </section>
 
-<section id="shadow-element">
-<h3>The <code>shadow</code> HTML element</h3>
+  <section id="shadow-element">
+    <h3>The <code>shadow</code> HTML element</h3>
 
-<p>The <dfn id="dfn-shadow-element"><code>shadow</code></dfn> HTML element represents an <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a>.</p>
-<p>If a <code>shadow</code> HTML element does not satisfy the condition of an <a href="#dfn-insertion-point">insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</p>
+    <p>The <dfn id="dfn-shadow-element"><code>shadow</code></dfn> HTML element represents an <a href="#dfn-shadow-insertion-point">shadow insertion point</a> in a <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+    <p>If a <code>shadow</code> HTML element does not satisfy the condition of an <a href="#dfn-insertion-point">insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</p>
 
-<dl>
-<dt>Context</dt>
-<dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
-<dt>Content model</dt>
-<dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent">Transparent</a></dd>
-<dt>Children</dt>
-<dd>Anything as <a href="#dfn-fallback-content">fallback content</a></dd>
-<dt>Content attributes</dt>
-<dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
-<dd>
-<dl>
-    <dt id="markup-shadow-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
-    <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
-</dl></dd>
-<dt>DOM Interface</dt>
-<dd>
-    <pre class="myidl">
-interface <dfn id="api-html-shadow-element">HTMLShadowElement</dfn> : <a href="http://dev.w3.org/html5/spec/Overview.html#htmlelement">HTMLElement</a> {
-    attribute boolean <a href="#api-html-shadow-element-reset-style-inheritance">resetStyleInheritance</a>;
-    <a href="http://www.w3.org/TR/domcore/#interface-nodelist">NodeList</a> <a href="#api-html-shadow-element-get-distributed-nodes">getDistributedNodes</a>();
-}
-    </pre>
     <dl>
-        <dt>Attributes</dt>
-        <dd><dl>
-            <dt id="api-html-shadow-element-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>boolean</code></dt>
-            <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
-        </dl></dd>
-    <dl>
-        <dt>Methods</dt>
-        <dd><dl>
-            <dt id="api-html-shadow-element-get-distributed-nodes"><code>getDistributedNodes</code></dt>
-            <dd>When invoked, it <strong>must</strong> return result of running the following steps:
-              <ol>
-                <li>If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
+      <dt>Context</dt>
+      <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
+
+      <dt>Content model</dt>
+      <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent">Transparent</a></dd>
+
+      <dt>Children</dt>
+      <dd>Anything as <a href="#dfn-fallback-content">fallback content</a></dd>
+
+      <dt>Content attributes</dt>
+      <dd>
+        <p><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></p>
+        <p>
+          <dl>
+            <dt id="markup-shadow-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
+            <dd>indicates the state of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for this <a href="#dfn-shadow-insertion-point">shadow insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
+          </dl>
+        </p>
+      </dd>
+
+      <dt>DOM Interface</dt>
+      <dd>
+        <dl class="idl" title="interface HTMLShadowElement : HTMLElement">
+          <dt>attribute boolean resetStyleInheritance</dt>
+          <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
+
+          <dt>NodeList getDistributedNodes()</dt>
+          <dd>
+            When invoked, it <strong>must</strong> return result of running the following steps:
+            <ol>
+              <li>
+                If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a href="#dfn-shadow-insertion-point">shadow insertion point</a>:
                 <ol>
                   <li>Return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes in the <a href="#dfn-distributed-nodes">distributed nodes</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
-                </ol></li>
-                <li>Otherwise:
+                </ol>
+              </li>
+              <li>
+                Otherwise:
                 <ol>
                   <li>Return an empty <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a>.</li>
-                </ol></li>
-              </ol></dd>
-        </dl></dd>
+                </ol>
+              </li>
+            </ol>
+          </dd>
+        </dl>
+      </dd>
     </dl>
-    </dl>
-</dd>
-</dl>
-
-</section>
+  </section>
 
 <section id="extensions-to-event">
 <h3>Extensions to <code>Event</code> Interface</h3>
