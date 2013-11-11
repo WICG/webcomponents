@@ -1356,46 +1356,41 @@ div::part(thumb) {
     </dl>
   </section>
 
-<section id="extensions-to-event">
-<h3>Extensions to <code>Event</code> Interface</h3>
+  <section id="extensions-to-event">
+    <h3>Extensions to <code>Event</code> Interface</h3>
 
-<pre class="myidl">
-partial interface <a href="http://dom.spec.whatwg.org/#event">Event</a> {
-    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-nodelist">NodeList</a> <a href="#api-partial-event-path">path</a>;
-}
-</pre>
-
-<section id="partial-event-attributes">
-<h4>Attributes</h4>
-<dl>
-<dt><dfn id="api-partial-event-path">path</dfn> of type <a href="http://www.w3.org/TR/dom/#interface-nodelist"><code>NodeList</code></a></dt>
-<dd>Represents the adjusted event path.</dd>
-<dd>To maintain encapsulation, the <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="#dfn-inclusive-ancestor-tree">inclusive ancestor trees</a> <strong>must</strong> be included in the event path, relative to the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> would be invoked.</dd>
-<dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>PATH</var>, the event path for an event</dd>
-    <dd><var>NODE</var>, the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners would be invoked</dd>
-<dt>Output</dt>
-    <dd><var>RESULT</var>, an adjusted event path for <var>NODE</var></dd>
-</dl>
-<ol>
-    <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
-    <li>Let <var>RESULT</var> be the empty ordered list</li>
-    <li>For each node, <var>NODE2</var>, in <var>PATH</var>:
-        <ol>
-            <li>Let <var>TREE2</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE2</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participate</a> in</li>
-            <li>If <var>TREE2</var> is an <a href="#dfn-inclusive-ancestor-tree">inclusive ancestor tree</a> of <var>TREE1</var>, add <var>NODE2</var> to <var>RESULT</var></li>
-        </ol></li>
-</ol>
-</div>
-<p>These steps <strong>must</strong> run prior to invoking <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> on any <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> in <var>PATH</var>.</p>
-</dd>
-</dl>
-</section>
-</section>
+    <dl class="idl" title="partial interface Event">
+      <dt>readonly attribute NodeList path</dt>
+      <dd>
+        <p>Represents the adjusted event path.</p>
+        <p>To maintain encapsulation, the <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a href="#dfn-inclusive-ancestor-tree">inclusive ancestor trees</a> <strong>must</strong> be included in the event path, relative to the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> would be invoked.</p>
+        <p>
+          On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
+          <div class="algorithm">
+            <dl>
+              <dt>Input</dt>
+              <dd><var>PATH</var>, the event path for an event</dd>
+              <dd><var>NODE</var>, the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> on which event listeners would be invoked</dd>
+              <dt>Output</dt>
+              <dd><var>RESULT</var>, an adjusted event path for <var>NODE</var></dd>
+            </dl>
+            <ol>
+              <li>Let <var>TREE1</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participates</a> in</li>
+              <li>Let <var>RESULT</var> be the empty ordered list</li>
+              <li>
+                For each node, <var>NODE2</var>, in <var>PATH</var>:
+                <ol>
+                  <li>Let <var>TREE2</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> that <var>NODE2</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate">participate</a> in</li>
+                  <li>If <var>TREE2</var> is an <a href="#dfn-inclusive-ancestor-tree">inclusive ancestor tree</a> of <var>TREE1</var>, add <var>NODE2</var> to <var>RESULT</var></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+          <p>These steps <strong>must</strong> run prior to invoking <a href="http://dom.spec.whatwg.org/#concept-event-listener">event listeners</a> on any <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> in <var>PATH</var>.</p>
+        </p>
+      </dd>
+    </dl>
+  </section>
 </section>
 
 <section id="shadow-dom-example">
