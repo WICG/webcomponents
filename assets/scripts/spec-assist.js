@@ -134,7 +134,7 @@ DefinitionsCrossLinker.prototype.findCrossLinkHeading = function(a)
 {
     var element = a;
     while(element = element.previousSibling || element.parentElement) {
-        if (element instanceof HTMLHeadingElement && element.id)
+        if (element.id && (element instanceof HTMLHeadingElement || element.tagName == "SECTION"))
             break;
     }
     return element;
@@ -162,10 +162,16 @@ DefinitionsCrossLinker.prototype.createCrossLinks = function(dfn)
             }
             var heading = this.findCrossLinkHeading(a);
             var titles = headings[heading.id];
-            if (titles)
+            if (titles){
                 titles.push(this.createCrossLink(backId, '(' + (titles.length + 1) + ')'));
-            else
-                titles = headings[heading.id] = [ this.createCrossLink(backId, heading.textContent) ];
+            } else {
+                var title;
+                if (heading.tagName == "SECTION" && heading.id)
+                    title = heading.id;
+                else
+                    title = heading.textContent;
+                titles = headings[heading.id] = [ this.createCrossLink(backId, title) ];
+            }
         }, this);
 
         var keys = Object.keys(headings);

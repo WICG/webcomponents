@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var blocked = inputs.blocked;
 
     var form = document.body.appendChild(document.createElement('form'));
-    form.style.cssText = 'position:fixed;width:10em;top:1em;right:1em;font-family:Tahoma,sans-serif;font-size:11px;opacity:0.8;text-align:right';
+    form.id = "bug-assist-form";
     form.action = '//www.w3.org/Bugs/Public/enter_bug.cgi';
     form.target = '_blank';
     form.textContent = 'See a problem? Select text and ';
