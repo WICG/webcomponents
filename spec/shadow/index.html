@@ -1208,54 +1208,36 @@ div::part(thumb) {
     </dl>
   </section>
 
-<section id="css-host-rule-interface">
-<h3><code>CSSHostRule</code> Interface</h3>
+  <section id="css-host-rule-interface">
+    <h3><code>CSSHostRule</code> Interface</h3>
 
-<p>The <code>CSSHostRule</code> represents the <a href="#host-at-rule"><code>@host</code></a> at-rule in a CSS style sheet.</p>
+    <p>The <code>CSSHostRule</code> represents the <a href="#host-at-rule"><code>@host</code></a> at-rule in a CSS style sheet.</p>
 
-<pre class="myidl">
-interface <dfn id="api-css-host-rule">CSSHostRule</dfn> : <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> {
-    readonly attribute <a href="http://dev.w3.org/csswg/cssom/#the-cssrulelist-sequence">CSSRuleList</a> <a href="#api-css-host-rule-css-rules">cssRules</a>;
-    unsigned long <a href="#api-css-host-rule-insert-rule">insertRule</a>(DOMString rule, unsigned long index);
-    void <a href="#api-css-host-rule-delete-rule">deleteRule</a>(unsigned long index);
-};
-</pre>
+    <dl class="idl" title="interface CSSHostRule : CSSRule">
+      <dt>readonly attribute CSSRuleList cssRules</dt>
+      <dd>
+        <p>Represents the CSS rules in the <code>@host</code> style block</p>
+        <p>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a>.</p>
+      </dd>
 
-<section id="css-host-rule-attributes">
-<h4><code>CSSHostRule</code> Attributes</h4>
+      <dt>unsigned long insertRule(DOMString rule, unsigned long index)</dt>
+      <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#insert-a-css-rule">insert a CSS rule</a> <em>rule</em> into the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
 
-<dl>
-    <dt><dfn id="api-css-host-rule-css-rules"><code>cssRules</code></dfn> of type <a href="http://dev.w3.org/csswg/cssom/#the-cssrulelist-sequence">CSSRuleList</a></dt>
-    <dd>Represents the CSS rules in the <code>@host</code> style block</dd>
-    <dd>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a>.</dd>
-</dl>
-</section>
+      <dt>void deleteRule(unsigned long index)</dt>
+      <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#remove-a-css-rule">remove a CSS rule</a> <em>rule</em> from the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
+    </dl>
+  </section>
 
-<section id="css-host-rule-methods">
-<h4><code>CSSHostRule</code> Methods</h4>
+  <section id="css-host-rule-constants">
+    <h3><code>CSSRule</code> Constants</h3>
 
-<dl>
-    <dt><dfn id="api-css-host-rule-insert-rule"><code>insertRule(DOMSTring <em>rule</em>, unsigned long <em>index</em>)</code></dfn></dt>
-    <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#insert-a-css-rule">insert a CSS rule</a> <em>rule</em> into the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
-    <dt><dfn id="api-css-host-rule-delete-rule"><code>deleteRule(unsigned long <em>index</em>)</code></dfn></dt>
-    <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#remove-a-css-rule">remove a CSS rule</a> <em>rule</em> from the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
-</dl>
+    <p>The <code>HOST_RULE</code> type is added to <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> interface.</p>
 
-<p>The <code>HOST_RULE</code> type is added to <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> interface.</p>
-
-<pre class="myidl">
-partial interface <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> {
-    const unsigned short <a href="#api-css-rule-host-rule">HOST_RULE</a> = 1001;
-};
-</pre>
-
-<dl>
-    <dt><dfn id="api-css-rule-host-rule"><code>HOST_RULE</code></dfn></dt>
-    <dd>When the value of the <code>type</code> attribute is <code>HOST_RULE</code>, then the object that implements this interface <strong>must</strong> implement <a href="#api-css-host-rule"><code>CSSHostRule</code></a> interface.</dd>
-</dl>
-</section>
-
-</section>
+    <dl class="idl" title="partial interface CSSRule">
+      <dt>const unsigned short <a href="#api-css-rule-host-rule">HOST_RULE</a> = 1001</dt>
+      <dd>When the value of the <code>type</code> attribute is <code>HOST_RULE</code>, then the object that implements this interface <strong>must</strong> implement <a href="#api-css-host-rule"><code>CSSHostRule</code></a> interface.</dd>
+    </dl>
+  </section>
 
 <section id="content-element">
 <h3>The <code>content</code> HTML element</h3>
