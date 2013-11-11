@@ -1053,107 +1053,121 @@ div::part(thumb) {
 </section>
 
 <section id="elements-and-dom-objects">
-<h2>Elements and DOM Objects</h2>
+  <h2>Elements and DOM Objects</h2>
 
-<section id="shadow-root-object">
-<h3><code>ShadowRoot</code> Object</h3>
+  <section id="shadow-root-object">
+    <h3><code>ShadowRoot</code> Object</h3>
 
-<p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root">shadow root</a>.</p>
+    <p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root">shadow root</a>.</p>
 
-<pre class="myidl">
-<dfn id="api-shadow-root">interface ShadowRoot</dfn> : <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">DocumentFragment</a> {
-    <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement">HTMLElement</a> <a href="#api-shadow-root-get-element-by-id">getElementById</a>(DOMString elementId);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-class-name">getElementsByClassName</a>(DOMString className);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name">getElementsByTagName</a>(DOMString tagName);
-    <a href="http://www.w3.org/TR/domcore/#nodelist">NodeList</a> <a href="#api-shadow-root-get-elements-by-tag-name-ns">getElementsByTagNameNS</a>(DOMString? namespace, DOMString localName);
-    <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selection">Selection</a>? <a href="#api-shadow-root-selection">getSelection</a>();
-    <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a>? <a href="#api-shadow-root-element-from-point">elementFromPoint</a>(float x, float y);
-    attribute bool <a href="#api-shadow-root-apply-author-styles">applyAuthorStyles</a>;
-    attribute bool <a href="#api-shadow-root-reset-style-inheritance">resetStyleInheritance</a>;
-    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a>? <a href="#api-shadow-root-active-element">activeElement</a>;
-    readonly attribute <a href="http://www.w3.org/TR/domcore/#interface-element">Element</a> <a href="#api-shadow-root-host">host</a>;
-    readonly attribute <a href="#api-shadow-root">ShadowRoot</a>? <a href="#api-html-shadow-element-older-shadow-root">olderShadowRoot</a>;
-    attribute DOMString <a href="#api-shadow-root-inner-html">innerHTML</a>;
-    readonly attribute <a href="http://www.w3.org/TR/cssom/#the-stylesheet-interface">StyleSheetList</a> <a href="#api-shadow-root-style-sheets">styleSheets</a>;
-}
-</pre>
+    <dl class="idl" title="interface ShadowRoot : DocumentFragment">
+      <dt>HTMLElement getElementById(DOMString elementId)</dt>
+      <dd>
+        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.
+      </dd>
 
-<section id="shadow-root-attributes">
-<h4><code>ShadowRoot</code> Attributes</h4>
+      <dt>NodeList getElementsByClassName(DOMString className)</dt>
+      <dd>
+        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.
+      </dd>
 
-<dl>
-<dt id="api-shadow-root-apply-author-styles"><code>applyAuthorStyles</code> of type <code>bool</code></dt>
-<dd>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> apply to the <a href="#dfn-shadow-tree">shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a href="#dfn-shadow-tree">shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s tree.</dd>
-<dd>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</dd>
-<dt id="api-shadow-root-reset-style-inheritance"><code>resetStyleInheritance</code> of type <code>bool</code></dt>
-<dd>Represents the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag and indicates whether or not the inheritable CSS properties are set to the initial value at the shadow boundary. If <code>false</code> (default value), the properties continue to inherit. If <code>true</code>, the properties are set to initial value.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s tree.</dd>
-<dd>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</dd>
-<dt id="api-shadow-root-active-element"><code>activeElement</code> of type <code>Element</code>, readonly</dt>
-<dd>Represents the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a> or <code>null</code>, if there is none.</dd>
-<dt id="api-shadow-root-host"><code>host</code> of type <code>Element</code>, readonly</dt>
-<dd>Represents the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
-<dt id="api-html-shadow-element-older-shadow-root"><code>olderShadowRoot</code> of type <a href="#api-shadow-root"><code>ShadowRoot</code></a></dt>
-<dd>Represents the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a></dd>
-<dd>On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
-  <ol>
-    <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>, return <strong>null</strong>.</li>
-    <li>Return the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
-</ol></dd>
-<dd>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</dd>
-<dt id="api-shadow-root-inner-html"><code>innerHTML</code> of type <code>DOMString</code></dt>
-<dd>represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents.</dd>
-<dd>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a>.</dd>
-<dd>On setting, these steps <strong>must</strong> be run:
-<ol>
-    <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a></li>
-    <li><a href="http://www.w3.org/TR/dom/#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root">shadow root</a>.</li>
-</ol></dd>
-<dt id="api-shadow-root-style-sheets"><code>styleSheets</code> of type <code>StyleSheetList</code>, readonly</dt>
-<dd>Represents the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</dd>
-<dd>On getting, the attribute <strong>must</strong> return a <code>StyleSheetList</code> sequence containing the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.
-</dd>
-</dl>
+      <dt>NodeList getElementsByTagName(DOMString tagName)</dt>
+      <dd>
+        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.
+      </dd>
 
-<p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
-</section>
+      <dt>NodeList getElementsByTagNameNS(DOMString? namespace, DOMString localName)</dt>
+      <dd>
+        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.
+      </dd>
 
-<section id="shadow-root-methods">
-<h4><code>ShadowRoot</code> Methods</h4>
+      <dt>Selection? getSelection()</dt>
+      <dd>
+        <p>Returns the current selection in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+        <p>When invoked, it <strong>must</strong> return the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+      </dd>
 
-<dl>
-<dt id="api-shadow-root-get-element-by-id"><code>getElementById</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dt id="api-shadow-root-get-elements-by-class-name"><code>getElementsByClassName</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dt id="api-shadow-root-get-elements-by-tag-name"><code>getElementsByTagName</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dt id="api-shadow-root-get-elements-by-tag-name-ns"><code>getElementsByTagNameNS</code></dt>
-<dd><strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a href="#dfn-scoping-constraints">scoped</a> to the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dt id="api-shadow-root-selection"><code>getSelection</code></dt>
-<dd>Returns the current selection in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
-<dd>When invoked, it <strong>must</strong> return the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</dd>
+      <dt>Element? elementFromPoint(float x, float y)</dt>
+      <dd>
+        <p>Returns an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at specified coordinates.</p>
+        <div class="note">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification</div>
+        <p>
+          When invoked, it <strong>must</strong> return result of running the following steps:
+          <ol>
+            <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
+            <li>If either argument is negative, <code>x</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
+            <li>Let <var>HIT</var> be the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
+            <li>Let <var>PATH</var> be the result of running the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>HIT</var> as input</li>
+            <li>Return the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as input</li>
+          </ol>
+        </p>
+      </dd>
 
-<dt id="api-shadow-root-element-from-point"><code>elementFromPoint</code></dt>
-<dd>Returns an <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at specified coordinates.
-<div class="note">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification</div>
-When invoked, it <strong>must</strong> return result of running the following steps:
-<ol>
-    <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror"><code>InvalidNodeTypeError</code></a>.</li>
-    <li>If either argument is negative, <code>x</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
-    <li>Let <var>HIT</var> be the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
-    <li>Let <var>PATH</var> be the result of running the <a href="#dfn-event-path-calculation-algorithm">event path calculation algorithm</a> with <var>HIT</var> as input</li>
-    <li>Return the result of running the <a href="#dfn-retargeting-algorithm">retargeting algorithm</a> with <var>PATH</var> and <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as input</li>
-</ol></dd>
-</dl>
+      <dt>attribute bool applyAuthorStyles</dt>
+      <dd>
+        <p>Represents the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a href="http://www.w3.org/TR/domcore/#concept-element">element</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> apply to the <a href="#dfn-shadow-tree">shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a href="#dfn-shadow-tree">shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
+        <p>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s tree.</p>
+        <p>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-apply-author-styles">apply-author-styles</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</p>
+      </dd>
 
-<p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
-</section>
+      <dt>attribute bool resetStyleInheritance</dt>
+      <dd>
+        <p>Represents the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag and indicates whether or not the inheritable CSS properties are set to the initial value at the shadow boundary. If <code>false</code> (default value), the properties continue to inherit. If <code>true</code>, the properties are set to initial value.</p>
+        <p>On getting, the attribute <strong>must</strong> return the current value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s tree.</p>
+        <p>On setting, the attribute <strong>must</strong> set the value of the <a href="#dfn-reset-style-inheritance">reset-style-inheritance</a> flag for the <a href="#dfn-shadow-host">shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</p>
+      </dd>
 
-</section>
+      <dt>readonly attribute Element? activeElement</dt>
+      <dd>
+        <p>Represents the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://www.w3.org/TR/domcore/#concept-element">element</a> in the <a href="#dfn-shadow-tree">shadow tree</a> or <code>null</code>, if there is none.</p>
+      </dd>
+
+      <dt>readonly attribute Element host</dt>
+      <dd>
+        <p>Represents the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the <a href="#dfn-shadow-host">shadow host</a> which <a href="#dfn-verb-host">hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</p>
+      </dd>
+
+      <dt>readonly attribute ShadowRoot? olderShadowRoot</dt>
+      <dd>
+        <p>Represents the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a></p>
+        <p>
+          On getting, the attribute <strong>must</strong> return a result that is <a href="#dfn-processing-equivalence">equivalent</a> to running the following steps:
+          <ol>
+            <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is the <a href="#dfn-oldest-shadow-root">oldest shadow root</a>, return <strong>null</strong>.</li>
+            <li>Return the <a href="#dfn-older-shadow-root">older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+          </ol>
+        </p>
+        <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a href="#dfn-shadow-tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+      </dd>
+
+      <dt>attribute DOMString innerHTML</dt>
+      <dd>
+        <p>Represents the markup of <a href="#api-shadow-root"><code>ShadowRoot</code></a>'s contents.</p>
+        <p>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a>.</p>
+        <p>
+          On setting, these steps <strong>must</strong> be run:
+          <ol>
+            <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a href="#dfn-shadow-host"><code>shadow host</code></a></li>
+            <li><a href="http://www.w3.org/TR/dom/#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root">shadow root</a>.</li>
+          </ol>
+        </p>
+      </dd>
+
+      <dt>readonly attribute StyleSheetList styleSheets</dt>
+      <dd>
+        <p>Represents the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return a <code>StyleSheetList</code> sequence containing the <a href="#dfn-shadow-root-style-sheets">shadow root style sheets</a>.
+        </p>
+      </dd>
+    </dl>
+
+    <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
+
+    <p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a href="#api-shadow-root"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
+
+  </section>
 
 <section id="extensions-to-element">
 <h3>Extensions to <code>Element</code> Interface</h3>
