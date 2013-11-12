@@ -21,7 +21,15 @@
                 href: "https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/"
             }
           ]
-
+      ,   localBiblio:  {
+                "DOMPARSING": {
+                        title:    "DOM Parsing and Serialization"
+                    ,   href:     "http://domparsing.spec.whatwg.org/"
+                    ,   authors:  [
+                            "Ms2ger"
+                    ]
+                }
+          }
     };
 </script>
 <script src="../../assets/scripts/bug-assist.js"></script>
@@ -62,33 +70,15 @@
 <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn>processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
 </section>
 
-<section id="dependencies">
-<h2>Dependencies</h2>
-
-<p>This document relies on the following specifications:</p>
-
-<ul>
-    <li><a href="http://www.w3.org/TR/CSS2/">CSS Level 2 Revision 1</a></li>
-    <li><a href="http://www.w3.org/TR/cssom/">CSSOM</a></li>
-    <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li>
-    <li><a href="http://www.w3.org/TR/touch-events/">Touch Events version 1</a></li>
-    <li><a href="http://www.w3.org/TR/domcore/">DOM4 (DOM Core)</a></li>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
-    <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
-    <li><a href="http://www.w3.org/TR/selectors4/">Selectors Level 4</a></li>
-    <li><a href="http://www.w3.org/TR/selectors-api2/">Selectors API Level 2</a></li>
-</ul>
-
-<p class="issue">In order to solve the problem of mysterious definitions, we may have to make a concise, complete introduction here. It should explain what shadowing means, how it relates rendering, and what problem shadow DOM solves.</p>
-</section>
-
 <section id="concepts">
 <h2>Concepts</h2>
+
+<p class="issue">In order to solve the problem of mysterious definitions, we may have to make a concise, complete introduction here. It should explain what shadowing means, how it relates rendering, and what problem shadow DOM solves.</p>
 
 <section>
 <h3>Shadow trees</h3>
 
-<p>A <dfn>document tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.3.org/TR/domcore/#concept-node">node</a> is a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
+<p>A <dfn>document tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree">node tree</a> [[!DOM]] whose <a href="http://dom.spec.whatwg.org/#concept-tree-root">root</a> <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> is a <a href="http://dom.spec.whatwg.org/#concept-document">document</a>.</p>
 
 <p>Any element can have an <dfn title="shadow roots list">associated ordered list</dfn> of zero or more <a href="http://dom.spec.whatwg.org/#concept-node-tree">node trees</a>.</p>
 
@@ -183,7 +173,7 @@ The exact algorithm of constructing a composed tree is specified later.</p>
 
 <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-ownerdocument"><code>ownerDocument</code></a> property of a <a href="http://www.3.org/TR/domcore/#concept-node">node</a> in a shadow tree <strong>must</strong> refers to the <a href="http://dom.spec.whatwg.org/#concept-document">document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
 
-<p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a> <strong>must</strong> access the <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a>root tree</a>.</p>
+<p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a> [[!HTML]] <strong>must</strong> access the <a href="http://www.3.org/TR/domcore/#concept-node">nodes</a> in the <a>root tree</a>.</p>
 
 <div class="note">For convenience, the <a>shadow root</a> provides its own set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods. No <a href="http://www.w3.org/TR/domcore/#concept-node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</div>
 
@@ -403,7 +393,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="satisfying-matching-criteria">
 <h3>Satisfying Matching Criteria</h3>
 
-<p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a>. These <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> are restricted to contain only these <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a>:</p>
+<p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> [[!selectors4]]. These <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> are restricted to contain only these <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a>:</p>
 
 <ul>
     <li>A <a href="http://dev.w3.org/csswg/selectors4/#type-selector">type selector</a> or a <a href="http://dev.w3.org/csswg/selectors4/#universal-selector0">universal selector</a></li>
@@ -610,7 +600,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="retargeting-related-target">
 <h3>Retargeting <code>relatedTarget</code></h3>
 
-<p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> property, which holds a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that's not the event's target, but is related to the event.</p>
+<p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> [[!DOM-Level-3-Events]] property, which holds a <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> that's not the event's target, but is related to the event.</p>
 
 <p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> may hold the <a href="http://www.w3.org/TR/domcore/#concept-node">node</a> from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a>shadow tree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this tree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
 
@@ -653,7 +643,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="retargeting-touch-events">
 <h3>Retargeting Touch Events</h3>
 
-<p>The <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> attribute must be adjusted in the same way as an event with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a>. Each <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> in the <a href="http://www.w3.org/TR/touch-events/#touchlist-interface"><code>TouchList</code></a> returned from <a href="http://www.w3.org/TR/touch-events/#touchevent-interface"><code>TouchEvent</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-touches"><code>touches()</code></a>, <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-changedTouches"><code>changedTouches()</code></a> and <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-targetTouches"><code>targetTouches()</code></a> must be the result of <a>related target resolution algorithm</a>, given <var>NODE</var> and <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> as arguments.</p>
+<p>The <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute must be adjusted in the same way as an event with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a>. Each <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> in the <a href="http://www.w3.org/TR/touch-events/#touchlist-interface"><code>TouchList</code></a> returned from <a href="http://www.w3.org/TR/touch-events/#touchevent-interface"><code>TouchEvent</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-touches"><code>touches()</code></a>, <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-changedTouches"><code>changedTouches()</code></a> and <a href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-targetTouches"><code>targetTouches()</code></a> must be the result of <a>related target resolution algorithm</a>, given <var>NODE</var> and <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> as arguments.</p>
 </section>
 
 <section id="retargeting-focus-events">
@@ -801,9 +791,9 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
 <div class="issue">This section is outdated. This section should be rewritten so that it uses the concept of a <a>tree of trees</a> to define the cascading order among node trees more clealy.</div>
 
-<p>Each <a>shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
+<p>Each <a>shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
-<p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a>, defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
+<p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
 
 <p><a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a>ancestor tree</a> <strong>must not</strong> apply in a <a>shadow tree</a>, except when the <dfn>apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a title="ancestor tree">ancestor trees</a> are applicable in the <a>shadow tree</a>.</p>
 
@@ -1220,7 +1210,7 @@ div::part(thumb) {
       <dt>readonly attribute CSSRuleList cssRules</dt>
       <dd>
         <p>Represents the CSS rules in the <code>@host</code> style block</p>
-        <p>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a> [[!DOMPARSING]].</p>
       </dd>
 
       <dt>unsigned long insertRule(DOMString rule, unsigned long index)</dt>
