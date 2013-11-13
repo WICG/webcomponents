@@ -85,6 +85,7 @@ var autolinkConfig = {
     },
 
     'http://dev.w3.org/csswg/selectors4/': {
+        'selectors': '',
         'attribute selector': '#attribute-selector',
         'class selector': '#class-selector',
         'compound selector': '#compound',
