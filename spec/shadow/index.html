@@ -175,9 +175,9 @@ The exact algorithm of constructing a composed tree is specified later.</p>
 
 <p>The <a><code>ownerDocument</code></a> property of a <a>node</a> in a shadow tree <strong>must</strong> refers to the <a>document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
 
-<p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window"><code>Window</code></a> object <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
+<p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
 
-<div class="note">For convenience, the <a>shadow root</a> provides its own set of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</div>
+<div class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</div>
 
 <p class="issue">This section is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
 </section>
@@ -855,7 +855,7 @@ host
 
 <p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a>shadow host</a> of the <a>shadow tree</a> in which the style is specified, but only if this <a>shadow tree</a> is <a title="rendering">rendered</a>. When the <a>shadow tree</a> is not <a title="rendering">rendered</a> (when it's an older <a href="http://www.w3.org/TR/domcore/#trees">tree</a> that is not assigned to a <a>shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
 
-<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a>element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#the-style-attribute"><code>style</code></a> attribute.</p>
+<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a>element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a><code>style</code></a> attribute.</p>
 </section>
 
 <section id="part-pseudo-elements">
@@ -914,7 +914,7 @@ div::part(thumb) {
 
 <p>If a <a>node</a> doesn’t <a title="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> sequence.</p>
 
-<p>The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a>shadow tree</a> <strong>must</strong> be computed as a list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a> <a title="element">elements</a> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#tree-order">tree order</a>, and is called <dfn>shadow tree navigation order</dfn>.</p>
+<p>The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a>shadow tree</a> <strong>must</strong> be computed as a list of <a>focusable</a> <a title="element">elements</a> in <a>tree order</a>, and is called <dfn>shadow tree navigation order</dfn>.</p>
 
 <p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a>shadow tree navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into other <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> as follow:
 <ol>
@@ -924,7 +924,7 @@ div::part(thumb) {
     <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
     <li>The <a>shadow tree navigation order</a> for A <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var>:
     <ol>
-      <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable">focusable</a>; or</li>
+      <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
       <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
     </ol></li>
   </ol></li>
@@ -943,9 +943,9 @@ div::part(thumb) {
 <section id="active-element">
 <h3>Active Element</h3>
 
-<p>To maintain encapsulation, the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
+<p>To maintain encapsulation, the value of the <a title="Document object">Document</a> object's focus API property <a>activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
 
-<p>The <dfn id="active-element-adjustment-algorithm">active <a>element</a> adjustment algorithm</dfn> is used to determine the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> property, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+<p>The <dfn id="active-element-adjustment-algorithm">active <a>element</a> adjustment algorithm</dfn> is used to determine the value of the <a>activeElement</a> property, and it <strong>must</strong> be equivalent to processing the following steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -953,7 +953,7 @@ div::part(thumb) {
     <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
     <dd><var>ROOT</var>, either a <a>document</a> or a <a>shadow root</a></dd>
 <dt>Output</dt>
-    <dd><var>ADJUSTED</var>, an adjusted <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement">activeElement</a> property of <var>ROOT</var>.</dd>
+    <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var>.</dd>
 </dl>
 <ol>
     <li>Let <var>PATH</var> be the result of the <a>event path calculation algorithm</a> with <var>ELEMENT</var> and null as input</li>
@@ -965,7 +965,7 @@ div::part(thumb) {
 <section id="editing">
 <h3>Editing</h3>
 
-<p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable"><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a>shadow host</a> to its <a title="shadow tree">shadow trees</a>.</p>
+<p>The value of the <a><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a>shadow host</a> to its <a title="shadow tree">shadow trees</a>.</p>
 </section>
 
 <section id="assistive-technology">
@@ -980,26 +980,26 @@ div::part(thumb) {
 <section id="html-elements">
 <h2>HTML Elements in Shadow Trees</h2>
 
-<p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a></em> and itself being a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a href="http://www.w3.org/TR/domcore/#trees">tree</a> in a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">as specified</a> in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
+<p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a></em> and itself being a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a href="http://www.w3.org/TR/domcore/#trees">tree</a> in a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
 
 <section id="inert-html-elements">
 <h3>Inert HTML Elements</h3>
 
-<p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These <a title="element">elements</a> are:</p>
+<p>A subset of <a>HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a>HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These <a title="element">elements</a> are:</p>
 <ul>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-base-element"><code>base</code></a></li>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a></li>
+    <li><a title="base element"><code>base</code></a></li>
+    <li><a title="link element"><code>link</code></a></li>
 </ul>
 
-<p>All other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> in the <a title="shadow tree">shadow trees</a> <strong>must</strong> behave as if they were part of the <a>document tree</a>.</p>
+<p>All other <a>HTML elements</a> in the <a title="shadow tree">shadow trees</a> <strong>must</strong> behave as if they were part of the <a>document tree</a>.</p>
 </section>
 
 <section id="html-forms">
 <h3>HTML Forms</h3>
 
-<p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#forms">forms</a> in HTML are scoped at the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> level. That is, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> <a title="element">elements</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a> are accessible using the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors">tree accessors</a>. This <strong>must</strong> exclude <a title="element">elements</a> in the <a title="shadow tree">shadow trees</a>.</p>
+<p>The <a>forms</a> in HTML are scoped at the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> level. That is, all <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a> are accessible using the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a>tree accessors</a>. This <strong>must</strong> exclude <a title="element">elements</a> in the <a title="shadow tree">shadow trees</a>.</p>
 
-<p>Instead, each <a>shadow tree</a> <strong>must</strong> scope its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a> <a title="element">elements</a> and <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#form-associated-element">form-associated elements</a>. Because the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-form-element"><code>form</code></a>'s <a><code>ownerDocument</code></a> is the <a>shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the form submission <strong>must</strong> continue to work <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/association-of-controls-and-forms.html#form-submission">as specified</a>.</p>
+<p>Instead, each <a>shadow tree</a> <strong>must</strong> scope its <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a>. Because the <a title="form element"><code>form</code></a>'s <a><code>ownerDocument</code></a> is the <a>shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the form submission <strong>must</strong> continue to work <a title="form submission">as specified</a>.</p>
 </section>
 
 </section>
@@ -1007,7 +1007,7 @@ div::part(thumb) {
 <section id="html-elements-and-their-shadow-trees">
 <h2>HTML Elements and Their Shadow Trees</h2>
 
-<p>Per <a href="http://www.whatwg.org/specs/web-apps/current-work/">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a>composed tree</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a> <strong>must</strong> have an <a title="processing equivalence">equivalent</a> of a <a>shadow tree</a> that is created and populated at the time of <a>element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+<p>Per <a title="HTML">specification</a>, some <a>HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a>composed tree</a>, all <a>HTML elements</a> <strong>must</strong> have an <a title="processing equivalence">equivalent</a> of a <a>shadow tree</a> that is created and populated at the time of <a>element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
 <table>
 <thead>
@@ -1018,11 +1018,11 @@ div::part(thumb) {
 </thead>
 <tbody>
     <tr>
-        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#the-img-element"><code>img</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element"><code>iframe</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element"><code>embed</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element"><code>object</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element"><code>video</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element"><code>audio</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element"><code>canvas</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element"><code>map</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element"><code>input</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element"><code>textarea</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element"><code>progress</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element"><code>meter</code></a></td>
-        <td>If the <a>element</a> can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>, contains one <a>content insertion point</a>. The <a>matching criteria</a> value is the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a>element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content">fallback content</a>. Otherwise, contains no <a title="content insertion point">content insertion points</a> or an <a>content insertion point</a> that matches nothing.</td>
+        <td><a title="img element"><code>img</code></a>, <a title="iframe element"><code>iframe</code></a>, <a title="embed element"><code>embed</code></a>, <a title="object element"><code>object</code></a>, <a title="video element"><code>video</code></a>, <a title="audio element"><code>audio</code></a>, <a title="canvas element"><code>canvas</code></a>, <a title="map element"><code>map</code></a>, <a title="input element"><code>input</code></a>, <a title="textarea element"><code>textarea</code></a>, <a title="progress element"><code>progress</code></a>, <a title="meter element"><code>meter</code></a></td>
+        <td>If the <a>element</a> can have <a>fallback content</a>, contains one <a>content insertion point</a>. The <a>matching criteria</a> value is the <a href="http://www.w3.org/TR/css3-selectors/#universal-selector">universal selector</a> only when the <a>element</a> needs to show <a>fallback content</a>. Otherwise, contains no <a title="content insertion point">content insertion points</a> or an <a>content insertion point</a> that matches nothing.</td>
     </tr>
     <tr>
-        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/forms.html#the-fieldset-element"><code>fieldset</code></a></td>
+        <td><a title="fieldset element"><code>fieldset</code></a></td>
         <td>Contains two <a title="content insertion point">content insertion points</a> with the following <a>matching criteria</a>:
         <ol>
             <li><code>legend:first-of-type</code></li>
@@ -1031,7 +1031,7 @@ div::part(thumb) {
         </td>
     </tr>
     <tr>
-        <td><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element"><code>details</code></a></td>
+        <td><a title="details element"><code>details</code></a></td>
         <td>Contains two <a title="content insertion point">content insertion points</a> with the following <a>matching criteria</a>:
         <ol>
             <li><code>summary:first-of-type</code></li>
@@ -1134,13 +1134,13 @@ div::part(thumb) {
             <li>Return the <a>older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
           </ol>
         </p>
-        <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+        <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
       </dd>
 
       <dt>attribute DOMString innerHTML</dt>
       <dd>
         <p>Represents the markup of <a><code>ShadowRoot</code></a>'s contents.</p>
-        <p>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm">HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a title="shadow host"><code>shadow host</code></a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a title="shadow host"><code>shadow host</code></a>.</p>
         <p>
           On setting, these steps <strong>must</strong> be run:
           <ol>
@@ -1185,7 +1185,7 @@ div::part(thumb) {
       <dd>
         <p>Represents the <a>youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a>hosts</a>.</p>
         <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
-        <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+        <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
       </dd>
 
       <dt>attribute DOMString part</dt>
@@ -1243,10 +1243,10 @@ div::part(thumb) {
 
     <dl>
       <dt>Context</dt>
-      <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
+      <dd>Where <a>flow content</a> is expected.</dd>
 
       <dt>Content model</dt>
-      <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent">Transparent</a></dd>
+      <dd><a>Transparent</a></dd>
 
       <dt>Children</dt>
       <dd>Anything as fallback content</dd>
@@ -1255,10 +1255,10 @@ div::part(thumb) {
       <dd><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></dd>
       <dd>
         <dl>
-          <dt id="markup-content-select"><code>select</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#comma-separated-tokens">set of comma-separated tokens</a></dt>
+          <dt id="markup-content-select"><code>select</code>, a <a title="comma separated tokens">set of comma-separated tokens</a></dt>
           <dd>Represents the <a>matching criteria</a> for <a title="distribution">distributing</a> child <a title="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selector</a>.</dd>
 
-          <dt id="markup-content-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
+          <dt id="markup-content-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a>boolean</a> attribute</dt>
           <dd>Indicates the state of the <a>reset-style-inheritance</a> flag for this <a>insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
         </dl>
       </dd>
@@ -1267,10 +1267,10 @@ div::part(thumb) {
       <dd>
         <dl class="idl" title="interface HTMLContentElement : HTMLElement">
           <dt>attribute DOMString select</dt>
-          <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
+          <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
 
           <dt>attribute boolean resetStyleInheritance</dt>
-          <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-content-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
+          <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-content-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
 
           <dt>NodeList getDistributedNodes()</dt>
           <dd>
@@ -1303,10 +1303,10 @@ div::part(thumb) {
 
     <dl>
       <dt>Context</dt>
-      <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0">flow content</a> is expected.</dd>
+      <dd>Where <a>flow content</a> is expected.</dd>
 
       <dt>Content model</dt>
-      <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent">Transparent</a></dd>
+      <dd><a>Transparent</a></dd>
 
       <dt>Children</dt>
       <dd>Anything as fallback content</dd>
@@ -1316,7 +1316,7 @@ div::part(thumb) {
         <p><a href="http://dev.w3.org/html5/spec/Overview.html#global-attributes">Global attributes</a></p>
         <p>
           <dl>
-            <dt id="markup-shadow-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#boolean-attribute">boolean</a> attribute</dt>
+            <dt id="markup-shadow-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a>boolean</a> attribute</dt>
             <dd>indicates the state of the <a>reset-style-inheritance</a> flag for this <a>shadow insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
           </dl>
         </p>
@@ -1326,7 +1326,7 @@ div::part(thumb) {
       <dd>
         <dl class="idl" title="interface HTMLShadowElement : HTMLElement">
           <dt>attribute boolean resetStyleInheritance</dt>
-          <dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect">reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
+          <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
 
           <dt>NodeList getDistributedNodes()</dt>
           <dd>

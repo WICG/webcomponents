@@ -1,4 +1,5 @@
 var autolinkConfig = {
+
     'http://dom.spec.whatwg.org/': {
         'AT_TARGET': '#dom-event-at_target',
         'InvalidNodeTypeError': '#invalidnodetypeerror',
@@ -25,5 +26,46 @@ var autolinkConfig = {
         'target': '#dom-event-target',
         'tree order': '#concept-tree-order',
         'tree': '#trees'
+    },
+
+    'http://www.whatwg.org/specs/web-apps/current-work/multipage/': {
+        'DOM tree accessors': 'dom.html#dom-tree-accessors',
+        'Document object': 'dom.html#document',
+        'HTML': '',
+        'HTML elements': 'semantics.html#semantics',
+        'HTML fragment serialization algorithm': 'the-end.html#html-fragment-serialization-algorithm',
+        'activeElement': 'editing.html#dom-document-activeelement',
+        'audio element': 'the-video-element.html#the-audio-element',
+        'base element': 'semantics.html#the-base-element',
+        'boolean': 'common-microsyntaxes.html#boolean-attribute',
+        'canvas element': 'the-canvas-element.html#the-canvas-element',
+        'comma separated tokens': 'common-microsyntaxes.html#comma-separated-tokens',
+        'contenteditable': 'editing.html#attr-contenteditable',
+        'details element': 'interactive-elements.html#the-details-element',
+        'embed element': 'the-iframe-element.html#the-embed-element',
+        'fallback content': 'elements.html#fallback-content',
+        'fieldset element': 'forms.html#the-fieldset-element',
+        'flow content': 'elements.html#flow-content-0',
+        'focusable': 'editing.html#focusable',
+        'form element': 'forms.html#the-form-element',
+        'form submission': 'association-of-controls-and-forms.html#form-submission',
+        'form-associated element': 'forms.html#form-associated-element',
+        'forms': 'forms.html#forms',
+        'iframe element': 'the-iframe-element.html#the-iframe-element',
+        'img element': 'embedded-content-1.html#the-img-element',
+        'input element': 'the-input-element.html#the-input-element',
+        'link element': 'semantics.html#the-link-element',
+        'map element': 'the-map-element.html#the-map-element',
+        'meter element': 'the-button-element.html#the-meter-element',
+        'named access on the window object': 'browsers.html#named-access-on-the-window-object',
+        'object element': 'the-iframe-element.html#the-object-element',
+        'progress element': 'the-button-element.html#the-progress-element',
+        'reflect': 'common-dom-interfaces.html#reflect',
+        'style': 'elements.html#the-style-attribute',
+        'textarea element': 'the-button-element.html#the-textarea-element',
+        'transparent': 'elements.html#transparent',
+        'tree accessors': 'dom.html#dom-tree-accessors',
+        'video element': 'the-video-element.html#the-video-element',
+        'window': 'browsers.html#window'
     }
 };
