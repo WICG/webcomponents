@@ -82,5 +82,19 @@ var autolinkConfig = {
         'tree accessors': 'dom.html#dom-tree-accessors',
         'video element': 'the-video-element.html#the-video-element',
         'window': 'browsers.html#window'
+    },
+
+    'http://dev.w3.org/csswg/selectors4/': {
+        'attribute selector': '#attribute-selector',
+        'class selector': '#class-selector',
+        'compound selector': '#compound',
+        'id selector': '#id-selector',
+        'reference element set': '#reference-element-set',
+        'relative selector': '#relative-selectors',
+        'scope contained selectors': '#scope-contained-selectors',
+        'simple selector': '#simple',
+        'type selector': '#type-selector',
+        'universal selector': '#universal-selector'
     }
+
 };

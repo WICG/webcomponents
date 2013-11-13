@@ -8,31 +8,36 @@
 <link rel="stylesheet" href="../../assets/styles/respec-complement.css" type="text/css" />
 <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
 <script class='remove'>
-  var respecConfig = {
-          specStatus:   "ED"
-      ,   shortName:    "shadow-dom"
-      ,   editors:      [{ name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc." },
-                         { name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc." }]
-      ,   wg:           "W3C Web Applications (WebApps)"
-      ,   wgURI:        "http://www.w3.org/2008/webapps/"
-      ,   wgPublicList: "public-webapps"
-      ,   wgPatentURI:  ""
-      ,   edDraftURI:   "http://w3c.github.io/webcomponents/spec/shadow/"
-      ,   otherLinks: [{
+    var respecConfig = {
+        specStatus: "ED",
+        shortName: "shadow-dom",
+        editors: [{ name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc." },
+                  { name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc." }],
+        wg: "W3C Web Applications (WebApps)",
+        wgURI: "http://www.w3.org/2008/webapps/",
+        wgPublicList: "public-webapps",
+        wgPatentURI: "",
+        edDraftURI: "http://w3c.github.io/webcomponents/spec/shadow/",
+        otherLinks: [
+            {
                 key: "Revision history",
                 href: "https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/"
             }
-          ]
-      ,   localBiblio:  {
-                "DOMPARSING": {
-                        title:    "DOM Parsing and Serialization"
-                    ,   href:     "http://domparsing.spec.whatwg.org/"
-                    ,   authors:  [
-                            "Ms2ger"
-                    ]
-                }
-          }
-    };
+        ],
+        localBiblio: {
+            "SELECTORS4": {
+                title: "Selectors Level 4",
+                href: "http://dev.w3.org/csswg/selectors4/",
+                authors: ["Elika Etemad", "Tab Atkins Jr"],
+                status: "ED"
+            },
+            "DOMPARSING": {
+                title: "DOM Parsing and Serialization",
+                href: "http://domparsing.spec.whatwg.org/",
+                authors:  ["Ms2ger"]
+            }
+        }
+    }
 </script>
 <script src="../../assets/scripts/bug-assist.js" class="remove"></script>
 <meta name="bug.blocked" content="14978" class="remove" />
@@ -395,19 +400,19 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="satisfying-matching-criteria">
 <h3>Satisfying Matching Criteria</h3>
 
-<p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> [[!selectors4]]. These <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> are restricted to contain only these <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a>:</p>
+<p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a title="compound selector">compound selectors</a> [[!SELECTORS4]]. These <a title="compound selector">compound selectors</a> are restricted to contain only these <a title="simple selector">simple selectors</a>:</p>
 
 <ul>
-    <li>A <a href="http://dev.w3.org/csswg/selectors4/#type-selector">type selector</a> or a <a href="http://dev.w3.org/csswg/selectors4/#universal-selector0">universal selector</a></li>
-    <li><a href="http://dev.w3.org/csswg/selectors4/#class-selector">class selector(s)</a></li>
-    <li>An <a href="http://dev.w3.org/csswg/selectors4/#id-selector">ID selector</a></li>
-    <li><a href="http://dev.w3.org/csswg/selectors4/#attribute-selector">attribute selector(s)</a></li>
+    <li>A <a>type selector</a> or a <a>universal selector</a></li>
+    <li><a title="class selector">class selector(s)</a></li>
+    <li>An <a>ID selector</a></li>
+    <li><a title="attribute selector">attribute selector(s)</a></li>
 </ul>
 
 <p>A <a>node</a> <dfn title="satisfies-matching-criteria">satisfies</dfn> a <a>matching criteria</a> only if:
 <ol>
-    <li>all <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set, contain only the <a href="http://dev.w3.org/csswg/selectors4/#simple">simple selectors</a> specified above; and</li>
-    <li>a <a>node</a> matches at least one <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selectors</a> in the set or the set is empty.</li>
+    <li>all <a title="compound selector">compound selectors</a> in the set, contain only the <a title="simple selector">simple selectors</a> specified above; and</li>
+    <li>a <a>node</a> matches at least one <a title="compound selector">compound selectors</a> in the set or the set is empty.</li>
 </ol>
 </p>
 </section>
@@ -415,7 +420,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section>
 <h3><code>::content</code> pseudo-element</h3>
 
-<p>The <dfn title="content pseudo-element">::content</dfn> is a pseudo-element that represents a relationship between a <a>content insertion point</a> in a <a>shadow tree</a> and an <a>element</a> whose <a>inclusive ancestor</a> is <a title="distributes">distributed</a> into that <a>content insertion point</a>. The <a href="http://dev.w3.org/csswg/selectors4/#relative-selectors">relative selector</a> following <a title="content pseudo-element"><code>::content</code></a> pseudo-element is <a href="http://dev.w3.org/csswg/selectors4/#scope-contained-selectors">scope-contained</a>, with the <a href="http://dev.w3.org/csswg/selectors4/#reference-element-set">reference element set</a> initialized to the <a>parent</a> of the <a href="">element</a>, distributed to the <a>content insertion point</a>.</p>
+<p>The <dfn title="content pseudo-element">::content</dfn> is a pseudo-element that represents a relationship between a <a>content insertion point</a> in a <a>shadow tree</a> and an <a>element</a> whose <a>inclusive ancestor</a> is <a title="distributes">distributed</a> into that <a>content insertion point</a>. The <a>relative selector</a> following <a title="content pseudo-element"><code>::content</code></a> pseudo-element is <a title="scope contained selectors">scope-contained</a>, with the <a>reference element set</a> initialized to the <a>parent</a> of the <a href="">element</a>, distributed to the <a>content insertion point</a>.</p>
 
 <div class="note">
 <p>For example, the following selector represents the all <code>div</code> elements that are descendants of an element, distributed into a <a>content insertion point</a></p>
@@ -1256,7 +1261,7 @@ div::part(thumb) {
       <dd>
         <dl>
           <dt id="markup-content-select"><code>select</code>, a <a title="comma separated tokens">set of comma-separated tokens</a></dt>
-          <dd>Represents the <a>matching criteria</a> for <a title="distribution">distributing</a> child <a title="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a href="http://dev.w3.org/csswg/selectors4/#compound">compound selector</a>.</dd>
+          <dd>Represents the <a>matching criteria</a> for <a title="distribution">distributing</a> child <a title="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a>compound selector</a>.</dd>
 
           <dt id="markup-content-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a>boolean</a> attribute</dt>
           <dd>Indicates the state of the <a>reset-style-inheritance</a> flag for this <a>insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
