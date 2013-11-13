@@ -486,7 +486,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="events">
 <h2>Events</h2>
 
-<p>When an <a href="http://www.w3.org/TR/domcore/#events">event</a> is <a href="http://www.w3.org/TR/domcore/#dispatching-events">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a title="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
+<p>When an <a>event</a> is <a title="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a title="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the mutation events. The <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
 
 <section id="events-that-are-always-stopped">
 <h3>Events that are Always Stopped</h3>
@@ -659,7 +659,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
 <p>At the time of event dispatch:</p>
 <ul>
-    <li>The <a><code>Event</code></a> <a><code>target</code></a> and <a><code>currentTarget</code></a> attributes <strong>must</strong> return the <a>relative target</a> for the <a>node</a> on which event listeners are <a href="http://www.w3.org/TR/domcore/#concept-event-listener-invoke">invoked</a></li>
+    <li>The <a><code>Event</code></a> <a><code>target</code></a> and <a><code>currentTarget</code></a> attributes <strong>must</strong> return the <a>relative target</a> for the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
     <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent"><code>MouseEvent</code></a> <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-relatedTarget"><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
     <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent"><code>MouseEvent</code></a> <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetX"><code>offsetX</code></a> and <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetY"><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a href="http://dev.w3.org/csswg/cssom-view/#padding-edge">padding edge</a> of the <a>relative target</a></li>
     <li>The <a href="http://www.w3.org/TR/touch-events/#touch-interface"><code>Touch</code></a> <a href="http://www.w3.org/TR/touch-events/#widl-Touch-target"><code>target</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
@@ -799,7 +799,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
 <p><a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a>ancestor tree</a> <strong>must not</strong> apply in a <a>shadow tree</a>, except when the <dfn>apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a title="ancestor tree">ancestor trees</a> are applicable in the <a>shadow tree</a>.</p>
 
-<p>Even when the <a>apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors4/">selectors</a> still <strong>must not</strong> cross the node trees per scoping constraints. In other words, with <a>apply-author-styles</a> set, the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> CSS rules only match wholly inside or outside of the <a>shadow tree</a>.</p>
+<p>Even when the <a>apply-author-styles</a> is set, the <a href="http://www.w3.org/TR/selectors4/">selectors</a> still <strong>must not</strong> cross the node trees per scoping constraints. In other words, with <a>apply-author-styles</a> set, the <a>document</a> CSS rules only match wholly inside or outside of the <a>shadow tree</a>.</p>
 
 <p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a title="shadow tree">shadow trees</a> that have the <a>apply-author-styles</a> flag set <strong>must</strong> be treated as <a href="http://www.w3.org/TR/selectors4/#scoping">scoped</a> selectors with <a>shadow root</a> as their scope. In this context, for <a title="shadow tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a>shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a>shadow root</a> if <em>A</em> is a <a>descendant tree</a> of <em>B</em>.</p>
 
@@ -811,7 +811,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
     <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a>shadow host</a> in the <a>parent tree</a>.</li>
 </ol>
 
-<p>In a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> that contains <a title="shadow tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a>event path calculation algorithm</a>. This requirement has the following effects:</p>
+<p>In a <a>document</a> that contains <a title="shadow tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a>event path calculation algorithm</a>. This requirement has the following effects:</p>
 <ul>
     <li>the styles of the <a>shadow host</a> are inherited by the children of the <a>shadow root</a></li>
     <li>the styles of the <a>content insertion point</a> <a title="node">nodes</a> are inherited by those child <a title="node">nodes</a> of the <a>shadow host</a> that are <a title="distributes">distributed</a> to this <a>content insertion point</a></li>
@@ -853,7 +853,7 @@ host
 @{H}{O}{S}{T}        {return HOST_SYM;}
 </pre>
 
-<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a>shadow host</a> of the <a>shadow tree</a> in which the style is specified, but only if this <a>shadow tree</a> is <a title="rendering">rendered</a>. When the <a>shadow tree</a> is not <a title="rendering">rendered</a> (when it's an older <a href="http://www.w3.org/TR/domcore/#trees">tree</a> that is not assigned to a <a>shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
+<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a>shadow host</a> of the <a>shadow tree</a> in which the style is specified, but only if this <a>shadow tree</a> is <a title="rendering">rendered</a>. When the <a>shadow tree</a> is not <a title="rendering">rendered</a> (when it's an older <a>tree</a> that is not assigned to a <a>shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
 
 <p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a>element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a href="http://www.w3.org/TR/selectors4/">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a><code>style</code></a> attribute.</p>
 </section>
@@ -861,7 +861,7 @@ host
 <section id="part-pseudo-elements">
 <h3>Part Pseudo-Elements</h3>
 
-<p>In certain situations, the author of a <a>shadow tree</a> may wish to designate one or more <a title="element">elements</a> from that <a href="http://www.w3.org/TR/domcore/#trees">tree</a> as a structural abstraction that provides additional information about the contents of the <a>shadow tree</a>.</p>
+<p>In certain situations, the author of a <a>shadow tree</a> may wish to designate one or more <a title="element">elements</a> from that <a>tree</a> as a structural abstraction that provides additional information about the contents of the <a>shadow tree</a>.</p>
 
 <div class="note">
 For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
@@ -902,9 +902,9 @@ div::part(thumb) {
 <section id="ranges-and-selection">
 <h3>Ranges and Selections</h3>
 
-<p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a href="http://www.w3.org/TR/domcore/#concept-tree-root">root</a>, there may never exist a valid <a href="http://www.w3.org/TR/domcore/#range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
+<p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a title="range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
 
-<p>Accordingly, <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a href="http://www.w3.org/TR/domcore/#range">range</a>. The <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a>, returned by the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection"><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> within a <a>shadow tree</a>.</p>
+<p>Accordingly, <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a>, returned by the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection"><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> within a <a>shadow tree</a>.</p>
 
 <p>The <code>getSelection()</code> method of the <a>shadow root</a> object <strong>must</strong> return the current <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in this <a>shadow tree</a>.</p>
 </section>
@@ -937,7 +937,7 @@ div::part(thumb) {
 </ol>
 </p>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a title="shadow tree navigation order">shadow tree navigation orders</a> into the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
+<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a title="shadow tree navigation order">shadow tree navigation orders</a> into the <a>document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
 </section>
 
 <section id="active-element">
@@ -980,12 +980,12 @@ div::part(thumb) {
 <section id="html-elements">
 <h2>HTML Elements in Shadow Trees</h2>
 
-<p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a></em> and itself being a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a href="http://www.w3.org/TR/domcore/#trees">tree</a> in a <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
+<p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
 
 <section id="inert-html-elements">
 <h3>Inert HTML Elements</h3>
 
-<p>A subset of <a>HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a>HTML elements</a> would behave in a <a href="http://www.w3.org/TR/domcore/#interface-documentfragment">document fragment</a>. These <a title="element">elements</a> are:</p>
+<p>A subset of <a>HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>. These <a title="element">elements</a> are:</p>
 <ul>
     <li><a title="base element"><code>base</code></a></li>
     <li><a title="link element"><code>link</code></a></li>
@@ -997,9 +997,9 @@ div::part(thumb) {
 <section id="html-forms">
 <h3>HTML Forms</h3>
 
-<p>The <a>forms</a> in HTML are scoped at the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> level. That is, all <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a> are accessible using the <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> <a href="http://www.w3.org/TR/domcore/#interface-document">DOM object</a>'s <a>tree accessors</a>. This <strong>must</strong> exclude <a title="element">elements</a> in the <a title="shadow tree">shadow trees</a>.</p>
+<p>The <a>forms</a> in HTML are scoped at the <a>document</a> level. That is, all <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a> are accessible using the <a>document</a> <a title="interface Document">DOM object</a>'s <a>tree accessors</a>. This <strong>must</strong> exclude <a title="element">elements</a> in the <a title="shadow tree">shadow trees</a>.</p>
 
-<p>Instead, each <a>shadow tree</a> <strong>must</strong> scope its <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a>. Because the <a title="form element"><code>form</code></a>'s <a><code>ownerDocument</code></a> is the <a>shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a>, the form submission <strong>must</strong> continue to work <a title="form submission">as specified</a>.</p>
+<p>Instead, each <a>shadow tree</a> <strong>must</strong> scope its <a title="form element"><code>form</code></a> <a title="element">elements</a> and <a title="form-associated element">form-associated elements</a>. Because the <a title="form element"><code>form</code></a>'s <a><code>ownerDocument</code></a> is the <a>shadow host</a>'s <a>document</a>, the form submission <strong>must</strong> continue to work <a title="form submission">as specified</a>.</p>
 </section>
 
 </section>
@@ -1058,22 +1058,22 @@ div::part(thumb) {
     <dl class="idl" title="interface ShadowRoot : DocumentFragment">
       <dt>HTMLElement getElementById(DOMString elementId)</dt>
       <dd>
-        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementbyid">document.getElementById</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
+        <strong>Must</strong> behave exactly like <a>document.getElementById</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
       </dd>
 
       <dt>NodeList getElementsByClassName(DOMString className)</dt>
       <dd>
-        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbyclassname">document.getElementsByClassName</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
+        <strong>Must</strong> behave exactly like <a>document.getElementsByClassName</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
       </dd>
 
       <dt>NodeList getElementsByTagName(DOMString tagName)</dt>
       <dd>
-        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagname">document.getElementsByTagName</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
+        <strong>Must</strong> behave exactly like <a>document.getElementsByTagName</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
       </dd>
 
       <dt>NodeList getElementsByTagNameNS(DOMString? namespace, DOMString localName)</dt>
       <dd>
-        <strong>Must</strong> behave exactly like <a href="http://www.w3.org/TR/domcore/#dom-document-getelementsbytagnamens">document.getElementsByTagNameNS</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
+        <strong>Must</strong> behave exactly like <a>document.getElementsByTagNameNS</a>, except <a title="scoping constraints">scoped</a> to the <a>shadow tree</a>.
       </dd>
 
       <dt>Selection? getSelection()</dt>
@@ -1089,27 +1089,27 @@ div::part(thumb) {
         <p>
           When invoked, it <strong>must</strong> return result of running the following steps:
           <ol>
-            <li>If <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is not a <a><code>ShadowRoot</code></a> instance, throw an <a><code>InvalidNodeTypeError</code></a>.</li>
+            <li>If <a>context object</a> is not a <a><code>ShadowRoot</code></a> instance, throw an <a><code>InvalidNodeTypeError</code></a>.</li>
             <li>If either argument is negative, <code>x</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
             <li>Let <var>HIT</var> be the <a>element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
             <li>Let <var>PATH</var> be the result of running the <a>event path calculation algorithm</a> with <var>HIT</var> as input</li>
-            <li>Return the result of running the <a>retargeting algorithm</a> with <var>PATH</var> and <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as input</li>
+            <li>Return the result of running the <a>retargeting algorithm</a> with <var>PATH</var> and <a>context object</a> as input</li>
           </ol>
         </p>
       </dd>
 
       <dt>attribute bool applyAuthorStyles</dt>
       <dd>
-        <p>Represents the <a>apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a>element</a>'s <a href="http://www.w3.org/TR/domcore/#concept-document">document</a> apply to the <a>shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a>shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
+        <p>Represents the <a>apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a>element</a>'s <a>document</a> apply to the <a>shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a>shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
         <p>On getting, the attribute <strong>must</strong> return the current value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s tree.</p>
-        <p>On setting, the attribute <strong>must</strong> set the value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</p>
+        <p>On setting, the attribute <strong>must</strong> set the value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s <a>tree</a> to specified value.</p>
       </dd>
 
       <dt>attribute bool resetStyleInheritance</dt>
       <dd>
         <p>Represents the <a>reset-style-inheritance</a> flag and indicates whether or not the inheritable CSS properties are set to the initial value at the shadow boundary. If <code>false</code> (default value), the properties continue to inherit. If <code>true</code>, the properties are set to initial value.</p>
         <p>On getting, the attribute <strong>must</strong> return the current value of the <a>reset-style-inheritance</a> flag for the <a>shadow host</a>'s tree.</p>
-        <p>On setting, the attribute <strong>must</strong> set the value of the <a>reset-style-inheritance</a> flag for the <a>shadow host</a>'s <a href="http://www.w3.org/TR/domcore/#trees">tree</a> to specified value.</p>
+        <p>On setting, the attribute <strong>must</strong> set the value of the <a>reset-style-inheritance</a> flag for the <a>shadow host</a>'s <a>tree</a> to specified value.</p>
       </dd>
 
       <dt>readonly attribute Element? activeElement</dt>
@@ -1120,18 +1120,18 @@ div::part(thumb) {
 
       <dt>readonly attribute Element host</dt>
       <dd>
-        <p>Represents the <a>shadow host</a> which <a>hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</p>
-        <p>On getting, the attribute <strong>must</strong> return the <a>shadow host</a> which <a>hosts</a> the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</p>
+        <p>Represents the <a>shadow host</a> which <a>hosts</a> the <a>context object</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the <a>shadow host</a> which <a>hosts</a> the <a>context object</a>.</p>
       </dd>
 
       <dt>readonly attribute ShadowRoot? olderShadowRoot</dt>
       <dd>
-        <p>Represents the <a>older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a></p>
+        <p>Represents the <a>older shadow root</a> relative to the <a>context object</a></p>
         <p>
           On getting, the attribute <strong>must</strong> return a result that is <a title="processing equivalence">equivalent</a> to running the following steps:
           <ol>
-            <li>If the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> is the <a>oldest shadow root</a>, return <strong>null</strong>.</li>
-            <li>Return the <a>older shadow root</a> relative to the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+            <li>If the <a>context object</a> is the <a>oldest shadow root</a>, return <strong>null</strong>.</li>
+            <li>Return the <a>older shadow root</a> relative to the <a>context object</a>.</li>
           </ol>
         </p>
         <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
@@ -1140,11 +1140,11 @@ div::part(thumb) {
       <dt>attribute DOMString innerHTML</dt>
       <dd>
         <p>Represents the markup of <a><code>ShadowRoot</code></a>'s contents.</p>
-        <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a title="shadow host"><code>shadow host</code></a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a>.</p>
         <p>
           On setting, these steps <strong>must</strong> be run:
           <ol>
-            <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> as <a title="shadow host"><code>shadow host</code></a></li>
+            <li>Let <var>FRAGMENT</var> be the result of invoking the <a href="http://html5.org/specs/dom-parsing.html#concept-parse-fragment">fragment parsing algorithm</a> with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a></li>
             <li><a href="http://www.w3.org/TR/dom/#concept-node-replace-all">Replace all</a> with <var>FRAGMENT</var> within the <a>shadow root</a>.</li>
           </ol>
         </p>
@@ -1158,9 +1158,9 @@ div::part(thumb) {
       </dd>
     </dl>
 
-    <p>The <a href="http://www.w3.org/TR/domcore/#dom-node-nodetype"><code>nodeType</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://www.w3.org/TR/domcore/#dom-node-document_fragment_node"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://www.w3.org/TR/domcore/#dom-node-nodename"><code>nodeName</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
+    <p>The <a><code>nodeType</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <a><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a><code>nodeName</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
 
-    <p>Invoking the <a href="http://www.w3.org/TR/domcore/#dom-node-clonenode"><code>cloneNode()</code></a> method on a <a><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://www.w3.org/TR/domcore/#dom-domexception-data_clone_err"><code>DATA_CLONE_ERR</code></a> exception.</p>
+    <p>Invoking the <a><code>cloneNode()</code></a> method on a <a><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a><code>DATA_CLONE_ERR</code></a> exception.</p>
 
   </section>
 
@@ -1173,18 +1173,18 @@ div::part(thumb) {
         When invoked, these steps <strong>must</strong> be run:
         <ol>
           <li>Create a new instance of the <a><code>ShadowRoot</code></a> object</li>
-          <li>Add the <a><code>ShadowRoot</code></a> object to the <a title="shadow roots list">ordered list of shadow roots</a> associated with the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> as the <a>youngest shadow root</a></li>
+          <li>Add the <a><code>ShadowRoot</code></a> object to the <a title="shadow roots list">ordered list of shadow roots</a> associated with the <a>context object</a> as the <a>youngest shadow root</a></li>
           <li>Return <a><code>ShadowRoot</code></a> object.</li>
         </ol>
       </dd>
 
       <dt>NodeList getDestinationInsertionPoints()</dt>
-      <dd>When invoked, the method <strong>must</strong> return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</dd>
+      <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>.</dd>
 
       <dt>readonly attribute ShadowRoot? shadowRoot</dt>
       <dd>
-        <p>Represents the <a>youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a>hosts</a>.</p>
-        <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a href="http://www.w3.org/TR/domcore/#context-object">context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
+        <p>Represents the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
+        <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
         <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
       </dd>
 
@@ -1277,15 +1277,15 @@ div::part(thumb) {
             When invoked, it <strong>must</strong> return result of running the following steps:
             <ol>
               <li>
-                If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a>content insertion point</a>:
+                If the <a>context object</a> is a <a>content insertion point</a>:
                 <ol>
-                  <li>Return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+                  <li>Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.</li>
                 </ol>
               </li>
               <li>
                 Otherwise:
                 <ol>
-                  <li>Return an empty <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a>.</li>
+                  <li>Return an empty <a>static</a> <a><code>NodeList</code></a>.</li>
                 </ol>
               </li>
             </ol>
@@ -1333,15 +1333,15 @@ div::part(thumb) {
             When invoked, it <strong>must</strong> return result of running the following steps:
             <ol>
               <li>
-                If the <a href="http://html5.org/specs/dom-parsing.html#context-object">context object</a> is a <a>shadow insertion point</a>:
+                If the <a>context object</a> is a <a>shadow insertion point</a>:
                 <ol>
-                  <li>Return a <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a href="http://www.w3.org/TR/domcore/#context-object">context object</a>.</li>
+                  <li>Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.</li>
                 </ol>
               </li>
               <li>
                 Otherwise:
                 <ol>
-                  <li>Return an empty <a href="http://www.w3.org/TR/domcore/#concept-collection-static">static</a> <a href="http://www.w3.org/TR/domcore/#nodelist"><code>NodeList</code></a>.</li>
+                  <li>Return an empty <a>static</a> <a><code>NodeList</code></a>.</li>
                 </ol>
               </li>
             </ol>
