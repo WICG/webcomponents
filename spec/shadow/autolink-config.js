@@ -85,7 +85,6 @@ var autolinkConfig = {
     },
 
     'http://dev.w3.org/csswg/selectors4/': {
-        'selectors': '',
         'attribute selector': '#attribute-selector',
         'class selector': '#class-selector',
         'compound selector': '#compound',
@@ -93,6 +92,8 @@ var autolinkConfig = {
         'reference element set': '#reference-element-set',
         'relative selector': '#relative-selectors',
         'scope contained selectors': '#scope-contained-selectors',
+        'scoped selectors': '#scope',
+        'selectors': '',
         'simple selector': '#simple',
         'type selector': '#type-selector',
         'universal selector': '#universal-selector'
