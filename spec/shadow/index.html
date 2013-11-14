@@ -308,22 +308,11 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
         <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> which is a <a>descendant</a> of <var>SHADOW-ROOT</var></li>
         <li>If such a <var>SHADOW</var> exits:
         <ol>
-          <li>If <var>SHADOW-ROOT</var> is the <a>oldest shadow root</a>:
+          <li>If <var>SHADOW-ROOT</var> is not the <a>oldest shadow root</a>:
           <ol>
-            <li>If <var>SHADOW</var> has child <a title="node">nodes</a>:
-            <ol>
-              <li>Let <var>SHADOW-POOL</var> be the result of the <a>pool population algorithm</a> with <var>SHADOW</var> as input.</li>
-            </ol></li>
-            <li>Otherwise:
-            <ol>
-              <li>Let <var>SHADOW-POOL</var> be <var>POOL</var>.</li>
-            </ol></li>
+            <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
           </ol></li>
-          <li>Otherwise:
-          <ol>
-            <li>Let <var>SHADOW-POOL</var> be the result of the <a>pool population algorithm</a> with the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
-          </ol></li>
-          <li>For each <a>node</a>, <var>CHILD</var>, in <var>SHADOW-POOL</var>
+          <li>For each <a>node</a>, <var>CHILD</var>, in <var>POOL</var>
           <ol>
             <li><a title="distributes">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
           </ol></li>
