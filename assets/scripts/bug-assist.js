@@ -19,10 +19,13 @@ Sample use and configuration:
 */
 
 document.addEventListener('DOMContentLoaded', function() {
-    var BUGS_PREFIX = 'bug.';
-
     var inputs = {  comment: '' };
-
+    if (window.bugAssistConfig) {
+        for (var name in window.bugAssistConfig) {
+            inputs[name] = window.bugAssistConfig[name];
+        }
+    }
+    var BUGS_PREFIX = 'bug.';
     [].forEach.call(document.querySelectorAll('meta'), function(meta) {
         if (meta.name.indexOf(BUGS_PREFIX) == 0)
             inputs[meta.name.substr(BUGS_PREFIX.length)] = meta.content;
