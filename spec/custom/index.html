@@ -470,7 +470,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>Let <var>CANDIDATES</var> be the <a href="#dfn-sorted-element-queue">sorted element queue</a> for <var>TYPE</var> and <var>NAMESPACE</var> in <var>MAP</var></li>
     <li>For each item <var>ELEMENT</var> in <var>CANDIDATES</var>:
     <ol>
-        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> callback <a href="#dfn-created-callback"><em>created</em></a> for <var>ELEMENT</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for <var>ELEMENT</var></li>
     </ol></li>
     <li>Set <var>CANDIDATES</var> to empty <a href="#dfn-sorted-element-queue">sorted element queue</a>.</li>
 </ol>
@@ -614,11 +614,7 @@ steps:</p>
 
 <h2 id="parsing">Parsing Custom Elements</h2>
 
-<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for any <a href="#dfn-custom-element">custom element</a> when popping it from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#stack-of-open-elements">stack of open elements</a>.</p>
-
-<div class="informative">
-<p>Enqueuing created callbacks when popping an element from the stack of open elements has the effect of ordering the callbacks in such a way that the childrens' callbacks are invoked prior to their parents' callbacks, and the siblings' callbacks are invoked in document order. Keeping  unresolved elements in a sorted element queue has the same effect on the order of element upgrade.</p>
-</div>
+<p>To enable instantiating <a href="#dfn-custom-element">custom elements</a> during <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a>, a conforming UA <strong>must</strong> run <a href="#dfn-enqueue-lifecycle-callback">enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback whenever <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#create-an-element-for-the-token">creating</a> a <a href="#dfn-custom-element">custom element</a>.</p>
 
 <div class="informative">
 <p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
