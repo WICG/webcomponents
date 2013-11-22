@@ -793,12 +793,9 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
 <p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a title="shadow tree">shadow trees</a> that have the <a>apply-author-styles</a> flag set <strong>must</strong> be treated as <a>scoped selectors</a> with <a>shadow root</a> as their scope. In this context, for <a title="shadow tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a>shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a>shadow root</a> if <em>A</em> is a <a>descendant tree</a> of <em>B</em>.</p>
 
-<p>If a <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rule</a> in the parent tree ends with a <a>compound selector</a> that contains a <a>part pseudo-element</a> whose parameter value equals to a value of a <a>part pseudo-element</a> that exists in a <a>shadow tree</a>, this <a>part pseudo-element</a> <strong>must</strong> match the <a>element</a>, associated with this <a>part pseudo-element</a>.</p>
-
-<p>Conversely, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a>shadow root style sheets</a> <strong>must not</strong> apply in the <a title="ancestor tree">ancestor trees</a>, with two exceptions:</p>
+<p>Conversely, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a>shadow root style sheets</a> <strong>must not</strong> apply in the <a title="ancestor tree">ancestor trees</a>, with a exception:</p>
 <ol>
     <li>Rules that contain a <a title="content pseudo-element"><code>::content</code> pseudo-element</a> match <a title="element">elements</a> in the <a title="ancestor tree">ancestor trees</a>;</li>
-    <li>The <a href="#host-at-rule"><code>@host</code> @-rule</a> matches a <a>shadow host</a> in the <a>parent tree</a>.</li>
 </ol>
 
 <p>In a <a>document</a> that contains <a title="shadow tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a>event path calculation algorithm</a>. This requirement has the following effects:</p>
@@ -822,66 +819,6 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <h3><code>text-decoration</code> Property</h3>
 
 <p>The text decorations, specified by the <a href="http://www.w3.org/TR/CSS2/text.html#lining-striking-props"><code>text-decoration</code></a> property <strong>must not</strong> be propagated from <a title="shadow host">shadow hosts</a> to <a title="shadow tree">shadow trees</a>.</p>
-</section>
-
-<section id="host-at-rule">
-<h3><code>@host</code> @-rule</h3>
-
-<p>Within styles, specified in <a title="shadow tree">shadow trees</a>, the author may use a <code>@host</code> @-rule. The syntax of this rule is defined as this addition to <a href="http://www.w3.org/TR/CSS21/grammar.html">CSS Grammar</a>:</p>
-
-<p>The following production is added to the <a href="http://www.w3.org/TR/CSS21/grammar.html#grammar">grammar</a>:</p>
-
-<pre>
-host
-    : HOST_SYM S* '{' S* ruleset* '}' S*
-    ;
-</pre>
-
-<p>The following rule is added to the <a href="http://www.w3.org/TR/CSS21/grammar.html#scanner">tokenizer</a>:</p>
-
-<pre>
-@{H}{O}{S}{T}        {return HOST_SYM;}
-</pre>
-
-<p>The <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> of the rules in a <code>@host</code> @-rule <strong>must</strong> only be matched against the <a>shadow host</a> of the <a>shadow tree</a> in which the style is specified, but only if this <a>shadow tree</a> is <a title="rendering">rendered</a>. When the <a>shadow tree</a> is not <a title="rendering">rendered</a> (when it's an older <a>tree</a> that is not assigned to a <a>shadow insertion point</a>), the <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> <strong>must not</strong> be applied.</p>
-
-<p>When a rule in <a href="#host-at-rule"><code>@host</code> @-rule</a> matches an <a>element</a>, it <strong>must</strong> have higher <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than any <a title="selectors">selector</a>, but lower <a href="http://www.w3.org/TR/CSS2/cascade.html#specificity">specificity</a> than <a href="http://www.w3.org/TR/CSS21/syndata.html#x19">declarations</a> from a <a><code>style</code></a> attribute.</p>
-</section>
-
-<section id="part-pseudo-elements">
-<h3>Part Pseudo-Elements</h3>
-
-<p>In certain situations, the author of a <a>shadow tree</a> may wish to designate one or more <a title="element">elements</a> from that <a>tree</a> as a structural abstraction that provides additional information about the contents of the <a>shadow tree</a>.</p>
-
-<div class="note">
-For example, when developing a 2-dimensional range slider widget, which offers a thumb that could be moved in 2 directions in a rectangular space, the author decides to allow the widget users to style the thumb directly.
-</div>
-
-<p>The <dfn title="part pseudo-element">part pseudo-elements</dfn> enable this scenario. A <a>part pseudo-element</a> is an association between an <a>element</a> in a <a>shadow tree</a> and a string value. This string value is called a <dfn>part pseudo-element value</dfn>.</p>
-
-<div class="note">
-
-<p>In the case of the aforementioned 2-dimensional slider widget, the author could build the widget's shadow tree as follows:</p>
-
-<pre class="highlight">
-var widget = document.createElement('div');
-var root = widget.createShadowRoot();
-var thumb = document.createElement('div');
-thumb.part = 'thumb';
-root.appendChild(thumb);
-</pre>
-
-<p>Once the <code>part</code> property is set, the consumer of the widget could style the widget's thumb using the part pseudo-element with <code>thumb</code> as a parameter, reaching into the widget's shadow tree directly to the thumb:</p>
-
-<pre class="highlight">
-div::part(thumb) {
-    width: 10px;
-    height: 10px;
-    color: bisque;
-}
-</pre>
-
-</div>
 </section>
 
 </section>
@@ -1176,50 +1113,6 @@ div::part(thumb) {
         <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
         <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
       </dd>
-
-      <dt>attribute DOMString part</dt>
-      <dd>
-        <p>Represents the <a>part pseudo-element value</a>, associated with the <a>element</a>.</p>
-        <p>On getting, the attribute <strong>must</strong> return the current <a>part pseudo-element value</a> or <strong>empty string</strong> if there is no <a>part pseudo-element</a> associated with this <a>element</a>.</p>
-        <p>
-          On setting, these steps <strong>must</strong> be run:
-        </p>
-        <ol>
-          <li>If the <a>part pseudo-element</a>, associated with this <a>element</a> already exists, discard it</li>
-          <li>If the new value is not <strong>null</strong>, create a new <a>part pseudo-element</a> with <a>element</a> and the new value as its <a title="part pseudo-element value">value</a>.</li>
-        </ol>
-      </dd>
-    </dl>
-  </section>
-
-  <section id="css-host-rule-interface">
-    <h3><code>CSSHostRule</code> Interface</h3>
-
-    <p>The <code>CSSHostRule</code> represents the <a href="#host-at-rule"><code>@host</code></a> at-rule in a CSS style sheet.</p>
-
-    <dl class="idl" title="interface CSSHostRule : CSSRule">
-      <dt>readonly attribute CSSRuleList cssRules</dt>
-      <dd>
-        <p>Represents the CSS rules in the <code>@host</code> style block</p>
-        <p>On getting, the attribute <strong>must</strong> return the list of all CSS rules, specified in the <code>@host</code> at-rule, represented by the <a href="http://domparsing.spec.whatwg.org/#context-object">context object</a> [[!DOMPARSING]].</p>
-      </dd>
-
-      <dt>unsigned long insertRule(DOMString rule, unsigned long index)</dt>
-      <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#insert-a-css-rule">insert a CSS rule</a> <em>rule</em> into the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
-
-      <dt>void deleteRule(unsigned long index)</dt>
-      <dd>When invoked, the method <strong>must</strong> <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom/Overview.html#remove-a-css-rule">remove a CSS rule</a> <em>rule</em> from the CSS rule list returned by <a href="#api-css-host-rule-css-rules"><code>cssRules</code></a> at <em>index</em>.</dd>
-    </dl>
-  </section>
-
-  <section id="css-host-rule-constants">
-    <h3><code>CSSRule</code> Constants</h3>
-
-    <p>The <code>HOST_RULE</code> type is added to <a href="http://dev.w3.org/csswg/cssom/#the-cssrule-interface">CSSRule</a> interface.</p>
-
-    <dl class="idl" title="partial interface CSSRule">
-      <dt>const unsigned short <a href="#api-css-rule-host-rule">HOST_RULE</a> = 1001</dt>
-      <dd>When the value of the <code>type</code> attribute is <code>HOST_RULE</code>, then the object that implements this interface <strong>must</strong> implement <a href="#api-css-host-rule"><code>CSSHostRule</code></a> interface.</dd>
     </dl>
   </section>
 
