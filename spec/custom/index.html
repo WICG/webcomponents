@@ -254,10 +254,14 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 <p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
 
 <pre><code class="prettyprint">
-<strong class="nocode">index.html</strong>:
-&lt;me-first&gt;&lt;/me-first&gt;
-&lt;link rel="import" href="import.html"&gt;
-&lt;me-third&gt;&lt;/me-third&gt;
+<span class="nocode"><strong>index.html</strong>:</span>
+&lt;head&gt;
+    &lt;me-first&gt;&lt;/me-first&gt;
+    &lt;link rel="import" href="import.html"&gt;
+    &lt;me-third&gt;&lt;/me-third&gt;
+    <span class="nocode">...</span>
+&lt;/head&gt;
+<span class="nocode">...</span>
 
 <strong class="nocode">import.html</strong>:
 &lt;me-second&gt;&lt;/me-second&gt;
