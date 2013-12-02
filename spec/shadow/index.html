@@ -841,31 +841,31 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 <section id="focus-navigation">
 <h3>Focus Navigation</h3>
 
-<p>If a <a>node</a> doesn’t <a title="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> [[!CSS3UI]] sequence.</p>
+<p>If a <a>node</a> doesn’t <a title="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>navigation order</a> [[!CSS3UI]] sequence.</p>
 
-<p>The <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> within a <a>shadow tree</a> <strong>must</strong> be computed as a list of <a>focusable</a> <a title="element">elements</a> in <a>tree order</a>, and is called <dfn>shadow tree navigation order</dfn>.</p>
+<p>The <a>navigation order</a> within a <a>shadow tree</a> <strong>must</strong> be computed as a list of <a>focusable</a> <a title="element">elements</a> in <a>tree order</a>, and is called <dfn>shadow tree navigation order</dfn>.</p>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a>shadow tree navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into other <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> as follow:</p>
+<p>For <a>sequential focus navigation</a>, the <a>shadow tree navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into other <a>navigation order</a> as follow:</p>
 <ol>
   <li>If the <a>root</a> <a>node</a> of <var>A</var> is the <a>youngest shadow root</a>:
   <ol>
     <li>Let <var>B</var> be the <a>parent tree</a> of <var>A</var></li>
     <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
-    <li>The <a>shadow tree navigation order</a> for A <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var>:
+    <li>The <a>shadow tree navigation order</a> for A <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var>:
     <ol>
       <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
-      <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+      <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
     </ol></li>
   </ol></li>
   <li>Otherwise:
   <ol>
     <li>Let <var>B</var> be the <a>younger shadow root</a> relative to <var>A</var></li>
     <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> in <var>B</var></li>
-    <li>If <var>SHADOW</var> exists, the <a>shadow tree navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var> immediately after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a href="http://www.w3.org/TR/css3-ui/#keyboard"><code>auto</code></a> for determining its position.</li>
+    <li>If <var>SHADOW</var> exists, the <a>shadow tree navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var> immediately after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
   </ol></li>
 </ol>
 
-<p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard">directional focus navigation</a>, it is up to the user agent to integrate the <a title="shadow tree navigation order">shadow tree navigation orders</a> into the <a>document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
+<p>For <a>directional focus navigation</a>, it is up to the user agent to integrate the <a title="shadow tree navigation order">shadow tree navigation orders</a> into the <a>document</a> <a>navigation order</a>.</p>
 </section>
 
 <section id="active-element">

@@ -113,6 +113,12 @@ var autolinkConfig = {
         'changedTouches': '#widl-TouchEvent-changedTouches',
         'targetTouches': '#widl-TouchEvent-targetTouches',
         'touches': '#widl-TouchEvent-touches'
-    }
+    },
 
+    'http://www.w3.org/TR/css3-ui/': {
+        'directional focus navigation': '#nav-dir',
+        'nav-index auto': '#nav-index',
+        'navigation order': '#keyboard',
+        'sequential focus navigation': '#keyboard'
+    }
 };
