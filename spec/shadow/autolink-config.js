@@ -97,6 +97,12 @@ var autolinkConfig = {
         'simple selector': '#simple',
         'type selector': '#type-selector',
         'universal selector': '#universal-selector'
+    },
+
+    'http://www.w3.org/TR/DOM-Level-3-Events/': {
+        'MouseEvent': '#events-MouseEvent',
+        'mutation event': '#interface-MutationEvent',
+        'relatedTarget': '#events-MouseEvent-relatedTarget'
     }
 
 };
