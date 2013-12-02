@@ -103,6 +103,16 @@ var autolinkConfig = {
         'MouseEvent': '#events-MouseEvent',
         'mutation event': '#interface-MutationEvent',
         'relatedTarget': '#events-MouseEvent-relatedTarget'
+    },
+
+    'http://www.w3.org/TR/touch-events/': {
+        'Touch target': '#widl-Touch-target',
+        'Touch': '#touch-interface',
+        'TouchEvent': '#touchevent-interface',
+        'TouchList': '#touchlist-interface',
+        'changedTouches': '#widl-TouchEvent-changedTouches',
+        'targetTouches': '#widl-TouchEvent-targetTouches',
+        'touches': '#widl-TouchEvent-touches'
     }
 
 };
