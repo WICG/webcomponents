@@ -120,5 +120,12 @@ var autolinkConfig = {
         'nav-index auto': '#nav-index',
         'navigation order': '#keyboard',
         'sequential focus navigation': '#keyboard'
+    },
+
+    'http://www.w3.org/TR/css3-cascade/': {
+        'author stylesr': '',
+        'cascade order': '#cascade',
+        'inheritance': '#inheritance',
+        'initial values': '#inital-values'
     }
 };

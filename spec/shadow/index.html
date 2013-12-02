@@ -787,13 +787,13 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
 <p>Each <a>shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
-<p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a> [[!CSS3CASCADE]] of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
+<p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a>cascade order</a> [[!CSS3CASCADE]] of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
 
 <p><a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a>ancestor tree</a> <strong>must not</strong> apply in a <a>shadow tree</a>, except when the <dfn>apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a title="ancestor tree">ancestor trees</a> are applicable in the <a>shadow tree</a>.</p>
 
 <p>Even when the <a>apply-author-styles</a> is set, the <a>selectors</a> still <strong>must not</strong> cross the node trees per scoping constraints. In other words, with <a>apply-author-styles</a> set, the <a>document</a> CSS rules only match wholly inside or outside of the <a>shadow tree</a>.</p>
 
-<p>For the purposes of the <a href="http://dev.w3.org/csswg/css3-cascade/#cascade">cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a title="shadow tree">shadow trees</a> that have the <a>apply-author-styles</a> flag set <strong>must</strong> be treated as <a>scoped selectors</a> with <a>shadow root</a> as their scope. In this context, for <a title="shadow tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a>shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a>shadow root</a> if <em>A</em> is a <a>descendant tree</a> of <em>B</em>.</p>
+<p>For the purposes of the <a>cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a title="shadow tree">shadow trees</a> that have the <a>apply-author-styles</a> flag set <strong>must</strong> be treated as <a>scoped selectors</a> with <a>shadow root</a> as their scope. In this context, for <a title="shadow tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a>shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a>shadow root</a> if <em>A</em> is a <a>descendant tree</a> of <em>B</em>.</p>
 
 <p>Conversely, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a>shadow root style sheets</a> <strong>must not</strong> apply in the <a title="ancestor tree">ancestor trees</a>, with a exception:</p>
 <ol>
@@ -807,9 +807,9 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
     <li>the styles of the <a>shadow insertion point</a> <a>node</a> are inherited by the child <a title="node">nodes</a> of the <a>shadow root</a> of the <a>shadow tree</a>, <a title="distributes">distributed</a> to this <a>shadow insertion point</a></li>
 </ul>
 
-<p>If the <dfn>reset-style-inheritance</dfn> flag is set for a <a>shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the <a>shadow root</a>.</p>
+<p>If the <dfn>reset-style-inheritance</dfn> flag is set for a <a>shadow tree</a>, all <a title="inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a title="initial values">initial value</a> at the <a>shadow root</a>.</p>
 
-<p>If the <a>reset-style-inheritance</a> flag is set for an <a>insertion point</a> in a <a>shadow tree</a>, all <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a href="http://www.w3.org/TR/2005/WD-css3-cascade-20051215/#initial0">initial value</a> at the <a>insertion point</a>.</p>
+<p>If the <a>reset-style-inheritance</a> flag is set for an <a>insertion point</a> in a <a>shadow tree</a>, all <a title="inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a title="initial values">initial value</a> at the <a>insertion point</a>.</p>
 
 <section id="css-variables">
 <h3>CSS Variables</h3>
@@ -1028,7 +1028,7 @@ The <a>distribution result</a> <strong>must</strong> be <a title="processing equ
 
       <dt>attribute bool applyAuthorStyles</dt>
       <dd>
-        <p>Represents the <a>apply-author-styles</a> flag and indicates whether or not the rules in <a href="http://www.w3.org/TR/CSS2/cascade.html">author styles</a> associated with the <a>element</a>'s <a>document</a> apply to the <a>shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a>shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
+        <p>Represents the <a>apply-author-styles</a> flag and indicates whether or not the rules in <a>author styles</a> associated with the <a>element</a>'s <a>document</a> apply to the <a>shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a>shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
         <p>On getting, the attribute <strong>must</strong> return the current value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s tree.</p>
         <p>On setting, the attribute <strong>must</strong> set the value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s <a>tree</a> to specified value.</p>
       </dd>
