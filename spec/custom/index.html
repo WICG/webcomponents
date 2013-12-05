@@ -255,19 +255,17 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <pre><code class="prettyprint">
 <span class="nocode"><strong>index.html</strong>:</span>
-&lt;head&gt;
-    &lt;me-first&gt;&lt;/me-first&gt;
-    &lt;link rel="import" href="import.html"&gt;
-    &lt;me-third&gt;&lt;/me-third&gt;
-    <span class="nocode">...</span>
-&lt;/head&gt;
+&lt;link rel="import" href="import.html"&gt;
+<span class="nocode">...</span>
+&lt;me-second&gt;&lt;/me-second&gt;
 <span class="nocode">...</span>
 
 <strong class="nocode">import.html</strong>:
-&lt;me-second&gt;&lt;/me-second&gt;
+&lt;me-first&gt;&lt;/me-first&gt;
+
 </code></pre>
 
-<p>The order of custom elements in the flattened import tree is <code>me-first</code> (1), <code>me-second</code> (2), <code>me-third</code> (3). However, it's very likely that the parser will find out about <code>me-third</code> sooner than <code>me-second</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at <code>me-first</code> (1). When <code>import.html</code> is ready, the order jumps all the way to <code>me-third</code> (3).</p>
+<p>The order of custom elements in the flattened import tree is <code>me-first</code> (1), <code>me-second</code> (2). However, it's very likely that the parser will find out about <code>me-second</code> sooner than <code>me-first</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at the beginning position. When <code>import.html</code> is ready, the order jumps all the way to <code>me-second</code> (2).</p>
 
 </div>
 
