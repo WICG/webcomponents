@@ -140,7 +140,7 @@
             are defined in the similar way as defined in <a title="tree">trees</a>.</li>
         </ul>
 
-        <div class="note">The <a>document tree</a> is always the <a>root tree</a> of a <a>tree of trees</a>.</div>
+        <p class="note">The <a>document tree</a> is always the <a>root tree</a> of a <a>tree of trees</a>.</p>
       </section>
 
       <section>
@@ -183,7 +183,7 @@
 
       <p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
 
-      <div class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</div>
+      <p class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</p>
 
       <p class="issue">This section is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
     </section>
@@ -229,7 +229,8 @@
           <li>Each <a>node</a> that is not an <a>insertion point</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a title="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
         </ol>
 
-        <div class="note"><p>One case that deserves special consideration is the situation when an <a>insertion point</a> is a child <a>node</a> of another <a>shadow host</a>. In such situations, the <a title="node">nodes</a> <a title="distributes">distributed</a> into that <a>insertion point</a> appear as if they were child <a title="node">nodes</a> of the <a>shadow host</a> in the context of <a>distribution</a>. Thus, the <a title="node">nodes</a> <a title="distributes">distributed</a> to a <a>shadow tree</a> could have already been <a title="distributes">distributed</a> from its parent tree.</p>
+        <div class="note">
+          <p>One case that deserves special consideration is the situation when an <a>insertion point</a> is a child <a>node</a> of another <a>shadow host</a>. In such situations, the <a title="node">nodes</a> <a title="distributes">distributed</a> into that <a>insertion point</a> appear as if they were child <a title="node">nodes</a> of the <a>shadow host</a> in the context of <a>distribution</a>. Thus, the <a title="node">nodes</a> <a title="distributes">distributed</a> to a <a>shadow tree</a> could have already been <a title="distributes">distributed</a> from its parent tree.</p>
 
           <p>Despite being distributed to more than one insertion point, a node still only appears once in the composed tree at the final destination.</p>
         </div>
@@ -369,7 +370,7 @@
 
         </div>
 
-        <div class="note">When there is no nodes distributed into a <a>content insertion point</a> <var>CONTENT</var>, the child <a title="node">nodes</a> of <var>CONTENT</var> are distributed into <var>CONTENT</var> as fallback nodes.</div>
+        <p class="note">When there is no nodes distributed into a <a>content insertion point</a> <var>CONTENT</var>, the child <a title="node">nodes</a> of <var>CONTENT</var> are distributed into <var>CONTENT</var> as fallback nodes.</p>
       </section>
 
       <section id="satisfying-matching-criteria">
@@ -542,7 +543,7 @@
           </ol>
         </div>
 
-        <div class="note">For convenience, an event path may include shadow roots or <a title="insertion point">insertion points</a> so that event listeners registered on the shadow roots or the <a title="insertion point">insertion points</a> would be invoked.</div>
+        <p class="note">For convenience, an event path may include shadow roots or <a title="insertion point">insertion points</a> so that event listeners registered on the shadow roots or the <a title="insertion point">insertion points</a> would be invoked.</p>
       </section>
 
       <section id="event-retargeting">
@@ -617,7 +618,7 @@
           </ol>
         </div>
 
-        <div class="note">The result of the related target resolution algorithm is not always null. Unless that, you should file a bug for this specification.</div>
+        <p class="note">The result of the related target resolution algorithm is not always null. Unless that, you should file a bug for this specification.</p>
       </section>
 
       <section id="retargeting-touch-events">
@@ -658,7 +659,7 @@
       <section id="event-retargeting-example">
         <h3>Event Retargeting Example</h3>
 
-        <div class="issue">This example should be rewritten based on the current retargeting algorithm</div>
+        <p class="issue">This example should be rewritten based on the current retargeting algorithm</p>
 
         <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a title="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a title="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries> and represent <a title="shadow root">shadow roots</a>:</p>
         <pre class="example">
@@ -769,9 +770,9 @@
     <section id="styles">
       <h2>Styles</h2>
 
-      <div class="issue">This section is outdated. This section should be rewritten so that it uses the concept of a <a>tree of trees</a> to define the cascading order among node trees more clealy.</div>
+      <p class="issue">This section is outdated. This section should be rewritten so that it uses the concept of a <a>tree of trees</a> to define the cascading order among node trees more clealy.</p>
 
-      <div class="issue">Hats, <code>^</code>, and Cats, <code>^^</code>, selector combinators should be defined in this section.</div>
+      <p class="issue">Hats, <code>^</code>, and Cats, <code>^^</code>, selector combinators should be defined in this section.</p>
 
       <p>Each <a>shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
@@ -1001,7 +1002,7 @@
           <dt>Element? elementFromPoint(float x, float y)</dt>
           <dd>
             <p>Returns an <a>element</a> at specified coordinates.</p>
-            <div class="note">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification [[!CSSOM-VIEW]]</div>
+            <p class="note">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification [[!CSSOM-VIEW]]</p>
             <p>
               When invoked, it <strong>must</strong> return result of running the following steps:
             </p>
