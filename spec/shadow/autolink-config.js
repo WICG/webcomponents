@@ -134,6 +134,11 @@ var autolinkConfig = {
         'initial values': '#inital-values'
     },
 
+    'http://www.w3.org/TR/css-variables/': {
+        'CSS variables': '',
+        'var()': '#using-variables'
+    },
+
     'http://www.w3.org/TR/cssom/': {
         'style sheet': '#style-sheet'
     },
