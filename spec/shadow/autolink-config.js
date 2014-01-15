@@ -115,6 +115,11 @@ var autolinkConfig = {
         'touches': '#widl-TouchEvent-touches'
     },
 
+    'http://www.w3.org/TR/CSS21/': {
+        'CSS rules': 'syndata.html#rule-sets',
+        'text-decoration': 'text.html#lining-striking-props'
+    },
+
     'http://www.w3.org/TR/css3-ui/': {
         'directional focus navigation': '#nav-dir',
         'nav-index auto': '#nav-index',
