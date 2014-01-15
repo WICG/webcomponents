@@ -127,5 +127,17 @@ var autolinkConfig = {
         'cascade order': '#cascade',
         'inheritance': '#inheritance',
         'initial values': '#inital-values'
+    },
+
+    'http://www.w3.org/TR/cssom/': {
+        'style sheet': '#style-sheet'
+    },
+
+    'http://www.w3.org/TR/cssom-view/': {
+        'offsetx': '#dom-mouseevent-offsetx',
+        'offsety': '#dom-mouseevent-offsety',
+        'padding edge': '#padding-edge',
+        'viewport': '#viewport'
     }
+
 };

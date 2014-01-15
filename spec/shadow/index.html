@@ -640,7 +640,7 @@
         <ul>
           <li>The <a><code>Event</code></a> <a><code>target</code></a> and <a><code>currentTarget</code></a> attributes <strong>must</strong> return the <a>relative target</a> for the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
           <li>The <a><code>MouseEvent</code></a> <a><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
-          <li>The <a><code>MouseEvent</code></a> <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetX"><code>offsetX</code></a> and <a href="http://dev.w3.org/csswg/cssom-view/#widl-MouseEvent-offsetY"><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a href="http://dev.w3.org/csswg/cssom-view/#padding-edge">padding edge</a> of the <a>relative target</a></li>
+          <li>The <a><code>MouseEvent</code></a> <a><code>offsetX</code></a> and <a><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a>padding edge</a> of the <a>relative target</a></li>
           <li>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
           <li>If the <a><code>relatedTarget</code></a> and <a><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked. <a><code>TouchEvent</code></a> is not subject to this rule.</li>
           <li>When <em>capturing</em>, which entails processing step 6 of the <a title="event dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a title="event listener invoke">invoked</a> on a <a>node</a> <strong>if</strong> it is the same as its <a>relative target</a></li>
@@ -774,7 +774,7 @@
 
       <p class="issue">Hats, <code>^</code>, and Cats, <code>^^</code>, selector combinators should be defined in this section.</p>
 
-      <p>Each <a>shadow root</a> has an associated list of zero or more <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a href="http://www.w3.org/TR/cssom/#style-sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
+      <p>Each <a>shadow root</a> has an associated list of zero or more <a title="style sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a title="style sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a href="http://www.w3.org/TR/dom/#concept-tree-order">tree order</a>.</p>
 
       <p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a>cascade order</a> [[!CSS3CASCADE]] of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
 
@@ -997,14 +997,14 @@
           <dt>Element? elementFromPoint(float x, float y)</dt>
           <dd>
             <p>Returns an <a>element</a> at specified coordinates.</p>
-            <p class="note">Eventually, this needs to be part of <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html">CSSOM View Module</a> specification [[!CSSOM-VIEW]]</p>
+            <p class="note">Eventually, this needs to be part of CSSOM View Module specification [[!CSSOM-VIEW]]</p>
             <p>
               When invoked, it <strong>must</strong> return result of running the following steps:
             </p>
             <ol>
               <li>If <a>context object</a> is not a <a><code>ShadowRoot</code></a> instance, throw an <a><code>InvalidNodeTypeError</code></a>.</li>
-              <li>If either argument is negative, <code>x</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
-              <li>Let <var>HIT</var> be the <a>element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://dvcs.w3.org/hg/csswg/raw-file/tip/cssom-view/Overview.html#viewport">viewport</a>, determined through hit testing</li>
+              <li>If either argument is negative, <code>x</code> is greater than the <a>viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a>viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
+              <li>Let <var>HIT</var> be the <a>element</a> at coordinates <code>x</code> and <code>y</code> in the <a>viewport</a>, determined through hit testing</li>
               <li>Let <var>PATH</var> be the result of running the <a>event path calculation algorithm</a> with <var>HIT</var> as input</li>
               <li>Return the result of running the <a>retargeting algorithm</a> with <var>PATH</var> and <a>context object</a> as input</li>
             </ol>
