@@ -778,13 +778,8 @@
 
       <p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a>cascade order</a> [[!CSS3CASCADE]] of <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
 
-      <p><a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in an <a>ancestor tree</a> <strong>must not</strong> apply in a <a>shadow tree</a>, except when the <dfn>apply-author-styles</dfn> flag is set for this tree. The flag signals that the rules declared in the <a title="ancestor tree">ancestor trees</a> are applicable in the <a>shadow tree</a>.</p>
+      <p><a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a>node tree</a> <strong>must not</strong> apply in other <a title="node tree">node trees</a> with a exception:</p>
 
-      <p>Even when the <a>apply-author-styles</a> is set, the <a>selectors</a> still <strong>must not</strong> cross the node trees per scoping constraints. In other words, with <a>apply-author-styles</a> set, the <a>document</a> CSS rules only match wholly inside or outside of the <a>shadow tree</a>.</p>
-
-      <p>For the purposes of the <a>cascade order</a>, the  <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> for <a title="shadow tree">shadow trees</a> that have the <a>apply-author-styles</a> flag set <strong>must</strong> be treated as <a>scoped selectors</a> with <a>shadow root</a> as their scope. In this context, for <a title="shadow tree">shadow trees</a> <em>A</em> and <em>B</em>, the <em>A</em>'s <a>shadow root</a> is treated as <em>descendant</em> of <em>B</em>'s <a>shadow root</a> if <em>A</em> is a <a>descendant tree</a> of <em>B</em>.</p>
-
-      <p>Conversely, <a href="http://www.w3.org/TR/CSS2/syndata.html#rule-sets">CSS rules</a> declared in a <a>shadow root style sheets</a> <strong>must not</strong> apply in the <a title="ancestor tree">ancestor trees</a>, with a exception:</p>
       <ol>
         <li>Rules that contain a <a title="content pseudo-element"><code>::content</code> pseudo-element</a> match <a title="element">elements</a> in the <a title="ancestor tree">ancestor trees</a>;</li>
       </ol>
@@ -1013,13 +1008,6 @@
               <li>Let <var>PATH</var> be the result of running the <a>event path calculation algorithm</a> with <var>HIT</var> as input</li>
               <li>Return the result of running the <a>retargeting algorithm</a> with <var>PATH</var> and <a>context object</a> as input</li>
             </ol>
-          </dd>
-
-          <dt>attribute bool applyAuthorStyles</dt>
-          <dd>
-            <p>Represents the <a>apply-author-styles</a> flag and indicates whether or not the rules in <a>author styles</a> associated with the <a>element</a>'s <a>document</a> apply to the <a>shadow tree</a>. If <code>false</code> (default value), the author styles <strong>are not</strong> applied to the <a>shadow tree</a>. If <code>true</code>, the author styles <strong>are</strong> applied.</p>
-            <p>On getting, the attribute <strong>must</strong> return the current value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s tree.</p>
-            <p>On setting, the attribute <strong>must</strong> set the value of the <a>apply-author-styles</a> flag for the <a>shadow host</a>'s <a>tree</a> to specified value.</p>
           </dd>
 
           <dt>attribute bool resetStyleInheritance</dt>
