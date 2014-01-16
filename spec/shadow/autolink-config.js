@@ -35,6 +35,7 @@ var autolinkConfig = {
         'participates': '#concept-tree-participate',
         'preceding': '#concept-tree-preceding',
         'range': '#range',
+        'replace all': '#concept-node-replace-all',
         'root': '#concept-tree-root',
         'static': '#concept-collection-static',
         'stop propagation flag': '#stop-propagation-flag',
@@ -46,9 +47,11 @@ var autolinkConfig = {
     'http://www.whatwg.org/specs/web-apps/current-work/multipage/': {
         'DOM tree accessors': 'dom.html#dom-tree-accessors',
         'Document object': 'dom.html#document',
+        'Global attributes': 'elements.html#global-attributes',
         'HTML': '',
         'HTML elements': 'semantics.html#semantics',
         'HTML fragment serialization algorithm': 'the-end.html#html-fragment-serialization-algorithm',
+        'HTMLUnknownElement': 'elements.html#htmlunknownelement',
         'activeElement': 'editing.html#dom-document-activeelement',
         'audio element': 'the-video-element.html#the-audio-element',
         'base element': 'semantics.html#the-base-element',
@@ -155,6 +158,10 @@ var autolinkConfig = {
         'window.getSelection()': '#dom-window-getselection',
         'padding edge': '#padding-edge',
         'viewport': '#viewport'
+    },
+
+    'http://domparsing.spec.whatwg.org/': {
+        'parse fragment': '#concept-parse-fragment'
     }
 
 };
