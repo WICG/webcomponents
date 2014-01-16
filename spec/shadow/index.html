@@ -35,6 +35,11 @@
                   title: "DOM Parsing and Serialization",
                   href: "http://domparsing.spec.whatwg.org/",
                   authors:  ["Ms2ger"]
+              },
+              "EDITING": {
+                  title: "HTML Editing APIs",
+                  href: "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html",
+                  authors:  ["Aryeh Gregor"]
               }
           }
       };
@@ -817,9 +822,9 @@
 
         <p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a title="range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
 
-        <p>Accordingly, <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a>, returned by the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection"><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> within a <a>shadow tree</a>.</p>
+        <p>Accordingly, <a title="selection">selections</a> [[!EDITING]] may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a>selection</a> within a <a>shadow tree</a>.</p>
 
-        <p>The <code>getSelection()</code> method of the <a>shadow root</a> object <strong>must</strong> return the current <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in this <a>shadow tree</a>.</p>
+        <p>The <code>getSelection()</code> method of the <a>shadow root</a> object <strong>must</strong> return the current <a>selection</a> in this <a>shadow tree</a>.</p>
       </section>
 
       <section id="focus-navigation">
@@ -991,7 +996,7 @@
           <dt>Selection? getSelection()</dt>
           <dd>
             <p>Returns the current selection in the <a>shadow tree</a>.</p>
-            <p>When invoked, it <strong>must</strong> return the <a href="http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection">selection</a> in the <a>shadow tree</a>.</p>
+            <p>When invoked, it <strong>must</strong> return the <a>selection</a> in the <a>shadow tree</a>.</p>
           </dd>
 
           <dt>Element? elementFromPoint(float x, float y)</dt>

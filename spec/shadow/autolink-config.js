@@ -148,6 +148,13 @@ var autolinkConfig = {
         'offsety': '#dom-mouseevent-offsety',
         'padding edge': '#padding-edge',
         'viewport': '#viewport'
+    },
+
+    'https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html': {
+        'selection': '#concept-selection',
+        'window.getSelection()': '#dom-window-getselection',
+        'padding edge': '#padding-edge',
+        'viewport': '#viewport'
     }
 
 };
