@@ -479,11 +479,11 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 
 <h3 id="extensions-to-document-interface-to-register">Extensions to <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a> Interface</h3>
 
-<p>The <dfn id="dfn-document-register"><code>register</code></dfn> method of the <a href="http://dom.spec.whatwg.org/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
+<p>The <dfn id="dfn-document-registerElement"><code>registerElement</code></dfn> method of the <a href="http://dom.spec.whatwg.org/#document">Document</a> interface provides a way to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> and returns its <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
 <pre><code>
 partial interface <a href="http://dom.spec.whatwg.org/#document">Document</a> {
-    Function <a href="#dfn-document-register">register</a>(DOMString <a href="#var-document-register-type">type</a>, optional <a href="#api-element-registration-options">ElementRegistrationOptions</a> options);
+    Function <a href="#dfn-document-registerElement">registerElement</a>(DOMString <a href="#var-document-register-type">type</a>, optional <a href="#api-element-registration-options">ElementRegistrationOptions</a> options);
 };
 
 dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions</dfn> {
@@ -493,7 +493,7 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 
 </code></pre>
 
-<p>When called, the <a href="#dfn-document-register"><code>register</code></a> method <strong>must</strong> run these steps:</p>
+<p>When called, the <a href="#dfn-document-registerElement"><code>registerElement</code></a> method <strong>must</strong> run these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -520,9 +520,9 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
 </div>
 
 <div class="informative">
-<p>In order to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <code>document.register</code> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
+<p>In order to <a href="#dfn-element-registration">register</a> a <a href="#dfn-custom-element">custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <code>document.registerElement</code> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
 <pre><code class="prettyprint">
-document.register('x-foo', {
+document.registerElement('x-foo', {
     prototype: Object.create(HTMLParagraphElement.prototype, {
         firstMember: {
             get: function() { return "foo"; },
