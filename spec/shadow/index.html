@@ -233,6 +233,14 @@
           <li>Each <a>node</a> that is not an <a>insertion point</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a title="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
         </ol>
 
+        <p>An <a>insertion point</a> <var>A</var> is the <dfn>final destination</dfn> of a <a>node</a> <var>B</var> if <var>A</var> is the last item of the <a>destination insertion points</a> of <var>B</var>.</p>
+
+        <p>When a <a>node</a> <var>A</var> is <dfn title="distributes">distributed</dfn> into an <a>insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:</p>
+        <ul>
+          <li>Add <var>A</var> to the <a>distributed nodes</a> of <var>B</var></li>
+          <li>Add <var>B</var> to the <a>destination insertion points</a> of <var>A</var></li>
+        </ul>
+
         <div class="note">
           <p>One case that deserves special consideration is the situation when an <a>insertion point</a> is a child <a>node</a> of another <a>shadow host</a>. In such situations, the <a title="node">nodes</a> <a title="distributes">distributed</a> into that <a>insertion point</a> appear as if they were child <a title="node">nodes</a> of the <a>shadow host</a> in the context of <a>distribution</a>. Thus, the <a title="node">nodes</a> <a title="distributes">distributed</a> to a <a>shadow tree</a> could have already been <a title="distributes">distributed</a> from its parent tree.</p>
 
@@ -248,13 +256,6 @@
           </figcaption>
         </figure>
 
-        <p>When a <a>node</a> <var>A</var> is <dfn title="distributes">distributed</dfn> into an <a>insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:</p>
-        <ul>
-          <li>Add <var>A</var> to the <a>distributed nodes</a> of <var>B</var></li>
-          <li>Add <var>B</var> to the <a>destination insertion points</a> of <var>A</var></li>
-        </ul>
-
-        <p>An <a>insertion point</a> <var>A</var> is the <dfn>final destination</dfn> of a <a>node</a> <var>B</var> if <var>A</var> is the last item of the <a>destination insertion points</a> of <var>B</var>.</p>
       </section>
 
       <section id="distribution-algorithms">
