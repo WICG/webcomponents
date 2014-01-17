@@ -152,6 +152,12 @@
         </ul>
 
         <p class="note">The <a>document tree</a> is always the <a>root tree</a> of a <a>tree of trees</a>.</p>
+
+        <p>The <a><code>ownerDocument</code></a> property of a <a>node</a> in a shadow tree <strong>must</strong> refers to the <a>document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
+
+        <p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
+
+        <p class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</p>
       </section>
 
       <section>
@@ -170,8 +176,13 @@
         <p>The <a>composed tree</a> <strong>must</strong> be updated before the <a>rendering</a> occurs.</p>
       </section>
 
+    </section>
+
+    <section id="distributions">
+      <h2>Distributions</h2>
+
       <section>
-        <h3>Distributions</h3>
+        <h3>Insertion Points</h3>
 
         <p>An <dfn>insertion point</dfn> is a defined location where <a title="node">nodes</a> in a different <a>node tree</a> appear instead of the nodes's original position when constructing a <a>composed tree</a>.</p>
 
@@ -183,22 +194,6 @@
         <p>A <dfn>distribution</dfn> is the mechanism that determines which <a title="node">nodes</a> appear at each <a>insertion point</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
       </section>
 
-    </section>
-
-    <section>
-      <h2>Encapsulation</h2>
-
-      <p>The <a><code>ownerDocument</code></a> property of a <a>node</a> in a shadow tree <strong>must</strong> refers to the <a>document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
-
-      <p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
-
-      <p class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</p>
-
-      <p class="issue">This section is tiny. Maybe we could merge it into some other place? Encapsulation is effectively a natural property of having multiple trees.</p>
-    </section>
-
-    <section id="distributions">
-      <h2>Distributions</h2>
 
       <section id="content-insertion-points">
         <h3>Content Insertion Points</h3>
