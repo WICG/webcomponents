@@ -63,10 +63,6 @@
     <li><a href="#about">About this Document</a></li>
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#template-section">Templates</a></li>
-    <li><a href="#decorator-section">Decorators</a>
-    <ol>
-        <li><a href="#events-in-decorators">Events in Decorators</a></li>
-    </ol></li>
     <li><a href="#custom-element-section">Custom Elements</a>
     <ol>
         <li><a href="#defining-a-custom-element">Defining a Custom Element</a></li>
@@ -105,14 +101,13 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>The component model for the Web (&quot;Web Components&quot;) consists of five pieces:</p>
+<p>The component model for the Web (&quot;Web Components&quot;) consists of four pieces:</p>
 
 <ol>
     <li><a href="#template-section">Templates</a>, which define chunks of markup that are inert but can be activated for use later.</li>
-    <li><a href="#decorator-section">Decorators</a>, which apply templates based on CSS selectors to affect rich visual and behavioral changes to documents.</li>
     <li><a href="#custom-element-section">Custom Elements</a>, which let authors define their own elements, with new tag names and new script interfaces.</li>
     <li><a href="#shadow-dom-section">Shadow DOM</a>, which encapsulates a DOM subtree for more reliable composition of user interface elements.</li>
-    <li><a href="#imports-section">Imports</a>, which defines how templates, decorators and custom elements are packaged and loaded as a resource.</li>
+    <li><a href="#imports-section">Imports</a>, which defines how templates and custom elements are packaged and loaded as a resource.</li>
 </ol>
 
 <p>Each of these pieces is useful individually. When used in combination, Web Components enable Web application authors to define widgets with a level of visual richness and interactivity not possible with CSS alone, and ease of composition and reuse not possible with script libraries today.</p>
@@ -148,171 +143,11 @@ function addComment(imageUrl, text) {
 
 <p>Because what is contained in the template is not in the document, but in the <code>content</code> document fragment, appending a copy of the template content in this way makes it &quot;live&quot; so scripts run and images are fetched at this point. For example, templates can be used to store large scripts inline in the document, but not incur the cost of parsing them until they are needed.</p>
 
-<h2 id="decorator-section">Decorators</h2>
-
-<p>Decorators, unlike other parts of Web Components, do not have a specification yet. One concept for Decorators that could be pursued is sketched in this section. There is no normative description of this part of Web Components.</p>
-
-<p>A <dfn id="decorator-definition">decorator</dfn> is something that enhances or overrides the presentation of an existing element. Like all presentation aspects, the application of decorators is controlled by CSS. However, being able to specify the extra presentation using markup is unique to decorators.</p>
-
-<p id="example-details-open-decorator">The <code>&lt;decorator&gt;</code> element contains a <code>&lt;template&gt;</code> element, which specifies the markup to use for rendering the decoration.</p>
-
-<pre class="prettyprint"><code>
-&lt;decorator id=&quot;details-open&quot;&gt;
-    &lt;template&gt;
-        &lt;a id=&quot;summary&quot;&gt;
-          &amp;blacktriangledown;
-          &lt;content select=&quot;summary&quot;&gt;&lt;/content&gt;
-        &lt;/a&gt;
-        &lt;content&gt;&lt;/content&gt;
-    &lt;/template&gt;
-&lt;/decorator&gt;
-</code></pre>
-
-<p>The <code>&lt;content&gt;</code> element is the point where the content of the decorated element (the element's children) should appear in the rendering.</p>
-
-<p>Decorators are applied using the <code>decorator</code> CSS property:</p>
-
-<pre class="prettyprint"><code>
-details[open] {
-    decorator: url(#details-open);
-}
-</code></pre>
-
-<p>This decorator and stylesheet would cause the following markup:</p>
-
-<pre class="prettyprint"><code>
-&lt;details open&gt;
-    &lt;summary&gt;Timepieces&lt;/summary&gt;
-    &lt;ul&gt;
-      &lt;li&gt;Sundial
-      &lt;li&gt;Cuckoo clock
-      &lt;li&gt;Wristwatch
-    &lt;/ul&gt;
-&lt;/details&gt;
-</code></pre>
-
-<p>To be rendered like this:</p>
-
-<a>
-  &blacktriangledown; Timepieces
-</a>
-<ul>
-  <li>Sundial
-  <li>Cuckoo clock
-  <li>Wristwatch
-</ul>
-
-<p>Even though the <code>decorator</code> CSS property can point to any resource on the Web, the decorator will not be applied unless its definition is loaded by this document. The markup that generates the presentation is limited to be purely presentational: it may never run script (including inline event handlers) and it cannot be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#editing-0">editable</a>.</p>
-
-<h3 id="events-in-decorators">Events in Decorators</h3>
-
-<p>Decorators can also attach event handlers to implement interactivity.</p>
-
-<p>Because the decorators are transient, it is not useful for the decorator to attach event listeners to the nodes in the template or rely on any state, since it perishes any time the decorator is applied or unapplied. Instead, decorator events are mediated by an event controller.</p>
-
-<figure>
-    <img src="../assets/images/event-handler-registration.png">
-    <figcaption>Fig. Event handler registration</figcaption>
-</figure>
-
-<p>To register an event listener with an event controller, the template includes a <code>&lt;script&gt;</code> element. The script is run <em>once</em> when the <code>decorator</code> element is inserted into the document, or loaded as part of an external document. The script must evaluate to an array of registrations:</p>
-
-<pre class="prettyprint"><code>
-&lt;decorator id=&quot;details-open&quot;&gt;
-    &lt;script&gt;
-        function clicked(event) {
-            event.target.removeAttribute('open');
-        }
-        [{selector: '#summary', type: 'click', handler: clicked}];
-    &lt;/script&gt;
-    &lt;template&gt;
-        &lt;a id=&quot;summary&quot;&gt;
-        &lt;!-- as illustrated above --&gt;
-</code></pre>
-
-<p>The event controller interprets the array and routes events originating in any of the places that the decorator is applied to the event handler.</p>
-
-<figure>
-    <img src="../assets/images/event-routing-retargeting.png">
-    <figcaption>Fig. Event routing and retargeting</figcaption>
-</figure>
-
-<p>When the event listener is called, the target of the event is the content that the decorator was applied to, not content from the template. In the above example, clicks on the &blacktriangledown; (which is defined in the template) are delivered to the <code>clicked</code> function (which is registered to the <code>#summary</code> element, also defined in the template) but the <code>event.target</code> property refers to the decorated <code>&lt;details&gt;</code> element. This retargeting is necessary because the decorator specifies presentation; it does not affect the DOM structure of the document.</p>
-
-<p id="example-details-closed-decorator">By removing the <code>open</code> attribute, this decorator will no longer apply because the selector with the <code>decorator</code> property no longer matches. The decorator is unapplied, returning the rendering of the element back to the pre-decoration state. However the author could write a second decorator to affect a &quot;closed&quot; rendering and in this way implement stateless interactivity simply by triggering different decorators:</p>
-
-<pre class="prettyprint"><code class="language-html">
-&lt;style&gt;
-details {
-    decorator: url(#details-closed);
-}
-details[open] {
-    decorator: url(#details-open);
-}
-&lt;/style&gt;
-
-&lt;decorator id=&quot;details-closed&quot;&gt;
-    &lt;script&gt;
-        function clicked(event) {
-            event.target.setAttribute('open', 'open');
-        }
-        [{selector: '#summary', type: 'click', handler: clicked}];
-    &lt;/script&gt;
-    &lt;template&gt;
-        &lt;a id=&quot;summary&quot;&gt;
-            &amp;blacktriangleright; &lt;content select=&quot;summary&quot;&gt;&lt;/content&gt;
-        &lt;/a&gt;
-    &lt;/template&gt;
-&lt;/decorator&gt;
-
-&lt;decorator id=&quot;details-open&quot;&gt;
-    &lt;!-- as illustrated above --&gt;
-</code></pre>
-
-<p>This uses two decorators. One presents the details view closed; the other presents the details view open. Each decorator uses an event handler to respond to clicks by toggling the open state of the element. The content element's select attribute will be explained in detail later.</p>
-
 <h2 id="custom-element-section">Custom Elements</h2>
 
 <p><a href="../spec/custom/index.html">The Custom Elements specification</a> is the normative description of this part of Web Components.</p>
 
-<p>Custom elements are new types of DOM elements that can be defined by authors. Unlike decorators, which are stateless and ephemeral, custom elements can encapsulate state and provide script interfaces. The following table summarizes the key differences between decorators and custom elements.</p>
-
-<table>
-  <thead>
-    <tr>
-      <td></td>
-      <th>Decorators</th>
-      <th>Custom Elements</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Lifetime</td>
-      <td>Ephemeral, while a CSS selector matches</td>
-      <td>Stable, matches entire element lifetime</td>
-    </tr>
-    <tr>
-      <td>Applied, unapplied dynamically</td>
-      <td>Yes, based on CSS selectors</td>
-      <td>No, fixed at element creation time</td>
-    </tr>
-    <tr>
-      <td>Accessible through script</td>
-      <td>No, transparent to DOM; cannot add interfaces</td>
-      <td>Yes, accessible through DOM; can provide interfaces</td>
-    </tr>
-    <tr>
-      <td>State</td>
-      <td>Stateless projection</td>
-      <td>Stateful DOM object</td>
-    </tr>
-    <tr>
-      <td>Behavior</td>
-      <td>Simulated by changing decorators</td>
-      <td>First-class using script and events</td>
-    </tr>
-  </tbody>
-</table>
+<p>Custom elements are new types of DOM elements that can be defined by authors. Custom elements can encapsulate state and provide script interfaces.
 
 <h3 id="defining-a-custom-element">Defining a Custom Element</h3>
 
@@ -502,17 +337,9 @@ c.popOutBirdie(); // specific to cuckoo-clock
 
 <p>A shadow DOM subtree can use a <code><a href="../spec/shadow/index.html#content-element">&lt;content&gt;</a></code> element to specify an <a href="../spec/shadow/index.html#dfn-insertion-point">insertion point</a> in the rendered output. The host's children are displayed at the insertion point. The <code>&lt;content&gt;</code> element acts as an insertion point for rendering only&mdash;it does not change where the elements appear in DOM.</p>
 
-<p>You can have more than one insertion point in the shadow DOM subtree! The <code><a href="../spec/shadow/index.html#markup-content-select">select</a></code> attribute lets you choose which children appear at which insertion point, as illustrated in the <a href="#xample-details-open-decorator"><code>details-open</code> decorator example</a>:</p>
+<p>You can have more than one insertion point in the shadow DOM subtree! The <code><a href="../spec/shadow/index.html#markup-content-select">select</a></code> attribute lets you choose which children appear at which insertion point.</p>
 
-<pre class="prettyprint"><code>
-&lt;a id=&quot;#summary&quot;&gt;
-  &amp;blacktriangledown;
-  &lt;content select=&quot;summary&quot;&gt;&lt;/content&gt;
-&lt;/a&gt;
-&lt;content&gt;&lt;/content&gt;
-</code></pre>
-
-<p>Insertion points let you reordered or selectively omit rendering the host's children, but they will not cause something to be rendered multiple times. Tree order dictates when each of these elements takes a pass at selecting the children. Once the child is selected to be rendered at one insertion point, it can't be claimed by another one, which is why the <code>details-open</code> decorator only renders the summary once.</p>
+<p>Insertion points let you reordered or selectively omit rendering the host's children, but they will not cause something to be rendered multiple times. Tree order dictates when each of these elements takes a pass at selecting the children. Once the child is selected to be rendered at one insertion point, it can't be claimed by another one.</p>
 
 <h3 id="reprojection">Reprojection</h3>
 
@@ -625,7 +452,6 @@ s.appendChild(u.content.cloneNode(true));
     <li>The first derived custom element's shadow DOM.</li>
     <li>&hellip;</li>
     <li>Ad-hoc shadow DOM added using script.</li>
-    <li>Decorator shadow (applied and removed with CSS rules&mdash;not technically shadow <strong>DOM</strong>, but its insertion points work similarly to shadow DOM.)</li>
 </ol>
 
 <p>Next, we take this <a href="../spec/shadow/index.html#dfn-tree-stack">stack</a> of shadow DOM subtrees and traverse it backwards, starting with the last-applied (or <a href="../spec/shadow/index.html#dfn-youngest-tree">youngest</a>) subtree. Each <code>&lt;content&gt;</code> insertion point, encountered in tree order, grabs the host element's children that it needs as usual.</p>
@@ -776,13 +602,13 @@ var ticker = r.querySelector('#ticker');
 
 <p><a href="../spec/imports/index.html">The HTML Imports specification</a> is the normative description of this part of Web Components.</p>
 
-<p>Custom elements and decorators can be loaded from external files using the link tag:
+<p>Custom elements can be loaded from external files using the link tag:
 
 <pre class="prettyprint"><code>
 &lt;link rel=&quot;import&quot; href=&quot;goodies.html&quot;&gt;
 </code></pre>
 
-<p>Only <code>&lt;decorator&gt;</code> elements and <code>&lt;element&gt;</code> elements are interpreted by the user agent, although the DOM of this document is available to script through the <a href="../spec/imports/index.html#dfn-html-link-element-import"><code>import</code></a> property. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.</p>
+<p>The DOM of this document is available to script through the <a href="../spec/imports/index.html#dfn-html-link-element-import"><code>import</code></a> property. Documents which are retrieved cross-origin use CORs to determine that the definitions are designed to run cross-site.</p>
 
 <h2 id="appendix-a-interfaces">Appendix A. Interfaces and Elements</h2>
 
