@@ -116,7 +116,7 @@
 
 <h2 id="template-section">Templates</h2>
 
-<p><a href="../spec/templates/index.html">The HTML Templates specification</a> is the normative description of this part of Web Components.</p>
+<p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-template-element">The HTML specification</a> is the normative description of this part of Web Components.</p>
 
 <p>The <code id="#template-definition">&lt;template&gt;</code> element contains markup intended to be used later. The content of the <code>&lt;template&gt;</code> element is parsed by the parser, but it is inert: scripts aren't processed, images aren't downloaded, and so on. The <code>&lt;template&gt;</code> element is not rendered.</p>
 
@@ -151,17 +151,17 @@ function addComment(imageUrl, text) {
 
 <h3 id="defining-a-custom-element">Defining a Custom Element</h3>
 
-<p>The <code>&lt;element&gt;</code> element defines a custom element. It specifies the type of element it's a refinement of using the <code>extends</code> attribute:</p>
+<p>The <code>document.registerElement</code> method defines a custom element. It specifies the type of element it's a refinement of using the <code>extends</code> property:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;fancy-button&quot;&gt;
-    &hellip;
-&lt;/element&gt;
+var p = Object.create(HTMLButtonElement.prototype);
+var FancyButton = document.registerElement('fancy-button',
+                                           {extends: 'button', prototype: p});
 </code></pre>
 
-<p>The <code>extends</code> attribute specifies the tag name of the kind of element this element is an extension of. Instances of the custom element will have the tag name specified here.</p>
+<p>The first argument specifies the name of the custom element, by which it will be referred to in markup. These names must include a hyphen.</p>
 
-<p>The <code>name</code> attribute specifies the name of the custom element, by which it will be referred to in markup. These names must include a hyphen.</p>
+<p>The <code>extends</code> property specifies the tag name of the kind of element this element is an extension of. Instances of the custom element will have the tag name specified here.</p>
 
 <p>Because not all user agents support custom elements, authors should extend the HTML element that has the closest meaning to their new kind of element. For example, if they are defining a custom element that is interactive and responds to clicks by doing some action, they should extend button.</p>
 
@@ -169,70 +169,57 @@ function addComment(imageUrl, text) {
 
 <h3 id="methods-and-properties">Methods and Properties</h3>
 
-<p>You can define a custom element's script API by putting methods and properties on the custom element's prototype object using a nested <code>&lt;script&gt;</code> element:</p>
+<p>You can define a custom element's script API by putting methods and properties on the custom element's prototype object:</p>
 
 <pre class="prettyprint"><code>
-&lt;element name=&quot;tick-tock-clock&quot;&gt;
-  &lt;script&gt;
-    ({
-      tick: function () {
-        &hellip;
-      }
-    });
-  &lt;/script&gt;
-&lt;/element&gt;
+var p = Object.create(HTMLElement.prototype);
+p.tick = function () {
+    &hellip;
+}
+var TickTockClock = document.registerElement('tick-tock-clock', {prototype: p});
 </code></pre>
-
-<p>The properties of the last value of the script will be copied to a prototype object created for you. In the above example, <code>&lt;tick-tock-clock&gt;</code> elements will have a <code>tick</code> method.</p>
 
 <h3 id="lifecycle-callbacks">Lifecycle Callbacks</h3>
 
-<p>Custom elements have lifecycle callbacks which can be used to set up presentational aspects of a custom element. These are: <code>readyCallback</code>, which is called after a custom element is created; <code>insertedCallback</code>, which is called after a custom element is inserted into a document; and <code>removedCallback</code>, which is called after a custom element is removed from a document.</p>
+<p>Custom elements have lifecycle callbacks which can be used to set up presentational aspects of a custom element. These are: <code>createdCallback</code>, which is called after a custom element is created; <code>attachedCallback</code>, which is called after a custom element is inserted into a document with a default view; <code>detachedCallback</code>, which is called after a custom element is removed from a document with a default view; and <code>attributeChangedCallback</code> which is called when an attribute is added, changed or removed.</p>
 
 <p id="example-tick-tock-clock">The following example demonstrates using a template, shadow DOM (<a href="#shadow-dom-section">described in detail below</a>), and lifecycle callbacks to create a working clock element:</p>
 
 <pre class="prettyprint"><code>
-&lt;element name=&quot;tick-tock-clock&quot;&gt;
-  &lt;template&gt;
-    &lt;span id=&quot;hh&quot;&gt;&lt;/span&gt;
-    &lt;span id=&quot;sep&quot;&gt;:&lt;/span&gt;
-    &lt;span id=&quot;mm&quot;&gt;&lt;/span&gt;
-  &lt;/template&gt;
-  &lt;script&gt;
-    var template = document.currentScript.parentNode.querySelector('template');
-
-    function start() {
-      this.tick();
-      this._interval = window.setInterval(this.tick.bind(this), 1000);
-    }
-    function stop() {
-      window.clearInterval(this._interval);
-    }
+&lt;template id=&quot;tick-tock-clock-template&quot;&gt;
+  &lt;span id=&quot;hh&quot;&gt;&lt;/span&gt;
+  &lt;span id=&quot;sep&quot;&gt;:&lt;/span&gt;
+  &lt;span id=&quot;mm&quot;&gt;&lt;/span&gt;
+&lt;/template&gt;
+&lt;script&gt;
+var p = Object.create(HTMLElement.prototype);
+p.createdCallback: function() {
+    this._root = this.createShadowRoot();
+    var template = document.querySelector('#tick-tock-clock-template');
+    this._root.appendChild(document.importNode(template.content));
+};
+p.attachedCallback = function() {
+    this.tick();
+    this._interval = window.setInterval(this.tick.bind(this), 1000);
+};
+p.detachedCallback = function() {
+    window.clearInterval(this._interval);
+};
+p.tick = function () {
     function fmt(n) {
-      return (n < 10 ? '0' : '') + n;
+        return (n < 10 ? '0' : '') + n;
     }
 
-    ({
-      readyCallback: function () {
-        this._root = this.createShadowRoot();
-        this._root.appendChild(template.content.cloneNode());
-        if (this.parentElement) {
-          start.call(this);
-        }
-      },
-      insertedCallback: start,
-      removedCallback: stop,
-      tick: function () {
-        var now = new Date();
-        this._root.querySelector('hh').textContent = fmt(now.getHours());
-        this._root.querySelector('sep').style.visibility =
-            now.getSeconds() % 2 ? 'visible' : 'hidden';
-        this._root.querySelector('mm').textContent = fmt(now.getMinutes());
-      },
-      chime: function () { &hellip; }
-    });
-  &lt;/script&gt;
-&lt;/element&gt;
+    var now = new Date();
+    this._root.querySelector('hh').textContent = fmt(now.getHours());
+    this._root.querySelector('sep').style.visibility =
+        now.getSeconds() % 2 ? 'visible' : 'hidden';
+    this._root.querySelector('mm').textContent = fmt(now.getMinutes());
+};
+p.chime = function () { &hellip; };
+
+var TickTockClock = document.registerElement('tick-tock-clock', {prototype: p});
+&lt;/script&gt;
 </code></pre>
 
 <h3 id="using-custom-elements-in-markup">Using Custom Elements in Markup</h3>
@@ -240,12 +227,10 @@ function addComment(imageUrl, text) {
 <p>Because custom elements use existing HTML tag names&mdash;<code>div</code>, <code>button</code>, <code>option</code>, and so on&mdash;we need to use an attribute to specify when an author intends to use a custom element. The attribute name is <code>is</code>, and its value is the name of a custom element. For example:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;button&quot; name=&quot;fancy-button&quot;&gt;  &lt;!-- definition --&gt;
-    &hellip;
-&lt;/element&gt;
-</code></pre>
+&lt;script&gt;                    &lt;!-- definition --&gt;
+var FancyButton = document.registerElement('fancy-button', {extends: 'button', &hellip;});
+&lt;/script&gt;
 
-<pre class="prettyprint"><code>
 &lt;button <b>is=&quot;fancy-button&quot;</b>&gt;  &lt;!-- use --&gt;
     Do something fancy
 &lt;/button&gt;
@@ -253,20 +238,23 @@ function addComment(imageUrl, text) {
 
 <h3 id="using-custom-elements-in-script">Using Custom Elements in Script</h3>
 
-<p>As an alternative to the <code>&lt;element&gt;</code> element, you can also register custom elements from script using the <code>register</code> method. In this case you can set up the element's methods and properties by manipulating the prototype object directly. <code>register</code> returns a function that can be called to create an instance of the custom element:</p>
+<p>You can create a custom element from script by simply calling the constructor returned from <code>registerElement</code>:</p>
 
 <pre class="prettyprint"><code>
-var p = Object.create(HTMLButtonElement.prototype, {});
+var p = Object.create(HTMLButtonElement.prototype);
 p.dazzle = function () { &hellip; };
-var FancyButton = document.register('fancy-button', {prototype: p});
+var FancyButton = document.registerElement('fancy-button',
+                                           {extends: 'button', prototype: p});
+
 var b = new FancyButton();
+
 document.body.appendChild(b);
 b.addEventListener('click', function (event) {
     event.target.dazzle();
 });
 </code></pre>
 
-<p>Custom elements defined either using <code>&lt;element&gt;</code> or <code>register</code> can be instantiated from script using the standard <code>createElement</code> method:</p>
+<p>Custom elements can be instantiated from script using the standard <code>createElement</code> method:</p>
 
 <pre class="prettyprint"><code>
 var b = document.createElement('button', 'fancy-button');
@@ -303,18 +291,19 @@ Array.prototype.forEach.call(
 
 <h3 id="extending-custom-elements">Extending Custom Elements</h3>
 
-<p>In addition to HTML elements, you can also extend a custom element by specifying the custom element's name as the value of the <code>extends</code> attribute in the <code>&lt;element&gt;</code> element, or by setting up a prototype chain that includes another custom element prototype:</p>
+<p>In addition to HTML elements, you can also extend a custom element by setting up a prototype chain that includes another custom element prototype:</p>
 
 <pre class="prettyprint"><code>
-&lt;element extends=&quot;tick-tock-clock&quot; name=&quot;grand-father-clock&quot;&gt;
-    &hellip;
-&lt;/element&gt;
-&lt;script&gt;
-var p = Object.create(Object.getPrototypeOf(document.createElement('tick-tock-clock')));
-p.popOutBirdie = function () { &hellip; }
-var CuckooClock = document.register('cuckoo-clock', {prototype: p});
+var p = Object.create(TickTockClock.prototype);
+p.popOutBirdie = function() { &hellip; }
+p.chime = function() {
+  this.popOutBirdie();
+  TickTockClock.prototype.chime.call(this);
+};
+var CuckooClock = document.registerElement('cuckoo-clock', {prototype: p});
 var c = new CuckooClock();
 c.tick();         // inherited from tick-tock-clock
+c.chime();        // specialized by cuckoo-clock
 c.popOutBirdie(); // specific to cuckoo-clock
 &lt;/script&gt;
 </code></pre>
@@ -429,18 +418,16 @@ s.appendChild(u.content.cloneNode(true));
 
 <p>Any element can have more than one shadow DOM subtree. Don't look so puzzled! In fact, this is common when you are extending a custom element that already has a shadow DOM subtree. What happens to that poor old tree? We could just ditch it for the new arboreal hotness, but what if you don't want to? What if you want reuse it?</p>
 
-<p>There is another kind of insertion point for this purpose: the <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, which pulls in the previously applied shadow DOM subtree (also known as the <a href="../spec/shadow/index.html#dfn-older-tree">older tree</a>). For example, here is a custom element which extends the <a href="#example-tick-tock-clock"><code>&lt;tick-tock-clock&gt;</code> element</a> and adds a direction indicator to it:</p>
+<p>There is another kind of insertion point for this purpose: the <code><a href="../spec/shadow/index.html#shadow-element">&lt;shadow&gt;</a></code> element, which pulls in the previously applied shadow DOM subtree (also known as the <a href="../spec/shadow/index.html#dfn-older-tree">older tree</a>). For example, here is a template for a custom element which extends the <a href="#example-tick-tock-clock"><code>&lt;tick-tock-clock&gt;</code> element</a> and adds a direction indicator to it:</p>
 
 <pre class="prettyprint" id="example-sailing-watch"><code>
-&lt;element name="sailing-watch" extends="tick-tock-clock"&gt;
-  &lt;template&gt;
-    &lt;shadow&gt;&lt;/shadow&gt;
-    &lt;div id="compass"&gt;N&lt;/div&gt;
-  &lt;/template&gt;
-  &lt;script&gt;
+&lt;template id=&quot;sailing-watch-template&quot;&gt;
+  &lt;shadow&gt;&lt;/shadow&gt;
+  &lt;div id="compass"&gt;N&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
     &hellip;
-  &lt;/script&gt;
-&lt;/element&gt;
+&lt;/script&gt;
 </code></pre>
 
 <p>Since an element can have multiple shadows, we need to understand how these shadows interact with each other and what effect these interactions have on rendering of the element's children.</p>
@@ -620,7 +607,7 @@ by Web Components, with links to their normative definitions.</p>
 <ul>
 <!-- CSSHostRule --> <li><a href="../spec/shadow/index.html#css-host-rule-interface">CSSHostRule</a></li>
 <!-- CSSRule --> <li><a href="../spec/shadow/index.html#css-host-rule-methods">CSSRule</a> (partial)</li>
-<!-- Document --> <li>Document (partial&mdash;<a href="../spec/custom/index.html#dfn-document-register">register,</a> <a href="../spec/custom/index.html#monkeypatch-create-element">createElement, createElementNS</a>)</li>
+<!-- Document --> <li>Document (partial&mdash;<a href="../spec/custom/index.html#dfn-document-registerElement">registerElement,</a> <a href="../spec/custom/index.html#monkeypatch-create-element">createElement, createElementNS</a>)</li>
 <!-- Element --> <li><a href="../spec/shadow/index.html#extensions-to-element">Element</a> (partial)</li>
 <!-- HTMLLinkElement --> <li><a href="../spec/imports/index.html#interface-import">HTMLLinkElement</a> (partial)</li>
 <!-- ShadowRoot --> <li><a href="../spec/shadow/index.html#api-shadow-root">ShadowRoot</a></li>
@@ -630,9 +617,8 @@ by Web Components, with links to their normative definitions.</p>
 
 <ul>
 <!-- content --> <li><a href="../spec/shadow/index.html#content-element">content</a></li>
-<!-- element --> <li><a href="../spec/custom/index.html#the-element-element">element</a></li>
 <!-- shadow --> <li><a href="../spec/shadow/index.html#shadow-element">shadow</a></li>
-<!-- template --> <li><a href="../spec/templates/index.html#template-element">template</a></li>
+<!-- template --> <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-template-element">template</a></li>
 </ul>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
