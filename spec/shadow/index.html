@@ -106,13 +106,26 @@
 
         <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
 
-        <p>If more than one <a>shadow root</a> is <a title="hosts">hosted</a> by the same <a>shadow host</a>, the more recently added <a>shadow root</a> is called the <dfn>younger shadow root</dfn>, and the less recently added <a>shadow root</a> is called the <dfn>older shadow root</dfn>.</p>
+        <p>If more than one <a>shadow tree</a> is <a title="hosts">hosted</a> by the same <a>shadow host</a>, the more recently added <a>shadow tree</a> is called the <dfn>younger shadow tree</dfn> and the less recently added <a>shadow tree</a> is called the <dfn>older shadow tree</dfn></p>
 
-        <p>If there is no <a>older shadow root</a> than a given <a>shadow root</a>,
-          the <a>shadow root</a> is called the <dfn>oldest shadow root</dfn>.</p>
+        <p>If there is no <a>older shadow tree</a> than a given <a>shadow tree</a>,
+          the <a>shadow tree</a> is called the <dfn>oldest shadow tree</dfn>.</p>
 
-        <p>If there is no <a>younger shadow root</a> than a given <a>shadow root</a>,
-          the <a>shadow root</a> is called the <dfn>youngest shadow root</dfn>.</p>
+        <p>If there is no <a>younger shadow tree</a> than a given <a>shadow tree</a>,
+          the <a>shadow tree</a> is called the <dfn>youngest shadow tree</dfn>.</p>
+
+        <p>The <dfn>older shadow root</dfn> is the root node of the <a>older shadow tree</a></p>
+
+        <p>The <dfn>younger shadow root</dfn> is the root node of the <a>younger shadow tree</a></p>
+
+        <p>The <dfn>oldest shadow root</dfn> is the root node of the <a>oldest shadow tree</a></p>
+
+        <p>The <dfn>youngest shadow root</dfn> is the root node of the <a>youngest shadow tree</a></p>
+
+        <p class="note">
+          For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods.
+          No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.
+        </p>
       </section>
 
       <section>
@@ -121,25 +134,28 @@
         <p>A <dfn>tree of trees</dfn> is a <a>tree</a> of <a title="node tree">node trees</a>.</p>
 
         <p class="note">
-          The purpose of introducing a tree of trees here is to explain concepts and define algorithms easily in the following sections. This is a kind of a notation techchique to make the this specification simpler.
+          The purpose of introducing a tree of trees here is to define algorithms easily in the following sections.
+          This is a kind of a notation techchique to make the this specification simpler.
         </p>
-
-        <figure>
-          <object data="../../assets/images/tree-of-trees.svg" width="650" height="823"></object>
-          <figcaption>A tree of trees</figcaption>
-        </figure>
 
         <p>Just like a <a>node tree</a> is defined as <a title="tree">a set of relationships</a> between <a title="node">nodes</a>,
           a <a>tree of trees</a> is similarly defined as a set of relationships between <a title="node tree">node trees</a>:</p>
         <ul>
-          <li>A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if the <a>shadow host</a> of <var>B</var> <a>participates</a> in <var>A</var>.</li>
+          <li>
+            A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if either of the following conditions is satisfied:
+            <ul>
+              <li><var>A</var> and <var>B</var> are next to each other in the same <a title="shadow roots list">associated ordered list</a> and <var>A</var> is the <a>older shadow tree</a> relative to <var>B</var>.</li>
+              <li><var>B</var> is the <a>oldest shadow tree</a> and <a>shadow host</a> of <var>B</var> participates in <var>A</var>.</li>
+            </ul>
+
+          </li>
           <li>If there is more than one <a>node tree</a> that shares the same <a>parent tree</a>, the <a>tree order</a> between them in the <a>tree of trees</a> is defined as follows:
             <ol>
               <li>Let <var>A</var> and <var>B</var> be <a title="node tree">node trees</a> that share the same <a>parent tree</a>.</li>
               <li><var>A</var> comes before <var>B</var> if either of the following conditions is satisfied:
                 <ul>
-                  <li>Both <var>A</var> and <var>B</var> are <a title="hosts">hosted</a> by the same <a>shadow host</a> and <var>A</var> is <a title="older shadow root">older</a> than <var>B</var>.</li>
                   <li>The <a>shadow host</a> which <a>hosts</a> <var>A</var> is <a>preceding</a> the <a>shadow host</a> which <a>hosts</a> <var>B</var>.</li>
+                  <li><var>B</var> is not the <a>oldest shadow tree</a>.</li>
                 </ul>
               </li>
             </ol>
@@ -151,13 +167,39 @@
             are defined in the similar way as defined in <a title="tree">trees</a>.</li>
         </ul>
 
-        <p class="note">The <a>document tree</a> is always the <a>root tree</a> of a <a>tree of trees</a>.</p>
-
         <p>The <a><code>ownerDocument</code></a> property of a <a>node</a> in a shadow tree <strong>must</strong> refers to the <a>document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
 
         <p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>root tree</a>.</p>
 
-        <p class="note">For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods. No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.</p>
+        <section class="informative">
+          <h3>Example tree of trees</h3>
+
+          <figure>
+            <object data="../../assets/images/tree-of-trees.svg" width="650" height="823"></object>
+            <figcaption>
+              A tree of trees.
+            </figcaption>
+          </figure>
+
+          <p>
+            In the figure, there are seven node trees, named A, B, C, D, E and F.
+            The node trees, C, D and E, are hosted by the same <a>shadow host</a>, which participates in the node tree A.
+            The node tree C is the <a>oldest shadow tree</a>. The node tree E is the <a>youngest shadow tree</a>.
+            The folowing set of relationships hold in the figure:
+            <ul>
+              <li>The ordered list of A's <a title="child tree">child trees</a> is [B, C].</li>
+              <li>The ordered list of B's <a title="child tree">child trees</a> is [].</li>
+              <li>The ordered list of C's <a title="child tree">child trees</a> is [F, D].</li>
+              <li>The ordered list of D's <a title="child tree">child trees</a> is [E].</li>
+              <li>The ordered list of E's <a title="child tree">child trees</a> is [].</li>
+            </ul>
+          </p>
+
+          <p class="note">
+            The <a>document tree</a> is always the <a>root tree</a> of a <a>tree of trees</a>.
+           </p>
+        </section>
+
       </section>
 
       <section>
@@ -272,8 +314,8 @@
           </dl>
           <ol>
             <li>Let all <a>distributed nodes</a> and <a>destination insertion points</a> owned by <a title="node">nodes</a> in <var>TREE-OF-TREES</var> be empty</li>
-            <li>Let <var>ROOT</var> be the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>TREE-OF-TREES</var></li>
-            <li>Run the <a>distribution resolution algorithm</a> with <var>ROOT</var> as input</li>
+            <li>Let <var>DOCUMENT-TREE</var> be the <a>root tree</a> of <var>TREE-OF-TREES</var></li>
+            <li>Run the <a>distribution resolution algorithm</a> with <var>DOCUMENT-TREE</var> as input</li>
           </ol>
         </div>
 
@@ -282,34 +324,34 @@
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
-            <dd><var>ROOT</var>, the <a>root</a> <a>node</a> of a <a>node tree</a></dd>
+            <dd><var>NODE-TREE</var>, a <a>node tree</a></dd>
             <dt>Output</dt>
-            <dd>The <a>distribution result</a> is updated for the <a title="inclusive descendant tree">inclusive descendant trees</a> of <var>ROOT</var></dd>
+            <dd>The <a>distribution result</a> is updated for the <a title="inclusive descendant tree">inclusive descendant trees</a> of <var>NODE-TREE</var></dd>
           </dl>
 
           <ol>
-            <li>For each <a>shadow host</a>, <var>SHADOW-HOST</var>, that is a <a>descendant</a> of <var>ROOT</var>, in <a>tree order</a>:
+            <li>For each <a>shadow host</a>, <var>SHADOW-HOST</var>, which participates in <var>NODE-TREE</var>, in <a>tree order</a>:
               <ol>
                 <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with <var>SHADOW-HOST</var> as input</li>
-                <li>For each <a>shadow root</a>, <var>SHADOW-ROOT</var>, which <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>youngest shadow root</a> to the <a>oldest shadow root</a>:
+                <li>For each <a>shadow tree</a>, <var>SHADOW-TREE</var>, which <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>youngest shadow tree</a> to the <a>oldest shadow tree</a>:
                   <ol>
-                    <li>Run the <a>pool distribution algorithm</a> with <var>SHADOW-ROOT</var> and <var>POOL</var> as input</li>
+                    <li>Run the <a>pool distribution algorithm</a> with <var>SHADOW-TREE</var> and <var>POOL</var> as input</li>
                   </ol></li>
-                <li>For each <a>shadow root</a>, <var>SHADOW-ROOT</var>, that <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>oldest shadow root</a> to the <a>youngest shadow root</a>:
+                <li>For each <a>shadow tree</a>, <var>SHADOW-TREE</var>, that <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>oldest shadow tree</a> to the <a>youngest shadow tree</a>:
                   <ol>
-                    <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> which is a <a>descendant</a> of <var>SHADOW-ROOT</var></li>
+                    <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> which participates in <var>SHADOW-TREE</var></li>
                     <li>If such a <var>SHADOW</var> exits:
                       <ol>
-                        <li>If <var>SHADOW-ROOT</var> is not the <a>oldest shadow root</a>:
+                        <li>If <var>SHADOW-TREE</var> is not the <a>oldest shadow tree</a>:
                           <ol>
-                            <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> as input.</li>
+                            <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with the root node of the <a>older shadow tree</a> relative to <var>SHADOW-TREE</var> as input.</li>
                           </ol></li>
                         <li>For each <a>node</a>, <var>CHILD</var>, in <var>POOL</var>
                           <ol>
                             <li><a title="distributes">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
                           </ol></li>
                       </ol></li>
-                    <li>Run the <a>distribution resolution algorithm</a>, recursively, with <var>SHADOW-ROOT</var> as input</li>
+                    <li>Run the <a>distribution resolution algorithm</a>, recursively, with <var>SHADOW-TREE</var> as input</li>
                   </ol></li>
               </ol></li>
           </ol>
@@ -346,14 +388,14 @@
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
-            <dd><var>SHADOW-ROOT</var>, a shadow root</dd>
+            <dd><var>SHADOW-TREE</var>, a shadow tree</dd>
             <dd><var>POOL</var>, an ordered list of nodes</dd>
             <dt>Output</dt>
             <dd>Nodes in POOL are distributed into the content insertion points in the tree.</dd>
           </dl>
 
           <ol>
-            <li>For each <a>content insertion point</a>, <var>CONTENT</var>, which is descendant of <var>SHADOW-ROOT</var>, in tree order:
+            <li>For each <a>content insertion point</a>, <var>CONTENT</var>, which participates in <var>SHADOW-TREE</var>, in tree order:
               <ol>
                 <li>For each <a>node</a>, <var>NODE</var>, in <var>POOL</var>
                   <ol>
