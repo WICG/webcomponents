@@ -584,22 +584,21 @@
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
-            <dd><var>PATH</var>, an event path</dd>
+            <dd><var>EVENT-PATH</var>, an event path</dd>
             <dd><var>CURRENT-TARGET</var>, a <a>node</a> where the event listener is invoked.</dd>
             <dt>Output</dt>
             <dd><var>RELATIVE-TARGET</var>, adjusted target</dd>
           </dl>
           <ol>
             <li>Let <var>CURRENT-TARGET-TREE</var> be the <a>node tree</a> which <var>CURRENT-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>ORIGINAL-TARGET</var> be the first item in <var>PATH</var></li>
+            <li>Let <var>ORIGINAL-TARGET</var> be the first item in <var>EVENT-PATH</var></li>
             <li>Let <var>ORIGINAL-TARGET-TREE</var> be the <a>node tree</a> which <var>ORIGINAL-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a>inclusive ancestor</a> tree of <var>CURRENT-TARGET-TREE</var> and <var>ORIGINAL-TARGET-TREE</var></li>
-            <li>Let <var>RELATIVE-TARGET</var> be the <a>node</a> which satisfies all the following conditions:
+            <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>ORIGINAL-TARGET-TREE</var></li>
+            <li>Let <var>RELATIVE-TARGET</var> be the first <a>node</a> in <var>EVENT-PATH</var> which satisfies the following condition:
               <ol>
                 <li>The <a>node</a> <a>participates</a> in <var>RELATIVE-TARGET-TREE</var></li>
-                <li>The <a>node</a> is a member of <var>PATH</var></li>
-                <li>There is no other descendant <a>node</a> which satisfies the conditions.</li>
-              </ol></li>
+              </ol>
+            </li>
           </ol>
         </div>
 
@@ -624,25 +623,31 @@
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
+            <dd><var>EVENT</var>, an event</dd>
             <dd><var>CURRENT-TARGET</var>, the <a>node</a> on which event listeners would be invoked</dd>
             <dd><var>RELATED-TARGET</var>, the related target for the event</dd>
             <dt>Output</dt>
-            <dd><var>ADJUSTED-RELATED-TARGET</var>, the <dfn>adjusted related target</dfn> for <var>NODE</var></dd>
+            <dd><var>ADJUSTED-RELATED-TARGET</var>, the <dfn>adjusted related target</dfn> for <var>CURRENT-TARGET</var></dd>
           </dl>
           <ol>
-            <li>Let <var>ADJUSTED-RELATED-TARGET</var> be null</li>
-            <li>Let <var>RELATED-TARGET-PATH</var> be the result of the event path calculation algorithm with <var>RELATED-TARGET</var> as input</li>
-            <li>For each <a>inclusive ancestor</a> tree, <var>CURRENT-TREE</var>, of the <a>node tree</a> which <var>CURRENT-TARGET</var> <a>participates</a> in, in ascending order:
+            <li>Let <var>CURRENT-TARGET-TREE</var> be the <a>node tree</a> which <var>CURRENT-TARGET</var> <a>participates</a> in</li>
+            <li>Let <var>RELATED-TARGET-TREE</var> be the <a>node tree</a> which <var>RELATED-TARGET</var> <a>participates</a> in</li>
+            <li>Let <var>RELATED-TARGET-EVENT-PATH</var> be the result of the <a>event path calculation algorithm</a> with <var>RELATED-TARGET</var> and <var>EVENT</var> as input</li>
+            <li>Let <var>LOWEST-COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>RELATED-TARGET-TREE</var></li>
+            <li>For each <a>inclusive ancestor tree</a>, <var>COMMON-ANCESTOR-TREE</var>, of the <var>LOWEST-COMMON-ANCESTOR-TREE</var>, in ascending order:
               <ol>
-                <li>For each <a>node</a>, <var>RELATED-TARGET-PATH-ANCESTOR</var>, in the <var>RELATED-TARGET-PATH</var>:
+                <li>Let <var>ADJUSTED-RELATED-TARGET</var> be the first <a>node</a> in <var>RELATED-TARGET-EVENT-PATH</var> which satisfies the following condition:
                   <ol>
-                    <li>If <var>RELATED-TARGET-PATH-ANCESTOR</var> <a>participates</a> in <var>CURRENT-TREE</var>:
-                      <ol>
-                        <li>Let <var>ADJUSTED-RELATED-TARGET</var> be RELATED-TARGET-PATH-ANCESTOR</li>
-                        <li>Stops</li>
-                      </ol></li>
-                  </ol></li>
-              </ol></li>
+                    <li>The <a>node</a> <a>participates</a> in <var>COMMON-ANCESTOR-TREE</var></li>
+                  </ol>
+                </li>
+                <li>If such a <var>ADJUSTED-RELATED-TARGET</var> exists:
+                  <ol>
+                    <li>Stops this algorithm</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
           </ol>
         </div>
 
