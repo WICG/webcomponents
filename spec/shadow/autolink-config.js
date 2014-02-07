@@ -143,7 +143,8 @@ var autolinkConfig = {
     },
 
     'http://www.w3.org/TR/cssom/': {
-        'style sheet': '#style-sheet'
+        'style sheet': '#style-sheet',
+        'StyleSheetList': '#the-stylesheetlist-interface'
     },
 
     'http://www.w3.org/TR/cssom-view/': {
