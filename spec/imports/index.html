@@ -70,6 +70,8 @@
     <li><a href="#interface-import">Extensions to <code>HTMLLinkElement</code> interface</a></li>
     <li><a href="#loading-imports">Loading Imports</a>
     <ol>
+      <li><a href="#requesting-import">Requesting Import</a>
+      <li><a href="#fetching-import">Fetching Import</a>
       <li><a href="#imports-and-csp">Imports and Content Security Policy</a>
     </ol></li>
     <li><a href="#parsing-imports">Parsing Imports</a>
@@ -129,7 +131,7 @@
 
 <p>The default type for resources given by the <a href="#link-type-import"><code>import</code></a> keyword is <code>text/html</code>.</p>
 
-<p>The appropriate time to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain</a> the resource is when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> is created or when its element is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a>, whichever happens last.</p>
+<p>The appropriate time to <dfn id="dfn-obtaining-import"><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain</a></dfn> the resource is when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> is created or when its element is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a>, whichever happens last.</p>
 </div>
 
 <div class="informative">
@@ -198,22 +200,95 @@ Giving up an import before it loads, even if the import eventually does still lo
 
 <h2 id="loading-imports">Loading Imports</h2>
 
+<h3 id="requesting-import">Requesting Import</h3>
+
+<p>
+Each master document has <dfn id="dfn-loading-list">loading list</dfn>.
+An entry of <a href="#dfn-loading-list">loading lists</a> is consists of
+<dfn id="dfn-location-list-link">link</dfn> that is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element, 
+<dfn id="dfn-location-list-originator">originator</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> and
+<dfn id="dfn-location-list-location">location</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a>.
+Also, the entry is optionally <dfn id="dfn-location-list-done">marked as done</dfn>.
+The list is initially empty. New items are added via the <a href="#dfn-import-request">import request</a> algorithm.
+The <dfn id="dfn-loading-list-ancestor">ancestor list</dfn> of an <a href="#dfn-loading-list">loading list</a> is a list of <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> that contains its <a href="#dfn-location-list-originator">originator</a>. It also contains the ancestor list of an item whose <a href="#dfn-location-list-location">location</a> is same as <a href="#dfn-location-list-originator">originator</a>, if there is such an item. 
+</p>
+
+<p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, it <strong>must</strong> run the <dfn id="dfn-import-request">import request</dfn> algorithm in addition,
+that <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+<dd><var>LINK</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element that creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</dd>
+<dd><var>ORIGINATOR</var>, the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the linking document.</dd>
+<dd><var>LOCATION</var>, the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the linked resource.</dd>
+</dl>
+<ol>
+  <li>Let <var>ORIGINATORPOS</var> be a position of the <a href="#dfn-loading-list">loading list</a> item whose <a href="#dfn-location-list-location">location</a> is same as <var>ORIGINATOR</var>.</li>
+  <li>Let <var>SIBLINGPOS</var> be the largest position of the <a href="#dfn-loading-list">loading list</a> item whose <a href="#dfn-location-list-originator">originator</a> is same as <var>ORIGINATOR</var>.</li>
+  <li>If the <a href="#dfn-loading-list">loading list</a> contains an item whose <a href="#dfn-location-list-link">link</a> is <var>LINK</var>, <strong>stop</strong>.
+  <li>Let <var>ITEM</var> be <var>LINK</var>, <var>ORIGINATOR</var> and <var>LOCATION</var>:</li>
+  <ol>
+    <li>If <var>ORIGINATORPOS</var> and <var>SIBLINGPOS</var> are both <strong>null</strong>, insert <var>ITEM</var> at the head of the <a href="#dfn-loading-list">loading list</a> and <strong>stop</strong>.</li>
+    <li>If <var>SIBLINGPOS</var> is <strong>null</strong>, insert <var>ITEM</var> after <var>ORIGINATORPOS</var> and <strong>stop</strong>.
+    <li>Insert <var>ITEM</var> after <var>SIBLINGPOS</var>.
+  </ol>
+</ol>
+</div>
+
+<p>The <dfn>fetch readiness</dfn> algorithm defines if user agents can fetch given link to an import. The algorithm <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+<dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element.
+<dt>Output</dt>
+<dd><var>READINESS</var>, a boolean value representing the readiness</dd>
+</dl>
+<ol>
+  <li>Let <var>LINKITEM</var> be an item of the <a href="#dfn-loading-list">loading list</a> which has <var>LINK</var>.</li>
+  <li>If <var>LINKITEM</var> is <a href="#dfn-location-list-done">marked as done</a>, let <var>READINESS</var> true and <strong>stop</strong>.
+  <li>For each <var>ITEM</var> in the <a href="#dfn-loading-list">loading list</a> which is located before <var>LINKITEM</var>:</li>
+  <ol>
+    <li>If <var>ITEM</var> is not <a href="#dfn-location-list-done">marked as done</a> and its location is not in <var>LINKITEM</var>'s <a href="#dfn-loading-list-ancestor">ancestor list</a>, let <var>READINESS</var> false and <strong>stop</strong>.</li>
+  </ol>
+  <li>Let <var>READINESS</var> true.</li>
+</ol>
+</div>
+
+<div class="informative">
+<p>The <a href="#dfn-import-request">import request</a> algorithm sorts the <a href="#dfn-loading-list">loading list</a> in depth first traversal order of the import dependency tree. 
+The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether all predecessors in the dependency tree other than its ancestors are already loaded. Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> is never removed from the <a href="#dfn-loading-list">loading list</a> once it is added to the list.</p>
+</div>
+
+<h3 id="fetching-import">Fetching Import</h3>
+
 <p>All <a href="#dfn-import">imports</a> linked from documents that is in an <a href="#dfn-import-list">import list</a> <strong>must</strong> be loaded using <a href="http://fetch.spec.whatwg.org/#concept-legacy-potentially-cors-enabled-fetch">potentially CORS-enabled fetch</a> with <em>mode</em> set to "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#attr-crossorigin-anonymous">Anonymous</a>".</p>
 
 <p>When an <a href="#dfn-import">import</a> is <a href="http://fetch.spec.whatwg.org/#concept-fetch">fetched</a>, the user agent <strong>must</strong> run the <dfn id="dfn-import-fetching">import fetching</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
+<dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element which makes the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</li>
 <dd><var>LOCATION</var>, the <a href="#dfn-import-location">import location</a></dd>
 <dd><var>PARENT</var>, an <a href="#dfn-import-parent">import parent</a>, which contains the link to <var>LOCATION</var>.</li>
 <dt>Output</dt>
-<dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a></dd>
+<dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
 <ol>
-    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-list">import list</a>, let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
-    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>override referrer source</em> and <em>block cookies</em> flag set:
+    <li>Wait while the <a href="#dfn-fetch-rediness">fetch readiness</a> against <var>LINK</var> is false.</li>
+    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-list">import list</a>:</li>
     <ol>
-        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>, add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-list">import list</a> next to its <var>PARENT</var> and <strong>stop</strong>.
+      <li>Mark <a href="#dfn-loading-list">loading list</a> item which contains <var>LINK</var> <a href="#dfn-location-list-done">as done</a>.</li>
+      <li>Let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
+    </ol>
+    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>overnride referrer source</em> and <em>block cookies</em> flag set:
+    <ol>
+        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>:</li>
+        <ul>
+          <li>Mark <a href="#dfn-loading-list">loading list</a> item which contains <var>LINK</var> <a href="#dfn-location-list-done">as done</a>.</li>
+          <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-list">import list</a> next to its <var>PARENT</var> and <strong>stop</strong>.
+        </ul>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
         <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
         <li>Add <var>LOCATION</var> and <var>IMPORT</var> to the <a href="#dfn-import-list">import list</a> next to its <var>PARENT</var>.</li>
@@ -226,6 +301,7 @@ Giving up an import before it loads, even if the import eventually does still lo
         <ol>
             <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">Queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
         </ol>
+        <li>Mark <a href="#dfn-loading-list">loading list</a> item which contains <var>LINK</var> <a href="#dfn-location-list-done">as done</a>.</li>
     </ol></li>
 </ol>
 </div>
@@ -239,7 +315,7 @@ The loading attempt <strong>must</strong> be considered successful if <var>IMPOR
 </p>
 
 <div class="informative">
-<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">The link element</a> fires a simple event called <code>load</code>
+The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element fires a simple event called <code>load</code>
 for successful loading attempt. For failed attempt, it fires a simple event named <code>error</code>.
 </div>
 
