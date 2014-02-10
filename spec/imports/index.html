@@ -202,16 +202,15 @@ Giving up an import before it loads, even if the import eventually does still lo
 
 <h3 id="requesting-import">Requesting Import</h3>
 
-<p>
-Each master document has <dfn id="dfn-import-link-list">import link list</dfn>.
+<p>Each master document has <dfn id="dfn-import-link-list">import link list</dfn>.
 An entry of <a href="#dfn-import-link-list">import link list</a> is consists of
 <dfn id="dfn-location-list-link">link</dfn> that is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element, 
 <dfn id="dfn-location-list-originator">originator</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> and
 <dfn id="dfn-location-list-location">location</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a>.
 Also, the entry is optionally <dfn id="dfn-location-list-done">marked as done</dfn>.
-The list is initially empty. New items are added via the <a href="#dfn-import-request">import request</a> algorithm.
-The <dfn id="dfn-import-link-list-ancestor">ancestor list</dfn> of an <a href="#dfn-import-link-list">import link list</a> is a list of <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> that contains its <a href="#dfn-location-list-originator">originator</a>. It also contains the ancestor list of an item whose <a href="#dfn-location-list-location">location</a> is same as <a href="#dfn-location-list-originator">originator</a>, if there is such an item. 
-</p>
+The list is initially empty. New items are added via the <a href="#dfn-import-request">import request</a> algorithm.</p>
+
+<p>The <dfn id="dfn-import-link-list-ancestor">ancestor list</dfn> of an <a href="#dfn-import-link-list">import link list</a> is a list of <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> which contains its <a href="#dfn-location-list-originator">originator</a> and parent's <a href="#dfn-import-link-list-ancestor">ancestor list</a> items.</p>
 
 <p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, it <strong>must</strong> run the <dfn id="dfn-import-request">import request</dfn> algorithm in addition,
 that <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
@@ -263,7 +262,7 @@ The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether 
 
 <h3 id="fetching-import">Fetching Import</h3>
 
-<p>All <a href="#dfn-import">imports</a> linked from documents that is in an <a href="#dfn-import-map">import map</a> <strong>must</strong> be loaded using <a href="http://fetch.spec.whatwg.org/#concept-legacy-potentially-cors-enabled-fetch">potentially CORS-enabled fetch</a> with <em>mode</em> set to "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#attr-crossorigin-anonymous">Anonymous</a>".</p>
+<p>All <a href="#dfn-import">imports</a> linked from documents that is the <a href="#dfn-master-document">master document</a> or the one in the <a href="#dfn-import-map">import map</a> <strong>must</strong> be loaded using <a href="http://fetch.spec.whatwg.org/#concept-legacy-potentially-cors-enabled-fetch">potentially CORS-enabled fetch</a> with <em>mode</em> set to "<a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/fetching-resources.html#attr-crossorigin-anonymous">Anonymous</a>".</p>
 
 <p>When an <a href="#dfn-import">import</a> is <a href="http://fetch.spec.whatwg.org/#concept-fetch">fetched</a>, the user agent <strong>must</strong> run the <dfn id="dfn-import-fetching">import fetching</dfn> algorithm, which <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 <div class="algorithm">
@@ -271,7 +270,6 @@ The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether 
 <dt>Input</dt>
 <dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element which makes the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</li>
 <dd><var>LOCATION</var>, the <a href="#dfn-import-location">import location</a></dd>
-<dd><var>PARENT</var>, an <a href="#dfn-import-parent">import parent</a>, which contains the link to <var>LOCATION</var>.</li>
 <dt>Output</dt>
 <dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
@@ -307,7 +305,7 @@ The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether 
 </div>
 
 <div class="informative">
-All of loaded imports and imports under loading are in the <a href="#dfn-import-map">import map</a>, thus every <a href="#dfn-import">import</a> which is linked from imports in the list will also be loaded using the <a href="#dfn-import-fetching">import fetching</a> algorithm, with <var>PARENT</var> be the import and <var>LOCATION</var> be the <a href="#dfn-import-location">import location</a> of the import.
+All of loaded imports and imports under loading are in the <a href="#dfn-import-link-list">import link list</a>, thus every <a href="#dfn-import">import</a> which is linked from imports in the list will also be loaded using the <a href="#dfn-import-fetching">import fetching</a> algorithm, with  <var>LOCATION</var> be the <a href="#dfn-import-location">import location</a> of the import.
 </div>
 
 <p>
