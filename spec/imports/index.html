@@ -360,6 +360,15 @@ For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file
 </ol>
 </div>
 
+<h3 id="additions-to-prepare-a-script-algorithm">Additions to document.write() method</h3>
+
+<p>Insert following step between step 2 and step 3 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#document.write()">document.write() method</a>:</p>
+
+<div class="monkeypatch">
+<ul>
+  <li>If <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-currentscript">document.currentScript</a> points the element that isn't owned by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#active-document">active document</a>, then abort these steps.</li>
+</ul>
+</div>
 <h2 id="scripts-imports">Scripting in Imports</h2>
 
 <p>Scripting in <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#scripting">HTML Scripting</a>.</p>
