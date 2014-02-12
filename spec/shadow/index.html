@@ -832,10 +832,6 @@
         <li>the styles of the <a>shadow insertion point</a> <a>node</a> are inherited by the child <a title="node">nodes</a> of the <a>shadow root</a> of the <a>shadow tree</a>, <a title="distributes">distributed</a> to this <a>shadow insertion point</a></li>
       </ul>
 
-      <p>If the <dfn>reset-style-inheritance</dfn> flag is set for a <a>shadow tree</a>, all <a title="inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a title="initial values">initial value</a> at the <a>shadow root</a>.</p>
-
-      <p>If the <a>reset-style-inheritance</a> flag is set for an <a>insertion point</a> in a <a>shadow tree</a>, all <a title="inheritance">inheritable</a> CSS properties <strong>must</strong> behave as if they were explicitly set to the <a title="initial values">initial value</a> at the <a>insertion point</a>.</p>
-
       <section>
         <h3><code>::content</code> pseudo-element</h3>
 
@@ -1067,13 +1063,6 @@
             </ol>
           </dd>
 
-          <dt>attribute bool resetStyleInheritance</dt>
-          <dd>
-            <p>Represents the <a>reset-style-inheritance</a> flag and indicates whether or not the inheritable CSS properties are set to the initial value at the shadow boundary. If <code>false</code> (default value), the properties continue to inherit. If <code>true</code>, the properties are set to initial value.</p>
-            <p>On getting, the attribute <strong>must</strong> return the current value of the <a>reset-style-inheritance</a> flag for the <a>shadow host</a>'s tree.</p>
-            <p>On setting, the attribute <strong>must</strong> set the value of the <a>reset-style-inheritance</a> flag for the <a>shadow host</a>'s <a>tree</a> to specified value.</p>
-          </dd>
-
           <dt>readonly attribute Element? activeElement</dt>
           <dd>
             <p>Represents the currently focused <a>element</a> in the <a>shadow tree</a>.</p>
@@ -1175,9 +1164,6 @@
             <dl>
               <dt id="markup-content-select"><code>select</code>, a <a title="comma separated tokens">set of comma-separated tokens</a></dt>
               <dd>Represents the <a>matching criteria</a> for <a title="distribution">distributing</a> child <a title="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a>compound selector</a>.</dd>
-
-              <dt id="markup-content-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a>boolean</a> attribute</dt>
-              <dd>Indicates the state of the <a>reset-style-inheritance</a> flag for this <a>insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
             </dl>
           </dd>
 
@@ -1186,9 +1172,6 @@
             <dl class="idl" title="interface HTMLContentElement : HTMLElement">
               <dt>attribute DOMString select</dt>
               <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-content-select">select</a> attribute.</dd>
-
-              <dt>attribute boolean resetStyleInheritance</dt>
-              <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-content-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
 
               <dt>NodeList getDistributedNodes()</dt>
               <dd>
@@ -1229,21 +1212,9 @@
           <dt>Children</dt>
           <dd>Anything</dd>
 
-          <dt>Content attributes</dt>
-          <dd>
-            <p><a>Global attributes</a></p>
-            <dl>
-              <dt id="markup-shadow-reset-style-inheritance"><code>resetstyleinheritance</code>, a <a>boolean</a> attribute</dt>
-              <dd>indicates the state of the <a>reset-style-inheritance</a> flag for this <a>shadow insertion point</a>. If present, the value of the flag <strong>must</strong> be set to <strong>true</strong>. Otherwise, the value <strong>must</strong> be set to <strong>false</strong>.</dd>
-            </dl>
-          </dd>
-
           <dt>DOM Interface</dt>
           <dd>
             <dl class="idl" title="interface HTMLShadowElement : HTMLElement">
-              <dt>attribute boolean resetStyleInheritance</dt>
-              <dd><strong>Must</strong> <a>reflect</a> the <a href="#markup-shadow-reset-style-inheritance">resetstyleinheritance</a> attribute.</dd>
-
               <dt>NodeList getDistributedNodes()</dt>
               <dd>
                 When invoked, it <strong>must</strong> return result of running the following steps:
