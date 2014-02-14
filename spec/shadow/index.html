@@ -697,26 +697,24 @@
         <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>currentTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a title="node">nodes</a> in <a title="shadow tree">shadow trees</a>.</p>
       </section>
 
-      <section id="event-retargeting-example">
+      <section class="informative">
         <h3>Event Retargeting Example</h3>
 
-        <p class="issue">This example should be rewritten based on the current retargeting algorithm</p>
-
-        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a title="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a title="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries> and represent <a title="shadow root">shadow roots</a>:</p>
+        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a title="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a title="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a title="shadow root">shadow roots</a>:</p>
         <pre class="example">
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-root id=&quot;player-shadow-root&quot;&gt;</span>
         &lt;div id=&quot;controls&quot;&gt;
-            &lt;button class=&quot;play-button&quot;&gt;PLAY&lt;/button&gt;
+            &lt;button id=&quot;play-button&quot;&gt;PLAY&lt;/button&gt;
             &lt;input type=&quot;range&quot; id=&quot;timeline&quot;&gt;
                 <span class=shadow-boundary>&lt;shadow-root id=&quot;timeline-shadow-root&quot;&gt;</span>
-                    &lt;div class=&quot;slider-thumb&quot; id=&quot;timeline-slider-thumb&quot;&gt;&lt;/div&gt;
+                    &lt;div id=&quot;slider-thumb&quot; id=&quot;timeline-slider-thumb&quot;&gt;&lt;/div&gt;
                 <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
             &lt;/input&gt;
-            &lt;div class=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; class=&quot;volume-slider&quot;&gt;
+            &lt;div id=&quot;volume-slider-container&quot;&gt;
+                &lt;input type=&quot;range&quot; id=&quot;volume-slider&quot;&gt;
                     <span class=shadow-boundary>&lt;shadow-root id=&quot;volume-shadow-root&quot;&gt;</span>
-                        &lt;div class=&quot;slider-thumb&quot; id=&quot;volume-slider-thumb&quot;&gt;&lt;/div&gt;
+                        &lt;div id=&quot;slider-thumb&quot; id=&quot;volume-slider-thumb&quot;&gt;&lt;/div&gt;
                     <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
@@ -727,21 +725,7 @@
 
         <p>Let's have a user position their pointing device over the volume slider's thumb (<code>#volume-slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
 
-        <p>Just before the event is dispatched, we perform <a>retargeting</a>:</p>
-        <ol>
-          <li>Since <code>#volume-slider-thumb</code> is not an <a>insertion point</a>, we push it onto <var>STACK</var>, and add the first tuple to <var>TARGETS</var> as (<code>#volume-slider-thumb</code>, <code>#volume-slider-thumb</code>)</li>
-          <li>We then calculate parent as <code>#volume-shadow-root</code> and proceed to second iteration, adding (<code>#volume-slider-thumb</code>, <code>#volume-shadow-root</code>) tuple to <var>TARGETS</var></li>
-          <li>Because <code>#volume-shadow-root</code> is a <a>shadow root</a>, we pop <var>STACK</var>, thus emptying it</li>
-          <li>Next parent calculation yields <code>#volume-slider</code>, and so we begin the third iteration</li>
-          <li>Here, <var>STACK</var> is empty again, so we push <code>#volume-slider</code> into it and add (<code>#volume-slider</code>, <code>#volume-slider</code>) to <var>TARGETS</var></li>
-          <li>The parent of <code>#volume-slider</code> is <code>#volume-slider-container</code> not a <a>shadow root</a> and not an <a>insertion point</a>, which dictates that we add (<code>#volume-slider</code>, <code>#volume-slider-container</code>) to <var>TARGETS</var></li>
-          <li>Next up, we see <code>#controls</code>, again neither a <a>shadow root</a> nor an <a>insertion point</a>, which means we add (<code>##volume-slider</code>, <code>#controls</code>) to <var>TARGETS</var></li>
-          <li>The next ancestor is <code>#player-shadow-root</code>, a <a>shadow root</a>, and thus we add it (<code>#volume-slider</code>, <code>#player-shadow-root</code>) to <var>TARGETS</var>, then pop <var>STACK</var>, emptying it</li>
-          <li>Its parent is <code>#player</code>, neither <a>shadow root</a> nor <a>insertion point</a>, and <var>STACK</var> is empty, so we push <code>#player</code> to <var>STACK</var>, then add (<code>#player</code>, <code>#player</code>) to <var>TARGETS</var></li>
-          <li>In our example, there are no further parents, causing us to exit the loop and stop.</li>
-        </ol>
-
-        <p>At the end of this process, we should have the following set of ancestors and relative targets:</p>
+        <p>Per the <a>retargeting algorithm</a>, we should have the following set of ancestors and relative targets:</p>
         <table>
           <thead>
             <tr>
@@ -784,26 +768,56 @@
         <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
           (<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-        <p>Let's study how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per algorithm:</p>
+        <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a>related target resolution algorithm</a>, we should have the following set of ancestors and adjusted related targets:</p>
 
-        <ol>
-          <li>Starting with <var>NODE</var> as <code>#volume-slider-thumb</code> and <var>RELATED</var> as <code>#timeline-slider-thumb</code>,</li>
-          <li>We examine ancestors of <var>RELATED</var>:
-            <ol>
-              <li>First up> is <code>#timeline-slider-thumb</code>, and we push it into <var>STACK</var></li>
-              <li>Then it's <code>#timeline-shadow-root</code>, a <a>shadow root</a>, so we pop <var>STACK</var>, emptying it</li>
-              <li>Next is <code>#timeline</code>, we push it into <var>STACK</var></li>
-              <li>Then comes <code>#controls</code> and after it, <code>#player-shadow-root</code>, a <a>shadow root</a>, so we pop <var>STACK</var>, emptying it</li>
-              <li>Final ancestor is <code>#player</code>, we push it into <var>STACK</var></li>
-            </ol></li>
-          <li>Set <var>TARGET</var> to <code>#volume-shadow-root</code></li>
-          <li>We again examine ancestors of <var>RELATED</var> and notice that it produces the same result as our previous such examination</li>
-          <li>We then set <var>TARGET</var> to <code>#volume-slider</code> and</li>
-          <li>Repeat examination of ancestors once more&mdash;and realize that when <var>ANCESTOR</var> value is <code>#timeline</code>, the <var>ANCESTOR</var> and <var>TARGET</var> are in the same tree, and thus</li>
-          <li>Return <code>#timeline</code> as the adjusted <code>relatedTarget</code> value.</li>
-        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>Ancestor</th>
+              <th>Relative Target</th>
+              <th>Adjusted related Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>#player</code></td>
+              <td><code><strong>#player</strong></code></td>
+              <td><code><strong>#player</strong></code></td>
+            </tr>
+            <tr>
+              <td><code>#player-shadow-root</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#controls</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-container</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider</code></td>
+              <td><code><strong>#volume-slider</strong></code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-shadow-root</code></td>
+              <td><code>#volume-slider-thumb</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-thumb</code></td>
+              <td><code><strong>#volume-slider-thumb</strong></code></td>
+              <td><code><strong>#timeline</strong></code></td>
+            </tr>
+          </tbody>
+        </table>
 
-        <p>Performing this computation with <var>NODE</var> as <code>#player</code> yields the result of both <code>target</code> and <code>relatedTarget</code> being the same value (<code>#player</code>), which means that we do not dispatch the event on this <a>node</a> and its ancestors.</p>
+        <p>The node, <code>#player</code>, has both <code>target</code> and <code>relatedTarget</code> being the same value (<code>#player</code>), which means that we do not dispatch the event on this <a>node</a> and its ancestors.</p>
       </section>
 
     </section>
