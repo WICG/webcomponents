@@ -808,62 +808,6 @@
 
     </section>
 
-    <section id="styles">
-      <h2>Styles</h2>
-
-      <p class="issue">This section is outdated. This section should be rewritten so that it uses the concept of a <a>tree of trees</a> to define the cascading order among node trees more clealy.</p>
-
-      <p class="issue">Hats, <code>^</code>, and Cats, <code>^^</code>, selector combinators should be defined in this section.</p>
-
-      <p>Each <a>shadow root</a> has an associated list of zero or more <a title="style sheet">style sheets</a> [[!CSSOM]], named <dfn>shadow root style sheets</dfn>. This is an ordered list that contains all <a title="style sheet">style sheets</a>, associated with the <a>shadow root</a>, in <a>tree order</a>.</p>
-
-      <p>When a <a>shadow host</a> has multiple <a title="shadow root">shadow roots</a>, the <a>cascade order</a> [[!CSS3CASCADE]] of <a>CSS rules</a> [[!CSS2]], defined in <a>shadow root style sheets</a>, in ascending order of precedence <strong>must</strong> match the order of the <a title="shadow roots list">associated orderred list</a>, ending with the <a>youngest shadow root</a>.</p>
-
-      <p><a>CSS rules</a> declared in a <a>node tree</a> <strong>must not</strong> apply in other <a title="node tree">node trees</a> with a exception:</p>
-
-      <ol>
-        <li>Rules that contain a <a title="content pseudo-element"><code>::content</code> pseudo-element</a> match <a title="element">elements</a> in the <a title="ancestor tree">ancestor trees</a>;</li>
-      </ol>
-
-      <p>In a <a>document</a> that contains <a title="shadow tree">shadow trees</a>, the CSS properties <strong>must</strong> be inherited from parent nodes, produced using the <a>event path calculation algorithm</a>. This requirement has the following effects:</p>
-      <ul>
-        <li>the styles of the <a>shadow host</a> are inherited by the children of the <a>shadow root</a></li>
-        <li>the styles of the <a>content insertion point</a> <a title="node">nodes</a> are inherited by those child <a title="node">nodes</a> of the <a>shadow host</a> that are <a title="distributes">distributed</a> to this <a>content insertion point</a></li>
-        <li>the styles of the <a>shadow insertion point</a> <a>node</a> are inherited by the child <a title="node">nodes</a> of the <a>shadow root</a> of the <a>shadow tree</a>, <a title="distributes">distributed</a> to this <a>shadow insertion point</a></li>
-      </ul>
-
-      <section>
-        <h3><code>::content</code> pseudo-element</h3>
-
-        <p>The <dfn title="content pseudo-element">::content</dfn> is a pseudo-element that represents a relationship between a <a>content insertion point</a> in a <a>shadow tree</a> and an <a>element</a> whose <a>inclusive ancestor</a> is <a title="distributes">distributed</a> into that <a>content insertion point</a>. The <a>relative selector</a> following <a title="content pseudo-element"><code>::content</code></a> pseudo-element is <a title="scope contained selectors">scope-contained</a>, with the <a>reference element set</a> initialized to the <a>parent</a> of the <a href="">element</a>, distributed to the <a>content insertion point</a>.</p>
-
-        <div class="note">
-          <p>For example, the following selector represents the all <code>div</code> elements that are descendants of an element, distributed into a <a>content insertion point</a></p>
-          <pre class="highlight">
-    ::content div
-          </pre>
-          <p>This selector represents all child <code>span</code> elements that are distributed into <a title="content insertion point">content insertion points</a> with class attribute <code>victory</code></p>
-          <pre class="highlight">
-    .victory::content > span
-          </pre>
-        </div>
-
-      </section>
-
-      <section id="css-variables">
-        <h3>CSS Variables</h3>
-
-        <p>The <a>shadow host</a> styles being inherited by the children of the <a>shadow root</a> <strong>must</strong> also apply to <a>CSS Variables</a> [[!css-variables]]. This provides a way for <a>document tree</a> styles to send signals into the <a title="shadow tree">shadow trees</a>, and for the <a title="shadow tree">shadow trees</a> to receive these signals with the use of the <a><code>var()</code></a> function.</p>
-      </section>
-
-      <section id="text-decoration-property">
-        <h3><code>text-decoration</code> Property</h3>
-
-        <p>The text decorations, specified by the <a><code>text-decoration</code></a> property <strong>must not</strong> be propagated from <a title="shadow host">shadow hosts</a> to <a title="shadow tree">shadow trees</a>.</p>
-      </section>
-
-    </section>
-
     <section id="user-interaction">
       <h2>User Interaction</h2>
 
