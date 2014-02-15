@@ -210,7 +210,7 @@ Giving up an import before it loads, even if the import eventually does still lo
 
 <h2 id="loading-imports">Loading Imports</h2>
 
-<p>Each document has an <dfn id="dfn-import-link-list">import link list</dfn>, each of whose item is consist of <dfn id="dfn-import-link-link">link</dfn>, the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">link</a></code> element and <dfn id="import-link-list-location">location</dfn>, a URL. The list is empty at beginning and the item is added by XXX.</p>
+<p>Each document has an <dfn id="dfn-import-link-list">import link list</dfn>, each of whose item is consist of <dfn id="dfn-import-link-link">link</dfn>, the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">link</a></code> element and <dfn id="import-link-list-location">location</dfn>, a URL. The list is empty at beginning and the item is added by <a href="#dfn-import-request">import request</a>.</p>
 
 <!-- // FIXME: The addition algorithm should prevent cycles -->
 
@@ -221,12 +221,16 @@ Giving up an import before it loads, even if the import eventually does still lo
 <p>Once all <a href="#dfn-link-dependent">link dependents</a> are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#completely-loaded">completely loaded</a> and all <a href="#dfn-import-link-link">link</a> in <a href="#dfn-import-link-list">import link list</a> finished obtaining external resources, the <dfn id="dfn-imports-resolved">imports are resolved</dfn> for the document.</p>
 
 <div class="informative">
+<p>The linking structure of <a href="#dfn-import-link-list">import link lists</a> forms a directed asyclic graph (DAG). Each node of the DAG is a document and its edge is a <a href="#dfn-import-link-link">link</a>. It cannot be a tree because more than one link can point same import. Any cycle is prevented by the <a href="#dfn-import-request">import request</a> algorithm.</p>
+<p>The edges of each node are ordered, whose order is defined by the <a href="#dfn-import-link-list">import link list</a>. This order defines how <a href="#dfn-import-link-predecessor">link predecessors</a> is selected.</p>
+
 <figure id="fig-import-list">
   <img src="../../assets/images/import-link-list.png">
   <figcaption>
     A example of import link lists.
   </figcaption>
 </figure>
+
 <p>
 In the figure,
 <ul>
@@ -240,64 +244,21 @@ In the figure,
 
 <h3 id="requesting-import">Requesting Import</h3>
 
-<p>Each master document has <dfn id="dfn-import-link-list">import link list</dfn>.
-An <dfn id="dfn-import-list-entry">entry</dfn> of <a href="#dfn-import-link-list">import link list</a> is consists of
-<dfn id="dfn-import-list-link">link</dfn> that is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element, 
-<dfn id="dfn-import-list-originator">originator</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> and
-<dfn id="dfn-import-list-location">location</dfn> <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a>.
-Also, the entry is optionally <dfn id="dfn-import-list-done">marked as done</dfn>.
-The list is initially empty. New items are added via the <a href="#dfn-import-request">import request</a> algorithm.</p>
-
-<p>A <dfn id="dfn-import-link-ancestor">link ancestor</dfn> of a <a href="#dfn-import-list-entry">list entry</a> is another entry of the <a href="#dfn-import-link-list">import link list</a> whose <a href="#dfn-import-list-location">location</a> is the entry's <a href="#dfn-import-list-originator">originator</a> or it is the one whose <a href="#dfn-import-list-location">location</a> is another ancestor's <a href="#dfn-import-list-originator">originator</a>. 
-
-The <dfn id="dfn-import-link-descendant-list">link descendant</dfn> is the inverse. A link descendant of an <a href="#dfn-import-list-entry">entry</a> is another <a href="#dfn-import-link-list-entry">entry</a> one of whose <a href="#dfn-import-link-ancestor">link ancestor</a> is the entry of the subject.</p>
-
-<p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, it <strong>must</strong> run the <dfn id="dfn-import-request">import request</dfn> algorithm in addition,
-that <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+<p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, it <strong>must</strong> run the <dfn id="dfn-import-request">import request</dfn> algorithm in addition, that <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>LINK</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element that creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</dd>
-<dd><var>ORIGINATOR</var>, the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the linking document.</dd>
 <dd><var>LOCATION</var>, the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the linked resource.</dd>
 </dl>
 <ol>
-  <li>Let <var>ORIGINATORPOS</var> be a position of the <a href="#dfn-import-link-list">import link list</a> item whose <a href="#dfn-import-list-location">location</a> is same as <var>ORIGINATOR</var>.</li>
-  <li>Let <var>SIBLINGPOS</var> be the largest position of the <a href="#dfn-import-link-list">import link list</a> item whose <a href="#dfn-import-list-originator">originator</a> is same as <var>ORIGINATOR</var>.</li>
-  <li>If the <a href="#dfn-import-link-list">import link list</a> contains an item whose <a href="#dfn-import-list-link">link</a> is <var>LINK</var>, <strong>stop</strong>.
-  <li>Let <var>ITEM</var> be <var>LINK</var>, <var>ORIGINATOR</var> and <var>LOCATION</var>:</li>
-  <ol>
-    <li>If <var>ORIGINATORPOS</var> and <var>SIBLINGPOS</var> are both <strong>null</strong>, insert <var>ITEM</var> at the head of the <a href="#dfn-import-link-list">import link list</a> and <strong>stop</strong>.</li>
-    <li>If <var>SIBLINGPOS</var> is <strong>null</strong>, insert <var>ITEM</var> after <var>ORIGINATORPOS</var> and <strong>stop</strong>.
-    <li>Insert <var>ITEM</var> after <var>SIBLINGPOS</var>.
-  </ol>
+  <li>Let <var>DOCUMENT</var> be a document of <var>LINK</var>.
+  <li>Let <var>LIST</var> be an <a href="#dfn-import-link-list">import link list</a> of <var>DOCUMENT</var>.
+    <li>If there is a <a href="#dfn-import-link-ancestor">link ancestor</a> of <var>DOCUMENT</var> whose URL is same as <var>LOCATION</var>, <strong>stop</strong>.
+  <li>Let <var>ITEM</var> be <var>LINK</var> and <var>LOCATION</var>.</li>
+  <li>Add <var>ITEM</var> at the end of <var>LIST</var>.
 </ol>
-</div>
-
-<p>The <dfn>fetch readiness</dfn> algorithm defines if user agents can fetch given link to an import. The algorithm <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:
-
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-<dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element.
-<dt>Output</dt>
-<dd><var>READINESS</var>, a boolean value representing the readiness</dd>
-</dl>
-<ol>
-  <li>Let <var>LINKITEM</var> be an item of the <a href="#dfn-import-link-list">import link list</a> which has <var>LINK</var>.</li>
-  <li>If <var>LINKITEM</var> is <a href="#dfn-import-list-done">marked as done</a>, let <var>READINESS</var> true and <strong>stop</strong>.
-  <li>For each <var>ITEM</var> in the <a href="#dfn-import-link-list">import link list</a> which is located before <var>LINKITEM</var>:</li>
-  <ol>
-    <li>If <var>ITEM</var> is not <a href="#dfn-import-list-done">marked as done</a> and it is not a <var>LINKITEM</var>'s <a href="#dfn-import-link-ancestor">link ancestor</a>, let <var>READINESS</var> false and <strong>stop</strong>.</li>
-  </ol>
-  <li>Let <var>READINESS</var> true.</li>
-</ol>
-</div>
-
-<div class="informative">
-<p>The <a href="#dfn-import-request">import request</a> algorithm sorts the <a href="#dfn-import-link-list">import link list</a> in depth first traversal order of the import dependency tree. 
-The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether all predecessors in the dependency tree other than its ancestors are already loaded. Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> is never removed from the <a href="#dfn-import-link-list">import link list</a> once it is added to the list.</p>
 </div>
 
 <h3 id="fetching-import">Fetching Import</h3>
@@ -314,7 +275,6 @@ The <a href="#dfn-fetch-rediness">fetch readiness</a> intends to detect whether 
 <dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
 <ol>
-    <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> while the <a href="#dfn-fetch-rediness">fetch readiness</a> against <var>LINK</var> is false.</li>
     <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:</li>
     <ol>
       <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
