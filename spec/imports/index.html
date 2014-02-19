@@ -131,6 +131,12 @@
 
 <p>An <a href="#dfn-import-owner">import owner</a> which has its own <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> is called a <dfn id="dfn-master-document">master document</dfn>. Each <a href="dfn-import">import</a> is associated to one <a href="#dfn-master-document">master document</a>: If the <a href="dfn-import-parent">parent</a> of the <a href="dfn-import">import</a> is a <a href="dfn-master-document">master document</a>, it is the <a href="dfn-master-document">master document</a> of the <a href="dfn-import">import</a>. Otherwise, the <a href="dfn-master-document">master document</a> of the <a href="#dfn-import-owner">import owner</a> is the <a href="dfn-master-document">master document</a> of the <a href="dfn-import">import</a>.</p>
 
+
+<div class="fixme">
+Imported documents share its <code>defaultView</code> with the master document.
+(See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23170">Bug 23170</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=22305">Bug 22305</a>.)
+</div>
+
 <p>The <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of an <a href="#dfn-import">import</a> is called the <dfn id="dfn-import-location">import location</dfn><!--, and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/origin-0.html#origin">origin</a> of the <a href="#dfn-import-location">import location</a> is called <dfn id="dfn-import-origin">import origin</dfn>-->.</p>
 
 <p>In the <a href="#dfn-import-owner">import owner</a>, an <a href="#dfn-import">import</a> is represented as a <a href="http://dom.spec.whatwg.org/#interface-document"><code>Document</code></a>, called the <dfn id="dfn-imported-document">imported document</dfn>. Any <a href="#dfn-imported-document">imported document</a> doesn't have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</p>
@@ -147,6 +153,12 @@
 <p>The default type for resources given by the <a href="#link-type-import"><code>import</code></a> keyword is <code>text/html</code>.</p>
 
 <p>The appropriate time to <dfn id="dfn-obtaining-import"><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain</a></dfn> the resource is when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> is created or when its element is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a>, whichever happens last.</p>
+
+<div class="fixme">
+<p>If the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">link</code></a> element has an <dfn id="dfn-link-async">async</dfn> attribute, the import link may be asynchronously loaded.</p>
+<p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24114">bug 24114</a>.</p>
+</div>
+
 </div>
 
 <div class="informative">
@@ -302,7 +314,7 @@ In the figure,
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
         <li>Set <var>IMPORT</var> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#no-quirks-mode">no quirks mode.</li>
         <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
-        <li>Input a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#the-doctype">DOCTYPE</a> token to <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction stage</a> with name "html" and <i>force-quirks flag</i> turned <i>off</i>.
+        <li><div class="fixme">Input a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#the-doctype">DOCTYPE</a> token to <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction stage</a> with name "html" and <i>force-quirks flag</i> turned <i>off</i>. <p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24349">Bug 24349</a>.</div>
         <li>Add <var>LOCATION</var> and <var>IMPORT</var> to the <a href="#dfn-import-map">import map</a>.</li>
         <li>For each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">task</a> that the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">networking task source</a> places on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#task-queue">task queue</a> while fetching:
         <ol>
@@ -369,6 +381,10 @@ For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file
 </ol>
 </div>
 
+<div class="fixme">
+<p>All <a href="#dfn-import-dependent">import dependents</a> <strong>must</strong> be loaded before <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#event-domcontentloaded">DOMContentLoaded</a></code> is fired. See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23526">Bug 23526</a>.</p>
+</div>
+
 <h3 id="additions-to-parsing-xhtml-documents">Additions to Parsing XHTML Documents</h3>
 
 <p>Modify step 3 of steps that run following <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">preparing</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element to read:</p>
@@ -378,6 +394,7 @@ For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file
 </ol>
 </div>
 
+<div class="fixme">
 <h3 id="additions-to-document-write">Additions to document.write() method</h3>
 
 <p>Insert following step between step 2 and step 3 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#document.write()">document.write() method</a>:</p>
@@ -387,6 +404,10 @@ For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file
   <li>If <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-currentscript">document.currentScript</a> points the element that isn't owned by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#active-document">active document</a>, then abort these steps.</li>
 </ul>
 </div>
+
+<p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24042">Bug 24042</a>.</p>
+</div>
+
 <h2 id="scripts-imports">Scripting in Imports</h2>
 
 <h3 id="additions-to-script-enabling-criteria">Additions to Script Enabling Criteria</h3>
@@ -414,10 +435,14 @@ If the Document is an <a href="#dfn-imported-document">imported document</a>, it
 
 <h2 id="style-imports">Style processing with Imports</h2>
 
+<div class="fixme">
 <p>The contents of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-style-element">style</a></code> elements and
 the external resources of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-link-element">link</a></code> elements <strong>must</strong> be considered as input sources of the <a href="http://www.w3.org/TR/CSS21/intro.html#processing-model">style processing model</a> of the <a href="#dfn-master-document">master document</a>.</p>
 
 <p>Between declarations from different documents, the document order in terms of <a href="http://www.w3.org/TR/css3-cascade/#cascade-order">order of appearance</a> is defined based on the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">link</a></code> element of one of the <a href="#dfn-import-ancestor">import ancestors</a> that is in the same document of comparing declaration.</p>
+
+<p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24616">Bug 24616.</a></p>
+</div>
 
 <h2 id="events-imports">Events in Imports</h2>
 
