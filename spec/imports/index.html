@@ -143,7 +143,7 @@ Imported documents share its <code>defaultView</code> with the master document.
 
 <p>In the <a href="#dfn-import-referrer">import referrer</a>, an <a href="#dfn-import">import</a> is represented as a <a href="http://dom.spec.whatwg.org/#interface-document"><code>Document</code></a>, called the <dfn id="dfn-imported-document">imported document</dfn>. Any <a href="#dfn-imported-document">imported document</a> doesn't have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</p>
 
-<p>The set of all <a href="#dfn-import">imports</a> associated with the <a href="#dfn-master-document">master document</a> forms an <dfn id="dfn-import-map">import map</dfn> of the <a href="#dfn-master-document">master document</a>. The maps stores <a href="#dfn-import">imports</a> as its items with their <a href="#dfn-import-location">import locations</a> as keys. The import map is empty at beginning. New items are added to the map as <a href="#dfn-import-fetching">import fetching algorithm</a> specifies.</a>
+<p>The set of all <a href="#dfn-import">imports</a> associated with the <a href="#dfn-master-document">master document</a> forms an <dfn id="dfn-import-map">import map</dfn> of the <a href="#dfn-master-document">master document</a>. The maps stores <a href="#dfn-import">imports</a> as its items with their <a href="#dfn-import-location">import locations</a> as keys. The import map is empty at beginning. New items are added to the map as <a href="#dfn-import-fetching">import fetching algorithm</a> specifies.</p>
 
 <h2 id="link-type-import">Link Type "<code>import</code>"</h2>
 
@@ -252,6 +252,7 @@ The edges of each node is ordered in terms of <a href="#dfn-import-link-list">im
 
 <p>
 In the figure,
+</p>
 <ul>
   <li>The document <var>A</var> has an <a href="#dfn-imort-link-list">import link list</a> which contains a link to <var>B</var> and another link to <var>C</var>.
   <li>The document <var>D</var> has a set of <a href="#dfn-import-import-ancestor">import ancestors</a> that are <var>A</var>, <var>B</var> and <var>c</var>.
@@ -260,14 +261,12 @@ In the figure,
       Thus its <a href="#dfn-import-dependent">import dependents</a> are <var>A</var>, <var>B</var>, <var>C</var> and <var>D</var>.
   <li>The document <var>D</var> has two <a href="#dfn-import-parent">import parents</a> which are <var>B</var> and <var>C</var>.
 </ul>
-</p>
 
 <p>The difference between the <a href="#dfn-import-referrer">import referrer</a> and the <a href="#dfn-import-parent">import parent</a> is that <a href="#dfn-import-referrer">import referrer</a> reflects the state of the <a href="http://www.w3.org/TR/dom/#node-tree">node tree</a> and that the <a href="#dfn-import-parent">import parent</a> is built by the algorithm described in this document.</p>
 
 </div>
 
 <h3 id="requesting-import">Requesting Import</h3>
-<p></p>
 
 <p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, it <strong>must</strong> run the <dfn id="dfn-import-request">import request</dfn> algorithm in addition, that <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
@@ -282,10 +281,10 @@ In the figure,
   <li>Let <var>DOCUMENT</var> be a document of <var>LINK</var>.
   <li>Let <var>LIST</var> be an <a href="#dfn-import-link-list">import link list</a> of <var>DOCUMENT</var>.
   <li>Let <var>ITEM</var> be <var>LINK</var> and <var>LOCATION</var>:</li>
-  <ol>
+  <li><ol>
     <li>If there is a <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>DOCUMENT</var> whose URL is same as <var>LOCATION</var>, Mark <var>ITEM</var> as <a href="#dfn-import-link-list-cycle">cycle</a>.
     <li>Add <var>ITEM</var> at the end of <var>LIST</var>.
-  </oi>
+  </ol></li>
 </ol>
 </div>
 
@@ -297,17 +296,17 @@ In the figure,
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-<dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element which makes the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</li>
+<dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element which makes the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</dd>
 <dd><var>LOCATION</var>, the <a href="#dfn-import-location">import location</a></dd>
 <dt>Output</dt>
 <dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
 <ol>
     <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:</li>
-    <ol>
+    <li><ol>
       <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
       <li>Let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
-    </ol>
+    </ol></li>
     <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>overnride referrer source</em> and <em>block cookies</em> flag set:
     <ol>
         <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>:</li>
@@ -316,7 +315,7 @@ In the figure,
           <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-map">import map</a> and <strong>stop</strong>.
         </ul>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
-        <li>Set <var>IMPORT</var> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#no-quirks-mode">no quirks mode.</li>
+        <li>Set <var>IMPORT</var> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#no-quirks-mode">no quirks mode</a>.</li>
         <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
         <li><div class="fixme">Input a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#the-doctype">DOCTYPE</a> token to <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction stage</a> with name "html" and <i>force-quirks flag</i> turned <i>off</i>. <p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24349">Bug 24349</a>.</div>
         <li>Add <var>LOCATION</var> and <var>IMPORT</var> to the <a href="#dfn-import-map">import map</a>.</li>
