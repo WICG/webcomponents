@@ -310,10 +310,10 @@ In the figure,
     <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>overnride referrer source</em> and <em>block cookies</em> flag set:
     <ol>
         <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>:</li>
-        <ul>
+        <li><ul>
           <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
           <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-map">import map</a> and <strong>stop</strong>.
-        </ul>
+        </ul></li>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
         <li>Set <var>IMPORT</var> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#no-quirks-mode">no quirks mode</a>.</li>
         <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
@@ -354,7 +354,7 @@ for successful loading attempt. For failed attempt, it fires a simple event name
 
 <p>
 Each import <strong>must</strong> be restricted by the Content Security Policy of the <a href="#dfn-master-document">master document</a>.
-For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#enforce">enforce</a> the policy of the <a href="#dfn-master-document">master document</a> to the imported document.</a>
+For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#enforce">enforce</a> the policy of the <a href="#dfn-master-document">master document</a> to the imported document.
 </p>
 
 <h2 id="parsing-imports">Parsing Imports</h2>
@@ -380,7 +380,7 @@ For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file
 <p>Modify sub-step 1 of step 3 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#the-end">the end</a> to read:</p>
 <div class="monkeypatch">
 <ol>
-    <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the first <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element">script</a></code> in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#list-of-scripts-that-will-execute-when-the-document-has-finished-parsing">list of scripts that will execute when the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> has finished parsing</a> has its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag set <em>and</em> the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> <em>and</em> has <a href="#dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</a>.</p></li>    
+    <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the first <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element">script</a></code> in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#list-of-scripts-that-will-execute-when-the-document-has-finished-parsing">list of scripts that will execute when the <code>Document</code> has finished parsing</a> has its <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag set <em>and</em> the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> <em>and</em> has <a href="#dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</a>.</p></li>    
 </ol>
 </div>
 
@@ -458,7 +458,7 @@ script creation criteria by expanding the first paragraph:
 
 <div class="monkeypatch">
 <p>When an event handler content attribute is set, if the element is owned by a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> that is in a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> or
-in an <a href="#dfn-import-map">import map</a>, ...</a></p>
+in an <a href="#dfn-import-map">import map</a>, ...</p>
 </div>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
