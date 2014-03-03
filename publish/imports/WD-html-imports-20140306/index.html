@@ -106,7 +106,7 @@
     <li><a href="http://www.w3.org/TR/DOM-Level-3-Events/">DOM Level 3 Events</a></li> -->
     <li><a href="http://dom.spec.whatwg.org/">DOM4 (DOM Core)</a></li>
     <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML</a></li>
-    <li><a href="http://html5.org/specs/dom-parsing.html">DOM Parsing and Serialization</a></li>
+    <li><a href="http://domparsing.spec.whatwg.org/">DOM Parsing and Serialization</a></li>
     <li><a href="http://ecma-international.org/ecma-262/5.1/">ECMAScript Language Specification</a></li>
     <li><a href="http://url.spec.whatwg.org/">URL</a></li>
 <!--     <li><a href="http://www.w3.org/TR/selectors/">Selectors Level 3</a></li>
@@ -117,9 +117,9 @@
 
 <h2 id="terminology">Terminology</h2>
 
-<p>HTML Imports, or just <dfn id="dfn-import">imports</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to an <a href="#dfn-import">import</a> is called an <dfn id="dfn-import-referrer">import referrer</dfn>. For any given <a href="#dfn-import">import</a>, an <dfn id="dfn-import-referrer-ancestor">import referrer ancestor</dfn> is its <a href="#dfn-import-referrer">import referrer</a> or any <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of its <a href="#dfn-import-refererr">import referrer</a>.
+<p>HTML Imports, or just <dfn id="dfn-import">imports</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to an <a href="#dfn-import">import</a> is called an <dfn id="dfn-import-referrer">import referrer</dfn>. For any given <a href="#dfn-import">import</a>, an <dfn id="dfn-import-referrer-ancestor">import referrer ancestor</dfn> is its <a href="#dfn-import-referrer">import referrer</a> or any <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of its <a href="#dfn-import-referrer">import referrer</a>.
 
-<p>An <a href="#dfn-import-referrer">import referrer</a> which has its own <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> is called a <dfn id="#dfn-master-document">master document</dfn>. Each <a href="#dfn-import">import</a> is associated with one <a href="#dfn-master-document">master document</a>: if the <a href="#dfn-import-referrer">referrer</a> of the <a href="#dfn-import">import</a> is a <a href="#dfn-master-document">master document</a>, it is the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import">import</a>. Otherwise, the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import-referrer">import referrer</a> is the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import">import</a>.</p>
+<p>An <a href="#dfn-import-referrer">import referrer</a> which has its own <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> is called a <dfn id="dfn-master-document">master document</dfn>. Each <a href="#dfn-import">import</a> is associated with one <a href="#dfn-master-document">master document</a>: if the <a href="#dfn-import-referrer">referrer</a> of the <a href="#dfn-import">import</a> is a <a href="#dfn-master-document">master document</a>, it is the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import">import</a>. Otherwise, the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import-referrer">import referrer</a> is the <a href="#dfn-master-document">master document</a> of the <a href="#dfn-import">import</a>.</p>
 
 <div class="fixme">
 Imported documents share its <code>defaultView</code> with the master document.
@@ -218,7 +218,7 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 Also, the item is optionally <dfn id="dfn-import-link-list-cycle">marked as cycle</dfn>.
 The list is empty at beginning and the item is added as <a href="#dfn-import-request">import request</a> altorighm specifies.</p>
 
-<p>An <a href="#dfn-imported-document">imported document</a> has zero or more <dfn id="def-import-import-ancestor">import ancestors</dfn>. The <a href="#def-import-import-ancestor">import ancestor</a> is a document. If the <a href="#dfn-import-link-list">import link list</a> of document <var>A</var> contains an non-<a href="#dfn-import-link-list-cycle">cycle</a> item whose <a href="#import-link-list-location">location</a> points document <var>B</var>, <var>A</var> is a <a href="#def-import-import-ancestor">import ancestor</a> of <var>B</var>. <var>B</var> is also called the <dfn id="dfn-import-parent">import parent</dfn> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>. The <a href="#def-import-import-ancestor">import ancestor</a> is transitive: If document <var>C</var> is a <a href="#def-import-import-ancestor">import ancestor</a> of document <var>B</var> and document <var>B</var> is a <a href="#def-import-import-ancestor">import ancestor</a> of document <var>A</var>, <var>C</var> is a <a href="#def-import-import-ancestor">import ancestor</a> of document <var>A</var>.</p>
+<p>An <a href="#dfn-imported-document">imported document</a> has zero or more <dfn id="dfn-import-import-ancestor">import ancestors</dfn>. The <a href="#dfn-import-import-ancestor">import ancestor</a> is a document. If the <a href="#dfn-import-link-list">import link list</a> of document <var>A</var> contains an non-<a href="#dfn-import-link-list-cycle">cycle</a> item whose <a href="#import-link-list-location">location</a> points document <var>B</var>, <var>A</var> is a <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>B</var>. <var>B</var> is also called the <dfn id="dfn-import-parent">import parent</dfn> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>. The <a href="#dfn-import-import-ancestor">import ancestor</a> is transitive: If document <var>C</var> is a <a href="#dfn-import-import-ancestor">import ancestor</a> of document <var>B</var> and document <var>B</var> is a <a href="#dfn-import-import-ancestor">import ancestor</a> of document <var>A</var>, <var>C</var> is a <a href="#dfn-import-import-ancestor">import ancestor</a> of document <var>A</var>.</p>
 
 <p>An <a href="#dfn-imported-document">imported document</a> also has one or more <dfn id="dfn-import-import-predecessor">import predecessor</dfn>. The <a href="#dfn-import-import-predecessor">import predecessor</a> is a document. If the URL of document <var>A</var> is located before the URL of document <var>B</var> in the <a href="#dfn-import-link-list">import link list</a> of <var>B</var>'s <a href="#dfn-import-parent">import parent</a>, <var>A</var> is <a href="#dfn-import-import-predecessor">import predecessor</a> of <var>B</var>. The <a href="#dfn-import-import-predecessor">import predecessor</a> is transitive. If document <var>A</var> is <a href="#dfn-import-import-predecessor">import predecessor</a> of document <var>B</var> and <var>B</var> is redecessor of document <var>C</var>, <var>A</var> is <a href="#dfn-import-import-predecessor">import predecessor</a> of <var>C</var>.</p> 
 
@@ -241,10 +241,10 @@ The edges of each node is ordered in terms of <a href="#dfn-import-link-list">im
 In the figure,
 </p>
 <ul>
-  <li>The document <var>A</var> has an <a href="#dfn-imort-link-list">import link list</a> which contains a link to <var>B</var> and another link to <var>C</var>.
+  <li>The document <var>A</var> has an <a href="#dfn-import-link-list">import link list</a> which contains a link to <var>B</var> and another link to <var>C</var>.
   <li>The document <var>D</var> has a set of <a href="#dfn-import-import-ancestor">import ancestors</a> that are <var>A</var>, <var>B</var> and <var>c</var>.
   <li>As <var>B</var> is a <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>D</var>, one of <var>D</var>'s list item that points <var>B</var> is marked as <a href="#dfn-import-link-list-cycle">cycle</a>.
-  <li>The <a href="#dfn-import-import-predecessor">import predecessors</a> of <var>E</var> are <var>B</var> and <var>D</var>, its <a href="#dfn-import-import-ancestor">import ancestors</a> are <var>A</var> and <var>C</var> and its <a href="#dfn-imort-link-list">import link list</a> is empty.
+  <li>The <a href="#dfn-import-import-predecessor">import predecessors</a> of <var>E</var> are <var>B</var> and <var>D</var>, its <a href="#dfn-import-import-ancestor">import ancestors</a> are <var>A</var> and <var>C</var> and its <a href="#dfn-import-link-list">import link list</a> is empty.
       Thus its <a href="#dfn-import-dependent">import dependents</a> are <var>A</var>, <var>B</var>, <var>C</var> and <var>D</var>.
   <li>The document <var>D</var> has two <a href="#dfn-import-parent">import parents</a> which are <var>B</var> and <var>C</var>.
 </ul>
@@ -292,14 +292,12 @@ In the figure,
 <ol>
     <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:</li>
     <li><ol>
-      <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
       <li>Let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
     </ol></li>
     <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var>, with <var>IMPORT</var> as <em>overnride referrer source</em> and <em>block cookies</em> flag set:
     <li><ol>
         <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i>:</li>
         <li><ul>
-          <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
           <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-map">import map</a> and <strong>stop</strong>.
         </ul></li>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
@@ -316,7 +314,6 @@ In the figure,
         <ol>
             <li><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#queue-a-task">Queue a task</a> from the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#networking-task-source">networking task source</a> for <var>PARSER</var> to process implied <code>EOF</code> character</li>
         </ol>
-        <li>Mark <a href="#dfn-import-link-list">import link list</a> item which contains <var>LINK</var> <a href="#dfn-import-list-done">as done</a>.</li>
     </ol></li>
 </ol>
 </div>
@@ -337,12 +334,12 @@ for successful loading attempt. For failed attempt, it fires a simple event name
 <h3 id="imports-and-csp">Imports and Content Security Policy</h3>
 
 <p>
-<a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html">Content Security Policy</a> <strong>must</strong> restrict import loading through the <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#script-src">script-src</a> directive.
+<a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html">Content Security Policy</a> <strong>must</strong> restrict import loading through the <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#script-src">script-src</a> directive.
 </p>
 
 <p>
 Each import <strong>must</strong> be restricted by the Content Security Policy of the <a href="#dfn-master-document">master document</a>.
-For example, if <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#enforce">enforce</a> the policy of the <a href="#dfn-master-document">master document</a> to the imported document.
+For example, if <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#enforce">enforce</a> the policy of the <a href="#dfn-master-document">master document</a> to the imported document.
 </p>
 
 <h2 id="parsing-imports">Parsing Imports</h2>
