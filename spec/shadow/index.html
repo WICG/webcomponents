@@ -824,14 +824,22 @@
     <section>
       <h2>User Interaction</h2>
 
-      <section>
-        <h3>Ranges and Selections</h3>
+      <section class="informative">
+        <h3>Selections</h3>
 
-        <p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a title="range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
+        <p>
+          <a>Selection</a> is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
+        </p>
 
-        <p>Accordingly, <a title="selection">selections</a> [[!EDITING]] may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a>selection</a> within a <a>shadow tree</a>.</p>
+        <section>
+          <h3>Ranges and Selections</h3>
 
-        <p>The <code>getSelection()</code> method of the <a>shadow root</a> object <strong>must</strong> return the current <a>selection</a> in this <a>shadow tree</a>.</p>
+          <p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a title="range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
+
+          <p>Accordingly, <a title="selection">selections</a> [[!EDITING]] may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method <strong>must</strong> never return a <a>selection</a> within a <a>shadow tree</a>.</p>
+
+          <p>The <code>getSelection()</code> method of the <a>shadow root</a> object <strong>must</strong> return the current <a>selection</a> in this <a>shadow tree</a>.</p>
+        </section>
       </section>
 
       <section>
