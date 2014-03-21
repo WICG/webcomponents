@@ -92,7 +92,6 @@ var autolinkConfig = {
         'class selector': '#class-selector',
         'compound selector': '#compound',
         'id selector': '#id-selector',
-        'pseudo-classes': '#pseudo-classes',
         'reference element set': '#reference-element-set',
         'relative selector': '#relative-selectors',
         'scope contained selectors': '#scope-contained-selectors',
