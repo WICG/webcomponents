@@ -70,6 +70,7 @@
     <li><a href="#terminology">Terminology</a></li>
     <li><a href="#link-type-import">Link Type "<code>import</code>"</a>
     <li><a href="#interface-import">Extensions to <code>HTMLLinkElement</code> interface</a>
+    <li><a href="#interface-document">Extensions to <code>Document</code> interface</a>
     <li><a href="#loading-imports">Loading Imports</a>
     <ol>
       <li><a href="#import-dependent">Import Dependent</a>
@@ -221,6 +222,10 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 <p>The sate of "<a href="#dfn-has-an-import-that-is-blocking-scripts">has an import that is blocking scripts</a>" can change each time an existing import is completely loaded or new import loading is started. HTML parser has changes to unblock it for each of such timings.</p>
 </div>
 
+<h2 id="interface-document">Extensions to <code>Document</code> Interface</h2>
+
+<p>Each <a href="http://dom.spec.whatwg.org/#interface-document">document</a> has <dfn id="dfn-import-frozen-quirks-flag">quirks-mode-frozen</dfn> flag. If the flag is set, all attempts to setting <a href="http://dom.spec.whatwg.org/#concept-document-quirks">quirks mode</a> are ignored.</p>
+
 <h2 id="loading-imports">Loading Imports</h2>
 
 <h3 id="import-dependent">Import Dependent</h3>
@@ -313,6 +318,8 @@ In the figure,
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
         <li>Let <var>PARSER</var> be a new <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a>, associated with <var>IMPORT</var></li>
         <li>Add <var>LOCATION</var> and <var>IMPORT</var> to the <a href="#dfn-import-map">import map</a>.</li>
+        <li>Set <var>IMPORT</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#quirks-mode">quirks mode</a> to one of the Document of <var>LINK</var>.</li>
+        <li>Set <var>IMPORT</var>'s <a href="#dfn-import-frozen-quirks-flag">quirks-mode-frozen</a> flag.
         <li>For each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">task</a> that the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#concept-task">networking task source</a> places on the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#task-queue">task queue</a> while fetching:
         <ol>
             <li>Fill <var>PARSER</var>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#the-input-byte-stream">input byte stream</a> with the fetched bytes</li>
