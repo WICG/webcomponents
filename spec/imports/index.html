@@ -83,7 +83,6 @@
         <li><a href="#additions-to-prepare-a-script-algorithm">Additions to Prepare A Script Algorithm</a>
         <li><a href="#additions-to-tree-construction-algorithm">Additions to Tree Construction Algorithm</a>
         <li><a href="#additions-to-parsing-xhtml-documents">Additions to Parsing XHTML Documents</a>
-        <li><a href="#additions-to-document-write">Additions to document.write() method</a>
     </ol>
     <li><a href="#scripts-imports">Scripting in Imports</a>
     <ol>
@@ -225,6 +224,36 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 <h2 id="interface-document">Extensions to <code>Document</code> Interface</h2>
 
 <p>Each <a href="http://dom.spec.whatwg.org/#interface-document">document</a> has <dfn id="dfn-import-frozen-quirks-flag">quirks-mode-frozen</dfn> flag. If the flag is set, all attempts to setting <a href="http://dom.spec.whatwg.org/#concept-document-quirks">quirks mode</a> are ignored.</p>
+
+<h3 id="additions-to-document-open">Additions to <code>document.open() method</code></h3>
+
+<p>Add following step as the first step of the definition:</p>
+
+<div class="monkeypatch">
+<ol>
+  <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
+</ol>
+</div>
+
+<h3 id="additions-to-document-write">Additions to <code>document.write()</code> method</h3>
+
+<p>Add following step as the first step of the definition:</p>
+
+<div class="monkeypatch">
+<ol>
+  <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
+</ol>
+</div>
+
+<h3 id="additions-to-document-write">Additions to <code>document.close()</code> method</h3>
+
+<p>Add following step as the first step of the definition:</p>
+
+<div class="monkeypatch">
+<ol>
+  <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
+</ol>
+</div>
 
 <h2 id="loading-imports">Loading Imports</h2>
 
@@ -386,20 +415,6 @@ For example, if <a href="http://w3c.github.io/webappsec/specs/content-security-p
 <ol start="3">
     <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> and <a href="#dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</a> and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#pending-parsing-blocking-script">pending parsing-blocking script</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is set.</p></li>
 </ol>
-</div>
-
-<div class="fixme">
-<h3 id="additions-to-document-write">Additions to document.write() method</h3>
-
-<p>Insert following step between step 2 and step 3 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#document.write()">document.write() method</a>:</p>
-
-<div class="monkeypatch">
-<ul>
-  <li>If <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-currentscript">document.currentScript</a> points the element that isn't owned by the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#active-document">active document</a>, then abort these steps.</li>
-</ul>
-</div>
-
-<p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24042">Bug 24042</a>.</p>
 </div>
 
 <h2 id="scripts-imports">Scripting in Imports</h2>
