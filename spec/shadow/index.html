@@ -655,18 +655,26 @@
         </p>
 
         <p>
-          Note that the <a>event path calculation algorithm</a> is designed to satisfy the following conditions:
+          Note that the <a>event path calculation algorithm</a> is designed to achieve the following goals:
         </p>
 
         <ol>
           <li>
-            If there is a node in the event path and the node has the parent node, the parent node is also included in the event path.
-            In each node tree, the parent node always appears somewhere after the child node in the event path.
+            If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the node tree, the event path also includes <var>PARENT</var>.
+            <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
           </li>
           <li>
             Nodes in the event path form a <em>linear ancestor chain</em> in each <a>node tree</a>. There is no <em>branch points</em> in each <a>node tree</a>.
           </li>
         </ol>
+
+        <figure>
+          <object data="../../assets/images/event-path-node-trees.svg" width="884" height="473">></object>
+          <figcaption>
+            The relationship between an event path and node trees. In the figure, a number shown in a left-side of each node represents a zero-based position of each node in the event path.
+            A parent node always have a larger number than that of its child node in each node tree.
+          </figcaption>
+        </figure>
 
         <p>
           That means if we focus on one <a>node tree</a> and forget all other <a title="node tree">node trees</a>,
@@ -687,7 +695,7 @@
         </p>
 
         <figure>
-          <object data="../../assets/images/event-path-and-composed-tree.svg"  width="217" height="1723"></object>
+          <object data="../../assets/images/event-path-and-composed-tree.svg" width="217" height="1723"></object>
           <figcaption>
             The relationship between an event path and the <a>composed tree</a>. The event path used in the example is shown in the left-hand side and the <a>composed tree</a> is shown in the right-hand side.
             If we exclude all <a title="insertion point">insertion points</a> and <a title="shadow root">shadow roots</a> from the event path,
