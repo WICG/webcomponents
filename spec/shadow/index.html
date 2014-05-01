@@ -1328,12 +1328,12 @@
         <h3>Extensions to <code>Event</code> Interface</h3>
 
         <dl class="idl" title="partial interface Event">
-          <dt>readonly attribute EventTarget[] path</dt>
+          <dt>readonly attribute object path</dt>
           <dd>
             <p>Represents the adjusted event path.</p>
             <p>To maintain encapsulation, the <a title="node">nodes</a> in the <a title="inclusive ancestor tree">inclusive ancestor trees</a> <strong>must</strong> be included in the event path, relative to the <a>node</a> on which <a title="event listener">event listeners</a> would be invoked.</p>
             <p>
-              On getting, the attribute <strong>must</strong> return a result that is <a title="processing equivalence">equivalent</a> to running the following steps:
+              On getting, the attribute <strong>must</strong> return a new JavaScript Array object, that is a copy of an ordered list, <var>EVENT_TARGET_LIST</var>. <var>EVENT_TARGET_LIST</var> <strong>must</strong> be <a title="processing equivalence">equivalent</a> to running the following steps:
             </p>
             <div class="algorithm">
               <dl>
@@ -1355,10 +1355,18 @@
                 </li>
               </ol>
             </div>
-            <p>These steps <strong>must</strong> run prior to invoking <a title="event listener">event listeners</a> on any <a>node</a> in <var>PATH</var>.</p>
+            <p>
+              These steps <strong>must</strong> run prior to the event dispatching so that <var>EVENT_TARGET_LIST</var>, from where a new JavaScript Array object is copied, is not affected by DOM mutations in event listeners.
+            </p>
+            <p class="issue">
+              Use <code>Array</code> as the return type of the <code>path</code> attribute in WebIDL.
+              WebIDL bugs: <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20020"><code>Array</code> subclassing</a>
+              and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23225">class, not interface</a>.
+            </p>
           </dd>
         </dl>
       </section>
+
     </section>
 
     <section>
