@@ -586,12 +586,12 @@ document.registerElement('x-foo', {
 
 <h3 id="extensions-to-document-interface-to-instantiate">Extensions to <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a> Interface</h3>
 
-<p>To allow creating both <a href="#dfn-custom-tag">custom tag</a> and <a href="#dfn-type-extension">type extension</a>-style <a href="#dfn-custom-element">custom elements</a>, the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods have an optional <code>typeExtension</code> argument:</p>
+<p>To allow creating both <a href="#dfn-custom-tag">custom tag</a> and <a href="#dfn-type-extension">type extension</a>-style <a href="#dfn-custom-element">custom elements</a>, the <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods have <a href="http://heycam.github.io/webidl/#idl-overloading">overloads</a> with a <code>typeExtension</code> argument:</p>
 
 <pre><code>
 partial interface <a href="http://dom.spec.whatwg.org/#document">Document</a> {
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElement(DOMString localName, optional DOMString typeExtension);
-    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, optional DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElement(DOMString localName, DOMString typeExtension);
+    <a href="http://dom.spec.whatwg.org/#element">Element</a> createElementNS(DOMString? namespace, DOMString qualifiedName, DOMString typeExtension);
 };
 </code></pre>
 <p></p>
