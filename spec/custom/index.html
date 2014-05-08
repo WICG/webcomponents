@@ -531,12 +531,21 @@ document.registerElement('x-foo', {
         },
         // specify more members for your prototype.
         // ...
-    })
+    }),
+    extends: 'p'
 });
 
 </code></pre>
+<p>Note the use of <code>extends</code> option to specify that the element is being registered as a <a href="#dfn-type-extension">type extension</a> -- that is, this element does not introduce a new tag (like the <a href="#dfn-custom-tag">custom tag</a> elements do), but rather extends an existing element of type <strong>HTMLParagraphElement</strong>. Here's how one could instantiate this element:</p>
+<pre><code class="prettyprint">
+&lt;p is="x-foo"&gt;Paragraph of amazement&lt;/p&gt;
+</code></pre>
+Or imperatively, in JavaScript:
+<pre><code class="prettyprint">
+var foo = document.createElement('p', 'x-foo');
+</code></pre>
 </div>
-
+<p>Elements with <code>SVGElement</code> prototype deserve a special mention: using <a href="#dfn-custom-tag">custom tag</a> approach results in <a href="http://www.w3.org/TR/SVG11/extend.html#ForeignNamespaces">ignored elements</a> in SVG. Thus, your SVG-based custom elements would almost always be <a href="#dfn-type-extension">type extensions</a>.</p>
 <h3 id="unresolved-element-pseudoclass">Unresolved Element Pseudoclass</h3>
 
 <p>The <code>:unresolved</code> <a href="http://www.w3.org/TR/CSS2/selector.html#pseudo-elements">pseudoclass</a> <strong>must</strong> match all <a href="#dfn-custom-element">custom elements</a> whose <a href="#dfn-created-callback">created</a> callback has not yet been invoked.</p>
