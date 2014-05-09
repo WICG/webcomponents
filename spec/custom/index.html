@@ -83,6 +83,7 @@
     </ol>
     </li>
     <li><a href="#parsing">Parsing Custom Elements</a></li>
+    <li><a href="#es6">Custom Elements and ECMAScript 6</a></li>
     <li><a href="#appendix-a">Appendix A: All Algorithms in One Diagram</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
@@ -630,6 +631,81 @@ steps:</p>
 
 <div class="informative">
 <p>This modification to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#tree-construction">tree construction</a> has the consequence of <a href="#dfn-custom-element">custom elements</a> being created when <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">parsing HTML documents</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-parsing-algorithm">fragments</a>.</p>
+</div>
+
+<h2 id="es6">Custom Elements and ECMAScript 6</h2>
+
+<div class="informative">
+<p>Once the ECMAScript Standard Edition 6 is released, this section will be integrated into the respective areas of this specification. Until then, here is an overview of how ECMAScript 6 and Custom Elements integrate.</p>
+
+<p>If the user agent implements the <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method, this specification would stop treating the <code>ElementRegistrationOptions options</code> argument in <code><a href="#dfn-document-registerElement">registerElement</a></code> as a dictionary, and instead view it as a the custom element constructor function.</p>
+
+<p>Instead of generating a constructor, the user agent will now mutate this constructor function to have a new <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method that creates a new element object.</p>
+
+<p>Accordingly, the steps run when calling <code>registerElement</code> will change to:</p>
+</div>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var>, method's <a href="http://dom.spec.whatwg.org/#context-object">context object</a>, a <a href="http://dom.spec.whatwg.org/#concept-document">document</a></dd>
+    <dd><var id="var-document-register-type">TYPE</var>, the <a href="#dfn-custom-element-type">custom element type</a> of the element being registered</dd>
+    <dd><var id="var-options-prototype">FUNCTION</var>, the custom element constructor function, optional</dd>
+    <dd><var id="var-options-extends">EXTENDS</var>, the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML</a> or <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that is being extended, optional</dd>
+<dt>Output</dt>
+    <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
+</dl>
+<ol>
+    <li>If <var>FUNCTION</var> is <strong>null</strong>:
+    <ol>
+        <li>Let <var>FUNCTION</var> be the result of calling <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-functionallocate"><code>FunctionAllocate</code></a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a> as the <em>functionPrototype</em> and <strong>true</strong> as <em>strict</em></li>
+        <li>Let <var>PROTOTYPE</var> be the result of calling <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-objectcreate">ObjectCreate</a> with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlelement"><code>HTMLElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
+        <li>Call <code><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-definepropertyorthrow">DefinePropertyOrThrow</a>(</code><var>PROTOTYPE</var><code>, "constructor", PropertyDescriptor{[[Value]]: </code><var>FUNCTION</var><code>, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false})</code></li>
+        <li>Call <code><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-definepropertyorthrow">DefinePropertyOrThrow</a>(</code><var>FUNCTION</var><code>, "prototype", PropertyDescriptor{[[Value]]: </code><var>PROTOTYPE</var><code>, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false})</code></li>
+    </ol></li>
+    <li>Otherwise:
+    <ol>
+        <li>Let <var>PROTOTYPE</var> be the result of <code><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-o-p">Get</a>(</code><var>FUNCTION</var><code>, "prototype")</code></li>
+    </ol></li>
+
+    <li>Let <var>NAME</var> be <var>EXTENDS</var></li>
+    <li>Let <var>ERROR</var> be the result of running the <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
+    <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#syntaxerror"><code>SyntaxError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>ERROR</var> is not <code>None</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>DOCUMENT</var> and <var>FUNCTION</var> as arguments.</li>
+</ol>
+</div>
+
+
+<p class="fixme"><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24020">24020</a>: Definition should contain constructor, not the prototype.</p>
+
+<p>Similarly, the <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> will change as follows:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var id="var-options-prototype">FUNCTION</var>, the custom element constructor function.</dd>
+    <dd><var>DOCUMENT</var>, the owner <a href="http://dom.spec.whatwg.org/#concept-document">document</a> for new <a href="#dfn-custom-element">custom element</a></dd>
+<dt>Output</dt>
+    <dd><var>FUNCTION</var>, the mutated custom element constructor function</dd>
+</dl>
+<ol>
+    <li>If <var>FUNCTION</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>FUNCTION</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
+    <li>Let <var>CREATE</var> be a function which when called, executes these steps:
+    <ol>
+        <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
+        <li>Let <var>TYPE</var> be the <a href="#dfn-custom-element-type">custom element type</a> in <var>DEFINITION</var></li>
+        <li>Let <var>NAME</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in <var>DEFINITION</var></li>
+        <li>Let <var>NAMESPACE</var> be the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> in <var>DEFINITION</var></li>
+        <li>Set <var>ELEMENT</var>'s <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to the <var>NAMESPACE</var>, and <a href="http://dom.spec.whatwg.org/#concept-node-document">node document</a> to <var>DOCUMENT</var></li>
+        <li>If <var>TYPE</var> is not the same as <var>NAME</var>, set the value of <var>ELEMENT</var>'s <code>is</code> <a href="http://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> to <var>TYPE</var></li>
+        <li><a href="#dfn-enqueue-lifecycle-callback">Enqueue</a> <a href="#dfn-created-callback"><em>created</em></a> callback for <var>ELEMENT</var></li>
+        <li>Return <var>ELEMENT</var>.</li>
+    </ol></li>
+    <li>Call <code><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-definepropertyorthrow">DefinePropertyOrThrow</a>(</code><var>FUNCTION</var><code>, @@create, PropertyDescriptor{[[Value]]: </code><var>CREATE</var><code>, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false})</code></li>
+    <li>Return <var>FUNCTION</var>.</li>
+</ol>
 </div>
 
 <h2 id="appendix-a">Appendix A: All Algorithms in One Diagram</h2>
