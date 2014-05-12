@@ -638,11 +638,38 @@ steps:</p>
 <div class="informative">
 <p>Once the ECMAScript Standard Edition 6 is released, this section will be integrated into the respective areas of this specification. Until then, here is an overview of how ECMAScript 6 and Custom Elements integrate.</p>
 
-<p>If the user agent implements the <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method, this specification would stop treating the <code>ElementRegistrationOptions options</code> argument in <code><a href="#dfn-document-registerElement">registerElement</a></code> as a dictionary, and instead view it as a the custom element constructor function.</p>
+<p>If the user agent implements the <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method, this specification would stop treating the <code>ElementRegistrationOptions options</code> argument in <code><a href="#dfn-document-registerElement">registerElement</a></code> as a dictionary, and instead view it as a the <a href="#dfn-custom-element-constructor">custom element constructor</a>.</p>
 
-<p>Instead of generating a constructor, the user agent will now mutate this constructor function to have a new <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method that creates a new element object.</p>
+<p>Instead of generating a constructor, the user agent will now mutate this argument to have a new <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-symbols"><code>@@create</code></a> method that creates a new element object.</p>
 
-<p>Accordingly, the steps run when calling <code>registerElement</code> will change to:</p>
+<p>Since the <code>registerElement</code>'s second argument is now a constructor function, the <a href="#dfn-element-definition">element definition</a> should change to hold that constructor function, rather than the <a href="#dfn-custom-element-prototype">custom element prototype</a>.</p>
+
+<p>To accommodate this change, the <a href="dfn-element-registration">element registration alorightm</a> to the following steps:</p>
+</div>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DOCUMENT</var>, the <a href="http://dom.spec.whatwg.org/#concept-document">document</a></dd>
+    <dd><var>TYPE</var>, the <a href="#dfn-custom-element-type">custom element type</a> of the element being registered</dd>
+    <dd><var>FUNCTION</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
+    <dd><var>NAME</var>, a <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, optional</dd>
+<dt>Output</dt>
+    <dd><var>ERROR</var>, a variable that holds one of these values: <code>None</code>, <code>InvalidType</code>, <code>InvalidName</code>, <code>NoRegistry</code>, or <code>DuplicateDefinition</code></dd>
+</dl>
+<ol>
+    <li>Let <var>ERROR</var> and <var>DEFINITION</var> be the result of running <a href="#dfn-definition-construction-algorithm">definition construction algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
+    <li>If <var>ERROR</var> is not <code>None</code>, <strong>stop</strong>.</li>
+    <li>Let <var>REGISTRY</var> be <var>DOCUMENT</var>'s <a href="#dfn-registry">registry</a></li>
+    <li>If <var>REGISTRY</var> does not exist, set <var>ERROR</var> to <code>NoRegistry</code> and <strong>stop</strong>.</li>
+    <li>Add <var>DEFINITION</var> to <var>REGISTRY</var></li>
+    <li>Let <var>MAP</var> be <var>REGISTRY</var>'s <a href="#dfn-upgrade-candidates-map">upgrade candidates map</a></li>
+    <li>Run <a href="#dfn-element-upgrade-algorithm">element upgrade algorithm</a> with <var>MAP</var> and <var>DEFINITION</var> as arguments.</li>
+</ol>
+</div>
+
+<div class="informative">
+<p>The steps run when calling <code>registerElement</code> will change to:</p>
 </div>
 
 <div class="algorithm">
@@ -650,7 +677,7 @@ steps:</p>
 <dt>Input</dt>
     <dd><var>DOCUMENT</var>, method's <a href="http://dom.spec.whatwg.org/#context-object">context object</a>, a <a href="http://dom.spec.whatwg.org/#concept-document">document</a></dd>
     <dd><var id="var-document-register-type">TYPE</var>, the <a href="#dfn-custom-element-type">custom element type</a> of the element being registered</dd>
-    <dd><var id="var-options-prototype">FUNCTION</var>, the custom element constructor function, optional</dd>
+    <dd><var id="var-options-prototype">FUNCTION</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a>, optional</dd>
     <dd><var id="var-options-extends">EXTENDS</var>, the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML</a> or <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that is being extended, optional</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
@@ -672,26 +699,24 @@ steps:</p>
     <li>Let <var>ERROR</var> be the result of running the <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
     <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#syntaxerror"><code>SyntaxError</code></a> and <strong>stop</strong>.</li>
     <li>If <var>ERROR</var> is not <code>None</code>, <a href="http://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
-    <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>DOCUMENT</var> and <var>FUNCTION</var> as arguments.</li>
+    <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var>, <var>FUNCTION</var>, and <var>DOCUMENT</var> as arguments.</li>
 </ol>
 </div>
-
-
-<p class="fixme"><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24020">24020</a>: Definition should contain constructor, not the prototype.</p>
 
 <p>Similarly, the <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> will change as follows:</p>
 
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var id="var-options-prototype">FUNCTION</var>, the custom element constructor function.</dd>
+    <dd><var id="var-options-prototype">PROTOTYPE</var>, the <a href="#dfn-custom-element-prototype">custom element prototype</a></dd>
+    <dd><var id="var-options-prototype">FUNCTION</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
     <dd><var>DOCUMENT</var>, the owner <a href="http://dom.spec.whatwg.org/#concept-document">document</a> for new <a href="#dfn-custom-element">custom element</a></dd>
 <dt>Output</dt>
-    <dd><var>FUNCTION</var>, the mutated custom element constructor function</dd>
+    <dd><var>FUNCTION</var>, the mutated <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
     <li>If <var>FUNCTION</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
-    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>FUNCTION</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
+    <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CREATE</var> be a function which when called, executes these steps:
     <ol>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
