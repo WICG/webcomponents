@@ -1331,33 +1331,9 @@
         <dl class="idl" title="partial interface Event">
           <dt>readonly attribute object path</dt>
           <dd>
-            <p>Represents the adjusted event path.</p>
-            <p>To maintain encapsulation, the <a title="node">nodes</a> in the <a title="inclusive ancestor tree">inclusive ancestor trees</a> <strong>must</strong> be included in the event path, relative to the <a>node</a> on which <a title="event listener">event listeners</a> would be invoked.</p>
+            <p>Represents the event path.</p>
             <p>
-              On getting, the attribute <strong>must</strong> return a new JavaScript Array object, that is a copy of an ordered list, <var>EVENT_TARGET_LIST</var>. <var>EVENT_TARGET_LIST</var> <strong>must</strong> be <a title="processing equivalence">equivalent</a> to running the following steps:
-            </p>
-            <div class="algorithm">
-              <dl>
-                <dt>Input</dt>
-                <dd><var>PATH</var>, the event path for an event</dd>
-                <dd><var>NODE</var>, the <a>node</a> on which event listeners would be invoked</dd>
-                <dt>Output</dt>
-                <dd><var>RESULT</var>, an adjusted event path for <var>NODE</var></dd>
-              </dl>
-              <ol>
-                <li>Let <var>TREE1</var> be the <a>node tree</a> that <var>NODE</var> <a>participates</a> in</li>
-                <li>Let <var>RESULT</var> be the empty ordered list</li>
-                <li>
-                  For each node, <var>NODE2</var>, in <var>PATH</var>:
-                  <ol>
-                    <li>Let <var>TREE2</var> be the <a>node tree</a> that <var>NODE2</var> <a>participates</a> in</li>
-                    <li>If <var>TREE2</var> is an <a>inclusive ancestor tree</a> of <var>TREE1</var>, add <var>NODE2</var> to <var>RESULT</var></li>
-                  </ol>
-                </li>
-              </ol>
-            </div>
-            <p>
-              These steps <strong>must</strong> run prior to the event dispatching so that <var>EVENT_TARGET_LIST</var>, from where a new JavaScript Array object is copied, is not affected by DOM mutations in event listeners.
+              On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object, that is a copy of the event path for the <a>context object</a>.
             </p>
             <p class="issue">
               Use <code>Array</code> as the return type of the <code>path</code> attribute in WebIDL.
