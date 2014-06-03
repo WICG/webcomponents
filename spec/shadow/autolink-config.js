@@ -104,7 +104,7 @@ var autolinkConfig = {
     },
 
     'http://www.w3.org/TR/DOM-Level-3-Events/': {
-        'MouseEvent': '#widl-MouseEvent',
+        'MouseEvent': '#interface-MouseEvent',
         'mutation event': '#interface-MutationEvent',
         'relatedTarget': '#widl-MouseEvent-relatedTarget'
     },
