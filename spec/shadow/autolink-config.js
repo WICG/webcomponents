@@ -13,7 +13,7 @@ var autolinkConfig = {
         'currentTarget': '#dom-event-currenttarget',
         'descendant': '#concept-tree-descendant',
         'document': '#concept-document',
-        'document.getElementById': '#dom-document-getelementbyid',
+        'document.getElementById': '#dom-nonelementparentnode-getelementbyid',
         'document.getElementsByClassNameId': '#dom-document-getelementsbyclassname',
         'document.getElementsByTagName': '#dom-document-getelementsbytagname',
         'document.getElementsByTagNameNS': '#dom-document-getelementsbytagnamens',
@@ -62,15 +62,15 @@ var autolinkConfig = {
         'details element': 'interactive-elements.html#the-details-element',
         'embed element': 'the-iframe-element.html#the-embed-element',
         'fallback content': 'elements.html#fallback-content',
-        'fieldset element': 'forms.html#the-fieldset-element',
+        'fieldset element': 'the-button-element.html#the-fieldset-element',
         'flow content': 'elements.html#flow-content-0',
-        'focusable': 'editing.html#focusable',
+        'focusable': 'editing.html#focusable-area',
         'form element': 'forms.html#the-form-element',
         'form submission': 'association-of-controls-and-forms.html#form-submission',
         'form-associated element': 'forms.html#form-associated-element',
         'forms': 'forms.html#forms',
         'iframe element': 'the-iframe-element.html#the-iframe-element',
-        'img element': 'embedded-content-1.html#the-img-element',
+        'img element': 'edits.html#the-img-element',
         'input element': 'the-input-element.html#the-input-element',
         'link element': 'semantics.html#the-link-element',
         'map element': 'the-map-element.html#the-map-element',
@@ -104,9 +104,9 @@ var autolinkConfig = {
     },
 
     'http://www.w3.org/TR/DOM-Level-3-Events/': {
-        'MouseEvent': '#events-MouseEvent',
+        'MouseEvent': '#widl-MouseEvent',
         'mutation event': '#interface-MutationEvent',
-        'relatedTarget': '#events-MouseEvent-relatedTarget'
+        'relatedTarget': '#widl-MouseEvent-relatedTarget'
     },
 
     'http://www.w3.org/TR/touch-events/': {
