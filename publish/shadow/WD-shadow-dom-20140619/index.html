@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" typeof="bibo:Document " about="" property="dcterms:language" content="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shadow DOM</title>
+    
+    
+    <style>/* --- EXAMPLES --- */
+div.example-title {
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.example-title span {
+    text-transform: uppercase;   
+}
+aside.example, div.example, div.illegal-example {
+    padding: 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+div.illegal-example { color: red }
+div.illegal-example p { color: black }
+aside.example, div.example {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+    border-color: #e0cb52;
+    background: #fcfaee;    
+}
+
+aside.example div.example {
+    border-left-width: .1em;
+    border-color: #999;
+    background: #fff;
+}
+aside.example div.example div.example-title {
+    color: #999;
+}
+</style><style>/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title { color: #2b2; }
+div.issue-title span, div.note-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .issue > p:first-child { margin-top: 0 }
+.issue, .note {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note {
+    padding: 1em 1.2em 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.issue { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+
+</style><style>/* HIGHLIGHTS */
+code.prettyprint {
+    color:  inherit;
+}
+
+/* this from google-code-prettify */
+.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
+</style><style>/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+a.idlEnumItem {
+    color:  #000;
+    border-bottom:  1px dotted #ccc;
+    text-decoration: none;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType, .idlFieldType, .idlMemberType {
+    color:  #005a9c;
+}
+.idlAttrName, .idlFieldName, .idlMemberName {
+    color:  #ff4500;
+}
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType, .idlCallbackType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlCtor*/
+.idlCtorName {
+    color:  #ff4500;
+}
+.idlCtorName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName, .idlDefaultValue {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code, .fields dt code, .dictionary-members dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.constructors dt code {
+    background:  #cfc;
+}
+
+.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-family:    initial;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+</style><link rel="stylesheet" href="respec-complement.css" type="text/css">
+<link rel="stylesheet" href="working-draft.css" type="text/css">
+<script src="working-draft.js"></script>
+    
+    
+    
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #ff4500;
+}
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
+</style><link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-WD"><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--></head>
+  <body class="h-entry" role="document" id="respecDocument"><div class="head" role="contentinfo" id="respecHeader">
+  <p>
+    
+      <a href="http://www.w3.org/"><img width="72" height="48" src="https://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+    
+  </p>
+  <h1 class="title p-name" id="title" property="dcterms:title">Shadow DOM</h1>
+  
+  <h2 property="dcterms:issued" datatype="xsd:dateTime" content="2014-06-19T00:00:00.000Z" id="w3c-working-draft-19-jun-2014"><abbr title="World Wide Web Consortium">W3C</abbr> Working Draft <time class="dt-published" datetime="2014-06-19">19 Jun 2014</time></h2>
+  <dl>
+    
+      <dt>This version:</dt>
+      <dd><a href="http://www.w3.org/TR/2014/WD-shadow-dom-20140619/">http://www.w3.org/TR/2014/WD-shadow-dom-20140619/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="http://www.w3.org/TR/shadow-dom/">http://www.w3.org/TR/shadow-dom/</a></dd>
+    
+    
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="http://w3c.github.io/webcomponents/spec/shadow/">http://w3c.github.io/webcomponents/spec/shadow/</a></dd>
+      <dt>Previous version</dt>
+      <dd><a href="http://www.w3.org/TR/2013/WD-shadow-dom-20130514/">http://www.w3.org/TR/2013/WD-shadow-dom-20130514/</a></dd>
+    
+    
+    
+      
+    
+    
+    
+    <dt>Editors:</dt>
+    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><a class="u-url url p-name fn" rel="foaf:homepage" property="foaf:name" content="Dimitri Glazkov" href="mailto:dglazkov@chromium.org">Dimitri Glazkov</a>, Google, Inc.</span>
+</dd>
+<dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><a class="u-url url p-name fn" rel="foaf:homepage" property="foaf:name" content="Hayato Ito" href="mailto:hayato@google.com">Hayato Ito</a>, Google, Inc.</span>
+</dd>
+
+    
+    
+      
+        
+          <dt>Revision history:</dt>
+          
+            
+              
+                <dd>
+                  <a href="https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/">https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/</a>
+                </dd>
+              
+            
+          
+        
+      
+    
+  </dl>
+  
+
+      <p class="copyright">
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+        2014
+        
+        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), 
+        
+        All Rights Reserved.
+        
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+        
+          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
+        
+        rules apply.
+      </p>
+    
+  
+  <hr>
+</div>
+    <section id="abstract" class="introductory" property="dcterms:abstract" datatype="" typeof="bibo:Chapter" resource="#abstract" rel="bibo:Chapter"><h2 aria-level="1" role="heading" id="h2_abstract">Abstract</h2>
+
+      <p>
+        <strong>This is a work in progress!</strong> For the latest updates
+        from the <a href="http://www.w3.org/2008/webapps/">Web Applications
+        (WebApps) Working Group</a> possibly including important bug fixes,
+        please look at the <a href="http://w3c.github.io/webcomponents/spec/shadow/">draft on GitHub</a>.
+      </p>
+
+      <p>
+        This specification describes a method of combining multiple DOM trees into one hierarchy and how these trees interact with each other within a document, thus
+        enabling better composition of the DOM.
+      </p>
+    </section><section id="sotd" class="introductory" typeof="bibo:Chapter" resource="#sotd" rel="bibo:Chapter"><h2 aria-level="1" role="heading" id="h2_sotd">Status of This Document</h2>
+
+      <div id="wipcontainer">
+        <p class="stability" id="wip">
+          <strong>This is a work in progress!</strong>
+          This specification is for review and not for implementation! For the latest updates,
+          including important bug fixes, please look at the
+          <a href="http://w3c.github.io/webcomponents/spec/shadow/">draft on GitHub</a> instead.
+          <input onclick="hideWIP(this)" value="×" type="button">
+        </p>
+      </div>
+    
+        <p>
+          <em>This section describes the status of this document at the time of its publication.
+          Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the
+          latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at
+          http://www.w3.org/TR/.</em>
+        </p>
+        
+    
+        <p>
+          This document was published by the <a href="http://www.w3.org/2008/webapps/"><abbr title="World Wide Web Consortium">W3C</abbr> Web Applications (WebApps)</a> as a Working Draft.
+          
+          
+            If you wish to make comments regarding this document, please send them to 
+            <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> 
+            (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>,
+            <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>).
+          
+          
+          
+          
+            All comments are welcome.
+          
+        </p>
+        
+        
+          <p>
+            Publication as a Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr>
+            Membership. This is a draft document and may be updated, replaced or obsoleted by other
+            documents at any time. It is inappropriate to cite this document as other than work in
+            progress.
+          </p>
+        
+        
+        
+        <p>
+          
+            This document was produced by a group operating under the 
+            <a id="sotd_patent" about="" rel="w3p:patentRules" href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent
+            Policy</a>.
+          
+          
+          
+            
+              <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/42538/status" rel="disclosure">public list of any patent
+              disclosures</a> 
+            
+            made in connection with the deliverables of the group; that page also includes
+            instructions for disclosing a patent. An individual who has actual knowledge of a patent
+            which the individual believes contains
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
+            Claim(s)</a> must disclose the information in accordance with
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
+            6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+          
+          
+        </p>
+        
+      
+    
+  
+</section><section id="toc"><h2 class="introductory" aria-level="1" role="heading" id="h2_toc">Table of Contents</h2><ul class="toc" role="directory" id="respecContents"><li class="tocline"><a href="#conformance" class="tocxref"><span class="secno">1. </span>Conformance</a></li><li class="tocline"><a href="#concepts" class="tocxref"><span class="secno">2. </span>Concepts</a><ul class="toc"><li class="tocline"><a href="#introduction" class="tocxref"><span class="secno">2.1 </span>Introduction</a></li><li class="tocline"><a href="#shadow-trees" class="tocxref"><span class="secno">2.2 </span>Shadow trees</a></li><li class="tocline"><a href="#trees-of-trees" class="tocxref"><span class="secno">2.3 </span>Trees of trees</a><ul class="toc"><li class="tocline"><a href="#example-tree-of-trees" class="tocxref"><span class="secno">2.3.1 </span>Example tree of trees</a></li></ul></li><li class="tocline"><a href="#composed-trees" class="tocxref"><span class="secno">2.4 </span>Composed trees</a></li></ul></li><li class="tocline"><a href="#distributions" class="tocxref"><span class="secno">3. </span>Distributions</a><ul class="toc"><li class="tocline"><a href="#insertion-points" class="tocxref"><span class="secno">3.1 </span>Insertion Points</a></li><li class="tocline"><a href="#content-insertion-points" class="tocxref"><span class="secno">3.2 </span>Content Insertion Points</a></li><li class="tocline"><a href="#shadow-insertion-points" class="tocxref"><span class="secno">3.3 </span>Shadow Insertion Points</a></li><li class="tocline"><a href="#distribution-results" class="tocxref"><span class="secno">3.4 </span>Distribution Results</a></li><li class="tocline"><a href="#distribution-algorithms" class="tocxref"><span class="secno">3.5 </span>Distribution Algorithms</a></li><li class="tocline"><a href="#satisfying-matching-criteria" class="tocxref"><span class="secno">3.6 </span>Satisfying Matching Criteria</a></li></ul></li><li class="tocline"><a href="#composition" class="tocxref"><span class="secno">4. </span>Composition</a></li><li class="tocline"><a href="#events" class="tocxref"><span class="secno">5. </span>Events</a><ul class="toc"><li class="tocline"><a href="#events-that-are-always-stopped" class="tocxref"><span class="secno">5.1 </span>Events that are Always Stopped</a></li><li class="tocline"><a href="#event-paths" class="tocxref"><span class="secno">5.2 </span>Event Paths</a></li><li class="tocline"><a href="#event-paths-example" class="tocxref"><span class="secno">5.3 </span>Event Paths Example</a></li><li class="tocline"><a href="#event-retargeting" class="tocxref"><span class="secno">5.4 </span>Event Retargeting</a></li><li class="tocline"><a href="#retargeting-relatedtarget" class="tocxref"><span class="secno">5.5 </span>Retargeting <code>relatedTarget</code></a></li><li class="tocline"><a href="#retargeting-touch-events" class="tocxref"><span class="secno">5.6 </span>Retargeting Touch Events</a></li><li class="tocline"><a href="#retargeting-focus-events" class="tocxref"><span class="secno">5.7 </span>Retargeting Focus Events</a></li><li class="tocline"><a href="#event-dispatch" class="tocxref"><span class="secno">5.8 </span>Event Dispatch</a></li><li class="tocline"><a href="#event-retargeting-example" class="tocxref"><span class="secno">5.9 </span>Event Retargeting Example</a></li></ul></li><li class="tocline"><a href="#user-interaction" class="tocxref"><span class="secno">6. </span>User Interaction</a><ul class="toc"><li class="tocline"><a href="#ranges-and-selections" class="tocxref"><span class="secno">6.1 </span>Ranges and Selections</a></li><li class="tocline"><a href="#focus-navigation" class="tocxref"><span class="secno">6.2 </span>Focus Navigation</a></li><li class="tocline"><a href="#active-element" class="tocxref"><span class="secno">6.3 </span>Active Element</a></li><li class="tocline"><a href="#editing" class="tocxref"><span class="secno">6.4 </span>Editing</a></li><li class="tocline"><a href="#assistive-technology" class="tocxref"><span class="secno">6.5 </span>Assistive Technology</a></li></ul></li><li class="tocline"><a href="#html-elements-in-shadow-trees" class="tocxref"><span class="secno">7. </span>HTML Elements in Shadow Trees</a><ul class="toc"><li class="tocline"><a href="#inert-html-elements" class="tocxref"><span class="secno">7.1 </span>Inert HTML Elements</a></li></ul></li><li class="tocline"><a href="#html-elements-and-their-shadow-trees" class="tocxref"><span class="secno">8. </span>HTML Elements and Their Shadow Trees</a></li><li class="tocline"><a href="#elements-and-dom-objects" class="tocxref"><span class="secno">9. </span>Elements and DOM Objects</a><ul class="toc"><li class="tocline"><a href="#shadowroot-object" class="tocxref"><span class="secno">9.1 </span><code>ShadowRoot</code> Object</a><ul class="toc"><li class="tocline"><a href="#attributes" class="tocxref"><span class="secno">9.1.1 </span>Attributes</a></li><li class="tocline"><a href="#methods" class="tocxref"><span class="secno">9.1.2 </span>Methods</a></li></ul></li><li class="tocline"><a href="#extensions-to-element-interface" class="tocxref"><span class="secno">9.2 </span>Extensions to <code>Element</code> Interface</a><ul class="toc"><li class="tocline"><a href="#attributes-1" class="tocxref"><span class="secno">9.2.1 </span>Attributes</a></li><li class="tocline"><a href="#methods-1" class="tocxref"><span class="secno">9.2.2 </span>Methods</a></li></ul></li><li class="tocline"><a href="#the-content-element" class="tocxref"><span class="secno">9.3 </span>The <code>content</code> element</a></li><li class="tocline"><a href="#the-shadow-element" class="tocxref"><span class="secno">9.4 </span>The <code>shadow</code> element</a></li><li class="tocline"><a href="#extensions-to-event-interface" class="tocxref"><span class="secno">9.5 </span>Extensions to <code>Event</code> Interface</a><ul class="toc"><li class="tocline"><a href="#attributes-2" class="tocxref"><span class="secno">9.5.1 </span>Attributes</a></li></ul></li></ul></li><li class="tocline"><a href="#shadow-dom-example" class="tocxref"><span class="secno">10. </span>Shadow DOM Example</a></li><li class="tocline"><a href="#acknowledgements" class="tocxref"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a href="#references" class="tocxref"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a href="#normative-references" class="tocxref"><span class="secno">B.1 </span>Normative references</a></li></ul></li></ul></section>
+
+    
+
+    <section id="conformance">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_conformance"><span class="secno">1. </span>Conformance</h2>
+
+      <p>All diagrams, examples, notes, are non-normative, as well as sections explicitly marked as non-normative. Everything else in this specification is normative.</p>
+
+      <p>The key words "<em class="rfc2119" title="MUST">MUST</em>", "<em class="rfc2119" title="MUST NOT">MUST NOT</em>", "<em class="rfc2119" title="REQUIRED">REQUIRED</em>", "<em class="rfc2119" title="SHALL">SHALL</em>", "<em class="rfc2119" title="SHALL NOT">SHALL NOT</em>", "<em class="rfc2119" title="SHOULD">SHOULD</em>", "<em class="rfc2119" title="SHOULD NOT">SHOULD NOT</em>", "<em class="rfc2119" title="RECOMMENDED">RECOMMENDED</em>", "<em class="rfc2119" title="MAY">MAY</em>", and "<em class="rfc2119" title="OPTIONAL">OPTIONAL</em>" in the normative parts of this document are to be interpreted as described in [<cite><a class="bibref" href="#bib-RFC2119">RFC2119</a></cite>]. For readability, these words do not appear in all uppercase letters in this specification.</p>
+
+      <p>To help with layering and to avoid circular dependencies between various parts of specification, this document consists of three consecutive narratives:</p>
+      <ol>
+        <li>setting up the stage for the specification,</li>
+        <li>explaining of the conceptual model and algorithms behind it, and</li>
+        <li>expressing this model with DOM interfaces and HTML elements.</li>
+      </ol>
+
+      <p>In a sense, these parts can be viewed as <em>math</em>, which sets up the reasoning environment, <em>physics</em>, which is the theoretical reasoning about the concept, and <em>mechanics</em>, which is the practical application of this reasoning.</p>
+
+      <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
+    </section>
+
+    <section id="concepts">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_concepts"><span class="secno">2. </span>Concepts</h2>
+
+      <section class="informative" id="introduction">
+        <h3 aria-level="2" role="heading" id="h3_introduction"><span class="secno">2.1 </span>Introduction</h3><p><em>This section is non-normative.</em></p>
+
+        <p>
+          See the <a href="http://w3c.github.io/webcomponents/explainer/#shadow-dom-section">Shadow DOM section</a> of <a href="http://w3c.github.io/webcomponents/explainer/">Introduction to Web Components</a> as a non-normative intruduction.
+        </p>
+      </section>
+
+      <section id="shadow-trees">
+        <h3 aria-level="2" role="heading" id="h3_shadow-trees"><span class="secno">2.2 </span>Shadow trees</h3>
+
+        <p>A <dfn id="dfn-document-tree">document tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> [<cite><a class="bibref" href="#bib-DOM">DOM</a></cite>] whose <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> is a <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a>.</p>
+
+        <p>Any element can have an <dfn title="shadow roots list" id="dfn-shadow-roots-list">associated ordered list</dfn> of zero or more <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>.</p>
+
+        <p>An element <dfn id="dfn-hosts">hosts</dfn> a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> if the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> is a member of this associated list.</p>
+
+        <p>A <dfn id="dfn-shadow-host">shadow host</dfn> is an element that <a href="#dfn-hosts" class="internalDFN">hosts</a> one or more <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>.</p>
+
+        <p>A <dfn id="dfn-shadow-tree">shadow tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> <a title="hosts" href="#dfn-hosts" class="internalDFN">hosted</a> by a <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>.</p>
+
+        <p>A <dfn id="dfn-shadow-root">shadow root</dfn> is the <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of a shadow tree.</p>
+
+        <p>If more than one <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is <a title="hosts" href="#dfn-hosts" class="internalDFN">hosted</a> by the same <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>, the more recently added <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is called the <dfn id="dfn-younger-shadow-tree">younger shadow tree</dfn> and the less recently added <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is called the <dfn id="dfn-older-shadow-tree">older shadow tree</dfn>.</p>
+
+        <p>If there is no <a href="#dfn-older-shadow-tree" class="internalDFN">older shadow tree</a> than a given <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>,
+          the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is called the <dfn id="dfn-oldest-shadow-tree">oldest shadow tree</dfn>.</p>
+
+        <p>If there is no <a href="#dfn-younger-shadow-tree" class="internalDFN">younger shadow tree</a> than a given <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>,
+          the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is called the <dfn id="dfn-youngest-shadow-tree">youngest shadow tree</dfn>.</p>
+
+        <p>The <dfn id="dfn-older-shadow-root">older shadow root</dfn> is the root node of the <a href="#dfn-older-shadow-tree" class="internalDFN">older shadow tree</a>.</p>
+
+        <p>The <dfn id="dfn-younger-shadow-root">younger shadow root</dfn> is the root node of the <a href="#dfn-younger-shadow-tree" class="internalDFN">younger shadow tree</a>.</p>
+
+        <p>The <dfn id="dfn-oldest-shadow-root">oldest shadow root</dfn> is the root node of the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a>.</p>
+
+        <p>The <dfn id="dfn-youngest-shadow-root">youngest shadow root</dfn> is the root node of the <a href="#dfn-youngest-shadow-tree" class="internalDFN">youngest shadow tree</a>.</p>
+
+        <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_1"><span>Note</span></div><p class="">
+          For convenience, the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a> provides its own set of <a title="DOM tree accessors" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-tree-accessors" class="externalDFN">DOM tree accessor</a> methods.
+          No <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> other than the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a> descendants are accessible with these methods.
+        </p></div>
+      </section>
+
+      <section id="trees-of-trees">
+        <h3 aria-level="2" role="heading" id="h3_trees-of-trees"><span class="secno">2.3 </span>Trees of trees</h3>
+
+        <p>A <dfn id="dfn-tree-of-trees">tree of trees</dfn> is a <a href="http://dom.spec.whatwg.org/#trees" class="externalDFN">tree</a> of <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>.</p>
+
+        <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_2"><span>Note</span></div><p class="">
+          The purpose of introducing a tree of trees here is to define algorithms easily in the following sections.
+          This is a kind of a notation techchique to make the this specification simpler.
+        </p></div>
+
+        <p>Just like a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> is defined as <a title="tree" href="http://dom.spec.whatwg.org/#trees" class="externalDFN">a set of relationships</a> between <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a>,
+          a <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> is similarly defined as a set of relationships between <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>:</p>
+        <ul>
+          <li>
+            A <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> <var>A</var> is called a <dfn id="dfn-parent-tree">parent tree</dfn> of a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> <var>B</var> if either of the following conditions is satisfied:
+            <ul>
+              <li><var>A</var> and <var>B</var> are next to each other in the same <a title="shadow roots list" href="#dfn-shadow-roots-list" class="internalDFN">associated ordered list</a> and <var>A</var> is the <a href="#dfn-older-shadow-tree" class="internalDFN">older shadow tree</a> relative to <var>B</var>.</li>
+              <li><var>B</var> is the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a> and <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> of <var>B</var> participates in <var>A</var>.</li>
+            </ul>
+
+          </li>
+          <li>If there is more than one <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> that shares the same <a href="#dfn-parent-tree" class="internalDFN">parent tree</a>, the <a href="http://dom.spec.whatwg.org/#concept-tree-order" class="externalDFN">tree order</a> between them in the <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> is defined as follows:
+            <ol>
+              <li>Let <var>A</var> and <var>B</var> be <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a> that share the same <a href="#dfn-parent-tree" class="internalDFN">parent tree</a>.</li>
+              <li><var>A</var> comes before <var>B</var> if either of the following conditions is satisfied:
+                <ul>
+                  <li>The <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> <var>A</var> is <a href="http://dom.spec.whatwg.org/#concept-tree-preceding" class="externalDFN">preceding</a> the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> <var>B</var>.</li>
+                  <li><var>B</var> is not the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a>.</li>
+                </ul>
+              </li>
+            </ol>
+          </li>
+          <li>Other relationships and terms, such as <dfn id="dfn-root-tree">root tree</dfn>, <dfn id="dfn-child-tree">child tree</dfn>,
+            <dfn id="dfn-descendant-tree">descendant tree</dfn>, <dfn id="dfn-inclusive-descendant-tree">inclusive descendant tree</dfn>,
+            <dfn id="dfn-ancestor-tree">ancestor tree</dfn>, <dfn id="dfn-inclusive-ancestor-tree">inclusive ancestor tree</dfn>,
+            <dfn id="dfn-preceding-tree">preceding tree</dfn>
+            are defined in the similar way as defined in <a title="tree" href="http://dom.spec.whatwg.org/#trees" class="externalDFN">trees</a>.</li>
+        </ul>
+
+        <p>The <a href="http://dom.spec.whatwg.org/#dom-node-ownerdocument" class="externalDFN"><code>ownerDocument</code></a> property of a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> in a shadow tree <strong>must</strong> refers to the <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a> of the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> the shadow tree.</p>
+
+        <p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#window" class="externalDFN"><code>Window</code></a> object <a title="named access on the window object" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#named-access-on-the-window-object" class="externalDFN">named properties</a> [<cite><a class="bibref" href="#bib-HTML">HTML</a></cite>] <strong>must</strong> access the <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in the <a href="#dfn-document-tree" class="internalDFN">document tree</a>.</p>
+
+        <section class="informative" id="example-tree-of-trees">
+          <h4 aria-level="3" role="heading" id="h4_example-tree-of-trees"><span class="secno">2.3.1 </span>Example tree of trees</h4><p><em>This section is non-normative.</em></p>
+
+          <figure id="fig-a-tree-of-trees.x">
+            <object data="tree-of-trees.svg" width="650" height="823"></object>
+            <figcaption>Fig. <span class="figno">1</span> <span class="fig-title">
+              A tree of trees.
+            </span></figcaption>
+          </figure>
+
+          <p>
+            In the figure, there are seven node trees, named A, B, C, D, E and F.
+            The node trees, C, D and E, are hosted by the same <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>, which participates in the node tree A.
+            The node tree C is the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a>. The node tree E is the <a href="#dfn-youngest-shadow-tree" class="internalDFN">youngest shadow tree</a>.
+            The following set of relationships holds in the figure:
+            </p><ul>
+              <li>The ordered list of A's <a title="child tree" href="#dfn-child-tree" class="internalDFN">child trees</a> is [B, C].</li>
+              <li>The ordered list of B's <a title="child tree" href="#dfn-child-tree" class="internalDFN">child trees</a> is [].</li>
+              <li>The ordered list of C's <a title="child tree" href="#dfn-child-tree" class="internalDFN">child trees</a> is [F, D].</li>
+              <li>The ordered list of D's <a title="child tree" href="#dfn-child-tree" class="internalDFN">child trees</a> is [E].</li>
+              <li>The ordered list of E's <a title="child tree" href="#dfn-child-tree" class="internalDFN">child trees</a> is [].</li>
+            </ul>
+          <p></p>
+        </section>
+
+      </section>
+
+      <section id="composed-trees">
+        <h3 aria-level="2" role="heading" id="h3_composed-trees"><span class="secno">2.4 </span>Composed trees</h3>
+
+        <p>A <dfn id="dfn-composed-tree">composed tree</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which is constructed out of <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> from multiple <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a> in a <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a>.
+          The exact algorithm of constructing a composed tree is specified later.</p>
+
+        <figure id="fig-a-composed-tree">
+          <object data="composed-tree.svg" width="654" height="606"></object>
+          <figcaption>Fig. <span class="figno">2</span> <span class="fig-title">A composed tree</span></figcaption>
+        </figure>
+
+        <p>In <dfn id="dfn-rendering">rendering</dfn> a <a href="#dfn-document-tree" class="internalDFN">document tree</a>, or presenting it visually, the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> <strong>must</strong> be used instead of the <a href="#dfn-document-tree" class="internalDFN">document tree</a>.</p>
+
+        <p>The <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> <strong>must</strong> be updated before the <a href="#dfn-rendering" class="internalDFN">rendering</a> occurs.</p>
+      </section>
+
+    </section>
+
+    <section id="distributions">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_distributions"><span class="secno">3. </span>Distributions</h2>
+
+      <section id="insertion-points">
+        <h3 aria-level="2" role="heading" id="h3_insertion-points"><span class="secno">3.1 </span>Insertion Points</h3>
+
+        <p>An <dfn id="dfn-insertion-point">insertion point</dfn> is a defined location where <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in a different <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> appear instead of the nodes's original position when constructing a <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>.</p>
+
+        <figure id="fig-a-distribution">
+          <object data="distributions.svg" width="663" height="598"></object>
+          <figcaption>Fig. <span class="figno">3</span> <span class="fig-title">A distribution</span></figcaption>
+        </figure>
+
+        <p>A <dfn id="dfn-distribution">distribution</dfn> is the mechanism that determines which <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> appear at each <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>. The exact algorithm of a <a href="#dfn-distribution" class="internalDFN">distribution</a> is specified later.</p>
+      </section>
+
+
+      <section id="content-insertion-points">
+        <h3 aria-level="2" role="heading" id="h3_content-insertion-points"><span class="secno">3.2 </span>Content Insertion Points</h3>
+
+        <p>A <dfn id="dfn-content-insertion-point">content insertion point</dfn> is an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> to where the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> are distributed.
+          The <a href="#dfn-content-element" class="internalDFN">content element</a> that satisfies all of the following conditions represents a <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a>:</p>
+        <ul>
+          <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of the <a href="#dfn-content-element" class="internalDFN">content element</a> is a <a href="#dfn-shadow-root" class="internalDFN">shadow root</a></li>
+          <li>There is no other <a href="#dfn-content-element" class="internalDFN">content element</a> in the <a title="ancestor" href="http://dom.spec.whatwg.org/#concept-tree-ancestor" class="externalDFN">ancestors</a> of the <a href="#dfn-content-element" class="internalDFN">content element</a></li>
+          <li>There is no <a href="#dfn-shadow-element" class="internalDFN">shadow element</a> in the <a title="ancestor" href="http://dom.spec.whatwg.org/#concept-tree-ancestor" class="externalDFN">ancestors</a> of the <a href="#dfn-content-element" class="internalDFN">content element</a></li>
+        </ul>
+      </section>
+
+      <section id="shadow-insertion-points">
+        <h3 aria-level="2" role="heading" id="h3_shadow-insertion-points"><span class="secno">3.3 </span>Shadow Insertion Points</h3>
+
+        <p>A <dfn id="dfn-shadow-insertion-point">shadow insertion point</dfn> is an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> to where the children of the <a href="#dfn-older-shadow-root" class="internalDFN">older shadow root</a> are distributed.
+          The <a href="#dfn-shadow-element" class="internalDFN">shadow element</a> that satisfies of the following conditions represents a <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a>:</p>
+        <ul>
+          <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of the <a href="#dfn-shadow-element" class="internalDFN">shadow element</a> is a <a href="#dfn-shadow-root" class="internalDFN">shadow root</a></li>
+          <li>There is no other <a href="#dfn-shadow-element" class="internalDFN">shadow element</a> which is <a href="http://dom.spec.whatwg.org/#concept-tree-preceding" class="externalDFN">preceding</a> the <a href="#dfn-shadow-element" class="internalDFN">shadow element</a></li>
+          <li>There is no other <a href="#dfn-content-element" class="internalDFN">content element</a> in the <a title="ancestor" href="http://dom.spec.whatwg.org/#concept-tree-ancestor" class="externalDFN">ancestors</a> of the <a href="#dfn-shadow-element" class="internalDFN">shadow element</a></li>
+        </ul>
+      </section>
+
+      <section id="distribution-results">
+        <h3 aria-level="2" role="heading" id="h3_distribution-results"><span class="secno">3.4 </span>Distribution Results</h3>
+
+        <p>Each <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> has the <dfn id="dfn-distribution-result">distribution result</dfn> which describes the result of distributions.
+          The <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> of the following:</p>
+        <ol>
+          <li>Each <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> has an ordered list, called <dfn id="dfn-distributed-nodes">distributed nodes</dfn>, which consists of <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> which are distributed into the <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>.</li>
+          <li>Each <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> that is not an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> has an ordered list, called <dfn id="dfn-destination-insertion-points">destination insertion points</dfn>, which consists of <a title="insertion point" href="#dfn-insertion-point" class="internalDFN">insertion points</a> to where the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> is distributed</li>
+        </ol>
+
+        <p>An <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> <var>A</var> is the <dfn id="dfn-final-destination">final destination</dfn> of a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <var>B</var> if <var>A</var> is the last item of the <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <var>B</var>.</p>
+
+        <p>When a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <var>A</var> is <dfn title="distributes" id="dfn-distributes">distributed</dfn> into an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:</p>
+        <ul>
+          <li>Add <var>A</var> to the <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> of <var>B</var></li>
+          <li>Add <var>B</var> to the <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <var>A</var></li>
+        </ul>
+
+        <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_3"><span>Note</span></div><div class="">
+          <p>One case that deserves special consideration is the situation when an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> is a child <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of another <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>. In such situations, the <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> <a title="distributes" href="#dfn-distributes" class="internalDFN">distributed</a> into that <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> appear as if they were child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> in the context of <a href="#dfn-distribution" class="internalDFN">distribution</a>. Thus, the <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> <a title="distributes" href="#dfn-distributes" class="internalDFN">distributed</a> to a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> could have already been <a title="distributes" href="#dfn-distributes" class="internalDFN">distributed</a> from its parent tree.</p>
+
+          <p>Despite being distributed to more than one insertion point, a node still only appears once in the composed tree at the final destination.</p>
+        </div></div>
+
+        <figure id="fig-a-re-distribution.-in-the-figure-a-node-child-1-is-distributed-into-insertion-point-1.-then-child1-is-re-distributed-into-insertion-point-3.-the-destination-insertion-points-of-child-1-is-insertion-point-1-insertion-point-3-and-insertion-point-3-is-the-final-destination-of-child-1.-the-distributed-nodes-of-insertion-point-1-and-insertion-point-3-is-child-1-and-child-1-child-3-respectively.x">
+          <object data="re-distributions.svg" width="693" height="822"></object>
+          <figcaption>Fig. <span class="figno">4</span> <span class="fig-title">A re-distribution.
+            In the figure, a node <em>child 1</em> is distributed into <em>insertion point 1</em>. Then <em>child1</em> is re-distributed into <em>insertion point 3</em>.
+            The destination insertion points of <em>child 1</em> is [<em>insertion point 1</em>, <em>insertion point 3</em>] and <em>insertion point 3</em> is the final destination of <em>child 1</em>.
+            The distributed nodes of <em>insertion point 1</em> and <em>insertion point 3</em> is [<em>child 1</em>] and [<em>child 1</em>, <em>child 3</em>], respectively.
+          </span></figcaption>
+        </figure>
+
+      </section>
+
+      <section id="distribution-algorithms">
+        <h3 aria-level="2" role="heading" id="h3_distribution-algorithms"><span class="secno">3.5 </span>Distribution Algorithms</h3>
+
+        <p>The <dfn id="dfn-distribution-algorithm">distribution algorithm</dfn> <strong>must</strong> be used to determine the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> for a <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>TREE-OF-TREES</var>, a <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a></dd>
+            <dt>Output</dt>
+            <dd>The <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> of <var>TREE-OF-TREES</var> is updated</dd>
+          </dl>
+          <ol>
+            <li>Let all <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> and <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> owned by <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in <var>TREE-OF-TREES</var> be empty</li>
+            <li>Let <var>ROOT-TREE</var> be the <a href="#dfn-root-tree" class="internalDFN">root tree</a> of <var>TREE-OF-TREES</var></li>
+            <li>Run the <a href="#dfn-distribution-resolution-algorithm" class="internalDFN">distribution resolution algorithm</a> with <var>ROOT-TREE</var> as input</li>
+          </ol>
+        </div>
+
+        <p>The <dfn id="dfn-distribution-resolution-algorithm">distribution resolution algorithm</dfn> <strong>must</strong> be used to determine the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> for a given <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> and its <a title="descendant tree" href="#dfn-descendant-tree" class="internalDFN">descendant trees</a>, and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>NODE-TREE</var>, a <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a></dd>
+            <dt>Output</dt>
+            <dd>The <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> is updated for the <a title="inclusive descendant tree" href="#dfn-inclusive-descendant-tree" class="internalDFN">inclusive descendant trees</a> of <var>NODE-TREE</var></dd>
+          </dl>
+
+          <ol>
+            <li>For each <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>, <var>SHADOW-HOST</var>, which participates in <var>NODE-TREE</var>, in <a href="http://dom.spec.whatwg.org/#concept-tree-order" class="externalDFN">tree order</a>:
+              <ol>
+                <li>Let <var>POOL</var> be the result of the <a href="#dfn-pool-population-algorithm" class="internalDFN">pool population algorithm</a> with <var>SHADOW-HOST</var> as input</li>
+                <li>For each <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>, <var>SHADOW-TREE</var>, which <var>SHADOW-HOST</var> <a href="#dfn-hosts" class="internalDFN">hosts</a>, in order from the <a href="#dfn-youngest-shadow-tree" class="internalDFN">youngest shadow tree</a> to the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a>:
+                  <ol>
+                    <li>Run the <a href="#dfn-pool-distribution-algorithm" class="internalDFN">pool distribution algorithm</a> with <var>SHADOW-TREE</var> and <var>POOL</var> as input</li>
+                  </ol></li>
+                <li>For each <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>, <var>SHADOW-TREE</var>, that <var>SHADOW-HOST</var> <a href="#dfn-hosts" class="internalDFN">hosts</a>, in order from the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a> to the <a href="#dfn-youngest-shadow-tree" class="internalDFN">youngest shadow tree</a>:
+                  <ol>
+                    <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a> which participates in <var>SHADOW-TREE</var></li>
+                    <li>If such a <var>SHADOW</var> exits:
+                      <ol>
+                        <li>If <var>SHADOW-TREE</var> is not the <a href="#dfn-oldest-shadow-tree" class="internalDFN">oldest shadow tree</a>:
+                          <ol>
+                            <li>Let <var>POOL</var> be the result of the <a href="#dfn-pool-population-algorithm" class="internalDFN">pool population algorithm</a> with the root node of the <a href="#dfn-older-shadow-tree" class="internalDFN">older shadow tree</a> relative to <var>SHADOW-TREE</var> as input.</li>
+                          </ol></li>
+                        <li>For each <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a>, <var>CHILD</var>, in <var>POOL</var>
+                          <ol>
+                            <li><a title="distributes" href="#dfn-distributes" class="internalDFN">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
+                          </ol></li>
+                      </ol></li>
+                    <li>Run the <a href="#dfn-distribution-resolution-algorithm" class="internalDFN">distribution resolution algorithm</a>, recursively, with <var>SHADOW-TREE</var> as input</li>
+                  </ol></li>
+              </ol></li>
+          </ol>
+        </div>
+
+        <p>The <dfn id="dfn-pool-population-algorithm">pool population algorithm</dfn> <strong>must</strong> be used to populate <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> from the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of a given <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>NODE</var>, a node</dd>
+            <dt>Output</dt>
+            <dd><var>POOL</var>, an ordered list of nodes</dd>
+          </dl>
+
+          <ol>
+            <li>Let <var>POOL</var> be an empty ordered list.</li>
+            <li>For each child <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a>, <var>CHILD</var>, of <var>NODE</var>:
+              <ol>
+                <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>:
+                  <ol>
+                    <li>Add all <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in the <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> of <var>CHILD</var> to <var>POOL</var></li>
+                  </ol></li>
+                <li>Otherwise:
+                  <ol>
+                    <li>Add <var>CHILD</var> to <var>POOL</var></li>
+                  </ol></li>
+              </ol></li>
+          </ol>
+        </div>
+
+        <p>The <dfn id="dfn-pool-distribution-algorithm">pool distribution algorithm</dfn> <strong>must</strong> be used to distribute <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in a pool into the <a title="content insertion point" href="#dfn-content-insertion-point" class="internalDFN">content insertion points</a> in a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>SHADOW-TREE</var>, a shadow tree</dd>
+            <dd><var>POOL</var>, an ordered list of nodes</dd>
+            <dt>Output</dt>
+            <dd>Nodes in POOL are distributed into the content insertion points in the tree.</dd>
+          </dl>
+
+          <ol>
+            <li>For each <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a>, <var>CONTENT</var>, which participates in <var>SHADOW-TREE</var>, in tree order:
+              <ol>
+                <li>For each <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a>, <var>NODE</var>, in <var>POOL</var>
+                  <ol>
+                    <li>If <var>NODE</var> satisfies <var>CONTENT</var>'s matching criteria:
+                      <ol>
+                        <li><a title="distributes" href="#dfn-distributes" class="internalDFN">Distribute</a> <var>NODE</var> into <var>CONTENT</var></li>
+                        <li>Remove <var>NODE</var> from <var>POOL</var></li>
+                      </ol></li>
+                  </ol></li>
+                <li>If no <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> are distributed to <var>CONTENT</var>:
+                  <ol>
+                    <li>For each child, <var>CHILD</var>, of <var>CONTENT</var>
+                      <ol>
+                        <li><a title="distributes" href="#dfn-distributes" class="internalDFN">Distribute</a> <var>CHILD</var> into <var>CONTENT</var></li>
+                      </ol></li>
+                  </ol></li>
+              </ol></li>
+          </ol>
+
+        </div>
+
+        <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_4"><span>Note</span></div><p class="">If no nodes are distributed into a <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a> <var>CONTENT</var>, the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of <var>CONTENT</var> are distributed into <var>CONTENT</var> as fallback nodes.</p></div>
+
+        <p>If any condition which affects the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> changes, the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> <strong>must</strong> be updated before any use of the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a>.</p>
+
+      </section>
+
+      <section id="satisfying-matching-criteria">
+        <h3 aria-level="2" role="heading" id="h3_satisfying-matching-criteria"><span class="secno">3.6 </span>Satisfying Matching Criteria</h3>
+
+        <p>The <dfn id="dfn-matching-criteria">matching criteria</dfn> for an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> is a set of <a title="compound selector" href="http://dev.w3.org/csswg/selectors4/#compound" class="externalDFN">compound selectors</a> [<cite><a class="bibref" href="#bib-SELECTORS4">SELECTORS4</a></cite>]. These <a title="compound selector" href="http://dev.w3.org/csswg/selectors4/#compound" class="externalDFN">compound selectors</a> are restricted to contain only these <a title="simple selector" href="http://dev.w3.org/csswg/selectors4/#simple" class="externalDFN">simple selectors</a>:</p>
+
+        <ul>
+          <li>A <a href="http://dev.w3.org/csswg/selectors4/#type-selector" class="externalDFN">type selector</a> or a <a href="http://dev.w3.org/csswg/selectors4/#universal-selector" class="externalDFN">universal selector</a></li>
+          <li><a title="class selector" href="http://dev.w3.org/csswg/selectors4/#class-selector" class="externalDFN">class selector(s)</a></li>
+          <li>An <a href="http://dev.w3.org/csswg/selectors4/#id-selector" class="externalDFN">ID selector</a></li>
+          <li><a title="attribute selector" href="http://dev.w3.org/csswg/selectors4/#attribute-selector" class="externalDFN">attribute selector(s)</a></li>
+          <li>A <a href="http://dev.w3.org/csswg/selectors4/#negation" class="externalDFN">negation pseudo-class</a>, <code>:not()</code></li>
+        </ul>
+
+        <p>A <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <dfn title="satisfies-matching-criteria" id="dfn-satisfies-matching-criteria">satisfies</dfn> a <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a> only if:</p>
+        <ol>
+          <li>all <a title="compound selector" href="http://dev.w3.org/csswg/selectors4/#compound" class="externalDFN">compound selectors</a> in the set, contain only the <a title="simple selector" href="http://dev.w3.org/csswg/selectors4/#simple" class="externalDFN">simple selectors</a> specified above; and</li>
+          <li>a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> matches at least one <a title="compound selector" href="http://dev.w3.org/csswg/selectors4/#compound" class="externalDFN">compound selectors</a> in the set or the set is empty.</li>
+        </ol>
+      </section>
+
+    </section>
+
+    <section id="composition">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_composition"><span class="secno">4. </span>Composition</h2>
+
+      <p>The <dfn id="dfn-composed-tree-children-calculation-algorithm">composed tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> in the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+      <div class="algorithm">
+        <dl>
+          <dt>Input</dt>
+          <dd><var>NODE</var>, a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> which participates in a composed tree</dd>
+          <dt>Output</dt>
+          <dd><var>CHILDREN</var>, the child nodes of <var>NODE</var> in the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>.</dd>
+        </dl>
+
+        <ol>
+          <li>Let <var>CHILDREN</var> be an empty ordered list of nodes</li>
+          <li>If <var>NODE</var> is a <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>:
+            <ol>
+              <li>Let <var>CHILD-POOL</var> be the children of the <a href="#dfn-youngest-shadow-root" class="internalDFN">youngest shadow root</a> which <var>NODE</var> <a href="#dfn-hosts" class="internalDFN">hosts</a>.</li>
+            </ol></li>
+          <li>Otherwise:
+            <ol>
+              <li>Let <var>CHILD-POOL</var> be the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of NODE</li>
+            </ol></li>
+          <li>For each <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a>, <var>CHILD</var>, in <var>CHILD-POOL</var>:
+            <ol>
+              <li>If <var>CHILD</var> is an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>:
+                <ol>
+                  <li>For each <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a>, <var>DISTRIBUTED-NODE</var>, in the <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> of the <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> <var>CHILD</var>:
+                    <ol>
+                      <li>If <var>CHILD</var> is the <a href="#dfn-final-destination" class="internalDFN">final destination</a> of <var>DISTRIBUTED-NODE</var>, add <var>DISTRIBUTED-NODE</var> to <var>CHILDREN</var></li>
+                    </ol></li>
+                </ol></li>
+              <li>Otherwise:
+                <ol>
+                  <li>Add <var>CHILD</var> to <var>CHILDREN</var></li>
+                </ol></li>
+            </ol></li>
+        </ol>
+
+      </div>
+
+      <p>For a given <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> <var>TREE-OF-TREES</var>, the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> constructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to the following tree:</p>
+      <ul>
+        <li>The <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> is the <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of the <a href="#dfn-root-tree" class="internalDFN">root tree</a> of <var>TREE-OF-TREES</var>.</li>
+        <li>For a given <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> which <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>, the child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> is the result of the <a href="#dfn-composed-tree-children-calculation-algorithm" class="internalDFN">composed tree children calculation algorithm</a> with the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> as input.
+        </li>
+      </ul>
+    </section>
+
+    <section id="events">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_events"><span class="secno">5. </span>Events</h2>
+
+      <p>When an <a href="http://dom.spec.whatwg.org/#events" class="externalDFN">event</a> is <a title="event dispatch" href="http://dom.spec.whatwg.org/#concept-event-dispatch" class="externalDFN">dispatched</a> in a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>, its path either crosses the <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a> or is terminated at the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a>. One exception are the <a title="mutation event" href="http://www.w3.org/TR/DOM-Level-3-Events/#interface-MutationEvent" class="externalDFN">mutation events</a>. The <a title="mutation event" href="http://www.w3.org/TR/DOM-Level-3-Events/#interface-MutationEvent" class="externalDFN">mutation event types</a> <strong>must</strong> never be dispatched in a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+
+      <section id="events-that-are-always-stopped">
+        <h3 aria-level="2" role="heading" id="h3_events-that-are-always-stopped"><span class="secno">5.1 </span>Events that are Always Stopped</h3>
+
+        <p>The <dfn title="events-always-stopped" id="dfn-events-always-stopped">following events</dfn> <strong>must</strong> always be stopped at the <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a>:</p>
+        <ul>
+          <li><code>abort</code></li>
+          <li><code>error</code></li>
+          <li><code>select</code></li>
+          <li><code>change</code></li>
+          <li><code>load</code></li>
+          <li><code>reset</code></li>
+          <li><code>resize</code></li>
+          <li><code>scroll</code></li>
+          <li><code>selectstart</code></li>
+        </ul>
+      </section>
+
+      <section id="event-paths">
+        <h3 aria-level="2" role="heading" id="h3_event-paths"><span class="secno">5.2 </span>Event Paths</h3>
+
+        <p>The <dfn id="dfn-event-path-calculation-algorithm">event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>NODE</var>, a node</dd>
+            <dd><var>EVENT</var>, an event</dd>
+            <dt>Output</dt>
+            <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
+          </dl>
+          <ol>
+            <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+            <li>Let <var>CURRENT</var> be <var>NODE</var></li>
+            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+            <li>Repeat while <var>CURRENT</var> exists:
+              <ol>
+                <li>If the <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <var>CURRENT</var> is not empty:
+                  <ol>
+                    <li>For each <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>, <var>INSERTION-POINT</var>, in the <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <var>CURRENT</var>:
+                      <ol>
+                        <li>If <var>INSERTION-POINT</var> is a <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a>:
+                          <ol>
+                            <li>Let <var>SHADOW-ROOT</var> be the <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of <var>INSERTION-POINT</var></li>
+                            <li>If <var>SHADOW-ROOT</var> is not the <a href="#dfn-oldest-shadow-root" class="internalDFN">oldest shadow root</a>:
+                              <ol>
+                                <li>Add the <a href="#dfn-older-shadow-root" class="internalDFN">older shadow root</a> relative to <var>SHADOW-ROOT</var> to <var>PATH</var></li>
+                              </ol></li>
+                          </ol></li>
+                        <li>Add <var>INSERTION-POINT</var> to <var>PATH</var></li>
+                      </ol></li>
+                    <li>Let <var>CURRENT</var> be the <a href="#dfn-final-destination" class="internalDFN">final destination</a> of <var>CURRENT</var></li>
+                  </ol></li>
+                <li>Otherwise:
+                  <ol>
+                    <li>If <var>CURRENT</var> is a <a href="#dfn-shadow-root" class="internalDFN">shadow root</a>:
+                      <ol>
+                        <li>If <var>NODE</var> and <var>CURRENT</var> are in the same <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> and <var>EVENT</var> is one of the <a title="events-always-stopped" href="#dfn-events-always-stopped" class="internalDFN">events which must be stopped</a>:
+                          <ol>
+                            <li>Stop this algorithm</li>
+                          </ol></li>
+                        <li>Let <var>CURRENT</var> be the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> <var>CURRENT</var></li>
+                        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                      </ol></li>
+                    <li>Otherwise:
+                      <ol>
+                        <li>Let <var>CURRENT</var> be the <a href="http://dom.spec.whatwg.org/#concept-tree-parent" class="externalDFN">parent</a> <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> of <var>CURRENT</var></li>
+                        <li>If <var>CURRENT</var> exists:
+                          <ol>
+                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                          </ol></li>
+                      </ol></li>
+                  </ol></li>
+              </ol></li>
+          </ol>
+        </div>
+
+      </section>
+
+      <section class="informative" id="event-paths-example">
+        <h3 aria-level="2" role="heading" id="h3_event-paths-example"><span class="secno">5.3 </span>Event Paths Example</h3><p><em>This section is non-normative.</em></p>
+
+        <p>
+          Suppose we have the following tree of trees:
+        </p>
+
+        <figure id="fig-an-example-tree-of-trees.-nodes-which-are-not-involved-in-the-example-event-path-which-is-explained-later-are-omitted.x">
+          <object data="event-path-tree-of-trees.svg" width="301" height="1074"></object>
+          <figcaption>Fig. <span class="figno">5</span> <span class="fig-title">An example tree of trees. Nodes which are not involved in the example event path, which is explained later, are omitted.</span></figcaption>
+        </figure>
+
+        <ul>
+          <li>
+            <code>A</code> is a <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a>.
+          </li>
+          <li>
+            <code>E</code>, <code>J</code>, <code>N</code>, <code>Q</code>, <code>S</code> and <code>V</code> are <a title="shadow root" href="#dfn-shadow-root" class="internalDFN">shadow roots</a>.
+          </li>
+          <li>
+            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a title="content insertion point" href="#dfn-content-insertion-point" class="internalDFN">content insertion points</a>.
+          </li>
+          <li>
+            <code>X</code> is a <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a>.
+          </li>
+        </ul>
+
+        <p>
+          This <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> has the following seven <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>, one <a href="#dfn-document-tree" class="internalDFN">document tree</a> and six <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>:
+        </p>
+
+        <ul>
+          <li>
+            The <var>document tree 1</var>. Node <code>A</code>, <code>B</code>, <code>C</code> and <code>D</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 2</var> hosted by <code>B</code>. Node <code>E</code>, <code>F</code>, <code>G</code>, <code>H</code> and <code>I</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 3</var> hosted by <code>H</code>. Node <code>J</code>, <code>K</code>, <code>L</code> and <code>M</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 4</var> hosted by <code>K</code>. Node <code>N</code>, <code>O</code> and <code>P</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 5</var> hosted by <code>O</code>. Node <code>Q</code> and <code>R</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 6</var> hosted by <code>F</code>. Node <code>S</code>, <code>T</code> and <code>U</code> participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 7</var> hosted by <code>B</code>. Node <code>V</code>, <code>W</code> and <code>X</code> participate in that.
+            This <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> is younger than the <var>shadow tree 2</var>.
+          </li>
+        </ul>
+
+        <p>
+          Let's assume that the <a href="#dfn-distribution-result" class="internalDFN">distribution result</a> of this <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a> is:
+        </p>
+
+        <ul>
+          <li>
+            The <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <code>C</code> are <code>[I, M]</code> (<code>C</code> is re-distributed)
+          </li>
+          <li>
+            The <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <code>L</code> are <code>[P, R]</code> (<code>L</code> is re-distributed)
+          </li>
+          <li>
+            The <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <code>G</code> are <code>[U]</code>
+          </li>
+          <li>
+            The <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of <code>F</code> are <code>[X]</code>
+          </li>
+        </ul>
+
+        <p>
+          In this case, if an event is dispatched on node <code>D</code>, the event path will be:
+        </p>
+        <p>
+          <code>
+            [D, C, I, M, L, P, R, Q, O, N, K, J, H, G, U, T, S, F, E, X, W, V, B, A]
+          </code>
+        </p>
+
+        <p>
+          Note that the <a href="#dfn-event-path-calculation-algorithm" class="internalDFN">event path calculation algorithm</a> is designed to achieve the following goals:
+        </p>
+
+        <ol>
+          <li>
+            If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the node tree, the event path also includes <var>PARENT</var>.
+            <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
+          </li>
+          <li>
+            Nodes in the event path form a <em>linear ancestor chain</em> in each <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a>. There are no <em>branch points</em> in each <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a>.
+          </li>
+        </ol>
+
+        <figure id="fig-the-relationship-between-an-event-path-and-node-trees.-in-the-figure-a-number-shown-in-a-left-side-of-each-node-represents-a-zero-based-position-of-each-node-in-the-event-path.-a-parent-node-always-have-a-larger-number-than-that-of-its-child-node-in-each-node-tree.x">
+          <object data="event-path-node-trees.svg" width="884" height="473">&gt;</object>
+          <figcaption>Fig. <span class="figno">6</span> <span class="fig-title">
+            The relationship between an event path and node trees. In the figure, a number shown in a left-side of each node represents a zero-based position of each node in the event path.
+            A parent node always have a larger number than that of its child node in each node tree.
+          </span></figcaption>
+        </figure>
+
+        <p>
+          That means if we focus on one <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> and forget all other <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>,
+          the event path would be seen as if the event happened only on the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which we are focused on.
+          This is an important aspect in a sense that hosting shadow trees doesn't have any effect to the event path <em>within</em> the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> participate in
+          as long as the event is not stopped somewhere in the <a title="descendant tree" href="#dfn-descendant-tree" class="internalDFN">descendant trees</a>.
+        </p>
+
+        <p>
+          For example, from the view of the <var>document tree 1</var>, the event path would be seen as <code>[D, C, B, A]</code>.
+          From the view of the <var>shadow tree 2</var>, the event path would be seen as <code>[I, H, G, F, E]</code>.
+          The similar things also apply to other <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>.
+        </p>
+
+        <p>
+          It is also worth pointing out that if we exclude all <a title="insertion point" href="#dfn-insertion-point" class="internalDFN">insertion points</a> and <a title="shadow root" href="#dfn-shadow-root" class="internalDFN">shadow roots</a> from an event path,
+          the result would be equivalent to the inclusive ancestors of the node on which the event is dispatched, in the composed tree.
+        </p>
+
+        <figure id="fig-the-relationship-between-an-event-path-and-the-composed-tree.-the-event-path-used-in-the-example-is-shown-in-the-left-hand-side-and-the-composed-tree-is-shown-in-the-right-hand-side.-if-we-exclude-all-insertion-points-and-shadow-roots-from-the-event-path-the-result-would-be-equivalent-to-the-inclusive-ancestors-of-the-node-d-in-the-composed-tree.x">
+          <object data="event-path-and-composed-tree.svg" width="217" height="1723"></object>
+          <figcaption>Fig. <span class="figno">7</span> <span class="fig-title">
+            The relationship between an event path and the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>. The event path used in the example is shown in the left-hand side and the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a> is shown in the right-hand side.
+            If we exclude all <a title="insertion point" href="#dfn-insertion-point" class="internalDFN">insertion points</a> and <a title="shadow root" href="#dfn-shadow-root" class="internalDFN">shadow roots</a> from the event path,
+            the result would be equivalent to the inclusive ancestors of the node, <code>D</code>, in the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>.
+          </span></figcaption>
+        </figure>
+
+      </section>
+
+      <section id="event-retargeting">
+        <h3 aria-level="2" role="heading" id="h3_event-retargeting"><span class="secno">5.4 </span>Event Retargeting</h3>
+
+        <p>In the cases where event path is across multiple node trees, the event's information about the target of the event is adjusted in order to maintain encapsulation. Event <dfn id="dfn-retargeting">retargeting</dfn> is a process of computing relative targets for each ancestor of the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> at which the event is dispatched. A <dfn id="dfn-relative-target">relative target</dfn> is a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the encapsulation.</p>
+
+        <p>The <dfn id="dfn-retargeting-algorithm">retargeting algorithm</dfn> is used to determine relative targets, and it <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>EVENT-PATH</var>, an event path</dd>
+            <dd><var>CURRENT-TARGET</var>, a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> where the event listener is invoked.</dd>
+            <dt>Output</dt>
+            <dd><var>RELATIVE-TARGET</var>, adjusted target</dd>
+          </dl>
+          <ol>
+            <li>Let <var>CURRENT-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which <var>CURRENT-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in</li>
+            <li>Let <var>ORIGINAL-TARGET</var> be the first item in <var>EVENT-PATH</var></li>
+            <li>Let <var>ORIGINAL-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which <var>ORIGINAL-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in</li>
+            <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a href="#dfn-inclusive-ancestor-tree" class="internalDFN">inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>ORIGINAL-TARGET-TREE</var></li>
+            <li>Let <var>RELATIVE-TARGET</var> be the first <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> in <var>EVENT-PATH</var> which satisfies the following condition:
+              <ol>
+                <li>The <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in <var>RELATIVE-TARGET-TREE</var></li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>The retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
+      </section>
+
+      <section id="retargeting-relatedtarget">
+        <h3 aria-level="2" role="heading" id="h3_retargeting-relatedtarget"><span class="secno">5.5 </span>Retargeting <code>relatedTarget</code></h3>
+
+        <p>Some events have a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a> [<cite><a class="bibref" href="#bib-DOM-Level-3-Events">DOM-Level-3-Events</a></cite>] property, which holds a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> that's not the event's target, but is related to the event.</p>
+
+        <p>For instance, a <code>mouseover</code> event's <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a> may hold the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this tree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
+
+        <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch <strong>must</strong> be adjusted. In general:</p>
+        <ol>
+          <li>For a given node, the <code>relatedTarget</code> <strong>must</strong> be changed to its ancestor (or self) that is in the same <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> as the node</li>
+          <li>Event listeners <strong>must not</strong> be invoked on a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> for which the <code>target</code> and <code>relatedTarget</code> are the same.</li>
+        </ol>
+
+        <p>The <dfn id="dfn-related-target-resolution-algorithm">related target resolution algorithm</dfn> <strong>must</strong> be used to determine the value of the <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a> property and <strong>must</strong> be <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>EVENT</var>, an event</dd>
+            <dd><var>CURRENT-TARGET</var>, the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> on which event listeners would be invoked</dd>
+            <dd><var>RELATED-TARGET</var>, the related target for the event</dd>
+            <dt>Output</dt>
+            <dd><var>ADJUSTED-RELATED-TARGET</var>, the <dfn id="dfn-adjusted-related-target">adjusted related target</dfn> for <var>CURRENT-TARGET</var></dd>
+          </dl>
+          <ol>
+            <li>Let <var>CURRENT-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which <var>CURRENT-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in</li>
+            <li>Let <var>RELATED-TARGET-TREE</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which <var>RELATED-TARGET</var> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in</li>
+            <li>Let <var>RELATED-TARGET-EVENT-PATH</var> be the result of the <a href="#dfn-event-path-calculation-algorithm" class="internalDFN">event path calculation algorithm</a> with <var>RELATED-TARGET</var> and <var>EVENT</var> as input</li>
+            <li>If <var>CURRENT-TARGET-TREE</var> and <var>RELATED-TARGET-TREE</var> participate in the same <a href="#dfn-tree-of-trees" class="internalDFN">tree of trees</a>:
+              <ol>
+                <li>Let <var>LOWEST-COMMON-ANCESTOR-TREE</var> be the lowest common <a href="#dfn-inclusive-ancestor-tree" class="internalDFN">inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>RELATED-TARGET-TREE</var></li>
+              </ol>
+            </li>
+            <li>Otherwise:
+              <ol>
+                <li>Let <var>LOWEST-COMMON-ANCESTOR-TREE</var> be the <a href="#dfn-root-tree" class="internalDFN">root tree</a> of <var>RELATED-TARGET-TREE</var></li>
+              </ol>
+            </li>
+            <li>For each <a href="#dfn-inclusive-ancestor-tree" class="internalDFN">inclusive ancestor tree</a>, <var>COMMON-ANCESTOR-TREE</var>, of the <var>LOWEST-COMMON-ANCESTOR-TREE</var>, in ascending order:
+              <ol>
+                <li>Let <var>ADJUSTED-RELATED-TARGET</var> be the first <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> in <var>RELATED-TARGET-EVENT-PATH</var> which satisfies the following condition:
+                  <ol>
+                    <li>The <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <a href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participates</a> in <var>COMMON-ANCESTOR-TREE</var></li>
+                  </ol>
+                </li>
+                <li>If such a <var>ADJUSTED-RELATED-TARGET</var> exists:
+                  <ol>
+                    <li>Stops this algorithm</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_5"><span>Note</span></div><p class="">The result of the related target resolution algorithm is not always null. Unless that, you should file a bug for this specification.</p></div>
+
+        <p>The relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
+      </section>
+
+      <section id="retargeting-touch-events">
+        <h3 aria-level="2" role="heading" id="h3_retargeting-touch-events"><span class="secno">5.6 </span>Retargeting Touch Events</h3>
+
+        <p>The <a href="http://www.w3.org/TR/touch-events/#touch-interface" class="externalDFN"><code>Touch</code></a> <a title="Touch target" href="http://www.w3.org/TR/touch-events/#widl-Touch-target" class="externalDFN"><code>target</code></a> [<cite><a class="bibref" href="#bib-TOUCH-EVENTS">TOUCH-EVENTS</a></cite>] attribute must be adjusted in the same way as an event with a <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a>. Each <a href="http://www.w3.org/TR/touch-events/#touch-interface" class="externalDFN"><code>Touch</code></a> <a title="Touch target" href="http://www.w3.org/TR/touch-events/#widl-Touch-target" class="externalDFN"><code>target</code></a> in the <a href="http://www.w3.org/TR/touch-events/#touchlist-interface" class="externalDFN"><code>TouchList</code></a> returned from <a href="http://www.w3.org/TR/touch-events/#touchevent-interface" class="externalDFN"><code>TouchEvent</code></a> <a title="touches" href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-touches" class="externalDFN"><code>touches()</code></a>, <a title="changedTouches" href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-changedTouches" class="externalDFN"><code>changedTouches()</code></a> and <a title="targetTouches" href="http://www.w3.org/TR/touch-events/#widl-TouchEvent-targetTouches" class="externalDFN"><code>targetTouches()</code></a> must be the result of <a href="#dfn-related-target-resolution-algorithm" class="internalDFN">related target resolution algorithm</a>, given <var>NODE</var> and <a href="http://www.w3.org/TR/touch-events/#touch-interface" class="externalDFN"><code>Touch</code></a> <a title="Touch target" href="http://www.w3.org/TR/touch-events/#widl-Touch-target" class="externalDFN"><code>target</code></a> as arguments.</p>
+      </section>
+
+      <section id="retargeting-focus-events">
+        <h3 aria-level="2" role="heading" id="h3_retargeting-focus-events"><span class="secno">5.7 </span>Retargeting Focus Events</h3>
+
+        <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> that is losing focus as a result of <code>target</code> gaining focus or the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
+      </section>
+
+      <section id="event-dispatch">
+        <h3 aria-level="2" role="heading" id="h3_event-dispatch"><span class="secno">5.8 </span>Event Dispatch</h3>
+
+        <p>At the time of event dispatch:</p>
+        <ul>
+          <li>The <a href="http://dom.spec.whatwg.org/#events" class="externalDFN"><code>Event</code></a> <a href="http://dom.spec.whatwg.org/#dom-event-target" class="externalDFN"><code>target</code></a> and <a href="http://dom.spec.whatwg.org/#dom-event-currenttarget" class="externalDFN"><code>currentTarget</code></a> attributes <strong>must</strong> return the <a href="#dfn-relative-target" class="internalDFN">relative target</a> for the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> on which event listeners are <a title="event listener invoke" href="http://dom.spec.whatwg.org/#concept-event-listener-invoke" class="externalDFN">invoked</a></li>
+          <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#interface-MouseEvent" class="externalDFN"><code>MouseEvent</code></a> <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target" class="internalDFN">adjusted related target</a></li>
+          <li>The <a href="http://www.w3.org/TR/DOM-Level-3-Events/#interface-MouseEvent" class="externalDFN"><code>MouseEvent</code></a> <a href="http://www.w3.org/TR/cssom-view/#dom-mouseevent-offsetx" class="externalDFN"><code>offsetX</code></a> and <a href="http://www.w3.org/TR/cssom-view/#dom-mouseevent-offsety" class="externalDFN"><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a href="http://www.w3.org/TR/cssom-view/#padding-edge" class="externalDFN">padding edge</a> of the <a href="#dfn-relative-target" class="internalDFN">relative target</a></li>
+          <li>The <a href="http://www.w3.org/TR/touch-events/#touch-interface" class="externalDFN"><code>Touch</code></a> <a title="Touch target" href="http://www.w3.org/TR/touch-events/#widl-Touch-target" class="externalDFN"><code>target</code></a> attribute <strong>must</strong> return the <a href="#dfn-adjusted-related-target" class="internalDFN">adjusted related target</a></li>
+          <li>If the <a href="http://www.w3.org/TR/DOM-Level-3-Events/#widl-MouseEvent-relatedTarget" class="externalDFN"><code>relatedTarget</code></a> and <a href="http://dom.spec.whatwg.org/#dom-event-target" class="externalDFN"><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked. <a href="http://www.w3.org/TR/touch-events/#touchevent-interface" class="externalDFN"><code>TouchEvent</code></a> is not subject to this rule.</li>
+          <li>When <em>capturing</em>, which entails processing step 6 of the <a title="event dispatch" href="http://dom.spec.whatwg.org/#concept-event-dispatch" class="externalDFN">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a title="event listener invoke" href="http://dom.spec.whatwg.org/#concept-event-listener-invoke" class="externalDFN">invoked</a> on a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <strong>if</strong> it is the same as its <a href="#dfn-relative-target" class="internalDFN">relative target</a></li>
+          <li>When <em>bubbling</em>, which entails processing step 9 of the <a title="event dispatch" href="http://dom.spec.whatwg.org/#concept-event-dispatch" class="externalDFN">event dispatch algorithm</a>, the <a href="http://dom.spec.whatwg.org/#events" class="externalDFN"><code>Event</code></a> <a href="http://dom.spec.whatwg.org/#dom-event-eventphase" class="externalDFN">eventPhase</a> attribute <strong>must</strong> return <a href="http://dom.spec.whatwg.org/#dom-event-at_target" class="externalDFN">AT_TARGET</a> <strong>if</strong> the <a href="#dfn-relative-target" class="internalDFN">relative target</a> is same as the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> on which event listeners are <a title="event listener invoke" href="http://dom.spec.whatwg.org/#concept-event-listener-invoke" class="externalDFN">invoked</a></li>
+          <li>If the event's <a href="http://dom.spec.whatwg.org/#dom-event-bubbles" class="externalDFN"><code>bubbles</code></a> attribute value is <strong>false</strong>, run these substeps:
+            <ol>
+              <li>Reverse the order of <em>event path</em></li>
+              <li>Initialize event's <a href="http://dom.spec.whatwg.org/#dom-event-eventphase" class="externalDFN"><code>eventPhase</code></a> attribute to <a href="http://dom.spec.whatwg.org/#dom-event-at_target" class="externalDFN"><code>AT_TARGET</code></a></li>
+              <li>For each object in <em>event path</em> where the <a href="#dfn-relative-target" class="internalDFN">relative target</a> is same as the object, <a title="event listener invoke" href="http://dom.spec.whatwg.org/#concept-event-listener-invoke" class="externalDFN">invoke</a> its <a title="event listener" href="http://dom.spec.whatwg.org/#concept-event-listener" class="externalDFN">event listeners</a>, with event <em>event</em>, as long as <em>event</em>'s <a href="http://dom.spec.whatwg.org/#stop-propagation-flag" class="externalDFN">stop propagation flag</a> is unset</li>
+            </ol></li>
+        </ul>
+
+        <p>Upon completion of the event dispatch, the <a href="http://dom.spec.whatwg.org/#events" class="externalDFN"><code>Event</code></a> object's <a href="http://dom.spec.whatwg.org/#dom-event-target" class="externalDFN"><code>target</code></a> and <a href="http://dom.spec.whatwg.org/#dom-event-currenttarget" class="externalDFN"><code>currentTarget</code></a> <strong>must</strong> be to the highest ancestor's <a href="#dfn-relative-target" class="internalDFN">relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> in <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>.</p>
+      </section>
+
+      <section class="informative" id="event-retargeting-example">
+        <h3 aria-level="2" role="heading" id="h3_event-retargeting-example"><span class="secno">5.9 </span>Event Retargeting Example</h3><p><em>This section is non-normative.</em></p>
+
+        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a href="#dfn-document-tree" class="internalDFN">document tree</a> and the <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a title="element" href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> to demarcate the shadow boundaries and represent <a title="shadow root" href="#dfn-shadow-root" class="internalDFN">shadow roots</a>:</p>
+        <div class="example"><div class="example-title"><span>Example 1</span></div><pre class="example">&lt;div id="player"&gt;
+    <span class="shadow-boundary">&lt;shadow-root id="player-shadow-root"&gt;</span>
+        &lt;div id="controls"&gt;
+            &lt;button id="play-button"&gt;PLAY&lt;/button&gt;
+            &lt;input type="range" id="timeline"&gt;
+                <span class="shadow-boundary">&lt;shadow-root id="timeline-shadow-root"&gt;</span>
+                    &lt;div id="slider-thumb" id="timeline-slider-thumb"&gt;&lt;/div&gt;
+                <span class="shadow-boundary">&lt;/shadow-root&gt;</span>
+            &lt;/input&gt;
+            &lt;div id="volume-slider-container"&gt;
+                &lt;input type="range" id="volume-slider"&gt;
+                    <span class="shadow-boundary">&lt;shadow-root id="volume-shadow-root"&gt;</span>
+                        &lt;div id="slider-thumb" id="volume-slider-thumb"&gt;&lt;/div&gt;
+                    <span class="shadow-boundary">&lt;/shadow-root&gt;</span>
+                &lt;/input&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    <span class="shadow-boundary">&lt;/shadow-root&gt;</span>
+&lt;/div&gt;</pre></div>
+
+        <p>Let's have a user position their pointing device over the volume slider's thumb (<code>#volume-slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
+
+        <p>Per the <a href="#dfn-retargeting-algorithm" class="internalDFN">retargeting algorithm</a>, we should have the following set of ancestors and relative targets:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Ancestor</th>
+              <th>Relative Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>#player</code></td>
+              <td><code><strong>#player</strong></code></td>
+            </tr>
+            <tr>
+              <td><code>#player-shadow-root</code></td>
+              <td><code>#volume-slider</code></td>
+            </tr>
+            <tr>
+              <td><code>#controls</code></td>
+              <td><code>#volume-slider</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-container</code></td>
+              <td><code>#volume-slider</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider</code></td>
+              <td><code><strong>#volume-slider</strong></code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-shadow-root</code></td>
+              <td><code>#volume-slider-thumb</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-thumb</code></td>
+              <td><code><strong>#volume-slider-thumb</strong></code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
+          (<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
+
+        <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a href="#dfn-related-target-resolution-algorithm" class="internalDFN">related target resolution algorithm</a>, we should have the following set of ancestors and adjusted related targets:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Ancestor</th>
+              <th>Relative Target</th>
+              <th>Adjusted related Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>#player</code></td>
+              <td><code><strong>#player</strong></code></td>
+              <td><code><strong>#player</strong></code></td>
+            </tr>
+            <tr>
+              <td><code>#player-shadow-root</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#controls</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-container</code></td>
+              <td><code>#volume-slider</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider</code></td>
+              <td><code><strong>#volume-slider</strong></code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-shadow-root</code></td>
+              <td><code>#volume-slider-thumb</code></td>
+              <td><code>#timeline</code></td>
+            </tr>
+            <tr>
+              <td><code>#volume-slider-thumb</code></td>
+              <td><code><strong>#volume-slider-thumb</strong></code></td>
+              <td><code><strong>#timeline</strong></code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>The node, <code>#player</code>, has both <code>target</code> and <code>relatedTarget</code> being the same value (<code>#player</code>), which means that we do not dispatch the event on this <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> and its ancestors.</p>
+      </section>
+
+    </section>
+
+    <section id="user-interaction">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_user-interaction"><span class="secno">6. </span>User Interaction</h2>
+
+      <section class="informative" id="ranges-and-selections">
+        <h3 aria-level="2" role="heading" id="h3_ranges-and-selections"><span class="secno">6.1 </span>Ranges and Selections</h3><p><em>This section is non-normative.</em></p>
+
+        <p>
+          <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">Selection</a> [<cite><a class="bibref" href="#bib-EDITING">EDITING</a></cite>] is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
+        </p>
+
+        <p>Since <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> which are in the different <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a> never have the same <a href="http://dom.spec.whatwg.org/#concept-tree-root" class="externalDFN">root</a>, there may never exist a valid <a title="range" href="http://dom.spec.whatwg.org/#range" class="externalDFN">DOM range</a> that spans multiple <a title="node tree" href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node trees</a>.</p>
+
+        <p>Accordingly, <a title="selection" href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">selections</a> may only exist within one <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a>, because they are defined by a single <a href="http://dom.spec.whatwg.org/#range" class="externalDFN">range</a>. The <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">selection</a>, returned by the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#dom-window-getselection" class="externalDFN"><code>window.getSelection()</code></a> method never returns a <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">selection</a> within a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+
+        <p>The <code>getSelection()</code> method of the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a> object returns the current <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">selection</a> in this <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+      </section>
+
+      <section id="focus-navigation">
+        <h3 aria-level="2" role="heading" id="h3_focus-navigation"><span class="secno">6.2 </span>Focus Navigation</h3>
+
+        <p>If a <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> doesn’t <a title="participates" href="http://dom.spec.whatwg.org/#concept-tree-participate" class="externalDFN">participate</a> in the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>, the <a href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">node</a> <strong>must</strong> be skipped from the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> [<cite><a class="bibref" href="#bib-CSS3UI">CSS3UI</a></cite>] sequence.</p>
+
+        <p>For <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">sequential focus navigation</a>, the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> sequence for a given <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> for other <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> as follow:</p>
+        <ol>
+          <li>If <var>A</var> is the <a href="#dfn-youngest-shadow-tree" class="internalDFN">youngest shadow tree</a>:
+            <ol>
+              <li>Let <var>HOST</var> be the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> A</li>
+              <li>Let <var>B</var> be the <a href="http://dom.spec.whatwg.org/#concept-node-tree" class="externalDFN">node tree</a> which <var>HOST</var> participates in</li>
+              <li>The <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> for A <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> for <var>B</var>:
+                <ol>
+                  <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#focusable-area" class="externalDFN">focusable</a>; or</li>
+                  <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a title="nav-index auto" href="http://www.w3.org/TR/css3-ui/#nav-index" class="externalDFN"><code>auto</code></a> for determining its position.</li>
+                </ol></li>
+            </ol></li>
+          <li>Otherwise:
+            <ol>
+              <li>Let <var>B</var> be the <a href="#dfn-younger-shadow-tree" class="internalDFN">younger shadow tree</a> relative to <var>A</var></li>
+              <li>Let <var>SHADOW</var> be the <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a> in <var>B</var></li>
+              <li>If <var>SHADOW</var> exists, the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a> for <var>B</var> immediately after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a title="nav-index auto" href="http://www.w3.org/TR/css3-ui/#nav-index" class="externalDFN"><code>auto</code></a> for determining its position.</li>
+            </ol></li>
+        </ol>
+
+        <p>For <a href="http://www.w3.org/TR/css3-ui/#nav-dir" class="externalDFN">directional focus navigation</a>, it is up to the user agent to integrate the <a title="navigation order" href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation orders</a> for <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a> into the <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a> <a href="http://www.w3.org/TR/css3-ui/#keyboard" class="externalDFN">navigation order</a>.</p>
+      </section>
+
+      <section id="active-element">
+        <h3 aria-level="2" role="heading" id="h3_active-element"><span class="secno">6.3 </span>Active Element</h3>
+
+        <p>To maintain encapsulation, the value of the <a title="Document object" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document" class="externalDFN">Document</a> object's focus API property <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement" class="externalDFN">activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a href="#dfn-shadow-root" class="internalDFN">shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+
+        <p>The <dfn id="dfn-active-element-adjustment-algorithm">active <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> adjustment algorithm</dfn> is used to determine the value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement" class="externalDFN">activeElement</a> property, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>ELEMENT</var>, the focused <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a></dd>
+            <dd><var>ROOT</var>, either a <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a> or a <a href="#dfn-shadow-root" class="internalDFN">shadow root</a></dd>
+            <dt>Output</dt>
+            <dd><var>ADJUSTED</var>, an adjusted <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#dom-document-activeelement" class="externalDFN">activeElement</a> property of <var>ROOT</var>.</dd>
+          </dl>
+          <ol>
+            <li>Let <var>PATH</var> be the result of the <a href="#dfn-event-path-calculation-algorithm" class="internalDFN">event path calculation algorithm</a> with <var>ELEMENT</var> and null as input</li>
+            <li>Let <var>ADJUSTED</var> be the result of the <a href="#dfn-retargeting-algorithm" class="internalDFN">retargeting algorithm</a> with <var>PATH</var> and <var>ROOT</var> as input</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="editing">
+        <h3 aria-level="2" role="heading" id="h3_editing"><span class="secno">6.4 </span>Editing</h3>
+
+        <p>The value of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#attr-contenteditable" class="externalDFN"><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> to its <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>.</p>
+      </section>
+
+      <section id="assistive-technology">
+        <h3 aria-level="2" role="heading" id="h3_assistive-technology"><span class="secno">6.5 </span>Assistive Technology</h3>
+
+        <p>User agents with assistive technology traverse the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>, and thus enable full use of WAI-ARIA [<cite><a class="bibref" href="#bib-WAI-ARIA">WAI-ARIA</a></cite>] semantics in the <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>.</p>
+
+      </section>
+
+    </section>
+
+    <section id="html-elements-in-shadow-trees">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_html-elements-in-shadow-trees"><span class="secno">7. </span>HTML Elements in Shadow Trees</h2>
+
+      <p>Comparatively, a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> can be seen as somewhere between <em>just part of a <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a></em> and itself being a <a title="interface DocumentFragment" href="http://dom.spec.whatwg.org/#interface-documentfragment" class="externalDFN">document fragment</a>. Since it is rendered, a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> aims to retain the traits of a typical <a href="http://dom.spec.whatwg.org/#trees" class="externalDFN">tree</a> in a <a href="http://dom.spec.whatwg.org/#concept-document" class="externalDFN">document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a href="#dfn-document-tree" class="internalDFN">document tree</a>. Thus, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> <strong>must</strong> behave as specified [<cite><a class="bibref" href="#bib-HTML">HTML</a></cite>] in the <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a>, with a few exceptions.</p>
+
+      <section id="inert-html-elements">
+        <h3 aria-level="2" role="heading" id="h3_inert-html-elements"><span class="secno">7.1 </span>Inert HTML Elements</h3>
+
+        <p>A subset of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> <strong>must</strong> behave as <dfn id="dfn-inert">inert</dfn>, or not part of the <a href="#dfn-document-tree" class="internalDFN">document tree</a>. This is consistent how the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> would behave in a <a title="interface DocumentFragment" href="http://dom.spec.whatwg.org/#interface-documentfragment" class="externalDFN">document fragment</a>. These <a title="element" href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">elements</a> are:</p>
+        <ul>
+          <li><a title="base element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-base-element" class="externalDFN"><code>base</code></a></li>
+          <li><a title="link element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element" class="externalDFN"><code>link</code></a></li>
+        </ul>
+
+        <p>All other <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> in the <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a> <strong>must</strong> behave as if they were part of the <a href="#dfn-document-tree" class="internalDFN">document tree</a>.</p>
+      </section>
+
+    </section>
+
+    <section id="html-elements-and-their-shadow-trees">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_html-elements-and-their-shadow-trees"><span class="secno">8. </span>HTML Elements and Their Shadow Trees</h2>
+
+      <p>Per <a title="HTML" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/" class="externalDFN">specification</a>, some <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a href="#dfn-composed-tree" class="internalDFN">composed tree</a>, all <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a> <strong>must</strong> have an <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> of a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> that is created and populated at the time of <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30%">HTML Element</th>
+            <th>Shadow Tree Requirements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a title="img element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/edits.html#the-img-element" class="externalDFN"><code>img</code></a>, <a title="iframe element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-iframe-element" class="externalDFN"><code>iframe</code></a>, <a title="embed element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-embed-element" class="externalDFN"><code>embed</code></a>, <a title="object element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element" class="externalDFN"><code>object</code></a>, <a title="video element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-video-element" class="externalDFN"><code>video</code></a>, <a title="audio element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#the-audio-element" class="externalDFN"><code>audio</code></a>, <a title="canvas element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element" class="externalDFN"><code>canvas</code></a>, <a title="map element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-map-element.html#the-map-element" class="externalDFN"><code>map</code></a>, <a title="input element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#the-input-element" class="externalDFN"><code>input</code></a>, <a title="textarea element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-textarea-element" class="externalDFN"><code>textarea</code></a>, <a title="progress element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-progress-element" class="externalDFN"><code>progress</code></a>, <a title="meter element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-meter-element" class="externalDFN"><code>meter</code></a></td>
+            <td>If the <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> can have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content" class="externalDFN">fallback content</a>, contains one <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a>. The <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a> value is the <a href="http://dev.w3.org/csswg/selectors4/#universal-selector" class="externalDFN">universal selector</a> only when the <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> needs to show <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#fallback-content" class="externalDFN">fallback content</a>. Otherwise, contains no <a title="content insertion point" href="#dfn-content-insertion-point" class="internalDFN">content insertion points</a> or an <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a> that matches nothing.</td>
+          </tr>
+          <tr>
+            <td><a title="fieldset element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-button-element.html#the-fieldset-element" class="externalDFN"><code>fieldset</code></a></td>
+            <td>Contains two <a title="content insertion point" href="#dfn-content-insertion-point" class="internalDFN">content insertion points</a> with the following <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a>:
+              <ol>
+                <li><code>legend:first-of-type</code></li>
+                <li><a href="http://dev.w3.org/csswg/selectors4/#universal-selector" class="externalDFN">universal selector</a></li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td><a title="details element" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-details-element" class="externalDFN"><code>details</code></a></td>
+            <td>Contains two <a title="content insertion point" href="#dfn-content-insertion-point" class="internalDFN">content insertion points</a> with the following <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a>:
+              <ol>
+                <li><code>summary:first-of-type</code></li>
+                <li><a href="http://dev.w3.org/csswg/selectors4/#universal-selector" class="externalDFN">universal selector</a></li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td>All other <a title="element" href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">elements</a></td>
+            <td>Contains one <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a> with the <a href="http://dev.w3.org/csswg/selectors4/#universal-selector" class="externalDFN">universal selector</a> as the <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="elements-and-dom-objects">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_elements-and-dom-objects"><span class="secno">9. </span>Elements and DOM Objects</h2>
+
+      <section id="shadowroot-object">
+        <h3 aria-level="2" role="heading" id="h3_shadowroot-object"><span class="secno">9.1 </span><code>ShadowRoot</code> Object</h3>
+
+        <p>The <code>ShadowRoot</code> object represents the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a>.</p>
+
+        <pre class="idl"><span class="idlInterface" id="idl-def-ShadowRoot">interface <span class="idlInterfaceID">ShadowRoot</span> : <span class="idlSuperclass">DocumentFragment</span> {
+<span class="idlMethod">    <span class="idlMethType">HTMLElement</span> <span class="idlMethName"><a href="#widl-ShadowRoot-getElementById-HTMLElement-DOMString-elementId">getElementById</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">elementId</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">NodeList</span>    <span class="idlMethName"><a href="#widl-ShadowRoot-getElementsByClassName-NodeList-DOMString-className">getElementsByClassName</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">className</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">NodeList</span>    <span class="idlMethName"><a href="#widl-ShadowRoot-getElementsByTagName-NodeList-DOMString-tagName">getElementsByTagName</a></span> (<span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">tagName</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">NodeList</span>    <span class="idlMethName"><a href="#widl-ShadowRoot-getElementsByTagNameNS-NodeList-DOMString-namespace-DOMString-localName">getElementsByTagNameNS</a></span> (<span class="idlParam"><span class="idlParamType">DOMString?</span> <span class="idlParamName">namespace</span></span>, <span class="idlParam"><span class="idlParamType">DOMString</span> <span class="idlParamName">localName</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">Selection?</span>  <span class="idlMethName"><a href="#widl-ShadowRoot-getSelection-Selection">getSelection</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a href="#idl-def-Element" class="idlType"><code>Element</code></a>?</span>    <span class="idlMethName"><a href="#widl-ShadowRoot-elementFromPoint-Element-double-x-double-y">elementFromPoint</a></span> (<span class="idlParam"><span class="idlParamType">double</span> <span class="idlParamName">x</span></span>, <span class="idlParam"><span class="idlParamType">double</span> <span class="idlParamName">y</span></span>);</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-Element" class="idlType"><code>Element</code></a>?</span>       <span class="idlAttrName"><a href="#widl-ShadowRoot-activeElement">activeElement</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-Element" class="idlType"><code>Element</code></a></span>        <span class="idlAttrName"><a href="#widl-ShadowRoot-host">host</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a>?</span>    <span class="idlAttrName"><a href="#widl-ShadowRoot-olderShadowRoot">olderShadowRoot</a></span>;</span>
+<span class="idlAttribute">                attribute <span class="idlAttrType">DOMString</span>      <span class="idlAttrName"><a href="#widl-ShadowRoot-innerHTML">innerHTML</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">StyleSheetList</span> <span class="idlAttrName"><a href="#widl-ShadowRoot-styleSheets">styleSheets</a></span>;</span>
+};</span></pre><section id="attributes"><h4 aria-level="3" role="heading" id="h4_attributes"><span class="secno">9.1.1 </span>Attributes</h4><dl class="attributes"><dt id="widl-ShadowRoot-activeElement"><code>activeElement</code> of type <span class="idlAttrType"><a href="#idl-def-Element" class="idlType"><code>Element</code></a></span>, readonly   , nullable</dt><dd>
+            <p>Represents the currently focused <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+            <p>On getting, the attribute <strong>must</strong> return the currently focused <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a> or <code>null</code>, if there is none.</p>
+          </dd><dt id="widl-ShadowRoot-host"><code>host</code> of type <span class="idlAttrType"><a href="#idl-def-Element" class="idlType"><code>Element</code></a></span>, readonly   </dt><dd>
+            <p>Represents the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.</p>
+            <p>On getting, the attribute <strong>must</strong> return the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a> which <a href="#dfn-hosts" class="internalDFN">hosts</a> the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.</p>
+          </dd><dt id="widl-ShadowRoot-innerHTML"><code>innerHTML</code> of type <span class="idlAttrType">DOMString</span>,            </dt><dd>
+            <p>Represents the markup of <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a>'s contents.</p>
+            <p>On getting, the attribute <strong>must</strong> return the result of running the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#html-fragment-serialization-algorithm" class="externalDFN">HTML fragment serialization algorithm</a> with the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> as <a title="shadow host" href="#dfn-shadow-host" class="internalDFN"><code>shadow host</code></a>.</p>
+            <p>
+              On setting, these steps <strong>must</strong> be run:
+            </p>
+            <ol>
+              <li>Let <var>FRAGMENT</var> be the result of invoking the <a title="parse fragment" href="http://domparsing.spec.whatwg.org/#concept-parse-fragment" class="externalDFN">fragment parsing algorithm</a> [<cite><a class="bibref" href="#bib-DOMPARSING">DOMPARSING</a></cite>] with the new value as <var>MARKUP</var>, and the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> as <a title="shadow host" href="#dfn-shadow-host" class="internalDFN"><code>shadow host</code></a></li>
+              <li><a href="http://dom.spec.whatwg.org/#concept-node-replace-all" class="externalDFN">Replace all</a> with <var>FRAGMENT</var> within the <a href="#dfn-shadow-root" class="internalDFN">shadow root</a>.</li>
+            </ol>
+          </dd><dt id="widl-ShadowRoot-olderShadowRoot"><code>olderShadowRoot</code> of type <span class="idlAttrType"><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a></span>, readonly   , nullable</dt><dd>
+            <p>Represents the <a href="#dfn-older-shadow-root" class="internalDFN">older shadow root</a> relative to the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a></p>
+            <p>
+              On getting, the attribute <strong>must</strong> return a result that is <a title="processing equivalence" href="#dfn-processing-equivalence" class="internalDFN">equivalent</a> to running the following steps:
+            </p>
+            <ol>
+              <li>If the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> is the <a href="#dfn-oldest-shadow-root" class="internalDFN">oldest shadow root</a>, return <strong>null</strong>.</li>
+              <li>Return the <a href="#dfn-older-shadow-root" class="internalDFN">older shadow root</a> relative to the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.</li>
+            </ol>
+            <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a> <strong>must not</strong> be accessible.</p>
+          </dd><dt id="widl-ShadowRoot-styleSheets"><code>styleSheets</code> of type <span class="idlAttrType">StyleSheetList</span>, readonly   </dt><dd>
+            <p>Represents the shadow root style sheets.</p>
+            <p>On getting, the attribute <strong>must</strong> return a <a href="http://www.w3.org/TR/cssom/#the-stylesheetlist-interface" class="externalDFN"><code>StyleSheetList</code></a> sequence containing the shadow root style sheets.
+            </p>
+          </dd></dl></section><section id="methods"><h4 aria-level="3" role="heading" id="h4_methods"><span class="secno">9.1.2 </span>Methods</h4><dl class="methods"><dt id="widl-ShadowRoot-elementFromPoint-Element-double-x-double-y"><code>elementFromPoint</code></dt><dd>
+            <p>Returns an <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> at specified coordinates.</p>
+            <div class="note"><div class="note-title" aria-level="4" role="heading" id="h_note_6"><span>Note</span></div><p class="">Eventually, this needs to be part of CSSOM View Module specification [<cite><a class="bibref" href="#bib-CSSOM-VIEW">CSSOM-VIEW</a></cite>]</p></div>
+            <p>
+              When invoked, it <strong>must</strong> return result of running the following steps:
+            </p>
+            <ol>
+              <li>If <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> is not a <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> instance, throw an <a href="http://dom.spec.whatwg.org/#invalidnodetypeerror" class="externalDFN"><code>InvalidNodeTypeError</code></a>.</li>
+              <li>If either argument is negative, <code>x</code> is greater than the <a href="http://www.w3.org/TR/cssom-view/#viewport" class="externalDFN">viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a href="http://www.w3.org/TR/cssom-view/#viewport" class="externalDFN">viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
+              <li>Let <var>HIT</var> be the <a href="http://dom.spec.whatwg.org/#concept-element" class="externalDFN">element</a> at coordinates <code>x</code> and <code>y</code> in the <a href="http://www.w3.org/TR/cssom-view/#viewport" class="externalDFN">viewport</a>, determined through hit testing</li>
+              <li>Let <var>PATH</var> be the result of running the <a href="#dfn-event-path-calculation-algorithm" class="internalDFN">event path calculation algorithm</a> with <var>HIT</var> and null as input</li>
+              <li>Return the result of running the <a href="#dfn-retargeting-algorithm" class="internalDFN">retargeting algorithm</a> with <var>PATH</var> and <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> as input</li>
+            </ol>
+          <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">x</td><td class="prmType"><code>double</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">y</td><td class="prmType"><code>double</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a href="#idl-def-Element" class="idlType"><code>Element</code></a></code>, nullable</div></dd><dt id="widl-ShadowRoot-getElementById-HTMLElement-DOMString-elementId"><code>getElementById</code></dt><dd>
+            <strong>Must</strong> behave exactly like <a href="http://dom.spec.whatwg.org/#dom-nonelementparentnode-getelementbyid" class="externalDFN">document.getElementById</a>, except scoped to the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.
+          <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">elementId</td><td class="prmType"><code>DOMString</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>HTMLElement</code></div></dd><dt id="widl-ShadowRoot-getElementsByClassName-NodeList-DOMString-className"><code>getElementsByClassName</code></dt><dd>
+            <strong>Must</strong> behave exactly like document.getElementsByClassName, except scoped to the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.
+          <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">className</td><td class="prmType"><code>DOMString</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>NodeList</code></div></dd><dt id="widl-ShadowRoot-getElementsByTagName-NodeList-DOMString-tagName"><code>getElementsByTagName</code></dt><dd>
+            <strong>Must</strong> behave exactly like <a href="http://dom.spec.whatwg.org/#dom-document-getelementsbytagname" class="externalDFN">document.getElementsByTagName</a>, except scoped to the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.
+          <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">tagName</td><td class="prmType"><code>DOMString</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>NodeList</code></div></dd><dt id="widl-ShadowRoot-getElementsByTagNameNS-NodeList-DOMString-namespace-DOMString-localName"><code>getElementsByTagNameNS</code></dt><dd>
+            <strong>Must</strong> behave exactly like <a href="http://dom.spec.whatwg.org/#dom-document-getelementsbytagnamens" class="externalDFN">document.getElementsByTagNameNS</a>, except scoped to the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.
+          <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">namespace</td><td class="prmType"><code>DOMString</code></td><td class="prmNullTrue"><span role="img" aria-label="True">✔</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">localName</td><td class="prmType"><code>DOMString</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>NodeList</code></div></dd><dt id="widl-ShadowRoot-getSelection-Selection"><code>getSelection</code></dt><dd>
+            <p>Returns the current selection in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+            <p>When invoked, it <strong>must</strong> return the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#concept-selection" class="externalDFN">selection</a> in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code>Selection</code>, nullable</div></dd></dl></section>
+
+        <p>The <a href="http://dom.spec.whatwg.org/#dom-node-nodetype" class="externalDFN"><code>nodeType</code></a> attribute of a <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> instance <strong>must</strong> return <a href="http://dom.spec.whatwg.org/#dom-node-document_fragment_node" class="externalDFN"><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a href="http://dom.spec.whatwg.org/#dom-node-nodename" class="externalDFN"><code>nodeName</code></a> attribute of a <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
+
+        <p>Invoking the <a href="http://dom.spec.whatwg.org/#dom-node-clonenode" class="externalDFN"><code>cloneNode()</code></a> method on a <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> instance <strong>must</strong> always throw a <a href="http://dom.spec.whatwg.org/#dom-domexception-data_clone_err" class="externalDFN"><code>DATA_CLONE_ERR</code></a> exception.</p>
+
+      </section>
+
+      <section id="extensions-to-element-interface">
+        <h3 aria-level="2" role="heading" id="h3_extensions-to-element-interface"><span class="secno">9.2 </span>Extensions to <code>Element</code> Interface</h3>
+
+        <pre class="idl"><span class="idlInterface" id="idl-def-Element">partial interface <span class="idlInterfaceID">Element</span> {
+<span class="idlMethod">    <span class="idlMethType"><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a></span> <span class="idlMethName"><a href="#widl-Element-createShadowRoot-ShadowRoot">createShadowRoot</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">NodeList</span>   <span class="idlMethName"><a href="#widl-Element-getDestinationInsertionPoints-NodeList">getDestinationInsertionPoints</a></span> ();</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a>?</span> <span class="idlAttrName"><a href="#widl-Element-shadowRoot">shadowRoot</a></span>;</span>
+};</span></pre><section id="attributes-1"><h4 aria-level="3" role="heading" id="h4_attributes-1"><span class="secno">9.2.1 </span>Attributes</h4><dl class="attributes"><dt id="widl-Element-shadowRoot"><code>shadowRoot</code> of type <span class="idlAttrType"><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a></span>, readonly   , nullable</dt><dd>
+            <p>Represents the <a href="#dfn-youngest-shadow-root" class="internalDFN">youngest shadow root</a> that <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> <a href="#dfn-hosts" class="internalDFN">hosts</a>.</p>
+            <p>On getting, the attribute <strong>must</strong> return the <a href="#dfn-youngest-shadow-root" class="internalDFN">youngest shadow root</a> that <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> <a href="#dfn-hosts" class="internalDFN">hosts</a>, or <strong>null</strong> if no such <a href="#dfn-shadow-root" class="internalDFN">shadow root</a> is accessible.</p>
+            <p>For <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#semantics" class="externalDFN">HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree" href="#dfn-shadow-tree" class="internalDFN">shadow trees</a> <strong>must not</strong> be accessible.</p>
+          </dd></dl></section><section id="methods-1"><h4 aria-level="3" role="heading" id="h4_methods-1"><span class="secno">9.2.2 </span>Methods</h4><dl class="methods"><dt id="widl-Element-createShadowRoot-ShadowRoot"><code>createShadowRoot</code></dt><dd>
+            When invoked, these steps <strong>must</strong> be run:
+            <ol>
+              <li>Create a new instance of the <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> object</li>
+              <li>Add the <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> object to the <a title="shadow roots list" href="#dfn-shadow-roots-list" class="internalDFN">ordered list of shadow roots</a> associated with the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> as the <a href="#dfn-youngest-shadow-root" class="internalDFN">youngest shadow root</a></li>
+              <li>Return <a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a> object.</li>
+            </ol>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code><a href="#idl-def-ShadowRoot" class="idlType"><code>ShadowRoot</code></a></code></div></dd><dt id="widl-Element-getDestinationInsertionPoints-NodeList"><code>getDestinationInsertionPoints</code></dt><dd>When invoked, the method <strong>must</strong> return a <a href="http://dom.spec.whatwg.org/#concept-collection-static" class="externalDFN">static</a> <a href="http://dom.spec.whatwg.org/#nodelist" class="externalDFN"><code>NodeList</code></a> consisting of <a title="insertion point" href="#dfn-insertion-point" class="internalDFN">insertion points</a> in the <a href="#dfn-destination-insertion-points" class="internalDFN">destination insertion points</a> of the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.<div><em>No parameters.</em></div><div><em>Return type: </em><code>NodeList</code></div></dd></dl></section>
+      </section>
+
+      <section id="the-content-element">
+        <h3 aria-level="2" role="heading" id="h3_the-content-element"><span class="secno">9.3 </span>The <code>content</code> element</h3>
+
+        <p>The <code><dfn title="content element" id="dfn-content-element">content</dfn></code> element represents an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a> in the <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+
+        <p>If a <code>content</code> element does not satisfy the condition of an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlunknownelement" class="externalDFN"><code>HTMLUnknownElement</code></a>.</p>
+
+        <dl>
+          <dt>Context</dt>
+          <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0" class="externalDFN">flow content</a> is expected.</dd>
+
+          <dt>Content model</dt>
+          <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent" class="externalDFN">Transparent</a></dd>
+
+          <dt>Children</dt>
+          <dd>Anything as fallback content</dd>
+
+          <dt>Content attributes</dt>
+          <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#global-attributes" class="externalDFN">Global attributes</a></dd>
+          <dd>
+            <dl>
+              <dt><code><dfn title="content element select" id="dfn-content-element-select">select</dfn></code>, a <a title="comma separated tokens" href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#comma-separated-tokens" class="externalDFN">set of comma-separated tokens</a></dt>
+              <dd>Represents the <a href="#dfn-matching-criteria" class="internalDFN">matching criteria</a> for <a title="distribution" href="#dfn-distribution" class="internalDFN">distributing</a> child <a title="node" href="http://dom.spec.whatwg.org/#concept-node" class="externalDFN">nodes</a> of the <a href="#dfn-shadow-host" class="internalDFN">shadow host</a>. Each token <strong>must</strong> be a <a href="http://dev.w3.org/csswg/selectors4/#compound" class="externalDFN">compound selector</a>.</dd>
+            </dl>
+          </dd>
+
+          <dt>DOM Interface</dt>
+          <dd>
+            <pre class="idl"><span class="idlInterface" id="idl-def-HTMLContentElement">interface <span class="idlInterfaceID">HTMLContentElement</span> : <span class="idlSuperclass">HTMLElement</span> {
+<span class="idlAttribute">                attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-HTMLContentElement-select">select</a></span>;</span>
+<span class="idlMethod">    <span class="idlMethType">NodeList</span> <span class="idlMethName"><a href="#widl-HTMLContentElement-getDistributedNodes-NodeList">getDistributedNodes</a></span> ();</span>
+};</span></pre><section><h4 id="attributes-3" aria-level="3" role="heading">Attributes</h4><dl class="attributes"><dt id="widl-HTMLContentElement-select"><code>select</code> of type <span class="idlAttrType">DOMString</span>,            </dt><dd><strong>Must</strong> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/common-dom-interfaces.html#reflect" class="externalDFN">reflect</a> the <a href="#dfn-content-element-select">select</a> attribute.</dd></dl></section><section><h4 id="methods-2" aria-level="3" role="heading">Methods</h4><dl class="methods"><dt id="widl-HTMLContentElement-getDistributedNodes-NodeList"><code>getDistributedNodes</code></dt><dd>
+                When invoked, it <strong>must</strong> return result of running the following steps:
+                <ol>
+                  <li>
+                    If the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> is a <a href="#dfn-content-insertion-point" class="internalDFN">content insertion point</a>:
+                    <ol>
+                      <li>Return a <a href="http://dom.spec.whatwg.org/#concept-collection-static" class="externalDFN">static</a> <a href="http://dom.spec.whatwg.org/#nodelist" class="externalDFN"><code>NodeList</code></a> consisting of nodes in the <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> of the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.</li>
+                    </ol>
+                  </li>
+                  <li>
+                    Otherwise:
+                    <ol>
+                      <li>Return an empty <a href="http://dom.spec.whatwg.org/#concept-collection-static" class="externalDFN">static</a> <a href="http://dom.spec.whatwg.org/#nodelist" class="externalDFN"><code>NodeList</code></a>.</li>
+                    </ol>
+                  </li>
+                </ol>
+              <div><em>No parameters.</em></div><div><em>Return type: </em><code>NodeList</code></div></dd></dl></section>
+          </dd>
+        </dl>
+      </section>
+
+      <section id="the-shadow-element">
+        <h3 aria-level="2" role="heading" id="h3_the-shadow-element"><span class="secno">9.4 </span>The <code>shadow</code> element</h3>
+
+        <p>The <code><dfn title="shadow element" id="dfn-shadow-element">shadow</dfn></code> element represents an <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a> in a <a href="#dfn-shadow-tree" class="internalDFN">shadow tree</a>.</p>
+        <p>If a <code>shadow</code> element does not satisfy the condition of an <a href="#dfn-insertion-point" class="internalDFN">insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#htmlunknownelement" class="externalDFN"><code>HTMLUnknownElement</code></a>.</p>
+
+        <dl>
+          <dt>Context</dt>
+          <dd>Where <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#flow-content-0" class="externalDFN">flow content</a> is expected.</dd>
+
+          <dt>Content model</dt>
+          <dd><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#transparent" class="externalDFN">Transparent</a></dd>
+
+          <dt>Children</dt>
+          <dd>Anything</dd>
+
+          <dt>DOM Interface</dt>
+          <dd>
+            <pre class="idl"><span class="idlInterface" id="idl-def-HTMLShadowElement">interface <span class="idlInterfaceID">HTMLShadowElement</span> : <span class="idlSuperclass">HTMLElement</span> {
+<span class="idlMethod">    <span class="idlMethType">NodeList</span> <span class="idlMethName"><a href="#widl-HTMLShadowElement-getDistributedNodes-NodeList">getDistributedNodes</a></span> ();</span>
+};</span></pre><section><h4 id="methods-3" aria-level="3" role="heading">Methods</h4><dl class="methods"><dt id="widl-HTMLShadowElement-getDistributedNodes-NodeList"><code>getDistributedNodes</code></dt><dd>
+                When invoked, it <strong>must</strong> return result of running the following steps:
+                <ol>
+                  <li>
+                    If the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a> is a <a href="#dfn-shadow-insertion-point" class="internalDFN">shadow insertion point</a>:
+                    <ol>
+                      <li>Return a <a href="http://dom.spec.whatwg.org/#concept-collection-static" class="externalDFN">static</a> <a href="http://dom.spec.whatwg.org/#nodelist" class="externalDFN"><code>NodeList</code></a> consisting of nodes in the <a href="#dfn-distributed-nodes" class="internalDFN">distributed nodes</a> of the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.</li>
+                    </ol>
+                  </li>
+                  <li>
+                    Otherwise:
+                    <ol>
+                      <li>Return an empty <a href="http://dom.spec.whatwg.org/#concept-collection-static" class="externalDFN">static</a> <a href="http://dom.spec.whatwg.org/#nodelist" class="externalDFN"><code>NodeList</code></a>.</li>
+                    </ol>
+                  </li>
+                </ol>
+              <div><em>No parameters.</em></div><div><em>Return type: </em><code>NodeList</code></div></dd></dl></section>
+          </dd>
+        </dl>
+      </section>
+
+      <section id="extensions-to-event-interface">
+        <h3 aria-level="2" role="heading" id="h3_extensions-to-event-interface"><span class="secno">9.5 </span>Extensions to <code>Event</code> Interface</h3>
+
+        <pre class="idl"><span class="idlInterface" id="idl-def-Event">partial interface <span class="idlInterfaceID">Event</span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">object</span> <span class="idlAttrName"><a href="#widl-Event-path">path</a></span>;</span>
+};</span></pre><section id="attributes-2"><h4 aria-level="3" role="heading" id="h4_attributes-2"><span class="secno">9.5.1 </span>Attributes</h4><dl class="attributes"><dt id="widl-Event-path"><code>path</code> of type <span class="idlAttrType">object</span>, readonly   </dt><dd>
+            <p>Represents the event path.</p>
+            <p>
+              On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object, that is a copy of the event path for the <a href="http://dom.spec.whatwg.org/#context-object" class="externalDFN">context object</a>.
+            </p>
+            <div class="issue"><div class="issue-title" aria-level="4" role="heading" id="h_issue_1"><span>Issue 1</span></div><p class="">
+              Use <code>Array</code> as the return type of the <code>path</code> attribute in WebIDL.
+              WebIDL bugs: <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20020"><code>Array</code> subclassing</a>
+              and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23225">class, not interface</a>.
+            </p></div>
+          </dd></dl></section>
+      </section>
+
+    </section>
+
+    <section id="shadow-dom-example">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_shadow-dom-example"><span class="secno">10. </span>Shadow DOM Example</h2>
+
+      <p>Bob was asked to turn a simple list of links into a News Widget, which has links organized into two categories: breaking news and just news. The current document markup for the stories looks like this:</p>
+      <div class="example"><div class="example-title"><span>Example 2</span></div><pre class="example highlight prettyprint prettyprinted"><span class="tag">&lt;ul</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"stories"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/1"</span><span class="tag">&gt;</span><span class="pln">A story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/2"</span><span class="tag">&gt;</span><span class="pln">Another story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/3"</span><span class="tag">&gt;</span><span class="pln">Also a story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/4"</span><span class="tag">&gt;</span><span class="pln">Yet another story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/4"</span><span class="tag">&gt;</span><span class="pln">Awesome story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+    </span><span class="tag">&lt;li</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;&lt;a</span><span class="pln"> </span><span class="atn">href</span><span class="pun">=</span><span class="atv">"//example.com/stories/5"</span><span class="tag">&gt;</span><span class="pln">Horrible story</span><span class="tag">&lt;/a&gt;&lt;/li&gt;</span><span class="pln">
+</span><span class="tag">&lt;/ul&gt;</span></pre></div>
+
+      <p>To organize the stories, Bob decides to use <strong>shadow DOM</strong>. Doing so will allow Bob to keep the document markup uncluttered, and harnessing the power of insertion point makes sorting stories by class name a very simple task. After getting another cup of <a href="http://en.wikipedia.org/wiki/List_of_coffee_beverages#Green_Eye">Green Eye</a>, he quickly mocks up the following shadow tree, to be hosted by the <code>ul</code> element:</p>
+      <div class="example"><div class="example-title"><span>Example 3</span></div><pre class="example highlight prettyprint prettyprinted"><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"breaking"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;ul&gt;</span><span class="pln">
+        </span><span class="tag">&lt;content</span><span class="pln"> </span><span class="atn">select</span><span class="pun">=</span><span class="atv">".breaking"</span><span class="tag">&gt;&lt;/content&gt;</span><span class="pln"> </span><span class="com">&lt;!-- insertion point for breaking news --&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/ul&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span><span class="pln">
+</span><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">class</span><span class="pun">=</span><span class="atv">"other"</span><span class="tag">&gt;</span><span class="pln">
+    </span><span class="tag">&lt;ul&gt;</span><span class="pln">
+        </span><span class="tag">&lt;content&gt;&lt;/content&gt;</span><span class="pln"> </span><span class="com">&lt;!-- insertion point for the rest of the news --&gt;</span><span class="pln">
+    </span><span class="tag">&lt;/ul&gt;</span><span class="pln">
+</span><span class="tag">&lt;/div&gt;</span></pre></div>
+      <p>Bob then styles the newborn widget according to comps from the designer by adding this to the shadow tree mockup:</p>
+      <div class="example"><div class="example-title"><span>Example 4</span></div><pre class="example highlight prettyprint prettyprinted"><span class="tag">&lt;style&gt;</span><span class="pln">
+    div</span><span class="pun">.</span><span class="pln">breaking </span><span class="pun">{</span><span class="pln">
+        color</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Red</span><span class="pun">;</span><span class="pln">
+        font</span><span class="pun">-</span><span class="pln">size</span><span class="pun">:</span><span class="pln"> </span><span class="lit">20px</span><span class="pun">;</span><span class="pln">
+        border</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1px</span><span class="pln"> dashed </span><span class="typ">Purple</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    div</span><span class="pun">.</span><span class="pln">other </span><span class="pun">{</span><span class="pln">
+        padding</span><span class="pun">:</span><span class="pln"> </span><span class="lit">2px</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+        border</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1px</span><span class="pln"> solid </span><span class="typ">Cyan</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span></pre></div>
+      <p>While pondering if his company should start looking for a new designer, Bob converts the mockup to code:</p>
+      <div class="example"><div class="example-title"><span>Example 5</span></div><pre class="example highlight prettyprint prettyprinted"><span class="kwd">function</span><span class="pln"> createStoryGroup</span><span class="pun">(</span><span class="pln">className</span><span class="pun">,</span><span class="pln"> contentSelector</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> </span><span class="kwd">group</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'div'</span><span class="pun">);</span><span class="pln">
+    </span><span class="kwd">group</span><span class="pun">.</span><span class="pln">className </span><span class="pun">=</span><span class="pln"> className</span><span class="pun">;</span><span class="pln">
+    </span><span class="com">// Empty string in select attribute or absence thereof work the same, so no need for special handling.</span><span class="pln">
+    </span><span class="kwd">group</span><span class="pun">.</span><span class="pln">innerHTML </span><span class="pun">=</span><span class="pln"> </span><span class="str">'&lt;ul&gt;&lt;content select="'</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> contentSelector </span><span class="pun">+</span><span class="pln"> </span><span class="str">'"&gt;&lt;/content&gt;&lt;/ul&gt;'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">group</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> createStyle</span><span class="pun">()</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> style </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'style'</span><span class="pun">);</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> </span><span class="str">'div.breaking { color: Red;font-size: 20px; border: 1px dashed Purple; }'</span><span class="pln"> </span><span class="pun">+</span><span class="pln">
+        </span><span class="str">'div.other { padding: 2px 0 0 0; border: 1px solid Cyan; }'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> style</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> makeShadowTree</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> root </span><span class="pun">=</span><span class="pln"> storyList</span><span class="pun">.</span><span class="pln">createShadowRoot</span><span class="pun">();</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStyle</span><span class="pun">());</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'breaking'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'.breaking'</span><span class="pun">));</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'other'</span><span class="pun">,</span><span class="pln"> </span><span class="str">''</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+document</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'DOMContentLoaded'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="pun">[].</span><span class="pln">forEach</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">querySelectorAll</span><span class="pun">(</span><span class="str">'ul.stories'</span><span class="pun">),</span><span class="pln"> makeShadowTree</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre></div>
+
+      <p>Well done, Bob! With the cup of coffee still half-full, the work is complete. Recognizing his awesomeness, Bob returns to teaching n00bs the ways of <a href="http://en.wikipedia.org/wiki/World_of_Warcraft">WoW</a>.</p>
+
+      <p>A few months pass.</p>
+
+      <p>It's election time. With Bob at his annual conference, Alice is charged with adding <strong>another</strong>, temporary box to the news widget, filled with election-related stories. Alice studies Bob's code, reads up on the shadow DOM spec and realizes that, thanks to multiple shadow tree support, she doesn't have to touch his code. As usual, her solution is elegant and simple, fitting neatly right under Bob's code:</p>
+      <div class="example"><div class="example-title"><span>Example 6</span></div><pre class="example highlight prettyprint prettyprinted"><span class="com">// TODO(alice): BEGIN -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> ELECTION_BOX_REMOVAL_DEADLINE </span><span class="pun">=</span><span class="pln"> </span><span class="pun">...;</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> createElectionStyle</span><span class="pun">()</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> style </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'style'</span><span class="pun">);</span><span class="pln">
+    </span><span class="com">// TODO(alice): Check designer's desk for hallucinogens.</span><span class="pln">
+    style</span><span class="pun">.</span><span class="pln">textContent </span><span class="pun">=</span><span class="pln"> </span><span class="str">'div.election { color: Magenta; font-size: 24px; border: 2px dotted Fuchsia; }'</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> style</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> makeElectionShadowTree</span><span class="pun">(</span><span class="pln">storyList</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> root </span><span class="pun">=</span><span class="pln"> storyList</span><span class="pun">.</span><span class="pln">createShadowRoot</span><span class="pun">();</span><span class="pln">
+    </span><span class="com">// Add and style election story box.</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createElectionStyle</span><span class="pun">());</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">createStoryGroup</span><span class="pun">(</span><span class="str">'election'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'.election'</span><span class="pun">));</span><span class="pln">
+    </span><span class="com">// Insert Bob's shadow tree under the election story box.</span><span class="pln">
+    root</span><span class="pun">.</span><span class="pln">appendChild</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">createElement</span><span class="pun">(</span><span class="str">'shadow'</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Date</span><span class="pun">.</span><span class="pln">now</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> ELECTION_BOX_REMOVAL_DEADLINE</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    document</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'DOMContentLoaded'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">[].</span><span class="pln">forEach</span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">querySelectorAll</span><span class="pun">(</span><span class="str">'ul.stories'</span><span class="pun">),</span><span class="pln"> makeElectionShadowTree</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="com">// TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.</span></pre></div>
+      <p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers—without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow tree composition in such a cool way.</p>
+    </section>
+
+    <section class="appendix" id="acknowledgements">
+      <!--OddPage--><h2 aria-level="1" role="heading" id="h2_acknowledgements"><span class="secno">A. </span>Acknowledgements</h2>
+
+      <p><span class="vcard">David Hyatt</span> developed <a href="http://dev.w3.org/2006/xbl2/">XBL 1.0</a>, and <span class="vcard">Ian Hickson</span> co-wrote <a href="http://dev.w3.org/2006/xbl2/">XBL 2.0</a>. These documents provided tremendous insight into the problem of functional encapsulation and greatly influenced this specification.</p>
+
+      <p><span class="vcard">Alex Russell</span> and his considerable forethought triggered a new wave of enthusiasm around the subject of shadow DOM and how it can be applied practically on the Web.</p>
+
+      <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
+
+      <p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Brandon Payton</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Eric Bidelman</span>, <span class="vcard">Deepak Sherveghar</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Elliott Sprehn</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Glenn Adams</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Mike Taylor</span>, <span class="vcard">Oliver Nightingale</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Richard Bradshaw</span>, <span class="vcard">Ruud Steltenpool</span>, <span class="vcard">Sam Dutton</span>, <span class="vcard">Sergey G. Grekhov</span>, <span class="vcard">Shinya Kawanaka</span>, <span class="vcard">Tab Atkins</span>, <span class="vcard">Takashi Sakamoto</span>, and <span class="vcard">Yoshinori Sano</span> for their comments and contributions to this specification.</p>
+
+      <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs—and don't forget to ask the editor to add your name into this section.</p>
+    </section>
+
+  
+
+<section id="references" class="appendix" typeof="bibo:Chapter" resource="#references" rel="bibo:Chapter"><!--OddPage--><h2 aria-level="1" role="heading" id="h2_references"><span class="secno">B. </span>References</h2><section id="normative-references" typeof="bibo:Chapter" resource="#normative-references" rel="bibo:Chapter"><h3 aria-level="2" role="heading" id="h3_normative-references"><span class="secno">B.1 </span>Normative references</h3><dl class="bibliography" about=""><dt id="bib-CSS3UI">[CSS3UI]</dt><dd rel="dcterms:requires">Tantek Çelik. <a href="http://www.w3.org/TR/css3-ui/"><cite>CSS3 Basic User Interface Module</cite></a>. 17 January 2012. W3C Working Draft. URL: <a href="http://www.w3.org/TR/css3-ui/">http://www.w3.org/TR/css3-ui/</a>
+</dd><dt id="bib-CSSOM-VIEW">[CSSOM-VIEW]</dt><dd rel="dcterms:requires">Simon Pieters; Glenn Adams. <a href="http://www.w3.org/TR/cssom-view/"><cite>CSSOM View Module</cite></a>. 17 December 2013. W3C Working Draft. URL: <a href="http://www.w3.org/TR/cssom-view/">http://www.w3.org/TR/cssom-view/</a>
+</dd><dt id="bib-DOM">[DOM]</dt><dd rel="dcterms:requires">Anne van Kesteren; Aryeh Gregor; Ms2ger. <a href="http://dom.spec.whatwg.org"><cite>DOM Standard</cite></a>. Living Standard. URL: <a href="http://dom.spec.whatwg.org">http://dom.spec.whatwg.org</a>
+</dd><dt id="bib-DOM-Level-3-Events">[DOM-Level-3-Events]</dt><dd rel="dcterms:requires">Gary Kacmarcik; Travis Leithead; Jacob Rossi; Doug Schepers; Björn Höhrmann; Philippe Le Hégaret; Tom Pixley. <a href="http://www.w3.org/TR/DOM-Level-3-Events/"><cite>Document Object Model (DOM) Level 3 Events Specification</cite></a>. 5 November 2013. W3C Working Draft. URL: <a href="http://www.w3.org/TR/DOM-Level-3-Events/">http://www.w3.org/TR/DOM-Level-3-Events/</a>
+</dd><dt id="bib-DOMPARSING">[DOMPARSING]</dt><dd rel="dcterms:requires">Ms2ger. <a href="http://domparsing.spec.whatwg.org/"><cite>DOM Parsing and Serialization</cite></a>. URL: <a href="http://domparsing.spec.whatwg.org/">http://domparsing.spec.whatwg.org/</a>
+</dd><dt id="bib-EDITING">[EDITING]</dt><dd rel="dcterms:requires">Aryeh Gregor. <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html"><cite>HTML Editing APIs</cite></a>. URL: <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html</a>
+</dd><dt id="bib-HTML">[HTML]</dt><dd rel="dcterms:requires">Ian Hickson. <a href="http://www.whatwg.org/specs/web-apps/current-work/"><cite>HTML</cite></a>. Living Standard. URL: <a href="http://www.whatwg.org/specs/web-apps/current-work/">http://www.whatwg.org/specs/web-apps/current-work/</a>
+</dd><dt id="bib-RFC2119">[RFC2119]</dt><dd rel="dcterms:requires">S. Bradner. <a href="http://www.ietf.org/rfc/rfc2119.txt"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a> 
+</dd><dt id="bib-SELECTORS4">[SELECTORS4]</dt><dd rel="dcterms:requires">Elika Etemad; Tab Atkins Jr. <a href="http://dev.w3.org/csswg/selectors4/"><cite>Selectors Level 4</cite></a>. W3C Editor's Draft. URL: <a href="http://dev.w3.org/csswg/selectors4/">http://dev.w3.org/csswg/selectors4/</a>
+</dd><dt id="bib-TOUCH-EVENTS">[TOUCH-EVENTS]</dt><dd rel="dcterms:requires">Doug Schepers; Sangwhan Moon; Matt Brubeck; Arthur Barstow. <a href="http://www.w3.org/TR/touch-events/"><cite>Touch Events</cite></a>. 10 October 2013. W3C Recommendation. URL: <a href="http://www.w3.org/TR/touch-events/">http://www.w3.org/TR/touch-events/</a>
+</dd><dt id="bib-WAI-ARIA">[WAI-ARIA]</dt><dd rel="dcterms:requires">James Craig; Michael Cooper et al. <a href="http://www.w3.org/TR/wai-aria/"><cite>Accessible Rich Internet Applications (WAI-ARIA) 1.0</cite></a>. 20 March 2014. W3C Recommendation. URL: <a href="http://www.w3.org/TR/wai-aria/">http://www.w3.org/TR/wai-aria/</a>
+</dd></dl></section></section></body></html>
