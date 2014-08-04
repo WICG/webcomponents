@@ -324,16 +324,16 @@ To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, 
 
 <p>The following callbacks are recognized:</p>
 <dl>
-<dt><dfn id="dfn-created-callback">created</dfn></dt>
+<dt><dfn id="dfn-created-callback">createdCallback</dfn></dt>
     <dd>This callback is invoked after <a href="#dfn-custom-element">custom element</a> instance is created and its <a href="#dfn-element-definition">definition</a> is <a href="#dfn-element-registration">registered</a>. The actual timing of this callback is defined further in this specification.</dd>
     <dd>The <a href="#dfn-custom-element-prototype">custom element prototype</a> <strong>must</strong> be <a href="#dfn-set-prototype">set</a> just prior to invoking callback.</dd>
     <dd>For the duration of this callback invocation, the <a href="#dfn-element-is-being-created-flag">element is being created</a> flag <strong>must</strong> be set to <strong>true</strong>. In all other cases, the flag <strong>must</strong> be set to <strong>false</strong>.</dd>
     <dd>If the <a href="#dfn-created-callback">created</a> callback exists for an element, all other callbacks <strong>must not</strong> be enqueued until after this <a href="#dfn-created-callback">created</a> callback's invocation had started.</dd>
-<dt><dfn id="dfn-attached-callback">attached</dfn></dt>
+<dt><dfn id="dfn-attached-callback">attachedCallback</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into a document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
-<dt><dfn id="dfn-detached-callback">detached</dfn></dt>
+<dt><dfn id="dfn-detached-callback">detachedCallback</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a> is <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#remove-an-element-from-a-document">removed from the document</a> <em>and</em> this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>.</dd>
-<dt><dfn id="dfn-attribute-changed-callback">attributeChanged</dfn></dt>
+<dt><dfn id="dfn-attribute-changed-callback">attributeChangedCallback</dfn></dt>
     <dd>Unless specified otherwise, this callback <strong>must</strong> be <a href="#dfn-enqueue-lifecycle-callback">enqueued</a> whenever <a href="#dfn-custom-element">custom element</a>'s <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> is <a href="http://dom.spec.whatwg.org/#attribute-is-added">added</a>, <a href="http://dom.spec.whatwg.org/#attribute-is-changed">changed</a> or <a href="http://dom.spec.whatwg.org/#attribute-is-removed">removed</a>. Depending on the type of <a href="http://dom.spec.whatwg.org/#concept-attribute">attribute</a> modification, the following additional strings are added to the queue item:
     <dl>
     <dt><a href="http://dom.spec.whatwg.org/#attribute-is-added">attribute is set</a></dt>
