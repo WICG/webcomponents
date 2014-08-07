@@ -124,6 +124,21 @@
 
         <p>The <dfn>youngest shadow root</dfn> is the root node of the <a>youngest shadow tree</a>.</p>
 
+        <p>
+          A node <var>A</var> is called a <dfn>child or hosted shadow root</dfn> of a node <var>B</var>,
+          if either <var>A</var> is a child of <var>B</var> or A is the <a>root</a> node of the <a>shadow tree</a> that B <a>hosts</a>.
+        </p>
+
+        <p>
+          A node <var>A</var> is called a <dfn>deep descendant</dfn> of a node <var>B</var>,
+          if either <var>A</var> is a <a>child or hosted shadow root</a> of <var>B</var>
+          or <var>A</var> is <a>child or hosted shadow root</a> of a node <var>C</var> that is a <a>deep descendant</a> of <var>B</var>.
+        </p>
+
+        <p>
+          An <dfn>inclusive deep descendant</dfn> is a node or one of its <a title="deep descendant">deep descendants</a>.
+        </p>
+
         <p class="note">
           For convenience, the <a>shadow root</a> provides its own set of <a title="DOM tree accessors">DOM tree accessor</a> methods.
           No <a title="node">nodes</a> other than the <a>shadow root</a> descendants are accessible with these methods.
@@ -1227,6 +1242,15 @@
             <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
             <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
           </dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3>Extensions to <code>Node</code> Interface</h3>
+
+        <dl class="idl" title="partial interface Node">
+          <dt>boolean deepContains(Node? other)</dt>
+          <dd>When invoked, the method <strong>must</strong> return true if <var>other</var> is an <a>inclusive deep descendant</a> of the <a>context object</a>, and false otherwise (including when <var>other</var> is null).</dd>
         </dl>
       </section>
 
