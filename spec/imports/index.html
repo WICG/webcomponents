@@ -91,6 +91,10 @@
        <li><a href="#additions-to-dom-document-currentscript">Additions to document.currentScript</a>
     </ol>
     <li><a href="#style-imports">Style processing with Imports</a>
+    <ol>
+      <li><a href="#import-link-tree">Import Link Tree</a></li>
+      <li><a href="#order-of-appearances">Order of appearances and Imports</a></li>
+    </ol>
     <li><a href="#events-imports">Events in Imports</a>
     <ol>
       <li><a href="#additions-to-event-handlers">Additions to Event Handlers</a>
@@ -487,31 +491,44 @@ If the Document is an <a href="#dfn-imported-document">imported document</a>, it
 <p>The contents of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-style-element">style</a></code> elements and
 the external resources of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-link-element">link</a></code> elements in <a href="#dfn-import">imports</a> <strong>must</strong> be considered as input sources of the <a href="http://www.w3.org/TR/CSS21/intro.html#processing-model">style processing model</a> of the <a href="#dfn-master-document">master document</a>.</p>
 
-<div class="fixme">
-<p>Between declarations from different documents, the document order in terms of <a href="http://www.w3.org/TR/css3-cascade/#cascade-order">order of appearance</a> is defined by comparing two elements <var>x</var>, whose owner document is <var>Dx</var>, and <var>y</var>, whose owner document is <var>Dy</var>, as follows:</p>
+<h3 id="import-link-tree">Import Link Tree</h4>
 
-<ul>
-  <li>If there is a document <var>Da</var> which is a common <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of both <var>Dx</var> and <var>Dy</var>, use the document order order of <var>Lx</var>, the first import <code>link</code> element in <var>Da</var> that links to <var>Dx</var> or <var>Dx</var>'s <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a>, and <var>Ly</var>, a <code>link</code> that imports <var>Dy</var> respectivly. The <var>x</var> element wins if <var>Lx</var> wins, or <var>y</var> wins otehrwise.
+<p>A set of imports that are associated with a <a href="#dfn-master-document">master document</a> forms an <dfn id="dfn-import-link-tree">import link tree</dfn>, a <a href="dfn-master-document">tree</a> structure. Following <dfn id="dfn-import-link-tree-forming">import link tree forming</dfn> algorithm, being applied with <code>null</code> as <var>PARENT</var>, <a href="#dfn-master-document">master document</a> as <var>TREE</var> and all of its imports as <var>POOL</var>, defines the <a href="#dfn-import-link-tree">import link tree</a>:</p>
 
-  <li>If <var>Dx</var> is a <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of <var>Dy</var>, compare the document order of <var>x</var> and a <var>Ly</var>, the first import <code>link</code> in <var>Dx</var> which links to <var>Dy</var> or <var>Dy</var>'s <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a>. If <var>x</var> wins over <var>Ly</var> it wins over <var>y</var> as well.
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+<dd><var>PARENT</var>, a document tree node</dd>
+<dd><var>CURRENT</var>, a document</dd>
+<dd><var>POOL</var>, a list of document</dd>
+<dt>Output</dt>
+<dd><var>TREE</var>, a tree of document</dd>
+</dl>
 
-  <li>If <var>Dy</var> is a <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of <var>Dx</var>, compare the document order of <var>y</var> and a <var>Lx</var> respectivly.
-</ul>
+<ol>
+  <li>Let <var>TREE</var> be a tree node.</li>
+  <li>Let <var>TREE</var>'s value be <var>CURRENT</var>
+  <li>Let <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> be <var>PARENT</var>.</li>
+  <li>Make <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list empty.</li>
+  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:</li>
+  <ol>
+    <li>Let <var>IMPORT</var> be the import of <var>LINK</var>.</li>
+    <li>If <var>IMPORT</var> is not in <var>POOL<var>, try next.</li>
+    <li>Remove <var>LINK</var> from <var>POOL</var>.</li>
+    <li>Invoke the <a href="#dfn-import-link-tree-forming">import tree forming</a> algorithm with <var>TREE</var> as <var>PARENT</var>, <var>IMPORT</var> as <var>CURRENT</var> and <var>POOL</var> as <var>POOL</var>, let the result be <var>CHILD</var>.
+    <li>Append <var>CHILD</var> to <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list.</li>
+  </ol>
+  <li><strong>stop</strong>.</li>
+</ol>
+</div>
 
 <div class="informative">
-<p>Here is an illustrative document order of an import tree.</p>
-<p>In this example, the master document has two <var>link</var> elements which import <var>B</var>'s <a href="#dfn-import-referrer-ancestor">import referrer ancestors</a>. When comparing <var>b1</var> and <var>m2</var>, <var>b1</var> wins over <var>m2</var> because the first <code>link</code>, which is used to the comparison, appears before <var>m2</var> in the master document.</code></p>
-
-  <img src="../../assets/images/import-style-document-order.png">
-  <figcaption>
-    An example of document order of styles in different documents in an import tree.
-  </figcaption>
-
-<p>The comparison uses the notion of <a href="#dfn-import-referrer-ancestor">import referrer ancestors</a> instead of <a href="#dfn-import-import-ancestor">import ancestor</a>. This implies that moving import <code>link</code> through DOM mutation affect the ordering. It follows how <code>style</code> elements and <code>link</code> element for stylesheets work.</p>
+The <a href="#dfn-import-link-tree">import link tree</a> algorithm defines a order of imports using a depth first traversal. This <a href="#dfn-import-link-tree">import link tree</a> is different from the one formed by <a href="#dfn-import-link-list">import link list</a>. The former is based on the document tree of each import. The later is built through <a href="#loading-imports">import loading process</a> and isn'taffected by document tree mutation.
 </div>
 
-<p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24756">Bug 24756</a>.</p>
-</div>
+<h3 id="order-of-appearances">Order of Appearances and Imports</h3>
+
+<p>The <a href="http://www.w3.org/TR/css3-cascade/#cascade-order">order of appearances</a> of declarations which come from different documents are determined by <a href="#dfn-import-link-tree">import link tree</a>. If <a href="http://dom.spec.whatwg.org/#concept-node-document">node documents</a> of two declarations differ, compare the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> of these documents in the <a href="#dfn-import-link-tree">import link tree</a>. The last one wins.</p>
 
 <h2 id="events-imports">Events in Imports</h2>
 
