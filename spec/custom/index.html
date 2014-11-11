@@ -437,7 +437,8 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>NAME</var> to ASCII lowercase</li>
     <li>If <var>TYPE</var> is an invalid <a href="#dfn-custom-element-type">custom element type</a>, set <var>ERROR</var> to <code>InvalidType</code> and <strong>stop</strong>.</li>
     <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a></li>
-    <li>If <var>PROTOTYPE</var>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <a href="http://www.w3.org/TR/WebIDL/#dfn-inherit">inherits</a> from <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
+    <li>Let <var>IS-SVG</var> be the result of running <a href="#dfn-inheritance-detection-algorithm">inheritance detection algorithm</a> with <var>PROTOTYPE</var> and <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a> as arguments</li>
+    <li>If <var>IS-SVG</var> is <strong>true</strong>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var>, set <var>ERROR</var> to <code>DuplicateDefinition</code> and <strong>stop</strong>.</li>
     <li>If <var>NAME</var> was provided and is not <strong>null</strong>:
     <ol>
@@ -457,6 +458,30 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> with <a href="#dfn-custom-element-type">custom element type</a> set to <var>TYPE</var>, <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> to <var>NAME</var>, <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> to <var>NAMESPACE</var>, <a href="#dfn-custom-element-prototype">custom element prototype</a> to <var>PROTOTYPE</var>, and <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a> to <var>LIFECYCLE</var>.</li>
 </ol>
 </div>
+
+<p>The <dfn id="dfn-inheritance-detection-algorithm">inheritance detection algorithm</dfn> <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
+
+<div class="algorithm">
+<dl>
+<dt>Input</dt>
+    <dd><var>DESCENDANT</var>, an object whose inheritance is being detected</dd>
+    <dd><var>ANCESTOR</var>, an object from which <var>DESCENDANT</var> may or may not inherit</dd>
+<dt>Output</dt>
+    <dd><var>RESULT</var>, <strong>true</strong>, if <var>DESCENDANT</var> inherits from <var>ANCESTOR</var> or <strong>false</strong> otherwise</dd>
+</dl>
+<ol>
+    <li>Set <var>RESULT</var> to <strong>true</strong></li>
+    <li>Let <var>ANCESTOR-PROTOTYPE</var> be the result of <a href="http://es5.github.io/#x8.12.3">getting</a> a property named <code>prototype</code> of <var>ANCESTOR</var></li>
+    <li>Let <var>PROTOTYPE</var> be <var>DESCENDANT</var></li>
+    <li>Repeat until <var>PROTOTYPE</var> is <code>undefined</code>:
+    <ol>
+        <li>If <var>PROTOTYPE</var> <a href="http://es5.github.io/#x11.9.4">strictly equals</a> <var>ANCESTOR-PROTOTYPE</var>, <strong>stop</strong> and return <var>RESULT</var>.</li>
+        <li>Let <var>PROTOTYPE</var> be the result of <a href="http://es5.github.io/#x15.2.3.2">getting a prototype of</a> <var>PROTOTYPE</var></li>
+    </ol>
+    <li>Return <var>RESULT</var>.</li>
+</ol>
+</div>
+
 
 <p>The <dfn id="dfn-element-upgrade-algorithm">element upgrade algorithm</dfn> upgrades <a href="#dfn-unresolved-element">unresolved elements</a> whose definition is now <a href="#dfn-element-registration">registered</a> and <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
@@ -610,7 +635,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#document">Document</a> {
 
 <div class="monkeypatch" id="monkeypatch-create-element">
 
-<p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following 
+<p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following
 steps:</p>
 <ol>
     <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
