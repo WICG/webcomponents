@@ -581,7 +581,6 @@ var foo = document.createElement('p', 'x-foo');
 <ol>
     <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> <strong>or</strong> <var>PROTOTYPE</var> has a <a href="http://es5.github.io/#x8.6.1">non-configurable</a> property named <code>constructor</code>, throw a <a href="http://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
-    <li>Let <var>REGISTRY</var> be the <var>DOCUMENT</var>'s <a href="#dfn-registry">registry</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
         <li>Let <var>ELEMENT</var> be the <a href="http://dom.spec.whatwg.org/#context-object">context object</a></li>
@@ -610,7 +609,7 @@ partial interface <a href="http://dom.spec.whatwg.org/#document">Document</a> {
 
 <div class="monkeypatch" id="monkeypatch-create-element">
 
-<p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following 
+<p>Instead of step 3 in <a href="http://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> and step 9 in <a href="http://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> (the steps that determine <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a>, both methods <strong>must</strong> run the following
 steps:</p>
 <ol>
     <li>Let <var>TYPE</var> be <em>typeExtension</em>, or <em>localName</em> if <em>typeExtension</em> is not present</li>
