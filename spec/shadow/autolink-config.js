@@ -13,6 +13,7 @@ var autolinkConfig = {
         'currentTarget': '#dom-event-currenttarget',
         'descendant': '#concept-tree-descendant',
         'document': '#concept-document',
+        'document element': '#document-element',
         'document.getElementById': '#dom-nonelementparentnode-getelementbyid',
         'document.getElementsByClassNameId': '#dom-document-getelementsbyclassname',
         'document.getElementsByTagName': '#dom-document-getelementsbytagname',
