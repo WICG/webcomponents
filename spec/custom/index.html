@@ -437,7 +437,7 @@ The effect of this statement is that any HTML (or SVG) element with the local na
     <li>If <var>DOCUMENT</var> is an <a href="http://dom.spec.whatwg.org/#html-document">HTML document</a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#converted-to-ascii-lowercase">convert</a> <var>NAME</var> to ASCII lowercase</li>
     <li>If <var>TYPE</var> is an invalid <a href="#dfn-custom-element-type">custom element type</a>, set <var>ERROR</var> to <code>InvalidType</code> and <strong>stop</strong>.</li>
     <li>Let <var>NAMESPACE</var> be <a href="http://www.w3.org/1999/xhtml/">HTML Namespace</a></li>
-    <li>Let <var>IS-SVG</var> be the result of running <a href="#dfn-svg-inheritance-detection-algorithm"><code>SVGElement</code> inheritance detection algorithm</a> with <var>PROTOTYPE</var> and <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a> as arguments</li>
+    <li>Let <var>IS-SVG</var> be the result of running <a href="#dfn-svg-inheritance-detection-algorithm"><code>SVGElement</code> inheritance detection algorithm</a> with <var>PROTOTYPE</var> and the <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-global-environment-records">global environment</a> of <var>DOCUMENT</var> as arguments</li>
     <li>If <var>IS-SVG</var> is <strong>true</strong>, set <var>NAMESPACE</var> to <a href="http://www.w3.org/2000/svg">SVG Namespace</a></li>
     <li>If there already exists a <a href="#dfn-element-definition">definition</a> with the same <var>TYPE</var>, set <var>ERROR</var> to <code>DuplicateDefinition</code> and <strong>stop</strong>.</li>
     <li>If <var>NAME</var> was provided and is not <strong>null</strong>:
@@ -465,16 +465,17 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 <dl>
 <dt>Input</dt>
     <dd><var>DESCENDANT</var>, an object whose inheritance is being detected</dd>
-    <dd>
+    <dd><var>ENVIRONMENT</var>, a <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-global-environment-records">global environment</a></dd>
 <dt>Output</dt>
     <dd><var>RESULT</var>, <strong>true</strong>, if <var>DESCENDANT</var> inherits from <code>SVGElement</code> or <strong>false</strong> otherwise</dd>
 </dl>
 <ol>
     <li>Set <var>RESULT</var> to <strong>true</strong></li>
+    <li>Let <var>SVG-PROTOTYPE</var> be the <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#interface-object">interface object</a> for <var>ENVIRONMENT</var></li>
     <li>Let <var>PROTOTYPE</var> be <var>DESCENDANT</var></li>
     <li>Repeat until <var>PROTOTYPE</var> is <code>undefined</code>:
     <ol>
-        <li>If <var>PROTOTYPE</var> <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-strict-equality-comparison">strictly equals</a> to <a href="http://www.w3.org/TR/SVG/types.html#InterfaceSVGElement"><code>SVGElement</code></a>'s prototype, <strong>stop</strong> and return <var>RESULT</var>.</li>
+        <li>If <var>PROTOTYPE</var> <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-strict-equality-comparison">strictly equals</a> to <var>SVG-PROTOTYPE</var>, <strong>stop</strong> and return <var>RESULT</var>.</li>
         <li>Let <var>PROTOTYPE</var> be the result of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ordinary-object-internal-methods-and-internal-slots-getprototypeof">getting a prototype of</a> <var>PROTOTYPE</var></li>
     </ol>
     <li>Set <var>RESULT</var> to <strong>false</strong></li>
