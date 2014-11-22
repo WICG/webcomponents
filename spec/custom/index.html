@@ -272,13 +272,9 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>Each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a href="#dfn-sorted-element-queue">sorted element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
-<p>As part of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>, the user agent <strong>must</strong> <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
+<p>Whenever a <a href="#dfn-base-element-queue">base element queue</a> becomes non-empty, the user agent <strong>must</strong> <a href="https://html.spec.whatwg.org/#queue-a-microtask">queue a microtask</a> to <a href="#dfn-process-base-element-queue">process base element queue</a> for the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs.</p>
 
 <p>To prevent reentrance while <a href="#dfn-process-base-element-queue">processing base element queue</a>, each <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin contexts</a> has a <dfn id="dfn-processing-base-element-queue">processing base element queue</dfn> flag, which <strong>must</strong> initially be <strong>false</strong>.</p>
-
-<div class="informative">
-Currently, the HTML spec has sequential processing of steps in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#perform-a-microtask-checkpoint">microtask checkpoint</a>. Since every step may potentially generate additional microtasks for past steps, this may lead to incomplete fulfillment of microtask checkpoint objectives. This specification assumes that this deficiency has been addressed and adding a new step to microtask checkpoint guarantees exhaustion of microtasks for all types of steps.
-</div>
 
 <p>To <dfn id="dfn-process-base-element-queue">process base element queue</dfn>, a conforming user agent <strong>must</strong> run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
