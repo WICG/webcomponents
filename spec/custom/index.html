@@ -84,6 +84,7 @@
     </li>
     <li><a href="#parsing">Parsing Custom Elements</a></li>
     <li><a href="#es6">Custom Elements and ECMAScript 6</a></li>
+    <li><a href="#semantics">Custom Element Semantics</a></li>
     <li><a href="#appendix-a">Appendix A: All Algorithms in One Diagram</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
@@ -215,6 +216,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <dd><var>QUEUE</var>, an <a href="#dfn-element-queue">element queue</a></li>
 <dt>Output</dt>
     <dd>None</dd>
+    </dl>
 <ol>
     <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var></a>:
     <ol>
@@ -754,6 +756,14 @@ steps:</p>
 </ol>
 </div>
 
+<h2 id="semantics">Custom Element Semantics</h2>
+<p>The default <a href="http://www.w3.org/TR/html/dom.html#semantics-0">semantics</a> of a <a href="#dfn-custom-element">custom element</a> is dependent upon the form in which it is instiantated:</p>
+<ul>
+  <li>by default a <a href="#dfn-custom-tag">custom tag</a> has no special meaning at all. It <a href="http://www.w3.org/TR/html/dom.html#represents">represents</a> its children.</li>
+  <li>by default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</li>
+  </ul>
+<p>For example a custom tag, could be named 'super-button' but it does not express the semantics of a <a href="http://www.w3.org/TR/html/forms.html#the-button-element">button element</a> simply due to its name. As instaniated a custom tag conveys a similar amount of semantics as a HTML <a href="http://www.w3.org/TR/html/grouping-content.html#the-div-element"><code>div</code></a> or span element</p>
+<pre>&lt;super-button&gt;&lt;/super-button&gt;</pre>
 <h2 id="appendix-a">Appendix A: All Algorithms in One Diagram</h2>
 
 <div class="informative">
