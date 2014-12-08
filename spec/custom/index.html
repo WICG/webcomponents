@@ -762,26 +762,46 @@ steps:</p>
   <li>by default a <a href="#dfn-custom-tag">custom tag</a> has no special meaning at all. It <a href="http://www.w3.org/TR/html/dom.html#represents">represents</a> its children.</li>
   <li>by default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</li>
   </ul>
-<p>For example a custom tag, could be named <em>taco-button</em> but it does not express the semantics of a HTML <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element simply due to its name. As instaniated a custom tag conveys a similar amount of semantics as a HTML <a href="http://www.w3.org/TR/html/grouping-content.html#the-div-element"><code>div</code></a> or <code><a href="http://www.w3.org/TR/html/text-level-semantics.html#the-span-element">span</a></code> element. The addition of visual styling and scripted events to the <em>taco-button</em> could provide hints as to the semantics of the custom element for some users, but for the semantics to be formally expressed, developers must convey the role, states and properties of the element to browser APIs.</p>
+<h3>Custom Tag Semantics</h3>
+<p>By default a <a href="#dfn-custom-tag">custom tag</a> has no special meaning at all. It <a href="http://www.w3.org/TR/html/dom.html#represents">represents</a> its children.</p>
+<p>For example a custom tag, could be named <em>taco-button</em> but it does not express the semantics of a HTML <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element simply due to its name. As instaniated a custom tag conveys a similar amount of semantics as a HTML <a href="http://www.w3.org/TR/html/grouping-content.html#the-div-element"><code>div</code></a> or <code><a href="http://www.w3.org/TR/html/text-level-semantics.html#the-span-element">span</a></code> element. The addition of visual styling and scripted events to the <em>taco-button</em> could provide hints as to the semantics and expected interaction behaviours of the custom element for <em>some</em> users, but for the semantics to be formally expressed, developers must convey the role, states and properties of the element to browser APIs.</p>
 <pre>&lt;!-- taco-button represents a span with a fancy name -->
 &lt;taco-button&gt;&lt;/taco-button&gt;
-
+</pre>
+<p>The addition of a <code><a href="http://www.w3.org/TR/html/editing.html#attr-tabindex">tabindex</a></code> attribute to the <em>taco-button</em> element provides interaction (the element is included in the focus order) and property/state semantics (it exposes information that it is focusable and if it currently has focus).</p>
+<pre>
 &lt;!-- taco-button represents a focusable span with a fancy name -->
 &lt;taco-button <mark>tabindex=&quot;0&quot;</mark>&gt;&lt;/taco-button&gt;
-
+</pre>
+<p>The addition of a <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#dfn-accessible-name"></a> text label to the <em>taco-button</em> element provides an <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#dfn-accessible-name">Accessible Name</a> for the element.</p>
+<pre>
 &lt;!-- taco-button represents a focusable span with a fancy name and a text label -->
 &lt;taco-button tabindex=&quot;0&quot;&gt;<mark>Eat Me</mark>&lt;/taco-button&gt;
 or
 &lt;taco-button tabindex=&quot;0&quot; <mark>aria-label=&quot;Eat Me&quot;</mark>&gt;&lt;/taco-button&gt;
-
+</pre>
+<p>The addition of  keyboard event handlers to the <em>taco-button</em> element provides the means for keyboard users to operate the control, but does not convey the presence of the functionality.</p>
+<pre>
 &lt;!-- taco-button represents focusable span with a fancy name, a text label and button like event handling -->
 &lt;taco-button tabindex=&quot;0&quot; <mark>onclick=&quot;alert('tasty eh?');&quot;</mark> 
 <mark>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;
-
+</pre>
+<p>The addition of  an ARIA <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#button"><code>role="button"</code></a> conveys the <em>taco-button</em> element's role semantics, which enables users to successfully interact with the control using the expected <code>button</code> interaction behaviours (pressing the <kbd>space</kbd> or <code>enter</code> keys to activate).</p>
+<pre>
 &lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
 &lt;taco-button <mark>role=&quot;button&quot;</mark> tabindex=&quot;0&quot; onclick=&quot;alert('tasty eh?');&quot; 
 onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;&gt;Eat Me&lt;/taco-button&gt;</pre>
-<p class="note"> TO DO </p>
+<h3>Type Extension Semantics </h3>
+<p>By default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</p>
+<p>For example a type extension, could extend the HTML  <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element. As instaniated it would inherit the button element's name, role, states and properties, built in focus and keyboard interaction behaviours. </p>
+<pre>&lt;!-- taco-button represents a button with an accesssible name of &quot;Eat Me!&quot; -->
+&lt;button <mark>is=&quot;taco-button&quot;</mark>&gt;Eat Me!&lt;/taco-button&gt;
+</pre>
+<p>To provide the desired <em>taco-button</em> feature, all that is required is the addition of an event handler. The rest of the semantics and interaction behaviour are provided by the browser as part of its implementation of the <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element.</p>
+<pre>&lt;!-- taco-button represents a button -->
+&lt;button is=&quot;taco-button&quot; onclick=&quot;alert('tasty eh?');&quot;&gt;Eat Me!&lt;/taco-button&gt;
+</pre>
+<p class="note">TO DO </p>
 <h2 id="appendix-a">Appendix A: All Algorithms in One Diagram</h2>
 
 <div class="informative">
