@@ -123,7 +123,7 @@
 <p>There are two motivations that fueled the development of this specification:</p>
 <ol>
     <li><dfn id="dfn-help-web-developers" class="no-backreference">Provide a way for Web developers to build their own, fully-featured DOM elements</dfn>. Though it was long possible to create DOM elements with any tag names in HTML, these elements weren't very functional. By giving Web developers the means to both inform the parser on how to properly construct an element and to react to lifecycle changes of an element, the specification eliminates the need for DOM-as-a-render-view scaffolding that has to exist today in most web frameworks or libraries.</li>
-    <li><dfn id="dfn-rationalize-the-platform" class="no-backreference">Rationalize the platform</dfn>. The specification ensures that all of its new features and abilities are in concert with how the relevant bits of the Web platform work today, so that these new features could be used to explain the functionality of existing Web platform features, such as HTML elements.</p>
+    <li><dfn id="dfn-rationalize-the-platform" class="no-backreference">Rationalize the platform</dfn>. The specification ensures that all of its new features and abilities are in concert with how the relevant bits of the Web platform work today, so that these new features could be used to explain the functionality of existing Web platform features, such as HTML elements.</li>
 </ol>
 <p>Most of the effort went into finding the right balance between the two motivations, driven by the hope that these motivations do not run counter to each other, but are rather complementary parts of the same larger story. For example, though the scope of the spec is currently limited to only creating custom elements by authors, it is designed to shorten the distance to a much more ambitious goal of rationalizing all HTML, SVG, and MathML elements into one coherent system.</p>
 </div>
@@ -164,7 +164,7 @@ The list of names above is the summary of all hyphen-containing element names fr
 <p>If a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> has a <a href="#dfn-registry">registry</a> associated with it, then for this <a href="http://dom.spec.whatwg.org/#concept-document">document</a> and a given <a href="#dfn-element-definition">element definition</a> in the <a href="#dfn-registry">registry</a>, the <a href="#dfn-custom-element">custom element</a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a> <strong>must</strong> be the <a href="http://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> and <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> values of <a href="#dfn-custom-element-type">custom element type</a> and the <a href="http://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> of the <a href="#dfn-element-definition">element definition</a>, respectively.</p>
 
 <div class="informative">
-Effectively, the registry is consulted whenever a new DOM element is created, whether imperatively or by a parser. Whenever a matching element definition is found in the registry, the information in this definition is used to create a new instance of a custom element.</p>
+Effectively, the registry is consulted whenever a new DOM element is created, whether imperatively or by a parser. Whenever a matching element definition is found in the registry, the information in this definition is used to create a new instance of a custom element.
 </div>
 
 <p>If a <a href="http://dom.spec.whatwg.org/#concept-document">document</a> does not have a <a href="#dfn-registry">registry</a> associated with it, all attempts at <a href="#dfn-element-registration">element registration</a> will fail.</p>
@@ -193,7 +193,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <dd><var>PROPERTY</var>, name of the property</dd>
     <dd><var>OBJECT</var>, the object from which <var>PROPERTY</var> is being transferred</dd>
     <dd><var>LIFECYCLE</var>, the <a href="#dfn-lifecycle-callbacks">lifecycle callbacks</a></dd>
-<dt>Output</d>
+<dt>Output</dt>
     <dd>None</dd>
 </dl>
 <ol>
@@ -213,12 +213,12 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 <div class="algorithm">
 <dl>
 <dt>Input</dt>
-    <dd><var>QUEUE</var>, an <a href="#dfn-element-queue">element queue</a></li>
+    <dd><var>QUEUE</var>, an <a href="#dfn-element-queue">element queue</a></dd>
 <dt>Output</dt>
     <dd>None</dd>
-    </dl>
+</dl>
 <ol>
-    <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var></a>:
+    <li>For each <a href="#dfn-custom-element">custom element</a> <var>ELEMENT</var> in <var>QUEUE</var>:
     <ol>
         <li>Let <var>CALLBACKS</var> be the <var>ELEMENT</var>'s <a href="#dfn-callback-queue">callback queue</a></li>
         <li>Repeat until <var>CALLBACKS</var> is empty:
@@ -230,12 +230,11 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions <strong>must</strong> occur:
+<p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions <strong>must</strong> occur:</p>
 <ul>
     <li>When transitioning from script to the user agent code, push a new <a href="#dfn-element-queue">element queue</a> to the <a href="#dfn-processing-stack">processing stack</a></li>
     <li>When transitioning back from the user agent code to script, pop the <a href="#dfn-element-queue">element queue</a> from the <a href="#dfn-processing-stack">processing stack</a> and <a href="#dfn-invoke-callbacks-in-element-queue">invoke callbacks</a> in that queue.</li>
 </ul>
-</p>
 
 <div class="informative">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a lifecycle callback, the user agent could choose not to wrap it as a performance optimization.</div>
 
@@ -298,9 +297,10 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>In the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> at the top of the <a href="#dfn-processing-stack">processing stack</a> or the <a href="#dfn-base-element-queue">base element queue</a> if the <a href="#dfn-processing-stack">processing stack</a> is empty.</p>
 
-To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
+<p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
 <div class="algorithm">
+<dl>
 <dt>Input</dt>
     <dd><var>NAME</var>, name of the callback</dd>
     <dd><var>ELEMENT</var>, the <a href="#dfn-custom-element">custom element</a> for which the callback is enqueued</dd>
@@ -699,9 +699,9 @@ steps:</p>
 <dl>
 <dt>Input</dt>
     <dd><var>DOCUMENT</var>, method's <a href="http://dom.spec.whatwg.org/#context-object">context object</a>, a <a href="http://dom.spec.whatwg.org/#concept-document">document</a></dd>
-    <dd><var id="var-document-register-type">TYPE</var>, the <a href="#dfn-custom-element-type">custom element type</a> of the element being registered</dd>
-    <dd><var id="var-options-prototype">FUNCTION</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a>, optional</dd>
-    <dd><var id="var-options-extends">EXTENDS</var>, the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML</a> or <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that is being extended, optional</dd>
+    <dd><var>TYPE</var>, the <a href="#dfn-custom-element-type">custom element type</a> of the element being registered</dd>
+    <dd><var>FUNCTION</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a>, optional</dd>
+    <dd><var>EXTENDS</var>, the <a href="http://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#html-elements">HTML</a> or <a href="http://www.w3.org/TR/SVG/eltindex.html">SVG</a> <a href="http://dom.spec.whatwg.org/#concept-element">element</a> that is being extended, optional</dd>
 <dt>Output</dt>
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
@@ -784,13 +784,13 @@ or
 <p class="note">The addition of in line event handlers are for demonstration purposes only. The event handlers could be added by the lifecycle callbacks imperatively, or maybe even not used at all.</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents focusable span with a fancy name, a text label and button like event handling -->
-&lt;taco-button tabindex=&quot;0&quot; <mark>onclick=&quot;alert('tasty eh?');&quot;</mark> 
+&lt;taco-button tabindex=&quot;0&quot; <mark>onclick=&quot;alert('tasty eh?');&quot;</mark>
 <mark>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
 <p>The addition of  an ARIA <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#button"><code>role="button"</code></a> conveys the <em>taco-button</em> element's role semantics, which enables users to successfully interact with the control using the expected <code>button</code> interaction behaviours (pressing the <kbd>space</kbd> or <code>enter</code> keys to activate).</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
-&lt;taco-button <mark>role=&quot;button&quot;</mark> tabindex=&quot;0&quot; onclick=&quot;alert('tasty eh?');&quot; 
+&lt;taco-button <mark>role=&quot;button&quot;</mark> tabindex=&quot;0&quot; onclick=&quot;alert('tasty eh?');&quot;
 onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;&gt;Eat Me&lt;/taco-button&gt;</code></pre>
 <h3>Type Extension Semantics </h3>
 <p>By default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</p>
@@ -809,7 +809,7 @@ onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&
 <p>To help navigate through various parts of the spec and their interactions, here is a diagram that attempts to put all algorithms actions that trigger them in one space. Click on each box to go to the corresponding algorithm or action.</p>
 
 <figure>
-  <object data="custom-elements-whole-world.svg" width="100%"></object>
+  <object data="custom-elements-whole-world.svg"></object>
   <figcaption>Fig. All algorithms in one diagram</figcaption>
 </figure>
 
