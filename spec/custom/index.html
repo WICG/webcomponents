@@ -224,7 +224,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
         <li>Repeat until <var>CALLBACKS</var> is empty:
         <ol>
             <li>Remove the first item from <var>CALLBACKS</var> and let <var>CALLBACK</var> be this item</li>
-            <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="http://dev.w3.org/2006/webapi/WebIDL/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
+            <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="http://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
         </ol></li>
     </ol></li>
 </ol>
@@ -248,9 +248,9 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
     <li>A <a href="#dfn-custom-element">custom element</a> is created with means other than a parser</li>
 </ul>
 
-<p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-tree">import tree</a> is determined by <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-tree">import tree</a> that was flattened by replacing every <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a> <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
+<p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> is determined by <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> that was flattened by replacing every <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a> <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
 
-<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceeding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> in the first encountered <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, whose <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-ready-flag">ready flag</a> is not yet set. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-tree">import tree</a>.</p>
+<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceeding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> in the first encountered <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, that has not yet <a href="https://html.spec.whatwg.org/multipage/syntax.html#completely-loaded">completely loaded</a>. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="http://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a>.</p>
 
 <div class="informative">
 <p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
@@ -267,7 +267,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 </code></pre>
 
-<p>The order of custom elements in the flattened import tree is <code>me-first</code> (1), <code>me-second</code> (2). However, it's very likely that the parser will find out about <code>me-second</code> sooner than <code>me-first</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at the beginning position. When <code>import.html</code> is ready, the order jumps all the way to <code>me-second</code> (2).</p>
+<p>The order of custom elements in the flattened import link tree is <code>me-first</code> (1), <code>me-second</code> (2). However, it's very likely that the parser will find out about <code>me-second</code> sooner than <code>me-first</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at the beginning position. When <code>import.html</code> is ready, the order jumps all the way to <code>me-second</code> (2).</p>
 
 </div>
 
@@ -295,7 +295,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 </ol>
 </div>
 
-<p>In the <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#script's-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> at the top of the <a href="#dfn-processing-stack">processing stack</a> or the <a href="#dfn-base-element-queue">base element queue</a> if the <a href="#dfn-processing-stack">processing stack</a> is empty.</p>
+<p>In the <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a href="#dfn-element-queue">element queue</a> at the top of the <a href="#dfn-processing-stack">processing stack</a> or the <a href="#dfn-base-element-queue">base element queue</a> if the <a href="#dfn-processing-stack">processing stack</a> is empty.</p>
 
 <p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a lifecycle callback</dfn>, the user must run the following steps or their <a href="#dfn-processing-equivalence">equivalent</a>:</p>
 
@@ -535,8 +535,8 @@ dictionary <dfn id="api-element-registration-options">ElementRegistrationOptions
     <li>If <var>PROTOTYPE</var> is <strong>null</strong>, let <var>PROTOTYPE</var> be the result of invoking <a href="http://es5.github.io/#x15.2.3.5"><code>Object.create</code></a> with <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a>'s <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> as only argument</li>
     <li>Let <var>NAME</var> be <var>EXTENDS</var></li>
     <li>Let <var>ERROR</var> be the result of running the <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
-    <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="https://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="https://dom.spec.whatwg.org/#syntaxerror"><code>SyntaxError</code></a> and <strong>stop</strong>.</li>
-    <li>If <var>ERROR</var> is not <code>None</code>, <a href="https://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="https://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="http://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>SyntaxError</code> and <strong>stop</strong>.</li>
+    <li>If <var>ERROR</var> is not <code>None</code>, <a href="http://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and <strong>stop</strong>.</li>
     <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>DOCUMENT</var> and <var>PROTOTYPE</var> as arguments.</li>
 </ol>
 </div>
@@ -603,7 +603,7 @@ var foo = document.createElement('p', 'x-foo');
     <dd><var>CONSTRUCTOR</var>, the <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> <strong>or</strong> <var>PROTOTYPE</var> has a <a href="http://es5.github.io/#x8.6.1">non-configurable</a> property named <code>constructor</code>, throw a <a href="https://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>PROTOTYPE</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> <strong>or</strong> <var>PROTOTYPE</var> has a <a href="http://es5.github.io/#x8.6.1">non-configurable</a> property named <code>constructor</code>, throw a <code>NotSupportedError</code> and <strong>stop</strong>.</li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CONSTRUCTOR</var> be the <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> whose <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-prototype-object">interface prototype object</a> is <var>PROTOTYPE</var> and when called as a constructor, executes these steps:
     <ol>
@@ -720,8 +720,8 @@ steps:</p>
 
     <li>Let <var>NAME</var> be <var>EXTENDS</var></li>
     <li>Let <var>ERROR</var> be the result of running the <a href="#dfn-element-registration-algorithm">element registration algorithm</a> with <var>DOCUMENT</var>, <var>TYPE</var>, <var>PROTOTYPE</var>, and <var>NAME</var> as arguments</li>
-    <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="https://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="https://dom.spec.whatwg.org/#syntaxerror"><code>SyntaxError</code></a> and <strong>stop</strong>.</li>
-    <li>If <var>ERROR</var> is not <code>None</code>, <a href="https://dom.spec.whatwg.org/#concept-throw">throw</a> a <a href="https://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>ERROR</var> is <code>InvalidType</code>, <a href="http://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>SyntaxError</code> and <strong>stop</strong>.</li>
+    <li>If <var>ERROR</var> is not <code>None</code>, <a href="http://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and <strong>stop</strong>.</li>
     <li>Return result of running <a href="#dfn-custom-element-constructor-generation">custom element constructor generation algorithm</a> with <var>PROTOTYPE</var>, <var>FUNCTION</var>, and <var>DOCUMENT</var> as arguments.</li>
 </ol>
 </div>
@@ -738,7 +738,7 @@ steps:</p>
     <dd><var>FUNCTION</var>, the mutated <a href="#dfn-custom-element-constructor">custom element constructor</a></dd>
 </dl>
 <ol>
-    <li>If <var>FUNCTION</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, throw a <a href="https://dom.spec.whatwg.org/#notsupportederror"><code>NotSupportedError</code></a> and <strong>stop</strong>.</li>
+    <li>If <var>FUNCTION</var> is already an <a href="http://www.w3.org/TR/WebIDL/#dfn-interface-object">interface object</a> for any <a href="http://www.w3.org/TR/WebIDL/#dfn-interface">interface</a>, <a href="http://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and <strong>stop</strong>.</li>
     <li>Let <var>DEFINITION</var> be an <a href="#dfn-element-definition">element definition</a> that has <var>PROTOTYPE</var> as <a href="#dfn-custom-element-prototype">custom element prototype</a></li>
     <li>Let <var>CREATE</var> be a function which when called, executes these steps:
     <ol>
