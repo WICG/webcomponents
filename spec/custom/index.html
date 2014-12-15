@@ -89,8 +89,9 @@
     <li><a href="#es6">Custom Elements and ECMAScript 6</a></li>
     <li><a href="#semantics">Custom Element Semantics</a>
     <ol>
-      <li><a href="#custom-tag-semantics">Custom Tag Semantics</a></li>
-        <li><a href="#type-extension-semantics">Type Extension Semantics</a></li>
+     <li><a href="#custom-tag-semantics">Custom Tag Semantics</a></li>
+    <li><a href="#type-semantics">Type Extension Semantics</a></li>
+    <li><a href="#dev-advice">Developer Advice</a></li>
     </ol></li>
     <li><a href="#appendix-a">Appendix A: All Algorithms in One Diagram</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
@@ -793,11 +794,21 @@ steps:</p>
 &lt;taco-button tabindex=&quot;0&quot; <mark>onclick=&quot;alert('tasty eh?');&quot;</mark>
 <mark>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
-<p>The addition of  an ARIA <a href="http://www.w3.org/TR/wai-aria-1.1/#button"><code>role="button"</code></a> conveys the <em>taco-button</em> element's role semantics, which enables users to successfully interact with the control using the expected <code>button</code> interaction behaviours (pressing the <kbd>space</kbd> or <code>enter</code> keys to activate).</p>
+<p>The addition of  an ARIA <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#button"><code>role="button"</code></a> conveys the custom element's role semantics, which enables users to successfully interact with the control using the expected <code>button</code> interaction behaviours (pressing the <kbd>space</kbd> or <code>enter</code> keys to activate).</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
 &lt;taco-button <mark>role=&quot;button&quot;</mark> tabindex=&quot;0&quot; onclick=&quot;alert('tasty eh?');&quot;
 onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;&gt;Eat Me&lt;/taco-button&gt;</code></pre>
+<p>The developer may provide a disabled state for the custom element. This could be implemented by removing the <code>tabindex</code> attribute so the element is no longer included in the focus order and removing the functionality so that interacting with the element does nothing. Also the visual styling may also be modified to visually indicate it the element is disabled.</p>
+<pre><code class="prettyprint">
+&lt;!-- grayed out non focusable taco-button with functionality removed, to indicate the button is in a disabled state  -->
+&lt;taco-button role=&quot;button&quot; <mark><del>tabindex=&quot;0&quot;</del></mark> <mark><del>onclick=&quot;alert('tasty eh?');&quot;</del></mark> 
+<mark><del>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</del></mark>&gt;Eat Me&lt;/taco-button&gt;</code></pre>
+<p>Removing the focusability, functionality and modifying the style of the custom element does not unambiguously express that the custom element is in a disabled state. To unambiguously express the disabled state of the custom element add <code><a href="http://www.w3.org/TR/wai-aria/states_and_properties#aria-disabled">aria-disabled=&quot;true&quot;</a></code>.</p>
+<pre><code class="prettyprint">
+&lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
+&lt;taco-button role=&quot;button&quot; <mark><del>tabindex=&quot;0&quot;</del></mark> <mark><del>onclick=&quot;alert('tasty eh?');&quot;</del></mark> 
+<mark><del>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</del></mark> <mark>aria-disabled="true"</mark>&gt;Eat Me&lt;/taco-button&gt;</code></pre>
 <h3 id="type-extension-semantics">Type Extension Semantics</h3>
 <p>By default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</p>
 <h4 id="type-semantics-ex">Type Extension Example</h4>
