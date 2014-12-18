@@ -29,6 +29,7 @@ var autolinkConfig = {
         'nodeType': '#dom-node-nodetype',
         'ownerDocument': '#dom-node-ownerdocument',
         'parent': '#concept-tree-parent',
+        'participate': '#concept-tree-participate',
         'participates': '#concept-tree-participate',
         'preceding': '#concept-tree-preceding',
         'range': '#range',
@@ -118,6 +119,9 @@ var autolinkConfig = {
 
     'http://www.w3.org/TR/CSS21/': {
         'CSS rules': 'syndata.html#rule-sets',
+        'inheritance': 'cascade.html#inheritance',
+        'box': 'box.html',
+        'formating structure': 'intro.html#formatting-structure',
         'text-decoration': 'text.html#lining-striking-props'
     },
 
