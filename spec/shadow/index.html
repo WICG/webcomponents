@@ -226,9 +226,13 @@
           <figcaption>A composed tree</figcaption>
         </figure>
 
-        <p>In <dfn>rendering</dfn> a <a>document tree</a>, or presenting it visually, the <a>composed tree</a> <strong>must</strong> be used instead of the <a>document tree</a>.</p>
-
-        <p>The <a>composed tree</a> <strong>must</strong> be updated before the <a>rendering</a> occurs.</p>
+        <p>
+          If an element doesn't <a>participate</a> in a <a>composed tree</a> whose <a>root</a> node is a document, the element <strong>must</strong> not appear in the <a>formating structure</a> [[!CSS21]] nor create any CSS <a>box</a>.
+          This behavior <strong>must</strong> not be overridden by setting the 'display' property.
+        </p>
+        <p>
+          In resolving CSS <a>inheritance</a>, an element <strong>must</strong> inherit from the parent node in the <a>composed tree</a>, if applicable.
+        </p>
       </section>
 
     </section>
@@ -1120,12 +1124,12 @@
     </section>
 
     <section>
-      <h2>Elements and DOM Objects</h2>
+      <h2>Elements and DOM interfaces</h2>
 
       <section>
-        <h3><code>ShadowRoot</code> Object</h3>
+        <h3>The <code>ShadowRoot</code> interface</h3>
 
-        <p>The <code>ShadowRoot</code> object represents the <a>shadow root</a>.</p>
+        <p>The <code>ShadowRoot</code> interface represents the <a>shadow root</a>.</p>
 
         <dl class="idl" title="interface ShadowRoot : DocumentFragment">
           <dt>Selection? getSelection()</dt>
