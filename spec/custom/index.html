@@ -89,16 +89,11 @@
     <li><a href="#es6">Custom Elements and ECMAScript 6</a></li>
     <li><a href="#semantics">Custom Element Semantics</a>
     <ol>
-     	<li><a href="#custom-tag-semantics">Custom Tag Semantics</a>
-        <ol>
-        	<li><a href="#custom-tag-example">Custom Tag Example</a></li>
-        </ol></li>
-    	<li><a href="#type-semantics">Type Extension Semantics</a>
-        <ol>
-        	<li><a href="type-semantics-ex">Type Extension Example</a></li>
-        </ol></li>
-    	<li><a href="#dev-advice">Developer Advice</a></li>
-    </ol></li>
+		<li><a href="#custom-tag-example">Custom Tag Example</a></li>
+        <li><a href="#type-extension-example">Type Extension Example</a></li>
+        <li><a href="#dev-advice">Custom Element Semantics - Conclusion</a></li>
+     </ol>
+     </li>
     <li><a href="#appendix-a">Appendix A: All Algorithms in One Diagram</a></li>
     <li><a href="#acknowledgements" class="no-number">Acknowledgements</a></li>
 </ol>
@@ -776,30 +771,31 @@ steps:</p>
   <li>by default a <a href="#dfn-custom-tag">custom tag</a> has no special meaning at all. It <a href="http://www.w3.org/TR/html/dom.html#represents">represents</a> its children.</li>
   <li>by default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</li>
   </ul>
-<h3 id="custom-tag-semantics">Custom Tag Semantics</h3>
-<p>By default a <a href="#dfn-custom-tag">custom tag</a> has no special meaning at all. It <a href="http://www.w3.org/TR/html/dom.html#represents">represents</a> its children.</p>
-<h4 id="custom-tag-example">Custom Tag Example</h4>
-<p>For example a custom tag, could be named <em>taco-button,</em> but it does not express the semantics of a HTML <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element simply due to its name. As instantiated a custom tag conveys a similar amount of semantics as a HTML <a href="http://www.w3.org/TR/html/grouping-content.html#the-div-element"><code>div</code></a> or <code><a href="http://www.w3.org/TR/html/text-level-semantics.html#the-span-element">span</a></code> element. The addition of visual styling and scripted events to the <em>taco-button</em> could provide hints as to the semantics and expected interaction behaviours of the custom element for <em>some</em> users, but for the semantics to be formally expressed, developers must convey the semantics  using ARIA <a href="http://w3c.github.io/aria/aria/aria.html#usage_intro">roles</a>, <a href="http://w3c.github.io/aria/aria/aria.html#introstates">states and properties</a>.</p>
+<h3 id="custom-tag-example">Custom Tag Example</h3>
+<p>For example, a custom tag could be named <em>taco-button</em>, but the name alone does not express the semantics of a HTML <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element simply due to its name. As instantiated a custom tag conveys a similar amount of semantics as an HTML <a href="http://www.w3.org/TR/html/grouping-content.html#the-div-element"><code>div</code></a> or <code><a href="http://www.w3.org/TR/html/text-level-semantics.html#the-span-element">span</a></code> element:</p>
 <pre><code class="prettyprint">&lt;!-- taco-button represents a span with a fancy name -->
 &lt;taco-button&gt;&lt;/taco-button&gt;</code>
 </pre>
+<p> The addition of visual styling and scripted events to the <em>taco-button</em> could provide hints as to its semantics and expected interaction behaviours — for some users — but for the semantics to be formally expressed developers must convey the semantics  using ARIA <a href="http://w3c.github.io/aria/aria/aria.html#usage_intro">roles</a>, <a href="http://w3c.github.io/aria/aria/aria.html#introstates">states and properties</a>.</p>
+
 <p>The addition of a <code><a href="http://www.w3.org/TR/html/editing.html#attr-tabindex">tabindex</a></code> attribute to the custom element  provides interaction (the element is included in the focus order) and property/state semantics (it exposes information that it is focusable and if it currently has focus).</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable span with a fancy name -->
 &lt;taco-button <mark>tabindex=&quot;0&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
-<p>The addition of a <a href="http://www.w3.org/TR/wai-aria-1.1/#dfn-accessible-name"></a> text label to the <em>taco-button</em> element provides an <a href="http://www.w3.org/TR/wai-aria-1.1/#dfn-accessible-name">Accessible Name</a> for the element.</p>
+<p>The addition of a  label, using <a href="http://w3c.github.io/aria/aria/aria.html#aria-label"><code>aria-label</code></a>, to the custom element  provides an <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#dfn-accessible-name">Accessible Name</a> for the element.</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable span with a fancy name and a text label -->
 &lt;taco-button tabindex=&quot;0&quot; <mark>aria-label=&quot;Eat Me&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
 <p>The addition of  keyboard event handlers to the custom element element provides the means for keyboard users to operate the control, but does not convey the presence of the functionality. </p>
-<p class="note">The addition of in line event handlers are for demonstration purposes only. The event handlers could be added by the lifecycle callbacks imperatively, or maybe even not used at all. This example demonstrates <em>one</em> method for developers to ensure that a custom control is operable for keyboard users and meets the <a href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#keyboard-operation-keyboard-operable">WCAG 2.0</a> criteria &quot;All functionality of the content is operable through a keyboard interface&quot;.</p>
+
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents focusable span with a fancy name, a text label and button like event handling -->
 &lt;taco-button tabindex=&quot;0&quot; <mark>onclick=&quot;alert('tasty eh?');&quot;</mark>
 <mark>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
+<p class="note">The addition of inline event handlers are for demonstration purposes only. The event handlers could be added by the lifecycle callbacks imperatively, or maybe even not used at all. This example demonstrates <em>one</em> method for developers to ensure that a custom control is operable for keyboard users and meets the <a href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#keyboard-operation-keyboard-operable">WCAG 2.0</a> criteria &quot;All functionality of the content is operable through a keyboard interface&quot;.</p>
 <p>The addition of  an ARIA <a href="http://rawgit.com/w3c/aria/master/aria/aria.html#button"><code>role="button"</code></a> conveys the custom element's role semantics, which enables users to successfully interact with the control using the expected <code>button</code> interaction behaviours (pressing the <kbd>space</kbd> or <code>enter</code> keys to activate).</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
@@ -810,15 +806,15 @@ onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&
 &lt;!-- grayed out non focusable taco-button with functionality removed, to indicate the button is in a disabled state  -->
 &lt;taco-button role=&quot;button&quot; <mark><del>tabindex=&quot;0&quot;</del></mark> <mark><del>onclick=&quot;alert('tasty eh?');&quot;</del></mark> 
 <mark><del>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</del></mark>&gt;Eat Me&lt;/taco-button&gt;</code></pre>
-<p>Removing the focusability, functionality and modifying the style of the custom element does not unambiguously express that the custom element is in a disabled state. To unambiguously express the disabled state of the custom element add <code><a href="http://www.w3.org/TR/wai-aria/states_and_properties#aria-disabled">aria-disabled=&quot;true&quot;</a></code>.</p>
+<p>Removing the focusability and functionality of the custom element and modifying its style does not unambiguously express that it is in a disabled state. To unambiguously express the disabled state add <code><a href="http://www.w3.org/TR/wai-aria/states_and_properties#aria-disabled">aria-disabled=&quot;true&quot;</a></code>.</p>
+<p class="note">A <a href="http://www.w3.org/TR/html/forms.html#attr-fe-disabled"><code>disabled</code></a> attribute would not work here as the custom tag is not based on an HTML element that suports its use.</p>
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents a focusable button with a text label and button like event handling -->
 &lt;taco-button role=&quot;button&quot; <mark><del>tabindex=&quot;0&quot;</del></mark> <mark><del>onclick=&quot;alert('tasty eh?');&quot;</del></mark> 
 <mark><del>onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&quot;</del></mark> <mark>aria-disabled="true"</mark>&gt;Eat Me&lt;/taco-button&gt;</code></pre>
-<h3 id="type-extension-semantics">Type Extension Semantics</h3>
-<p>By default a <a href="#dfn-type-extension">type extension</a> inherits the semantics of the element type it extends.</p>
-<h4 id="type-semantics-ex">Type Extension Example</h4>
-<p> a type extension, could extend the HTML  <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element. As instantiated it would inherit the <code>button</code> element's name, role, states and properties, built in focus and keyboard interaction behaviours. </p>
+
+<h3 id="type-extension-example">Type Extension Example</h3>
+<p> A type extension, for example could extend the HTML  <a href="http://www.w3.org/TR/html/forms.html#the-button-element"><code>button</code></a> element. As instantiated it would inherit the <code>button</code> element's name, role, states and properties, built in focus and keyboard interaction behaviours. </p>
 <pre><code class="prettyprint">&lt;!-- tequila-button represents a button with an accessible name of &quot;Drink Me!&quot; -->
 &lt;button <mark>is=&quot;tequila-button&quot;</mark>&gt;Drink Me!&lt;/button&gt;</code>
 </pre>
@@ -830,8 +826,8 @@ onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&
 <pre><code class="prettyprint">&lt;!-- tequila-button represents a button -->
 &lt;button is=&quot;tequila-button&quot; onclick=&quot;alert('smooth!');&quot; <mark>disabled</mark>&gt;Drink Me!&lt;/button&gt;</code>
 </pre>
-<h3 id="dev-advice">Custom Element Semantics - Developer Advice</h3>
-<p>As illustrated by the  examples above. The simplest and most robust method to create custom elements that are usable and accessible is to implement custom elements as <a href="#dfn-type-extension">type extensions</a>. This method provides a custom element with built in semantics and interaction behaviours which developers can use as a foundation.</p>
+<h3 id="dev-advice">Custom Element Semantics — Conclusion</h3>
+<p> The simplest and most robust method to create custom elements that are usable and accessible is to implement custom elements as <a href="#dfn-type-extension">type extensions</a>. This method provides a custom element with built in semantics and interaction behaviours that developers can use as a foundation.</p>
 <p>Use <a href="http://w3c.github.io/aria/aria/aria.html">ARIA</a>, where needed, to provide semantics for custom elements and follow the <a href="http://www.w3.org/TR/wai-aria-practices/#aria_ex">ARIA  Design Patterns</a> when implementing ARIA attributes and UI interaction behaviours. Ensure that custom tag or type extension custom elements meet the criteria listed in the <a href="http://w3c.github.io/aria-in-html/#custom-control-accessible-development-checklist">Custom Control Accessible Development Checklist</a>. Use ARIA in accordance with the <a href="https://specs.webplatform.org/html-aria/webspecs/master/#docconformance">Document conformance requirements for use of ARIA attributes in HTML</a>.</p>
 <h4 id="dev-reading">Further Reading for Developers</h4>
 <ul>
