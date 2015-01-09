@@ -61,7 +61,7 @@ var autolinkConfig = {
         'embed element': 'the-iframe-element.html#the-embed-element',
         'fallback content': 'elements.html#fallback-content',
         'fieldset element': 'the-button-element.html#the-fieldset-element',
-        'flow content': 'elements.html#flow-content-0',
+        'flow content': 'dom.html#flow-content',
         'focusable': 'editing.html#focusable-area',
         'form element': 'forms.html#the-form-element',
         'form submission': 'association-of-controls-and-forms.html#form-submission',
