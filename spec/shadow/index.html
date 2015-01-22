@@ -1359,7 +1359,9 @@
           <dd>
             <p>Represents the event path.</p>
             <p>
-              On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object, that is a copy of the event path for the <a>context object</a>.
+              On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object, that <strong>must</strong> be equivalent of the result of the <a>event path calculation algorithm</a> with the <a>context object</a> and the <a>event target</a> before capture phase as input, if the event is being dispached.
+              The same thing also applies after the event is dispatched.
+              If the event hasn't been dispatched, the attribute <strong>must</strong> create and return a new empty array.
             </p>
             <p class="issue">
               Use <code>Array</code> as the return type of the <code>path</code> attribute in WebIDL.
