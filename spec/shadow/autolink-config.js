@@ -152,6 +152,7 @@ var autolinkConfig = {
     'http://www.w3.org/TR/cssom-view/': {
         'offsetx': '#dom-mouseevent-offsetx',
         'offsety': '#dom-mouseevent-offsety',
+        'caretPositionFromPoint': '#dom-document-caretpositionfrompoint',
         'padding edge': '#padding-edge',
         'viewport': '#viewport'
     },
