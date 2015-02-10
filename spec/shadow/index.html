@@ -1223,7 +1223,7 @@
               <li>If the <a>context object</a> is the <a>oldest shadow root</a>, return <strong>null</strong>.</li>
               <li>Return the <a>older shadow root</a> relative to the <a>context object</a>.</li>
             </ol>
-            <p>For <a>HTML elements</a>, the <a>closed</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+            <p>If the older shadow root is <a>closed</a>, the attribute <strong>must</strong> return <code>null</code>.</p>
           </dd>
 
           <dt>attribute DOMString innerHTML</dt>
@@ -1273,8 +1273,7 @@
           <dt>readonly attribute ShadowRoot? shadowRoot</dt>
           <dd>
             <p>Represents the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
-            <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
-            <p>For <a>HTML elements</a>, the <a>closed</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+            <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a> if there is and it is <a>open</a>. Otherwise <strong>must</strong> return <code>null</code>.</p>
           </dd>
         </dl>
       </section>
