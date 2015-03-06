@@ -1083,18 +1083,83 @@
     <section>
       <h2>HTML Elements in Shadow Trees</h2>
 
-      <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
-
       <section>
-        <h3>Inert HTML Elements</h3>
+        <h2>Inertness of HTML Elements in a shadow tree</h2>
 
-        <p>A subset of <a>HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>. These <a title="element">elements</a> are:</p>
+        <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
+
+        <p class="note">
+          According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a <a>shadow tree</a>, instead of a document tree,
+          because their definitions require the elements to be <a>in a document</a> as a necessary condition for them to work.
+          In other words, they shouldn't work if they participate in a <a>shadow tree</a>, even when they are <a>in a document deeply</a>.
+          We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a document deeply</a>.
+          See W3C <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26365">Bug 26365</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27406">Bug 27406</a> for the details.
+          The following is the tentative summary of the discussions in the W3C bugs. We, however, haven't covered all HTML Elements and their behaviors here yet.
+          For HTML Elements which are not mentioned explitly here, they should be considered as <a>active in a shadow tree</a>.
+          We are trying to update [[!HTML]] itself, instead of having monkey patches here.
+        </p>
+        <p>
+          HTML Elements are classified into the following categories:
+        </p>
         <ul>
-          <li><a title="base element"><code>base</code></a></li>
-          <li><a title="link element"><code>link</code></a></li>
+          <li>
+            <p>
+              <dfn>Active in a shadow tree</dfn>
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as if they were in the <a>document tree</a>, even when they participate in a <a>shadow tree</a>,
+              as long as they are <a>in a document deeply</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><code>dialog</code></li>
+              <li><code>iframe</code></li>
+              <li><code>style</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              <dfn>Inert in a shadow tree</dfn>:
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>, if they participate in a <a>shadow tree</a>.
+              This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><a title="base element"><code>base</code></a></li>
+              <li><a title="link element"><code>link</code></a></li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              <dfn>Inert if not being rendered</dfn>:
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>,
+              if they are not <a>being rendered</a>.
+              In other words, if they don't particitpate in a <a>composed tree</a> whose root node is a document, they <strong>must</strong> behave as <a>inert</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><code>applet</code></li>
+              <li><code>embed</code></li>
+              <li><code>object</code></li>
+            </ul>
+            <p class="note">
+              For example, suppose that an <code>object</code> element is a child node of a shadow host, but the <code>object</code> element's <a>destination insertion points</a> is empty.
+              In this case, according to the <a>distribution algorithm</a> and <a>composed tree children calculation algorithm</a>,
+              this element never participate in a <a>composed tree</a> whose root node is a <a>document</a>.
+              Therefore, this element is <a>inert</a> because this element is not <a>being rendered</a>. .
+            </p>
+          </li>
         </ul>
-
-        <p>All other <a>HTML elements</a> in the <a title="shadow tree">shadow trees</a> <strong>must</strong> behave as if they were part of the <a>document tree</a>.</p>
       </section>
 
       <section>
