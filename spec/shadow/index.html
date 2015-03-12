@@ -1084,7 +1084,7 @@
       <h2>HTML Elements in Shadow Trees</h2>
 
       <section>
-        <h2>Inertness of HTML Elements in a shadow tree</h2>
+        <h3>Inertness of HTML Elements in a shadow tree</h3>
 
         <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
 
@@ -1095,7 +1095,7 @@
           We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a document deeply</a>.
           See W3C <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26365">Bug 26365</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27406">Bug 27406</a> for the details.
           The following is the tentative summary of the discussions in the W3C bugs. We, however, haven't covered all HTML Elements and their behaviors here yet.
-          For HTML Elements which are not mentioned explitly here, they should be considered as <a>active in a shadow tree</a>.
+          For HTML Elements which are not explicitly stated here, they should be considered as <a>active in a shadow tree</a>.
           We are trying to update [[!HTML]] itself, instead of having monkey patches here.
         </p>
         <p>
@@ -1137,11 +1137,11 @@
           </li>
           <li>
             <p>
-              <dfn>Inert if not being rendered</dfn>:
+              <dfn>Inert unless being rendered</dfn>:
             </p>
             <p>
               A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>,
-              if they are not <a>being rendered</a>.
+              unless they are <a>being rendered</a>.
               In other words, if they don't particitpate in a <a>composed tree</a> whose root node is a document, they <strong>must</strong> behave as <a>inert</a>.
             </p>
             <p>
@@ -1176,11 +1176,15 @@
           <li><code>title</code></li>
         </ul>
 
-        <p class="note">This list does not include attributes that are defined elsewhere in this specification. Such attributes include:
-        <ul>
-          <li><code>tabindex</code> and <code>autofocus</code> are defined in <a href="#focus-navigation">Focus Navigation</a>.</li>
-          <li><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</li>
-        </ul>
+        <div class="note">
+          <p>
+            This list does not include attributes that are defined elsewhere in this specification. Such attributes include:
+          </p>
+          <ul>
+            <li><code>tabindex</code> and <code>autofocus</code> are defined in <a href="#focus-navigation">Focus Navigation</a>.</li>
+            <li><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</li>
+          </ul>
+        </div>
         <p class="issue">This section is still under discussion and it may change. The status is tracked in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27222">W3C bug 27222</a>.
       </section>
 
@@ -1360,7 +1364,6 @@
         <dl class="idl" title="partial interface Text">
           <dt>NodeList getDestinationInsertionPoints()</dt>
           <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
-          </dd>
         </dl>
       </section>
 
