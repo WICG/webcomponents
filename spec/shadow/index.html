@@ -212,19 +212,23 @@
 
           <div class="note">
             <p>
-              As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between nodes if they participate in different node trees.
+              As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between two nodes if they participate in different node trees.
               A shadow root is not a <a>child</a> node of the shadow host. The <a>parent</a> node of a <a>shadow root</a> doesn't exist.
-              Because of this nature, a <a>shadow tree</a> would act as a kind of <strong>scoping</strong>.
+              Because of this nature, most of existing APIs are <strong>scoped</strong> and don't affect other node trees, even though they are forming one tree of trees.
               For example, <a title="getElementById"><code>document.getElementById(elementId)</code></a> never returns an element in a shadow tree,
-              even when the shadow tree is a <a>child tree</a> of the <a>document tree</a> and the element has the given <code>elementId</code>.
+              even when the element has the given <code>elementId</code>.
             </p>
             <p>
               The same thing also applies to CSS <a title="selectors">Selectors</a> matching.
-              For example, a <a title="descendant combinators">descendant combinator</a> never descends into a <a title="child tree">child</a> <a>shadow tree</a>
+              For example, a <a title="descendant combinators">descendant combinator</a> never descends into a node in a <a title="child tree">child</a> <a>shadow tree</a>
               because a <a>shadow root</a> is not a <a>child</a> node of the <a>shadow host</a>.
               Unless a special CSS Selector for Shadow DOM, which is mentioned later, is used, a CSS Selector never matches an element in a different node tree.
             </p>
           </div>
+          <p class="note">
+            Because <code>ShadowRoot</code> inherits <code>DocumentFragment</code>, as <a href="#idl-def-ShadowRoot">specified</a> later,
+            you can use <code>ShadowRoot.getElementByID(elementId)</code> to get a node in the <a>shadow tree</a>.
+          </p>
         </section>
 
       </section>
