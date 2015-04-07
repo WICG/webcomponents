@@ -545,49 +545,58 @@
             <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
           </dl>
           <ol>
-            <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
-            <li>Let <var>CURRENT</var> be <var>NODE</var></li>
-            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-            <li>Repeat while <var>CURRENT</var> exists:
+            <li>Let PATH be the empty ordered list of nodes
+            <li>Let CURRENT be NODE
+            <li>Let INSERTION-POINTS be an empty stack of nodes
+            <li>Add CURRENT to PATH
+            <li>Repeat while CURRENT exists:
               <ol>
-                <li>If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
+                <li>If the destination insertion points of CURRENT is not empty:
                   <ol>
-                    <li>For each <a>insertion point</a>, <var>INSERTION-POINT</var>, in the <a>destination insertion points</a> of <var>CURRENT</var>:
-                      <ol>
-                        <li>If <var>INSERTION-POINT</var> is a <a>shadow insertion point</a>:
-                          <ol>
-                            <li>Let <var>SHADOW-ROOT</var> be the <a>root</a> <a>node</a> of <var>INSERTION-POINT</var></li>
-                            <li>If <var>SHADOW-ROOT</var> is not the <a>oldest shadow root</a>:
-                              <ol>
-                                <li>Add the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> to <var>PATH</var></li>
-                              </ol></li>
-                          </ol></li>
-                        <li>Add <var>INSERTION-POINT</var> to <var>PATH</var></li>
-                      </ol></li>
-                    <li>Let <var>CURRENT</var> be the <a>final destination</a> of <var>CURRENT</var></li>
-                  </ol></li>
-                <li>Otherwise:
+                    <li>Push the destination insertion points into INSERTION-POINTS in order of first destination to final destination
+                    <li>Pop INSERTION-POINTS and set CURRENT to be the popped node
+                  </ol>
+                <li>Otherwise if CURRENT is a shadow root:
                   <ol>
-                    <li>If <var>CURRENT</var> is a <a>shadow root</a>:
+                    <li>Let SHADOW-POOL-HOST be the shadow host which hosts CURRENT
+                    <li>If SHADOW-POOL-HOST hosts the node tree which NODE participates in and EVENT is one of the events which must be stopped:
                       <ol>
-                        <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                        <li>If <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
-                          <ol>
-                            <li>Stop this algorithm</li>
-                          </ol></li>
-                        <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                      </ol></li>
+                        <li>Stop this algorithm
+                      </ol>
+                    <li>If CURRENT is not the youngest shadow root hosted by SHADOW-POOL-HOST:
+                      <ol>
+                        <li>Let SHADOW-POOL-HOST be the shadow insertion point into which CURRENT shadow root is projected.
+                      </ol>
+                    <li>If INSERTION-POINTS is not empty and if the most recent node in the INSERTION-POINTS is in the same node tree as SHADOW-POOL-HOST:
+                      <ol>
+                        <li>Pop INSERTION-POINTS and set CURRENT to be the popped node.
+                      </ol>
                     <li>Otherwise:
                       <ol>
-                        <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
-                        <li>If <var>CURRENT</var> exists:
-                          <ol>
-                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                          </ol></li>
-                      </ol></li>
-                  </ol></li>
-              </ol></li>
+                        <li>Set CURRENT to SHADOW-POOL-HOST and skip step 4
+                      </ol>
+                  </ol>
+                <li>Otherwise:
+                  <ol>
+                    <li>Let CURRENT be the parent node of CURRENT.
+                  </ol>
+                <li>Repeat while CURRENT is a shadow insertion point.
+                  <ol>
+                    <li>Let PROJECTED-SHADOW be the shadow root projected into CURRENT.
+                    <li>If INSERTION-POINTS is not empty and if the most recent node in the INSERTION-POINTS is in the same node tree as PROJECTED-SHADOW:
+                      <ol>
+                        <li>Pop INSERTION-POINTS and set CURRENT to be the popped node.
+                      </ol>
+                    <li>Otherwise:
+                      <ol>
+                        <li>Set CURRENT to PROJECTED-SHADOW.
+                      </ol>
+                  </ol>
+                <li>If CURRENT exists:
+                  <ol>
+                    <li>Add CURRENT to PATH.
+                  </ol>
+              </ol>
           </ol>
         </div>
 
