@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'/>
@@ -545,6 +545,56 @@
             <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
           </dl>
           <ol>
+            <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+            <li>Let <var>CURRENT</var> be <var>NODE</var></li>
+            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+            <li>Repeat while <var>CURRENT</var> exists:
+              <ol>
+                <li>If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
+                  <ol>
+                    <li>For each <a>insertion point</a>, <var>INSERTION-POINT</var>, in the <a>destination insertion points</a> of <var>CURRENT</var>:
+                      <ol>
+                        <li>If <var>INSERTION-POINT</var> is a <a>shadow insertion point</a>:
+                          <ol>
+                            <li>Let <var>SHADOW-ROOT</var> be the <a>root</a> <a>node</a> of <var>INSERTION-POINT</var></li>
+                            <li>If <var>SHADOW-ROOT</var> is not the <a>oldest shadow root</a>:
+                              <ol>
+                                <li>Add the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> to <var>PATH</var></li>
+                              </ol></li>
+                          </ol></li>
+                        <li>Add <var>INSERTION-POINT</var> to <var>PATH</var></li>
+                      </ol></li>
+                    <li>Let <var>CURRENT</var> be the <a>final destination</a> of <var>CURRENT</var></li>
+                  </ol></li>
+                <li>Otherwise:
+                  <ol>
+                    <li>If <var>CURRENT</var> is a <a>shadow root</a>:
+                      <ol>
+                        <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                        <li>If <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
+                          <ol>
+                            <li>Stop this algorithm</li>
+                          </ol></li>
+                        <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                      </ol></li>
+                    <li>Otherwise:
+                      <ol>
+                        <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
+                        <li>If <var>CURRENT</var> exists:
+                          <ol>
+                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                          </ol></li>
+                      </ol></li>
+                  </ol></li>
+              </ol></li>
+          </ol>
+
+          <div id="bug23887" class="issue">
+            The algorithm above is under discussion at <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887">W3C bug 23887</a>.
+            A different algorithm is proposed at <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1059989#c10">Bugzilla@Mozilla 1059989</a>,
+            which is copied below and we're applying some fixes to make sure the proposal is technically correct.
+          <ol>
             <li>Let PATH be the empty ordered list of nodes
             <li>Let CURRENT be NODE
             <li>Let INSERTION-POINTS be an empty stack of nodes
@@ -601,6 +651,7 @@
                   </ol>
               </ol>
           </ol>
+          </div>
         </div>
 
       </section>
