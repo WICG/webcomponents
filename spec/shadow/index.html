@@ -633,16 +633,16 @@
                   <ol>
                     <li>Let CURRENT be the parent node of CURRENT.
                   </ol>
-                <li>Repeat while CURRENT is a shadow insertion point and there is a shadow root distributed to it:
+                <li>Repeat while CURRENT is a shadow insertion point and there is a shadow tree distributed to it:
                   <ol>
-                    <li>Let PROJECTED-SHADOW be the shadow root projected into CURRENT.
-                    <li>If INSERTION-POINTS is not empty and if the most recent node in the INSERTION-POINTS is in the same node tree as PROJECTED-SHADOW:
+                    <li>Let DISTRIBUTED-SHADOW-ROOT be the shadow root of the shadow tree distributed into CURRENT.
+                    <li>If INSERTION-POINTS is not empty and if the most recent node in the INSERTION-POINTS is in the same node tree as DISTRIBUTED-SHADOW-ROOT:
                       <ol>
                         <li>Pop INSERTION-POINTS and set CURRENT to be the popped node.
                       </ol>
                     <li>Otherwise:
                       <ol>
-                        <li>Set CURRENT to PROJECTED-SHADOW.
+                        <li>Set CURRENT to DISTRIBUTED-SHADOW-ROOT.
                       </ol>
                   </ol>
                 <li>If CURRENT exists:
