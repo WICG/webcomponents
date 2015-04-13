@@ -6,7 +6,7 @@
     <script src='./autolink-config.js' class='remove'></script>
     <script src='../../assets/scripts/autolink.js' class='remove'></script>
     <link rel="stylesheet" href="../../assets/styles/respec-complement.css" type="text/css" />
-    <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
     <script class='remove'>
       var respecConfig = {
           specStatus: "ED",
@@ -652,66 +652,46 @@
               </ol>
           </ol>
 
-          <p id="bug23888alt">Alternate proposal to achieve the same results:
+          <p id="bug23888-koji">Alternate proposal to achieve the same results:
           <ol>
             <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
             <li>Let <var>INSERTION-POINT-STACK</var> be an empty stack of nodes
             <li>Let <var>CURRENT</var> be <var>NODE</var></li>
-            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
             <li>Repeat while <var>CURRENT</var> exists:
               <ol>
-                <li>Let <var>POP-INSERTION-POINT-STACK</var> be false
-                <li>If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
+                <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                <li>Let <var>INSERTION-POINTS</var> be the <a>destination insertion points</a> of <var>CURRENT</var>
+                <li>Remove valid <a>shadow insertion points</a> from <var>INSERTION-POINTS</var>
+                <li>If <var>INSERTION-POINTS</var> is not empty:
                   <ol>
-                    <li>For each <a>insertion point</a>, <var>INSERTION-POINT</var>, in the <a>destination insertion points</a> of <var>CURRENT</var>:
-                      <ol>
-                        <li>If <var>INSERTION-POINT</var> is a <a>shadow insertion point</a>:
-                          <ol>
-                            <li>Continue the loop</li>
-                          </ol></li>
-                        <li>Push <var>INSERTION-POINT</var> to <var>INSERTION-POINT-STACK</var></li>
-                        <li>Let <var>POP-INSERTION-POINT-STACK</var> be true
-                      </ol></li>
-                  </ol></li>
-                <li>If <var>POP-INSERTION-POINT-STACK</var> is false:
+                    <li>Push <var>INSERTION-POINTS</var> into <var>INSERTION-POINT-STACK</var> in order of first destination to final destination
+                    <li>Pop <var>INSERTION-POINT-STACK</var> and set <var>CURRENT</var> to be the popped node.</li>
+                  </ol>
+                <li>Otherwise if <var>CURRENT</var> is a <a>shadow root</a>:
                   <ol>
-                    <li>If <var>CURRENT</var> is a <a>shadow root</a>:
+                    <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                    <li>If <var>INSERTION-POINT-STACK</var> is not empty and
+                      the most recent node in the <var>INSERTION-POINT-STACK</var> is in the same node tree as <var>SHADOW-HOST</var>
                       <ol>
-                        <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                        <li>If <var>INSERTION-POINT-STACK</var> is not empty and
-                          the most recent node in the <var>INSERTION-POINT-STACK</var> is in the same node tree as <var>SHADOW-HOST</var>
-                          <ol>
-                            <li>Let <var>POP-INSERTION-POINT-STACK</var> be true
-                          </ol>
-                        <li>If younger shadow root of CURRENT has a <a>shadow insertion point</a>:
-                          <ol>
-                            <li>Let <var>CURRENT</var> be the <a>shadow insertion point</a></li>
-                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                          </ol>
-                        <li>Otherwise:
-                          <ol>
-                            <li>If <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
-                              <ol>
-                                <li>Stop this algorithm</li>
-                              </ol></li>
-                            <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                          </ol>
+                        <li>Pop <var>INSERTION-POINT-STACK</var> and set <var>CURRENT</var> to be the popped node.</li>
+                      </ol>
+                    <li>If younger shadow root of CURRENT has a <a>shadow insertion point</a>:
+                      <ol>
+                        <li>Let <var>CURRENT</var> be the <a>shadow insertion point</a></li>
+                      </ol>
+                    <li>Otherwise if <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
+                      <ol>
+                        <li>Stop this algorithm</li>
                       </ol></li>
                     <li>Otherwise:
                       <ol>
-                        <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
-                        <li>If <var>CURRENT</var> exists:
-                          <ol>
-                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                          </ol></li>
-                      </ol></li>
+                        <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                      </ol>
                   </ol></li>
-                <li>If <var>POP-INSERTION-POINT-STACK</var> is true:
+                <li>Otherwise:
                   <ol>
-                    <li>Pop <var>INSERTION-POINTS</var> and set <var>CURRENT</var> to be the popped node.</li>
-                    <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                  </ol>
+                    <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
+                  </ol></li>
               </ol></li>
           </ol>
           </div>
