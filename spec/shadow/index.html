@@ -592,8 +592,17 @@
 
           <div id="bug23887" class="issue">
             The algorithm above is under discussion at <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887">W3C bug 23887</a>.
-            A different algorithm is proposed at <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1059989#c10">Bugzilla@Mozilla 1059989</a>,
-            which is copied below and we're applying some fixes to make sure the proposal is technically correct.
+            To resolve it, we're working on two candidates:
+            <ol>
+              <li>One proposed at <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1059989#c10">Bugzilla@Mozilla 1059989</a>,
+                then some fixes applied on top of it.
+              <li>The other tries to apply desired changes based on the algorithm currently in the spec.
+            </ol>
+            <p>
+              There is a <a href="https://codereview.chromium.org/906123002/">WIP patch for Blink for both algorithms</a>,
+              which confirms that
+              both algorithms produce the desired result for the <a href="bug23887-example">example later in this spec</a>.
+          <p>Candidate 1:
           <ol>
             <li>Let <var>PATH</var> be the empty ordered list of nodes
             <li>Let <var>CURRENT</var> be <var>NODE</var>
@@ -652,7 +661,7 @@
               </ol>
           </ol>
 
-          <p id="bug23888-koji">Alternate proposal to achieve the same results:
+          <p id="bug23888-koji">Candidate 2:
           <ol>
             <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
             <li>Let <var>INSERTION-POINT-STACK</var> be an empty stack of nodes
@@ -782,7 +791,7 @@
             [D, C, I, M, L, P, R, Q, O, N, K, J, H, G, U, T, S, F, E, X, W, V, B, A]  (<a>Window</a> is omitted)
           </code>
         </p>
-        <div class="issue">
+        <div class="issue" id="bug23887-example">
           <p>With the <a href="#bug23887">proposed algorithm from Mozilla</a>,
             that this will be (from <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887#c115">comment 115</a>):
           <p>
