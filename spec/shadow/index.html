@@ -651,6 +651,69 @@
                   </ol>
               </ol>
           </ol>
+
+          <p id="bug23888alt">Alternate proposal to achieve the same results:
+          <ol>
+            <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+            <li>Let <var>INSERTION-POINT-STACK</var> be an empty stack of nodes
+            <li>Let <var>CURRENT</var> be <var>NODE</var></li>
+            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+            <li>Repeat while <var>CURRENT</var> exists:
+              <ol>
+                <li>Let <var>POP-INSERTION-POINT-STACK</var> be false
+                <li>If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
+                  <ol>
+                    <li>For each <a>insertion point</a>, <var>INSERTION-POINT</var>, in the <a>destination insertion points</a> of <var>CURRENT</var>:
+                      <ol>
+                        <li>If <var>INSERTION-POINT</var> is a <a>shadow insertion point</a>:
+                          <ol>
+                            <li>Continue the loop</li>
+                          </ol></li>
+                        <li>Push <var>INSERTION-POINT</var> to <var>INSERTION-POINT-STACK</var></li>
+                        <li>Let <var>POP-INSERTION-POINT-STACK</var> be true
+                      </ol></li>
+                  </ol></li>
+                <li>If <var>POP-INSERTION-POINT-STACK</var> is false:
+                  <ol>
+                    <li>If <var>CURRENT</var> is a <a>shadow root</a>:
+                      <ol>
+                        <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                        <li>If <var>INSERTION-POINT-STACK</var> is not empty and
+                          the most recent node in the <var>INSERTION-POINT-STACK</var> is in the same node tree as <var>SHADOW-HOST</var>
+                          <ol>
+                            <li>Let <var>POP-INSERTION-POINT-STACK</var> be true
+                          </ol>
+                        <li>If younger shadow root of CURRENT has a <a>shadow insertion point</a>:
+                          <ol>
+                            <li>Let <var>CURRENT</var> be the <a>shadow insertion point</a></li>
+                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                          </ol>
+                        <li>Otherwise:
+                          <ol>
+                            <li>If <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
+                              <ol>
+                                <li>Stop this algorithm</li>
+                              </ol></li>
+                            <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                          </ol>
+                      </ol></li>
+                    <li>Otherwise:
+                      <ol>
+                        <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
+                        <li>If <var>CURRENT</var> exists:
+                          <ol>
+                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                          </ol></li>
+                      </ol></li>
+                  </ol></li>
+                <li>If <var>POP-INSERTION-POINT-STACK</var> is true:
+                  <ol>
+                    <li>Pop <var>INSERTION-POINTS</var> and set <var>CURRENT</var> to be the popped node.</li>
+                    <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                  </ol>
+              </ol></li>
+          </ol>
           </div>
         </div>
 
