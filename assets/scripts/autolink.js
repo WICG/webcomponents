@@ -1,9 +1,3 @@
-(function() {
-
-function getTitle(e) {
-    var title = e.getAttribute("title") || e.innerText;
-    return title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-};
 
 function resolveAutolink() {
     if (!autolinkConfig)
@@ -22,7 +16,9 @@ function resolveAutolink() {
     Array.prototype.slice.call(document.querySelectorAll("a:not([href])")).forEach(function (e) {
         if (e.classList.contains("internalDFN"))
             return;
-        var title = getTitle(e);
+        var title = e.getAttribute("title") || e.textContent;
+        if (!title) return;
+        title = title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
         if (definitionMap[title]) {
             e.setAttribute("href", definitionMap[title]);
             e.classList.add("externalDFN");
@@ -30,6 +26,3 @@ function resolveAutolink() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', resolveAutolink);
-
-}());

@@ -24,18 +24,8 @@
                   href: "https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/"
               }
           ],
+          preProcess: [resolveAutolink],
           localBiblio: {
-              "SELECTORS4": {
-                  title: "Selectors Level 4",
-                  href: "http://dev.w3.org/csswg/selectors4/",
-                  authors: ["Elika Etemad", "Tab Atkins Jr"],
-                  status: "ED"
-              },
-              "DOMPARSING": {
-                  title: "DOM Parsing and Serialization",
-                  href: "http://domparsing.spec.whatwg.org/",
-                  authors:  ["Ms2ger"]
-              },
               "EDITING": {
                   title: "HTML Editing APIs",
                   href: "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html",
@@ -105,6 +95,14 @@
         <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one or more <a title="node tree">node trees</a>.</p>
 
         <p>A <dfn>shadow tree</dfn> is a <a>node tree</a> <a title="hosts">hosted</a> by a <a>shadow host</a>.</p>
+
+        <p>A shadow tree has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.
+
+        <p class="note">
+          The behavior of a <a>closed</a> shadow tree is not well defined in this spec yet. The status is tracked in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27775">W3C bug 27775</a>.
+          Unless otherwise mentioned, an encapsulation mode of a shadow tree is <a>open</a>.
+          The default-to-open is still under discussion and it may change. The status is tracked in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20144">W3C bug 20144</a>.
+        </p>
 
         <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
 
@@ -203,13 +201,33 @@
             The node trees, C, D and E, are hosted by the same <a>shadow host</a>, which participates in the node tree A.
             The node tree C is the <a>oldest shadow tree</a>. The node tree E is the <a>youngest shadow tree</a>.
             The following set of relationships holds in the figure:
-            <ul>
-              <li>The ordered list of A's <a title="child tree">child trees</a> is [B, C].</li>
-              <li>The ordered list of B's <a title="child tree">child trees</a> is [].</li>
-              <li>The ordered list of C's <a title="child tree">child trees</a> is [F, D].</li>
-              <li>The ordered list of D's <a title="child tree">child trees</a> is [E].</li>
-              <li>The ordered list of E's <a title="child tree">child trees</a> is [].</li>
-            </ul>
+          </p>
+          <ul>
+            <li>The ordered list of A's <a title="child tree">child trees</a> is [B, C].</li>
+            <li>The ordered list of B's <a title="child tree">child trees</a> is [].</li>
+            <li>The ordered list of C's <a title="child tree">child trees</a> is [F, D].</li>
+            <li>The ordered list of D's <a title="child tree">child trees</a> is [E].</li>
+            <li>The ordered list of E's <a title="child tree">child trees</a> is [].</li>
+          </ul>
+
+          <div class="note">
+            <p>
+              As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between two nodes if they participate in different node trees.
+              A shadow root is not a <a>child</a> node of the shadow host. The <a>parent</a> node of a <a>shadow root</a> doesn't exist.
+              Because of this nature, most of existing APIs are <strong>scoped</strong> and don't affect other node trees, even though they are forming one tree of trees.
+              For example, <a title="getElementById"><code>document.getElementById(elementId)</code></a> never returns an element in a shadow tree,
+              even when the element has the given <code>elementId</code>.
+            </p>
+            <p>
+              The same thing also applies to CSS <a title="selectors">Selectors</a> matching.
+              For example, a <a title="descendant combinators">descendant combinator</a> never descends into a node in a <a title="child tree">child</a> <a>shadow tree</a>
+              because a <a>shadow root</a> is not a <a>child</a> node of the <a>shadow host</a>.
+              Unless a special CSS Selector for Shadow DOM, which is mentioned later, is used, a CSS Selector never matches an element in a different node tree.
+            </p>
+          </div>
+          <p class="note">
+            Because <code>ShadowRoot</code> inherits <code>DocumentFragment</code>, as <a href="#idl-def-ShadowRoot">specified</a> later,
+            you can use <code>ShadowRoot.getElementByID(elementId)</code> to get a node in the <a>shadow tree</a>.
           </p>
         </section>
 
@@ -233,6 +251,20 @@
         <p>
           In resolving CSS <a>inheritance</a>, an element <strong>must</strong> inherit from the parent node in the <a>composed tree</a>, if applicable.
         </p>
+
+        <div class="note">
+          <p>
+            The editor's draft of CSS Scoping specification [[css-scoping-1]] defines the selectors which are related to Shadow DOM.
+            For those who would search this Shadow DOM specifaction with the name of these selectors, mentioning these selectores here:
+          </p>
+
+          <ul>
+            <li><code>:shadow</code> pseudo element</li>
+            <li><code>/deep/</code> combinator,  which was replaced with a <code>>>></code> combinator (or <strong>shadow piecing descendant combinator</strong>)</li>
+            <li><code>::content</code> pseudo-element</li>
+            <li><code>:host-context()</code> functional pseudo-class</li>
+          </ul>
+        </div>
       </section>
 
     </section>
@@ -369,6 +401,11 @@
               </ol></li>
           </ol>
         </div>
+
+        <p class="note">
+          The algorithm implies that a <a>shadow insertion point</a> can be used in the <a>oldest shadow tree</a>,
+          where a <a>shadow insertion point</a> behaves in a similar way to a <a>content insertion point</a>.
+        </p>
 
         <p>The <dfn>pool population algorithm</dfn> <strong>must</strong> be used to populate <a title="node">nodes</a> from the child <a title="node">nodes</a> of a given <a>node</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -517,7 +554,7 @@
       <section>
         <h3>Events that are Always Stopped</h3>
 
-        <p>The <dfn title="events-always-stopped">following events</dfn> <strong>must</strong> always be stopped at the <a>root</a> <a>node</a> of the <a>node tree</a>:</p>
+        <p>The <dfn title="events-always-stopped">following events</dfn> <strong>must</strong> always be stopped at the <a>youngest shadow root</a>:</p>
         <ul>
           <li><code>abort</code></li>
           <li><code>error</code></li>
@@ -529,6 +566,13 @@
           <li><code>scroll</code></li>
           <li><code>selectstart</code></li>
         </ul>
+
+        <p><a title="event path calculation algorithm">The exact algorithm</a> is specified later.</p>
+
+        <p class="issue">
+          It's not a good idea to have a fixed list of events. Alternative ideas are being discussed in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20247">W3C bug 20247</a>.
+        </p>
+
       </section>
 
       <section>
@@ -1185,22 +1229,87 @@
     <section>
       <h2>HTML Elements in Shadow Trees</h2>
 
-      <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
-
       <section>
-        <h3>Inert HTML Elements</h3>
+        <h3>Inertness of HTML Elements in a shadow tree</h3>
 
-        <p>A subset of <a>HTML elements</a> <strong>must</strong> behave as <dfn>inert</dfn>, or not part of the <a>document tree</a>. This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>. These <a title="element">elements</a> are:</p>
+        <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
+
+        <p class="note">
+          According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a <a>shadow tree</a>, instead of a document tree,
+          because their definitions require the elements to be <a>in a document</a> as a necessary condition for them to work.
+          In other words, they shouldn't work if they participate in a <a>shadow tree</a>, even when they are <a>in a document deeply</a>.
+          We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a document deeply</a>.
+          See W3C <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26365">Bug 26365</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27406">Bug 27406</a> for the details.
+          The following is the tentative summary of the discussions in the W3C bugs. We, however, haven't covered all HTML Elements and their behaviors here yet.
+          For HTML Elements which are not explicitly stated here, they should be considered as <a>active in a shadow tree</a>.
+          We are trying to update [[!HTML]] itself, instead of having monkey patches here.
+        </p>
+        <p>
+          HTML Elements are classified into the following categories:
+        </p>
         <ul>
-          <li><a title="base element"><code>base</code></a></li>
-          <li><a title="link element"><code>link</code></a></li>
+          <li>
+            <p>
+              <dfn>Active in a shadow tree</dfn>
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as if they were in the <a>document tree</a>, even when they participate in a <a>shadow tree</a>,
+              as long as they are <a>in a document deeply</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><code>dialog</code></li>
+              <li><code>iframe</code></li>
+              <li><code>style</code></li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              <dfn>Inert in a shadow tree</dfn>:
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>, if they participate in a <a>shadow tree</a>.
+              This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><a title="base element"><code>base</code></a></li>
+              <li><a title="link element"><code>link</code></a></li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              <dfn>Inert unless being rendered</dfn>:
+            </p>
+            <p>
+              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>,
+              unless they are <a>being rendered</a>.
+              In other words, if they don't particitpate in a <a>composed tree</a> whose root node is a document, they <strong>must</strong> behave as <a>inert</a>.
+            </p>
+            <p>
+              The following HTML elements <strong>must</strong> be classified to this category:
+            </p>
+            <ul>
+              <li><code>applet</code></li>
+              <li><code>embed</code></li>
+              <li><code>object</code></li>
+            </ul>
+            <p class="note">
+              For example, suppose that an <code>object</code> element is a child node of a shadow host, but the <code>object</code> element's <a>destination insertion points</a> is empty.
+              In this case, according to the <a>distribution algorithm</a> and <a>composed tree children calculation algorithm</a>,
+              this element never participate in a <a>composed tree</a> whose root node is a <a>document</a>.
+              Therefore, this element is <a>inert</a> because this element is not <a>being rendered</a>. .
+            </p>
+          </li>
         </ul>
-
-        <p>All other <a>HTML elements</a> in the <a title="shadow tree">shadow trees</a> <strong>must</strong> behave as if they were part of the <a>document tree</a>.</p>
       </section>
 
       <section>
-        <h3>Attributes</h2>
+        <h3>Attributes</h3>
 
         <p>When [[!HTML]] defines the processing algorithms to traverse trees for the following attributes, they <strong>must</strong> use the <a>composed tree</a>.
         <ul>
@@ -1213,12 +1322,15 @@
           <li><code>title</code></li>
         </ul>
 
-        <p class="note">This list does not include attributes that are defined elsewhere in this specification. Such attributes include:
-        <ul>
-          <li><code>tabindex</code> and <code>autofocus</code> are defined in <a href="#focus-navigation">Focus Navigation</a>.</li>
-          <li><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</li>
-        </ul>
-        <p class="issue">This section is still under discussion and it may change. The status is tracked in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27222">W3C bug 27222</a>.
+        <div class="note">
+          <p>
+            This list does not include attributes that are defined elsewhere in this specification. Such attributes include:
+          </p>
+          <ul>
+            <li><code>tabindex</code> and <code>autofocus</code> are defined in <a href="#focus-navigation">Focus Navigation</a>.</li>
+            <li><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</li>
+          </ul>
+        </div>
       </section>
 
     </section>
@@ -1226,7 +1338,7 @@
     <section>
       <h2>HTML Elements and Their Shadow Trees</h2>
 
-      <p>Per <a title="HTML">specification</a>, some <a>HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a>composed tree</a>, all <a>HTML elements</a> <strong>must</strong> have an <a title="processing equivalence">equivalent</a> of a <a>shadow tree</a> that is created and populated at the time of <a>element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
+      <p>Per <a title="HTML">specification</a>, some <a>HTML elements</a> are designed to either not render their contents or have special requirements in regard to contents rendering. In order to reconcile these differences in rendering behavior with the <a>composed tree</a>, all <a>HTML elements</a> <strong>must</strong> have an <a title="processing equivalence">equivalent</a> of a <a>closed</a> <a>shadow tree</a> that is created and populated at the time of <a>element</a> instantiation. It is up to a user agent to define the content of these trees. However, all conforming user agents <strong>must</strong> satisfy the following requirements:</p>
 
       <table>
         <thead>
@@ -1336,7 +1448,7 @@
               <li>If the <a>context object</a> is the <a>oldest shadow root</a>, return <strong>null</strong>.</li>
               <li>Return the <a>older shadow root</a> relative to the <a>context object</a>.</li>
             </ol>
-            <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+            <p>If the older shadow root is <a>closed</a>, the attribute <strong>must</strong> return <code>null</code>.</p>
           </dd>
 
           <dt>attribute DOMString innerHTML</dt>
@@ -1347,7 +1459,7 @@
               On setting, these steps <strong>must</strong> be run:
             </p>
             <ol>
-              <li>Let <var>FRAGMENT</var> be the result of invoking the <a title="parse fragment">fragment parsing algorithm</a> [[!DOMPARSING]] with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a></li>
+              <li>Let <var>FRAGMENT</var> be the result of invoking the <a title="parse fragment">fragment parsing algorithm</a> [[!DOM-PARSING]] with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a></li>
               <li><a>Replace all</a> with <var>FRAGMENT</var> within the <a>shadow root</a>.</li>
             </ol>
           </dd>
@@ -1374,21 +1486,29 @@
           <dd>
             When invoked, these steps <strong>must</strong> be run:
             <ol>
-              <li>Create a new instance of the <a><code>ShadowRoot</code></a> object</li>
+              <li>Create a new instance of the <a><code>ShadowRoot</code></a> object, whose <a>encapsulation mode</a> is <a>open</a>.</li>
               <li>Add the <a><code>ShadowRoot</code></a> object to the <a title="shadow roots list">ordered list of shadow roots</a> associated with the <a>context object</a> as the <a>youngest shadow root</a></li>
               <li>Return <a><code>ShadowRoot</code></a> object.</li>
             </ol>
           </dd>
 
           <dt>NodeList getDestinationInsertionPoints()</dt>
-          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>.</dd>
+          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
 
           <dt>readonly attribute ShadowRoot? shadowRoot</dt>
           <dd>
             <p>Represents the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
-            <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>, or <strong>null</strong> if no such <a>shadow root</a> is accessible.</p>
-            <p>For <a>HTML elements</a>, the <a href="#html-elements-and-their-shadow-trees">UA-provided</a> <a title="shadow tree">shadow trees</a> <strong>must not</strong> be accessible.</p>
+            <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a> if there is and it is <a>open</a>. Otherwise <strong>must</strong> return <code>null</code>.</p>
           </dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3>Extensions to <code>Text</code> Interface</h3>
+
+        <dl class="idl" title="partial interface Text">
+          <dt>NodeList getDestinationInsertionPoints()</dt>
+          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
         </dl>
       </section>
 
@@ -1431,7 +1551,10 @@
                   <li>
                     If the <a>context object</a> is a <a>content insertion point</a>:
                     <ol>
-                      <li>Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.</li>
+                      <li>
+                        Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>,
+                        but excluding a node which participates in a <a>closed</a> shadow tree.
+                      </li>
                     </ol>
                   </li>
                   <li>
@@ -1473,7 +1596,10 @@
                   <li>
                     If the <a>context object</a> is a <a>shadow insertion point</a>:
                     <ol>
-                      <li>Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.</li>
+                      <li>
+                        Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>,
+                        but excluding a node which participates in a <a>closed</a> shadow tree.
+                      </li>
                     </ol>
                   </li>
                   <li>
