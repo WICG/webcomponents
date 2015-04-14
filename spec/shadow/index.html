@@ -591,17 +591,15 @@
           </ol>
 
           <div id="bug23887" class="issue">
-            The algorithm above is under discussion at <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887">W3C bug 23887</a>.
-            To resolve it, we're working on two candidates:
-            <ol>
+            The algorithm above is under discussion at <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887">W3C bug 23887</a>,
+            and there are two candidate algorithms to resolve the issue discussed there.
+            <ul>
               <li>Candidate 1 was proposed at <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1059989#c10">Bugzilla@Mozilla 1059989</a>,
                 then some fixes applied on top of it.
-              <li><a href="#bug23887-koji">Candidate 2</a> is a try to modify the current algorithm to produce the desired results.
-            </ol>
-            <p>
-              There is a <a href="https://codereview.chromium.org/906123002/">WIP patch for Blink for both algorithms</a>,
-              which confirms that
-              both algorithms produce the desired result for the <a href="#bug23887-example">example later in this spec</a>.
+              <li><a href="#bug23887-koji">Candidate 2</a> is another try to modify the current algorithm to resolve the issue.
+              <li>Both algorithms produce the desired result for the <a href="#bug23887-example">example later in this spec</a>.
+              <li>There is a <a href="https://codereview.chromium.org/906123002/">WIP patch for Blink for both algorithms</a>.
+            </ul>
           <p>Candidate 1:
           <ol>
             <li>Let <var>PATH</var> be the empty ordered list of nodes
@@ -670,7 +668,7 @@
               <ol>
                 <li>Add <var>CURRENT</var> to <var>PATH</var></li>
                 <li>Let <var>INSERTION-POINTS</var> be the <a>destination insertion points</a> of <var>CURRENT</var>
-                <li>Remove <a>shadow insertion point</a>s from <var>INSERTION-POINTS</var>
+                <li>Exclude <a>shadow insertion point</a>s whose containing shadow root has <a>older shadow root</a>s from <var>INSERTION-POINTS</var>
                 <li>If <var>INSERTION-POINTS</var> is not empty:
                   <ol>
                     <li>Push <var>INSERTION-POINTS</var> into <var>INSERTION-POINT-STACK</var> in order of first destination to final destination
@@ -684,7 +682,7 @@
                       <ol>
                         <li>Pop <var>INSERTION-POINT-STACK</var> and set <var>CURRENT</var> to be the popped node.</li>
                       </ol>
-                    <li>Otherwise if younger shadow root of CURRENT exists and it has a <a>shadow insertion point</a>:
+                    <li>Otherwise if <var>CURRENT</var> has a <a>younger shadow root</a> and it has a <a>shadow insertion point</a>:
                       <ol>
                         <li>Let <var>CURRENT</var> be the <a>shadow insertion point</a></li>
                       </ol>
