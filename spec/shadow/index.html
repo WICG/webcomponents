@@ -1361,11 +1361,15 @@
         <h3>Extensions to <code>Element</code> Interface</h3>
 
         <dl class="idl" title="partial interface Element">
-          <dt>ShadowRoot createShadowRoot()</dt>
+          <dt>ShadowRoot createShadowRoot(optional ShadowRootInit shadowRootInitDict)</dt>
           <dd>
             When invoked, these steps <strong>must</strong> be run:
             <ol>
-              <li>Create a new instance of the <a><code>ShadowRoot</code></a> object, whose <a>encapsulation mode</a> is <a>open</a>.</li>
+              <li>
+                Create a new instance of the <a><code>ShadowRoot</code></a> object.
+                The optional <code>shadowRootInitDict</code> argument allows for setting the <a>encapsulation mode</a>.
+                If the <code>shadowRootInitDict</code> is not given, the <a>encapsulation mode</a> is <a>open</a>.
+              </li>
               <li>Add the <a><code>ShadowRoot</code></a> object to the <a title="shadow roots list">ordered list of shadow roots</a> associated with the <a>context object</a> as the <a>youngest shadow root</a></li>
               <li>Return <a><code>ShadowRoot</code></a> object.</li>
             </ol>
@@ -1379,6 +1383,24 @@
             <p>Represents the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
             <p>On getting, the attribute <strong>must</strong> return the <a>youngest shadow root</a> that <a>context object</a> <a>hosts</a> if there is and it is <a>open</a>. Otherwise <strong>must</strong> return <code>null</code>.</p>
           </dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3><code>ShadowRootInit</code> dictionary</h3>
+        <dl class="idl" title="dictionary ShadowRootInit">
+          <dt>ShadowRootMode mode</dt>
+          <dd>Spefifies the <a>encapsulation mode</a> of <a>ShadowRoot</a></dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3><code>ShadowRootMode</code> enum</h3>
+        <dl class="idl" title="enum ShadowRootMode">
+          <dt>open</dt>
+          <dd>Speficies <a>open</a> <a>encapsulation mode</a></dd>
+          <dt>closed</dt>
+          <dd>Speficies <a>closed</a> <a>encapsulation mode</a></dd>
         </dl>
       </section>
 
