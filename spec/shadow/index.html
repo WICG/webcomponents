@@ -554,7 +554,8 @@
       <section>
         <h3>Events that are Always Stopped</h3>
 
-        <p>The <dfn title="events-always-stopped">following events</dfn> <strong>must</strong> always be stopped at the <a>youngest shadow root</a>:</p>
+        <p>The <dfn title="events-always-stopped">following events</dfn> <strong>must</strong> always be stopped
+          right before the <a>shadow host</a> that <a>hosts</a> the target node:</p>
         <ul>
           <li><code>abort</code></li>
           <li><code>error</code></li>
@@ -590,46 +591,42 @@
           </dl>
           <ol>
             <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+            <li>Let <var>INSERTION-POINT-STACK</var> be an empty stack of nodes
             <li>Let <var>CURRENT</var> be <var>NODE</var></li>
-            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
             <li>Repeat while <var>CURRENT</var> exists:
               <ol>
-                <li>If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
+                <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                <li>Let <var>INSERTION-POINTS</var> be the <a>destination insertion points</a> of <var>CURRENT</var>
+                <li>Exclude <a>shadow insertion point</a>s whose containing shadow root has <a>older shadow root</a>s from <var>INSERTION-POINTS</var>
+                <li>If <var>INSERTION-POINTS</var> is not empty:
                   <ol>
-                    <li>For each <a>insertion point</a>, <var>INSERTION-POINT</var>, in the <a>destination insertion points</a> of <var>CURRENT</var>:
-                      <ol>
-                        <li>If <var>INSERTION-POINT</var> is a <a>shadow insertion point</a>:
-                          <ol>
-                            <li>Let <var>SHADOW-ROOT</var> be the <a>root</a> <a>node</a> of <var>INSERTION-POINT</var></li>
-                            <li>If <var>SHADOW-ROOT</var> is not the <a>oldest shadow root</a>:
-                              <ol>
-                                <li>Add the <a>older shadow root</a> relative to <var>SHADOW-ROOT</var> to <var>PATH</var></li>
-                              </ol></li>
-                          </ol></li>
-                        <li>Add <var>INSERTION-POINT</var> to <var>PATH</var></li>
-                      </ol></li>
-                    <li>Let <var>CURRENT</var> be the <a>final destination</a> of <var>CURRENT</var></li>
-                  </ol></li>
-                <li>Otherwise:
+                    <li>Push <var>INSERTION-POINTS</var> into <var>INSERTION-POINT-STACK</var> in order of first destination to final destination
+                    <li>Pop <var>INSERTION-POINT-STACK</var> and set <var>CURRENT</var> to be the popped node.</li>
+                  </ol>
+                <li>Otherwise if <var>CURRENT</var> is a <a>shadow root</a>:
                   <ol>
-                    <li>If <var>CURRENT</var> is a <a>shadow root</a>:
+                    <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
+                    <li>If <var>INSERTION-POINT-STACK</var> is not empty and
+                      the most recent node in the <var>INSERTION-POINT-STACK</var> is in the same node tree as <var>SHADOW-HOST</var>
                       <ol>
-                        <li>Let <var>SHADOW-HOST</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                        <li>If <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
-                          <ol>
-                            <li>Stop this algorithm</li>
-                          </ol></li>
-                        <li>Let <var>CURRENT</var> be the <a>shadow host</a> which <a>hosts</a> <var>CURRENT</var></li>
-                        <li>Add <var>CURRENT</var> to <var>PATH</var></li>
+                        <li>Pop <var>INSERTION-POINT-STACK</var> and set <var>CURRENT</var> to be the popped node.</li>
+                      </ol>
+                    <li>Otherwise if <var>CURRENT</var> has a <a>younger shadow root</a> and it has a <a>shadow insertion point</a>:
+                      <ol>
+                        <li>Let <var>CURRENT</var> be the <a>shadow insertion point</a></li>
+                      </ol>
+                    <li>Otherwise if <var>SHADOW-HOST</var> <a>hosts</a> the <a>node tree</a> which <var>NODE</var> <a>participates</a> in and <var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a>:
+                      <ol>
+                        <li>Stop this algorithm</li>
                       </ol></li>
                     <li>Otherwise:
                       <ol>
-                        <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
-                        <li>If <var>CURRENT</var> exists:
-                          <ol>
-                            <li>Add <var>CURRENT</var> to <var>PATH</var></li>
-                          </ol></li>
-                      </ol></li>
+                        <li>Let <var>CURRENT</var> be <var>SHADOW-HOST</var></li>
+                      </ol>
+                  </ol></li>
+                <li>Otherwise:
+                  <ol>
+                    <li>Let <var>CURRENT</var> be the <a>parent</a> <a>node</a> of <var>CURRENT</var></li>
                   </ol></li>
               </ol></li>
           </ol>
@@ -717,7 +714,7 @@
         </p>
         <p>
           <code>
-            [D, C, I, M, L, P, R, Q, O, N, K, J, H, G, U, T, S, F, E, X, W, V, B, A]  (<a>Window</a> is omitted)
+            [D, C, M, L, R, Q, P, O, N, K, J, I, H, G, U, T, S, F, E, X, W, V, B, A]  (<a>Window</a> is omitted)
           </code>
         </p>
 
@@ -735,6 +732,9 @@
           </li>
         </ol>
 
+        <div class="issue">
+          Charts below are not updated yet to the new result in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23887">bug 23887</a>.
+        </div>
         <figure>
           <object data="../../assets/images/event-path-node-trees.svg" width="884" height="473">></object>
           <figcaption>
