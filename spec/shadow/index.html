@@ -48,6 +48,11 @@
         This specification describes a method of combining multiple DOM trees into one hierarchy and how these trees interact with each other within a document, thus
         enabling better composition of the DOM.
       </p>
+
+      <p class="note">
+        The spec is being updated, removing "Multiple Shadow Roots". There are a lot of ReSpec errors, which are expected as of now.
+      </p>
+
     </section>
 
     <section id='sotd'>
@@ -88,13 +93,9 @@
 
         <p>A <dfn>document tree</dfn> is a <a>node tree</a> [[!DOM]] whose <a>root</a> <a>node</a> is a <a>document</a>.</p>
 
-        <p>Any element can have an <dfn title="shadow roots list">associated ordered list</dfn> of zero or more <a title="node tree">node trees</a>.</p>
+        <p>Any element can <dfn title="hosts">host</dfn> zero of one associated <a>node tree</a>, called <dfn>shadow tree</dfn>.
 
-        <p>An element <dfn>hosts</dfn> a <a>node tree</a> if the <a>node tree</a> is a member of this associated list.</p>
-
-        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one or more <a title="node tree">node trees</a>.</p>
-
-        <p>A <dfn>shadow tree</dfn> is a <a>node tree</a> <a title="hosts">hosted</a> by a <a>shadow host</a>.</p>
+        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one <a title="node tree">shadow tree</a>.
 
         <p>A shadow tree has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.
 
@@ -105,22 +106,6 @@
         </p>
 
         <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
-
-        <p>If more than one <a>shadow tree</a> is <a title="hosts">hosted</a> by the same <a>shadow host</a>, the more recently added <a>shadow tree</a> is called the <dfn>younger shadow tree</dfn> and the less recently added <a>shadow tree</a> is called the <dfn>older shadow tree</dfn>.</p>
-
-        <p>If there is no <a>older shadow tree</a> than a given <a>shadow tree</a>,
-          the <a>shadow tree</a> is called the <dfn>oldest shadow tree</dfn>.</p>
-
-        <p>If there is no <a>younger shadow tree</a> than a given <a>shadow tree</a>,
-          the <a>shadow tree</a> is called the <dfn>youngest shadow tree</dfn>.</p>
-
-        <p>The <dfn>older shadow root</dfn> is the root node of the <a>older shadow tree</a>.</p>
-
-        <p>The <dfn>younger shadow root</dfn> is the root node of the <a>younger shadow tree</a>.</p>
-
-        <p>The <dfn>oldest shadow root</dfn> is the root node of the <a>oldest shadow tree</a>.</p>
-
-        <p>The <dfn>youngest shadow root</dfn> is the root node of the <a>youngest shadow tree</a>.</p>
 
         <p>
           A node <var>A</var> is called a <dfn>child or hosted shadow root</dfn> of a node <var>B</var>,
@@ -157,22 +142,12 @@
           a <a>tree of trees</a> is similarly defined as a set of relationships between <a title="node tree">node trees</a>:</p>
         <ul>
           <li>
-            A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if either of the following conditions is satisfied:
-            <ul>
-              <li><var>A</var> and <var>B</var> are next to each other in the same <a title="shadow roots list">associated ordered list</a> and <var>A</var> is the <a>older shadow tree</a> relative to <var>B</var>.</li>
-              <li><var>B</var> is the <a>oldest shadow tree</a> and <a>shadow host</a> of <var>B</var> participates in <var>A</var>.</li>
-            </ul>
-
+            A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if B is a shadow tree and the shadow host which hosts <var>B</var> partitipates in <var>A</var>.
           </li>
           <li>If there is more than one <a>node tree</a> that shares the same <a>parent tree</a>, the <a>tree order</a> between them in the <a>tree of trees</a> is defined as follows:
             <ol>
               <li>Let <var>A</var> and <var>B</var> be <a title="node tree">node trees</a> that share the same <a>parent tree</a>.</li>
-              <li><var>A</var> comes before <var>B</var> if either of the following conditions is satisfied:
-                <ul>
-                  <li>The <a>shadow host</a> which <a>hosts</a> <var>A</var> is <a>preceding</a> the <a>shadow host</a> which <a>hosts</a> <var>B</var>.</li>
-                  <li><var>B</var> is not the <a>oldest shadow tree</a>.</li>
-                </ul>
-              </li>
+              <li><var>A</var> comes before <var>B</var> if the <a>shadow host</a> which <a>hosts</a> <var>A</var> is <a>preceding</a> the <a>shadow host</a> which <a>hosts</a> <var>B</var>.</li>
             </ol>
           </li>
           <li>Other relationships and terms, such as <dfn>root tree</dfn>, <dfn>child tree</dfn>,
@@ -188,6 +163,10 @@
 
         <section class="informative">
           <h3>Example tree of trees</h3>
+
+          <p class="issue">
+            The example should be updated.
+          </p>
 
           <figure>
             <object data="../../assets/images/tree-of-trees.svg" width="650" height="823"></object>
