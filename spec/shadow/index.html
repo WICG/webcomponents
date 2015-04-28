@@ -264,7 +264,6 @@
         <p>A <dfn>distribution</dfn> is the mechanism that determines which <a title="node">nodes</a> appear at each <a>insertion point</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
       </section>
 
-
       <section>
         <h3>Content Insertion Points</h3>
 
@@ -273,19 +272,6 @@
         <ul>
           <li>The <a>root</a> <a>node</a> of the <a>content element</a> is a <a>shadow root</a></li>
           <li>There is no other <a>content element</a> in the <a title="ancestor">ancestors</a> of the <a>content element</a></li>
-          <li>There is no <a>shadow element</a> in the <a title="ancestor">ancestors</a> of the <a>content element</a></li>
-        </ul>
-      </section>
-
-      <section>
-        <h3>Shadow Insertion Points</h3>
-
-        <p>A <dfn>shadow insertion point</dfn> is an <a>insertion point</a> to where the children of the <a>older shadow root</a> are distributed.
-          The <a>shadow element</a> that satisfies of the following conditions represents a <a>shadow insertion point</a>:</p>
-        <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>shadow element</a> is a <a>shadow root</a></li>
-          <li>There is no other <a>shadow element</a> which is <a>preceding</a> the <a>shadow element</a></li>
-          <li>There is no other <a>content element</a> in the <a title="ancestor">ancestors</a> of the <a>shadow element</a></li>
         </ul>
       </section>
 
@@ -357,34 +343,12 @@
             <li>For each <a>shadow host</a>, <var>SHADOW-HOST</var>, which participates in <var>NODE-TREE</var>, in <a>tree order</a>:
               <ol>
                 <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with <var>SHADOW-HOST</var> as input</li>
-                <li>For each <a>shadow tree</a>, <var>SHADOW-TREE</var>, which <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>youngest shadow tree</a> to the <a>oldest shadow tree</a>:
-                  <ol>
-                    <li>Run the <a>pool distribution algorithm</a> with <var>SHADOW-TREE</var> and <var>POOL</var> as input</li>
-                  </ol></li>
-                <li>For each <a>shadow tree</a>, <var>SHADOW-TREE</var>, that <var>SHADOW-HOST</var> <a>hosts</a>, in order from the <a>oldest shadow tree</a> to the <a>youngest shadow tree</a>:
-                  <ol>
-                    <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> which participates in <var>SHADOW-TREE</var></li>
-                    <li>If such a <var>SHADOW</var> exits:
-                      <ol>
-                        <li>If <var>SHADOW-TREE</var> is not the <a>oldest shadow tree</a>:
-                          <ol>
-                            <li>Let <var>POOL</var> be the result of the <a>pool population algorithm</a> with the root node of the <a>older shadow tree</a> relative to <var>SHADOW-TREE</var> as input.</li>
-                          </ol></li>
-                        <li>For each <a>node</a>, <var>CHILD</var>, in <var>POOL</var>
-                          <ol>
-                            <li><a title="distributes">Distribute</a> <var>CHILD</var> into <var>SHADOW</var></li>
-                          </ol></li>
-                      </ol></li>
-                    <li>Run the <a>distribution resolution algorithm</a>, recursively, with <var>SHADOW-TREE</var> as input</li>
-                  </ol></li>
-              </ol></li>
+                <li>Let <var>SHADOW-TREE</var> be the <a>shadow tree</a> which <var>SHADOW_HOST</var> hosts</li>
+                <li>Run the <a>pool distribution algorithm</a> with <var>SHADOW-TREE</var> and <var>POOL</var> as input</li>
+                <li>Run the <a>distribution resolution algorithm</a>, recursively, with <var>SHADOW-TREE</var> as input</li>
+              </ol>
           </ol>
         </div>
-
-        <p class="note">
-          The algorithm implies that a <a>shadow insertion point</a> can be used in the <a>oldest shadow tree</a>,
-          where a <a>shadow insertion point</a> behaves in a similar way to a <a>content insertion point</a>.
-        </p>
 
         <p>The <dfn>pool population algorithm</dfn> <strong>must</strong> be used to populate <a title="node">nodes</a> from the child <a title="node">nodes</a> of a given <a>node</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
 
