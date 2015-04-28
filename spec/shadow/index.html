@@ -1294,16 +1294,17 @@
         <h3>Extensions to <code>Element</code> Interface</h3>
 
         <dl class="idl" title="partial interface Element">
-          <dt>ShadowRoot createShadowRoot(optional ShadowRootInit shadowRootInitDict)</dt>
+          <dt>ShadowRoot? createShadowRoot(optional ShadowRootInit shadowRootInitDict)</dt>
           <dd>
             When invoked, these steps <strong>must</strong> be run:
             <ol>
+              <li>If the <a>context object</a> already hosts the shadow tree, return <code>null</code>.</li>
               <li>
                 Create a new instance of the <a><code>ShadowRoot</code></a> object.
                 The optional <code>shadowRootInitDict</code> argument allows for setting the <a>encapsulation mode</a>.
                 If the <code>shadowRootInitDict</code> is not given, the <a>encapsulation mode</a> is <a>open</a>.
               </li>
-              <li>Add the <a><code>ShadowRoot</code></a> object to the <a title="shadow roots list">ordered list of shadow roots</a> associated with the <a>context object</a> as the <a>youngest shadow root</a></li>
+              <li>Let the <a>content object</a> host the <a><code>ShadowRoot</code></a> object.</li>
               <li>Return <a><code>ShadowRoot</code></a> object.</li>
             </ol>
           </dd>
