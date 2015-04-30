@@ -1398,51 +1398,6 @@
       </section>
 
       <section>
-        <h3>The <code>shadow</code> element</h3>
-
-        <p>The <code><dfn title="shadow element">shadow</dfn></code> element represents an <a>shadow insertion point</a> in a <a>shadow tree</a>.</p>
-        <p>If a <code>shadow</code> element does not satisfy the condition of an <a>insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a><code>HTMLUnknownElement</code></a>.</p>
-
-        <dl>
-          <dt>Context</dt>
-          <dd>Where <a>flow content</a> is expected.</dd>
-
-          <dt>Content model</dt>
-          <dd><a>Transparent</a></dd>
-
-          <dt>Children</dt>
-          <dd>Anything</dd>
-
-          <dt>DOM Interface</dt>
-          <dd>
-            <dl class="idl" title="interface HTMLShadowElement : HTMLElement">
-              <dt>NodeList getDistributedNodes()</dt>
-              <dd>
-                When invoked, it <strong>must</strong> return result of running the following steps:
-                <ol>
-                  <li>
-                    If the <a>context object</a> is a <a>shadow insertion point</a>:
-                    <ol>
-                      <li>
-                        Return a <a>static</a> <a><code>NodeList</code></a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>,
-                        but excluding a node which participates in a <a>closed</a> shadow tree.
-                      </li>
-                    </ol>
-                  </li>
-                  <li>
-                    Otherwise:
-                    <ol>
-                      <li>Return an empty <a>static</a> <a><code>NodeList</code></a>.</li>
-                    </ol>
-                  </li>
-                </ol>
-              </dd>
-            </dl>
-          </dd>
-        </dl>
-      </section>
-
-      <section>
         <h3>Extensions to <code>Event</code> Interface</h3>
 
         <dl class="idl" title="partial interface Event">
