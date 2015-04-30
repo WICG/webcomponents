@@ -991,24 +991,16 @@
 
         <p>If a <a>node</a> doesn’t <a title="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>navigation order</a> [[!CSS3UI]] sequence.</p>
 
-        <p>For <a>sequential focus navigation</a>, the <a>navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>navigation order</a> for other <a>node tree</a> as follow:</p>
+        <p>For <a>sequential focus navigation</a>, the <a>navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>navigation order</a> for the <a>parent tree</a> <var>B</var> as follow:</p>
         <ol>
-          <li>If <var>A</var> is the <a>youngest shadow tree</a>:
+          <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
+          <li>
+            The <a>navigation order</a> for A <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var>:
             <ol>
-              <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
-              <li>Let <var>B</var> be the <a>node tree</a> which <var>HOST</var> participates in</li>
-              <li>The <a>navigation order</a> for A <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var>:
-                <ol>
-                  <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
-                  <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
-                </ol></li>
-            </ol></li>
-          <li>Otherwise:
-            <ol>
-              <li>Let <var>B</var> be the <a>younger shadow tree</a> relative to <var>A</var></li>
-              <li>Let <var>SHADOW</var> be the <a>shadow insertion point</a> in <var>B</var></li>
-              <li>If <var>SHADOW</var> exists, the <a>navigation order</a> for <var>A</var> <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var> immediately after <var>SHADOW</var> as if <var>SHADOW</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
-            </ol></li>
+              <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
+              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
+            </ol>
+          </li>
         </ol>
 
         <p>For <a>directional focus navigation</a>, it is up to the user agent to integrate the <a title="navigation order">navigation orders</a> for <a title="shadow tree">shadow trees</a> into the <a>document</a> <a>navigation order</a>.</p>
