@@ -221,7 +221,34 @@ Yet another approach is to decouple the timing from the observability by making 
 ### Cons
 - Both separate scripting context and pure function ideas need much more thorough examination and may take years to get right
 
+## 5. Browser-built "Fastdom" Callback
 
-## 5. Not a Problem for v1
+This is a combination synchronous ("Nanotask") timing and Mutation Observer timing, where the user has to select the timing they wish. Effectively, introduce a `window.requestAmazingWriteTime(callback)` (name intentionally terrible) function. Inside `callback`, all DOM operations that would previously be synchronously updating layout will return inaccurate results (throw?), and DOM operations with "Nanotasks" will run these tasks at the microtask checkpoint, which occurs immediately after the callback exits. This is conceptually similar to [fastdom](https://github.com/wilsonpage/fastdom), except built into the browser.
+
+Outside of this callback, the distribution API runs at "Nanotask" timing.
+
+For example:
+
+```js
+
+function makeDOM(parent) {
+  for (var i = 0; i < 1000; ++i) {
+    parent.appendChild(document.createElement('mah-dom'));
+    console.log(parent.offsetHeight);
+  }
+}
+
+// slow: runs distribution callback 1000 times.
+// accurate: logs correct height for each time.
+makeDOM(document.body);
+
+// fast: runs distribution callback 1 time.
+// wrong: logs the same height (or throws) 1000 times.
+requestAmazingWriteTime(() => {
+   makeDOM(document.body);
+});
+```
+
+## 6. Not a Problem for v1
 
 At least the distribution API proposals 1/2 have some way forward where triggering can be introduced later and therefore this might not be a problem we want to address for v1.
