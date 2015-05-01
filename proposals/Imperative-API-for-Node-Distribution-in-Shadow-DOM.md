@@ -64,7 +64,7 @@ Consider table-chart component which coverts a table element into a chart with e
 <table-chart>
  <table>
    ...
-     <td data-value=â€œ253â€ data-delta=5>253 Â± 5</td>
+     <td data-value="253" data-delta=5>253 ± 5</td>
    ...
  </table>
 </table-chart>
@@ -74,7 +74,7 @@ For people who like is attribute on custom elements, pretend it's
 ```html
  <table is=table-chart>
    ...
-     <td data-value=â€œ253â€ data-delta=5>253 Â± 5</td>
+     <td data-value="253" data-delta=5>253 ± 5</td>
    ...
  </table>
 ```
