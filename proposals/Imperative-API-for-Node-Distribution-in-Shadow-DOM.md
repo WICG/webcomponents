@@ -122,7 +122,7 @@ var shadow = host.createShadowRoot({
     }
   }
 })
-host.shadowRoot.distribute();
+shadow.distribute();
 ```
 
 ### Pros
