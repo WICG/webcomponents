@@ -210,6 +210,18 @@ Introduce a variant of mutation observers where the callback is invoked after ea
 - It could be as messy as old mutation events
 - Might be still too expensive to use with the second approach which requires collecting every distribution candidate.
 
-## 4. Not a problem for v1
+## 4. Run Distribution Callback in a Separate Scripting Context or as Pure Function
+
+Yet another approach is to decouple the timing from the observability by making callback execution not be observable. This can be accomplished by either creating a separate scripting context just for running distribution callbacks (similar to Houdini [ideas](https://wiki.css-houdini.org/explaining-css-layout#layout)), or some sort of not-yet-invented [pure function](http://en.wikipedia.org/wiki/Pure_function) ECMAScript primitive.
+
+### Pros
+- Provides consisten distribution state to user code
+- Interoperable
+
+### Cons
+- Both separate scripting context and pure function ideas need much more thorough examination and may take years to get right
+
+
+## 5. Not a Problem for v1
 
 At least the distribution API proposals 1/2 have some way forward where triggering can be introduced later and therefore this might not be a problem we want to address for v1.
