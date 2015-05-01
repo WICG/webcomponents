@@ -215,7 +215,7 @@ Introduce a variant of mutation observers where the callback is invoked after ea
 Yet another approach is to decouple the timing from the observability by making callback execution not be observable. This can be accomplished by either creating a separate scripting context just for running distribution callbacks (similar to Houdini [ideas](https://wiki.css-houdini.org/explaining-css-layout#layout)), or some sort of not-yet-invented [pure function](http://en.wikipedia.org/wiki/Pure_function) ECMAScript primitive.
 
 ### Pros
-- Provides consisten distribution state to user code
+- Provides consistent distribution state to user code
 - Interoperable
 
 ### Cons
@@ -248,6 +248,15 @@ requestAmazingWriteTime(() => {
    makeDOM(document.body);
 });
 ```
+
+### Pros
+- Provides consistent distribution state for users who don't care about performance
+- Provides best distribution timing for performance-conscious users
+- Interoprerable
+
+### Cons
+- Defining effects of `requestAmazingWriteTime` on the entire DOM API seems arduous and would be difficult to specify interoperably.
+
 
 ## 6. Not a Problem for v1
 
