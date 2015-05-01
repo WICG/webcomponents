@@ -223,7 +223,7 @@ Yet another approach is to decouple the timing from the observability by making 
 
 ## 5. Browser-built "Fastdom" Callback
 
-This is a combination synchronous ("Nanotask") timing and Mutation Observer timing, where the user has to select the timing they wish. Effectively, introduce a `window.requestAmazingWriteTime(callback)` (name intentionally terrible) function. Inside `callback`, all DOM operations that would previously be synchronously updating layout will return inaccurate results (throw?), and DOM operations with "Nanotasks" will run these tasks at the microtask checkpoint, which occurs immediately after the callback exits. This is conceptually similar to [fastdom](https://github.com/wilsonpage/fastdom), except built into the browser.
+This is a combination of synchronous ("Nanotask") timing and Mutation Observer timing, where the user has to select the timing they wish. Effectively, introduce a `window.requestAmazingWriteTime(callback)` (name intentionally terrible) function. Inside `callback`, all DOM operations that would previously be synchronously updating layout will return inaccurate results (throw?), and DOM operations with "Nanotasks" will run these tasks at the microtask checkpoint, which occurs immediately after the callback exits. This is conceptually similar to [fastdom](https://github.com/wilsonpage/fastdom), except built into the browser.
 
 Outside of this callback, the distribution API runs at "Nanotask" timing.
 
