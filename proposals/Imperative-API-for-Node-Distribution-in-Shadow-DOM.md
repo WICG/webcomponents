@@ -252,10 +252,12 @@ requestAmazingWriteTime(() => {
 ### Pros
 - Provides consistent distribution state for users who don't care about performance
 - Provides best distribution timing for performance-conscious users
-- Interoprerable
+- Interoprerable-ish (see cons below)
 
 ### Cons
 - Defining effects of `requestAmazingWriteTime` on the entire DOM API seems arduous and would be difficult to specify interoperably.
+- If unsafe things throw, then every operation that can cause a layout or style recaculation will need to have a check. Browsers will need to agree on what that list of things is. This changes over time (e.g. getComputedStyle in Blink used to force a layout and now only forces a style recalculation).
+- If unsafe things don't throw, then authors will have hard to find racey bugs. Also, browsers won't be interoperable because they'll give different stale data, so the races will be different in different browsers.
 
 
 ## 6. Not a Problem for v1
