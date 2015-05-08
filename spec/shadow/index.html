@@ -1417,18 +1417,49 @@
         <h3>Extensions to <code>Event</code> Interface</h3>
 
         <dl class="idl" title="partial interface Event">
-          <dt>readonly attribute object path</dt>
+          <dt>readonly attribute object deepPath</dt>
           <dd>
             <p>Represents the event path.</p>
             <p>
               On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object,
-              that <strong>must</strong> be equivalent of the result of the <a>event path calculation algorithm</a> with the <a>context object</a> and the <a>event target</a> which is not adjusted by the <a>retargeting algorithm</a> as input if the event is being dispatched.
-              This <a>event path calculation algorithm</a> <strong>must</strong> be done before capture phase. In other words, changes to the DOM while the event is dispatched <strong>must</strong> not affect the result.
-              The same thing also applies to the case when the event dispatching is finished.
-              If the event hasn't been dispatched, the attribute <strong>must</strong> create and return a new empty array.
+              that <strong>must</strong> be equivalent to processing the following steps:
             </p>
+
+            <div class="algorithm">
+              <dl>
+                <dt>Input</dt>
+                <dd><var>EVENT</var>, a <a>context object</a></dd>
+                <dt>Output</dt>
+                <dd><var>PATH</var>, an array of nodes</dd>
+              </dl>
+
+              <ol>
+                <li>If the event hasn't been dispatched, return a new empty array.</li>
+                <li>
+                  Otherwise:
+                  <ol>
+                    <li>Let <var>TARGET</var> be the <a>event target</a> of <var>EVENT</var>, which is not adjusted by the <a>retargeting algorithm</a>.</li>
+                    <li>Let <var>PATH</var> be the result of the <a>event path calculation algorithm</a> with <a>EVENT</a> and <a>TARGET</a> as input.</li>
+                    <li>
+                      If the event is being dispatched:
+                      <ol>
+                        <li>Let <var>CURRENT-TARGET</var> be the <a>current target</a> of <var>EVENT</var>.</li>
+                      </ol>
+                    </li>
+                    <li>
+                      Otherwise:
+                      <ol>
+                        <li>Let <var>CURRENT-TARGET</var> be the last node of <var>PATH</var>.</li>
+                      </ol>
+                    </li>
+                    <li>Let PATH contain only a node which is an <a>unclosed node</a> of <var>CURRENT-TARGET</var>.</li>
+                  </ol>
+                </li>
+              </ol>
+            </div>
+
             <p class="issue">
-              Use <code>Array</code> as the return type of the <code>path</code> attribute in WebIDL.
+              Use <code>Array</code> as the return type of the <code>deepPath</code> attribute in WebIDL.
               WebIDL bugs: <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20020"><code>Array</code> subclassing</a>
               and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23225">class, not interface</a>.
             </p>
