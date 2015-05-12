@@ -2,7 +2,7 @@
 
 #### by Dimitri Glazkov
 
-The main concern with microtask checkpoint timing of the distribution API callbacks is explained on the main [Imperative API](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Imperative-API-for-Node-Distribution-in-Shadow-DOM.md#api-for-triggering-distribution) page. The following experiment aims to supply data on the amount and type of breakage the asynchronous timing would cause in the wild.
+The main concern with microtask checkpoint timing of the distribution API callbacks is explained on the main [Imperative API](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Imperative-API-for-Node-Distribution-in-Shadow-DOM.md#api-for-triggering-distribution) page. The following experiment aims to provide data on the amount and type of breakages the asynchronous timing would cause in the wild.
 
 ## The Setup
 
@@ -24,10 +24,10 @@ To simulate these effects, the extension simply "lies" whenever asked about layo
 
 To install the modified extension:
 
-* Clone (nope-js)[https://github.com/dglazkov/nope-js] git repo locally
+* Clone [nope-js](https://github.com/dglazkov/nope-js) git repo locally
 * Switch the local repo to the `lie` branch
 * Open Chrome (M43+ is required) with a [clean profile](https://developer.chrome.com/devtools/docs/clean-testing-environment)
-* Go to http://chrome/extensions and check **Developer mode**
+* Go to `http://chrome/extensions` and check **Developer mode**
 * Click **Load unpacked extension...** and point the file picker to `extension/chrome` directory in the `nope-js` repo.
 
 ## The Results
@@ -49,5 +49,5 @@ Here are some things found in the first few minutes:
 
 Even within minutes of surfing, it is easy to conclude that the effect of incorrect layout/style data causes the majority of popular Web pages to look   varying degrees of wrong and do slightly wrong things.
 
-While it is unlikely that using asynchronous timing for distribution API callbacks will result in changes this dramatic, it is probable that the asynchronous timing will cause a good percentage of breakages, making adoption of third-party Web Components a high-risk proposition.
+While it is unlikely that using asynchronous timing for distribution API callbacks will result in changes this dramatic, it is probable that the asynchronous timing will cause good percentage of breakages, making adoption of third-party Web Components a high-risk proposition.
 
