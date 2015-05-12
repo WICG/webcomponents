@@ -594,7 +594,7 @@
         </div>
 
         <p class="note">
-          If an event has a <code>relatedTarget</code>, the event path will be further trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
+          For a <a title="trusted events" >trusted event</a> that has a <code>relatedTarget</code> attribute, the event path would be trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
         </p>
 
       </section>
@@ -829,8 +829,8 @@
         <p>The relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
 
         <p>
-          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for an event that has a <code>relatedTarget</code> property and
-          <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for a <a title="trusted events">trusted event</a> that has a <code>relatedTarget</code> attribute and
+          <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:
         </p>
         <div class="algorithm">
           <dl>
@@ -850,6 +850,10 @@
             </li>
           </ol>
         </div>
+
+        <p class="note">
+          For an <a title="trusted events" >untrusted event</a>, the <a>event path trimming algorithm</a> is not used.
+        </p>
 
       </section>
 
