@@ -589,8 +589,13 @@
                   </ol>
                 </li>
               </ol>
+            </li>
           </ol>
         </div>
+
+        <p class="note">
+          If an event has a <code>relatedTarget</code>, the event path will be further trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
+        </p>
 
       </section>
 
@@ -822,6 +827,30 @@
         <p class="note">The result of the related target resolution algorithm is not always null. Unless that, you should file a bug for this specification.</p>
 
         <p>The relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
+
+        <p>
+          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for an event that has a <code>relatedTarget</code> property and
+          <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        </p>
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>EVENT-PATH</var>, the event path, which is the result of the <a>event path calculation algorithm</a></dd>
+            <dt>Output</dt>
+            <dd><var>EVENT-PATH</var> is trimmed so that event listeners aren't invoked on a node for which the target and relatedTarget are the same.</dd>
+          </dl>
+          <ol>
+            <li>
+              For each event target <var>A</var> in EVENT-PATH:
+              <ol>
+                <li>Let <var>ADJUSTED-TARGET</var> be the result of <a>retargeting algorithm</a> for <var>A</var>.</li>
+                <li>Let <var>ADJUSTED-RELATED-TARGET</var> be the result of <a>related target resolution algorithm</a> for <var>A</var>.</li>
+                <li>If <var>ADJUSTED-TARGET</var> and <var>ADJUSTED-RELATED-TARGET</var> are the same, remove A from EVENT-PATH.</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
       </section>
 
       <section>
@@ -845,7 +874,6 @@
           <li>The <a><code>MouseEvent</code></a> <a><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
           <li>The <a><code>MouseEvent</code></a> <a><code>offsetX</code></a> and <a><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a>padding edge</a> of the <a>relative target</a></li>
           <li>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
-          <li>If the <a><code>relatedTarget</code></a> and <a><code>target</code></a> are the same for a given node, its the event listeners <strong>must not</strong> be invoked. <a><code>TouchEvent</code></a> is not subject to this rule.</li>
           <li>When <em>capturing</em>, which entails processing step 6 of the <a title="event dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a title="event listener invoke">invoked</a> on a <a>node</a> <strong>if</strong> it is the same as its <a>relative target</a></li>
           <li>When <em>bubbling</em>, which entails processing step 9 of the <a title="event dispatch">event dispatch algorithm</a>, the <a><code>Event</code></a> <a>eventPhase</a> attribute <strong>must</strong> return <a>AT_TARGET</a> <strong>if</strong> the <a>relative target</a> is same as the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
           <li>If the event's <a><code>bubbles</code></a> attribute value is <strong>false</strong>, run these substeps:
