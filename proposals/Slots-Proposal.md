@@ -1,6 +1,6 @@
 # Slots Proposal
 
-## Definitions
+### Definitions
 
 These are the new definitions. For all other definitions, consult current [spec](http://w3c.github.io/webcomponents/spec/shadow/).
 
@@ -8,7 +8,7 @@ These are the new definitions. For all other definitions, consult current [spec]
 * **slot id** -- the id of the **slot**.
 * **default slot** -- a **slot** for assigning nodes without a **slot id**.
 
-## Slotting Algorithm
+### Slotting Algorithm
 
 The **slotting** algorithm assigns nodes of a shadow tree host into *slots* of that tree.
 
@@ -31,7 +31,7 @@ The **slotting** algorithm assigns nodes of a shadow tree host into *slots* of t
 
 When each node is assigned to a slot, this slot is also added to the node's [destination insertion points](http://w3c.github.io/webcomponents/spec/shadow/#dfn-destination-insertion-points) list.
 
-## Get Distributed Nodes Algorithm
+### Get Distributed Nodes Algorithm
 
 The **get distributed nodes** algorithm recursively collects all nodes that are currently distributed into a given **slot**
 
@@ -60,7 +60,7 @@ This algorithm replaces the [**distribution resolution algorithm**](http://w3c.g
   1. Let **SHADOW-TREE** be *HOST*'s shadow tree
   1. Run **distribution resolution algorithm* (recursively) with *SHADOW-TREE* as input
 
-## `slot` element
+### `slot` element
 
 ```slot``` element represents an **slot** in the shadow tree. Has same rendering behavior is as the ```content``` element.
 
