@@ -5,8 +5,8 @@
 These are the new definitions. For all other definitions, consult current [spec](http://w3c.github.io/webcomponents/spec/shadow/).
 
 * **slot** -- a defined location in a shadow tree. Represented by the ```slot``` element.
-* **slot id** -- the id of the **slot**.
-* **default slot** -- a **slot** for assigning nodes without a **slot id**.
+* **slot name** -- the name of a **slot**.
+* **default slot** -- a **slot** for assigning nodes without a **slot name**.
 
 ### Slotting Algorithm
 
@@ -20,9 +20,9 @@ The **slotting** algorithm assigns nodes of a shadow tree host into *slots* of t
 1. Let *TREE* be *HOST*'s shadow tree
 2. Let *DEFAULT* be an empty list of nodes
 3. For each child node *NODE* of *HOST*, in tree order:
-  1. Let *ID* be *NODE*'s **slot id**
-  2. If the *ID* is empty, null, or undefined, add *NODE* to *DEFAULT*
-  3. Let *SLOT* be the slot with **slot id** *ID* for *TREE*
+  1. Let *NAME* be *NODE*'s **slot name**
+  2. If *NAME* is missing, add *NODE* to *DEFAULT*
+  3. Let *SLOT* be the slot with **slot name** *NAME* for *TREE*
   4. If *SLOT* does not exist, discard node
   5. Otherwise, assign *NODE* to *SLOT*
 4. Let *DEFAULT-SLOT* be the the **default slot** for *TREE*
