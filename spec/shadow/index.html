@@ -1480,7 +1480,7 @@ function createStyle()
 
 function makeShadowTree(storyList)
 {
-    var root = storyList.createShadowRoot();
+    var root = storyList.createShadowRoot({mode: 'open'});
     root.appendChild(createStyle());
     root.appendChild(createStoryGroup('breaking', '.breaking'));
     root.appendChild(createStoryGroup('other', ''));
@@ -1510,7 +1510,7 @@ function createElectionStyle()
 
 function makeElectionShadowTree(storyList)
 {
-    var root = storyList.createShadowRoot();
+    var root = storyList.createShadowRoot({mode: 'open'});
     // Add and style election story box.
     root.appendChild(createElectionStyle());
     root.appendChild(createStoryGroup('election', '.election'));
