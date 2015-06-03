@@ -56,6 +56,7 @@ var autolinkConfig = {
         'audio element': 'the-video-element.html#the-audio-element',
         'base element': 'semantics.html#the-base-element',
         'being rendered': 'rendering.html#being-rendered',
+        'binding': 'renderings.html#bindings',
         'boolean': 'common-microsyntaxes.html#boolean-attribute',
         'canvas element': 'the-canvas-element.html#the-canvas-element',
         'comma separated tokens': 'common-microsyntaxes.html#comma-separated-tokens',
