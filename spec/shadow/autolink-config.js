@@ -4,6 +4,7 @@ var autolinkConfig = {
         'AT_TARGET': '#dom-event-at_target',
         'DATA_CLONE_ERR': '#dom-domexception-data_clone_err',
         'DOCUMENT_FRAGMENT_NODE': '#dom-node-document_fragment_node',
+        'EventInit': '#dictdef-eventinit',
         'InvalidNodeTypeError': '#invalidnodetypeerror',
         'NodeList': '#nodelist',
         'ancestor': '#concept-tree-ancestor',

@@ -509,9 +509,9 @@
       <p>When an <a>event</a> is <a title="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a title="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the <a title="mutation event">mutation events</a>. The <a title="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
 
       <section>
-        <h3>Events that are Always Stopped</h3>
+        <h3>Events that are not leaked into ancestor trees</h3>
 
-        <p>The <dfn title="events-always-stopped">following events</dfn> <strong>must</strong> always be stopped at the <a>root</a> node in the node tree where an event is dispached:</p>
+        <p>For the following events</dfn>, <a>encapsulated flag</a> is initialized to true by default:</p>
         <ul>
           <li><code>abort</code></li>
           <li><code>error</code></li>
@@ -524,10 +524,8 @@
           <li><code>selectstart</code></li>
         </ul>
 
-        <p><a title="event path calculation algorithm">The exact algorithm</a> is specified later.</p>
-
         <p class="issue">
-          It's not a good idea to have a fixed list of events. Alternative ideas are being discussed in <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20247">W3C bug 20247</a>.
+          Upstream this section into relevant specs, instead of having a fixed list here.
         </p>
 
       </section>
@@ -564,7 +562,7 @@
                   <ol>
                     <li><var>CURRENT</var> is a shadow root</li>
                     <li><var>CURRENT</var> is the <a>root</a> node of <var>NODE</var></li>
-                    <li><var>EVENT</var> is one of the <a title="events-always-stopped">events which must be stopped</a></li>
+                    <li><var>EVENT</var>'s <a>encapsulated flag</a> is set</li>
                   </ol>
                 </li>
                 <li>
@@ -1363,6 +1361,17 @@
       </section>
 
       <section>
+        <h3>Extensions to <a><code>EventInit</code></a> Dictionary</h3>
+
+        <dl class="idl" title="partial dictionary EventInit">
+          <dt>boolean isEncapsulated = false</dt>
+          <dd>
+            <p>Specifies the <a>encapsulated flag</a> of <code>Event</code></p>
+          </dd>
+        </dl>
+      </section>
+
+      <section>
         <h3>Extensions to <code>Event</code> Interface</h3>
 
         <dl class="idl" title="partial interface Event">
@@ -1410,6 +1419,12 @@
               Use <code>Array</code> as the return type of the <code>deepPath</code> attribute in WebIDL.
               WebIDL bugs: <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=20020"><code>Array</code> subclassing</a>
               and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23225">class, not interface</a>.
+            </p>
+          </dd>
+          <dt>readonly attribute boolean isEncapsulated</dt>
+          <dd>
+            <p>
+              Returns the <dfn>encapsulated flag</dfn>.
             </p>
           </dd>
         </dl>
