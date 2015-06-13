@@ -27,7 +27,14 @@ There are several nuances to the accessibility argument which should be kept in 
   * Other roles, such as `listbox`, are _composite roles_, meaning that there may be several interactive elements within the element with that role. `<input type=date>` is a very special case of a composite role, since it doesn't have a pre-defined structure for its (browser-provided) descendant content, but always has several interactive elements within it; plus, it is rendered very differently on different platforms. 
 
 #### Forms behaviour
+
+* Only native forms element may be submitted as part of a standard `<form>`. A developer may do either or a combination of:
+  * extend native form elements in order to have custom behaviour or appearance for those elements, or 
+  * extend `<form>` to pick up values from custom elements before submitting. 
+
 #### Script-supporting element behaviour
+
+* `<script>` and `<template>` have behaviour which cannot be expressed any other way; until if and when the necessary primitives are developed, custom elements must extend these elements in order to get this behaviour.
 
 ### Progressive enhancement
 
