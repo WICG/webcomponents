@@ -10,8 +10,8 @@ This document explores the pros and cons of various options for instantiating a 
 
 * **Implicit semantics** - Using a type extension means - in most cases - that you get the semantics of the extended element without doing any extra work. This is discussed in detail [in the spec](http://w3c.github.io/webcomponents/spec/custom/#semantics).
 * **Non-ARIA semantics** - There are semantics which currently can't be expressed using ARIA, such as a _paragraph_ role.
-* **Focusability** - For interactive widgets, type extended elements inherit the native element's focusability without needing to add a `tabindex` attribute. (Note: there is (ongoing work)[https://docs.google.com/document/d/1k93Ez6yNSyWQDtGjdJJqTBPmljk9l2WS3JTe5OHHB50/edit?pli=1] to add this behaviour as a primitive.)
-* **Keyboard events** - If not adding a shadow root, you also get the native keyboard event handling
+* **Focusability** - For interactive widgets, type extended elements inherit the native element's focusability without needing to add a `tabindex` attribute. (Note: there is [ongoing work](https://docs.google.com/document/d/1k93Ez6yNSyWQDtGjdJJqTBPmljk9l2WS3JTe5OHHB50/edit?pli=1) to add this behaviour as a primitive.)
+* **Keyboard events** - If not adding a shadow root, you also get the native keyboard event handling.
 * **Platform-specific presentation** - If not adding a shadow root, you can access platform-specific presentation such as the varying appearance of `<input type=date>`.
 
 ##### Accessibility nuances
