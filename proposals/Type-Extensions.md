@@ -54,55 +54,51 @@ The [current proposal](http://www.w3.org/TR/custom-elements/#dfn-type-extension)
 
 ### Drawbacks
 
-#### Stands inheritance on its head 
+* **Stands inheritance on its head** - The main issue with the `is=` proposal is
+    takes the concept of inheritance developers are familiar with and stands it
+    on its head.
+    
+    The idea with inheritance is that you build new object from other ones,
+    conceptually, the object you build from become attributes of the object
+    you are building, so for example:
+    
+    ```html
+    <my-button extends=button>
+    ```
+    
+    …makes a lot of sense. Clearly, you're building a new element that
+    extends the capabilities of the existing button object.
+    
+    With the `is=` syntax, however, what it is you're doing isn't clear at all:
+    
+    ```html
+    <button is=my-button>
+    ```
+    
+    What's the message here? Is this just a button? Oh no, it's not a
+    button… it's a `my-button`. But does it actually inherit from button?
+    That's unclear from the syntax. 
 
-The main issue with the `is=` proposal is takes the concept of inheritance
-developers are familiar with and stands it on its head.
+* **Hard to spot when scanning code** - As soon as you add a number
+    of extra attributes in the mix, finding out what the element
+    actually is becomes a lot more involved.
+    
+    ```html
+    <button value="45" class="button button-large" is="my-button" id="cta" />
+    ```
 
-The idea with inheritance is that you build new object from other ones,
-conceptually, the object you build from become attributes of the object
-you are building, so for example:
-
-```html
-<my-button extends=button>
-```
-
-…makes a lot of sense. Clearly, you're building a new element that
-extends the capabilities of the existing button object.
-
-With the `is=` syntax, however, what it is you're doing isn't clear at all:
-
-```html
-<button is=my-button>
-```
-
-What's the message here? Is this just a button? Oh no, it's not a
-button… it's a `my-button`. But does it actually inherit from button?
-That's unclear from the syntax. 
-
-#### Hard to spot when scanning code
-
-As soon as you add a number of extra attributes in the mix,
-finding out what the element actually is becomes a lot more involved.
-
- ```html
- <button value="45" class="button button-large" is="my-button" id="cta" />
- ```
-
-#### Error prone (doesn't express intent)
-
-There's a concern developers will mistakenly write:
-
- ```html
-<my-button is=button>
- ```
-instead of
-
-```html
-<button is=my-button>
-```
- 
-as it is much closer in form to the conceptual inheritance model
-they have in mind (anecdotical evidence confirms this is already an issue).
+* **Error prone (doesn't express intent)** - There's a concern developers will mistakenly write:
+    
+    ```html
+    <my-button is=button>
+    ```
+    instead of
+    
+    ```html
+    <button is=my-button>
+    ```
+    
+    as it is much closer in form to the conceptual inheritance model
+    they have in mind (anecdotical evidence confirms this is already an issue).
 
 ## Alternative proposals
