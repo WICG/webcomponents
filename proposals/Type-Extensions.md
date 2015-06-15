@@ -54,6 +54,11 @@ The [current proposal](http://www.w3.org/TR/custom-elements/#dfn-type-extension)
 
 ### Drawbacks
 
+* **If you base your web component on a native element, you cannot have a custom tag name** - 
+    If I want to base my new button on `<button>`, I cannot use `<my-button>` as my
+    tag name. Instead I must use something awkward like `<button is="my-button">` and this
+    disappoints part of the idea of custom elements in web components.
+
 * **Stands inheritance on its head** - The main issue with the `is=` proposal is
     takes the concept of inheritance developers are familiar with and stands it
     on its head.
