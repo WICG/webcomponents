@@ -102,3 +102,17 @@ The [current proposal](http://www.w3.org/TR/custom-elements/#dfn-type-extension)
     they have in mind (anecdotical evidence confirms this is already an issue).
 
 ## Alternative proposals
+
+In "drawbacks' above, the objections to the syntax that inheritence is turned on its head an it's error prone could be ameliorated by changing the syntax, eg 
+
+    ```html
+    <button extendedby=my-button>
+    ```
+ 
+The objection that it's hard to scan is equally the case with
+
+    ```html
+    <my-button tabindex="-1" some-unknown-attribute="7829" and-another-one="hkha">
+    ```
+ 
+ That requires delving into some JS to see what it actually does. (I assume it's trivial for browser devtools/ syntax-highlighter to highlight an element with an extendedby/ is arribute to draw a developer's attention to it).
