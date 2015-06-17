@@ -85,4 +85,4 @@ partial interface Element {
 }
 ```
 
-* ```slot``` -- reflects the ```slot``` attribute. The ```slot``` attribute represents the **slot id**.
+* ```slot``` -- reflects the ```slot``` attribute. The ```slot``` attribute represents the **slot name**.
