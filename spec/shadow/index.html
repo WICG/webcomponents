@@ -710,30 +710,46 @@
 
         <p>In the cases where event path is across multiple node trees, the event's information about the target of the event is adjusted in order to maintain <a href="#encapsulation">encapsulation</a>. Event <dfn>retargeting</dfn> is a process of computing relative targets for each ancestor of the <a>node</a> at which the event is dispatched. A <dfn>relative target</dfn> is a <a>node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the encapsulation.</p>
 
-        <p>The <dfn>retargeting algorithm</dfn> is used to determine relative targets, and it <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>retargeting algorithm</dfn> is used to determine relative targets and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
-            <dd><var>EVENT-PATH</var>, an event path</dd>
-            <dd><var>CURRENT-TARGET</var>, a <a>node</a> where the event listener is invoked.</dd>
+            <dd><var>BASE</var>, a base node for which a target node should be adjusted</dd>
+            <dd><var>TARGET</var>, a target node which should be adjusted</dd>
             <dt>Output</dt>
-            <dd><var>RELATIVE-TARGET</var>, adjusted target</dd>
+            <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></a></dd>
           </dl>
           <ol>
-            <li>Let <var>CURRENT-TARGET-TREE</var> be the <a>node tree</a> which <var>CURRENT-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>ORIGINAL-TARGET</var> be the first item in <var>EVENT-PATH</var></li>
-            <li>Let <var>ORIGINAL-TARGET-TREE</var> be the <a>node tree</a> which <var>ORIGINAL-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>RELATIVE-TARGET-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>ORIGINAL-TARGET-TREE</var></li>
-            <li>Let <var>RELATIVE-TARGET</var> be the first <a>node</a> in <var>EVENT-PATH</var> which satisfies the following condition:
+            <li>Let <var>BASE-TREE</var> be the <a>node tree</a> which <var>BASE</var> <a>participates</a> in</li>
+            <li>Let <var>TARGET-TREE</var> be the <a>node tree</a> which <var>TARGET</var> <a>participates</a> in</li>
+            <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>tree of trees</a>:
               <ol>
-                <li>The <a>node</a> <a>participates</a> in <var>RELATIVE-TARGET-TREE</var></li>
+                <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
+              </ol>
+            </li>
+            <li>Otherwise:
+              <ol>
+                <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
+              </ol>
+            </li>
+            <li>
+              For each <a>node</a>, <var>ANCETOR</var>, in an <a>inclusive deep ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
+              <ol>
+                <li>
+                  If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
+                  <ol>
+                    <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
+                    <li>Stop this algorithm</li>
+                  </ol>
+                </li>
               </ol>
             </li>
           </ol>
         </div>
 
-        <p>The retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
+        <p>The value of the <code>Event</code> object's <a><code>target</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and <code>target</code> as input.</p>
+        <p>The event target retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
       </section>
 
       <section>
@@ -741,50 +757,38 @@
 
         <p>Some events have a <a><code>relatedTarget</code></a> [[!DOM-Level-3-Events]] property, which holds a <a>node</a> that's not the event's target, but is related to the event.</p>
 
-        <p>For instance, a <code>mouseover</code> event's <a><code>relatedTarget</code></a> may hold the <a>node</a> from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a>shadow tree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this tree. In cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.</p>
+        <p>
+          For instance, a <code>mouseover</code> event's <a><code>relatedTarget</code></a> may hold the <a>node</a> from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a>shadow tree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this tree.
+        </p>
+        <p>
+          The value of the <code>Event</code> object's <a><code>relatedTarget</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and <code>relatedTarget</code> as input. The result is called a <dfn>relative related target</dfn>.
+        </p>
+        <p>
+          The event relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.
+        </p>
+      </section>
 
-        <p>Thus, if an event has a <code>relatedTarget</code>, its value and extent of event dispatch <strong>must</strong> be adjusted. In general:</p>
-        <ol>
-          <li>For a given node, the <code>relatedTarget</code> <strong>must</strong> be changed to its ancestor (or self) that is in the same <a>shadow tree</a> as the node</li>
-          <li>Event listeners <strong>must not</strong> be invoked on a <a>node</a> for which the <code>target</code> and <code>relatedTarget</code> are the same.</li>
-        </ol>
+      <section>
+        <h3>Retargeting Touch Events</h3>
 
-        <p>The <dfn>related target resolution algorithm</dfn> <strong>must</strong> be used to determine the value of the <a><code>relatedTarget</code></a> property and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute <strong>must</strong> be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a title="touches"><code>touches()</code></a>, <a title="changedTouches"><code>changedTouches()</code></a> and <a title="targetTouches"><code>targetTouches()</code></a> must be the result of the <a>retargeting algorithm</a> with a current target and <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> as input.</p>
+      </section>
 
-        <div class="algorithm">
-          <dl>
-            <dt>Input</dt>
-            <dd><var>EVENT</var>, an event</dd>
-            <dd><var>CURRENT-TARGET</var>, the <a>node</a> on which event listeners would be invoked</dd>
-            <dd><var>RELATED-TARGET</var>, the related target for the event</dd>
-            <dt>Output</dt>
-            <dd><var>ADJUSTED-RELATED-TARGET</var>, the <dfn>adjusted related target</dfn> for <var>CURRENT-TARGET</var></dd>
-          </dl>
-          <ol>
-            <li>Let <var>CURRENT-TARGET-TREE</var> be the <a>node tree</a> which <var>CURRENT-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>RELATED-TARGET-TREE</var> be the <a>node tree</a> which <var>RELATED-TARGET</var> <a>participates</a> in</li>
-            <li>Let <var>RELATED-TARGET-EVENT-PATH</var> be the result of the <a>event path calculation algorithm</a> with <var>RELATED-TARGET</var> and <var>EVENT</var> as input</li>
-            <li>If <var>CURRENT-TARGET-TREE</var> and <var>RELATED-TARGET-TREE</var> participate in the same <a>tree of trees</a>:
-              <ol>
-                <li>Let <var>LOWEST-COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>CURRENT-TARGET-TREE</var> and <var>RELATED-TARGET-TREE</var></li>
-              </ol>
-            </li>
-            <li>Otherwise:
-              <ol>
-                <li>Let <var>LOWEST-COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>RELATED-TARGET-TREE</var></li>
-              </ol>
-            </li>
-            <li>Let <var>ADJUSTED-RELATED-TARGET</var> be the first <a>node</a> in <var>RELATED-TARGET-EVENT-PATH</var> which satisfies the following condition:
-              <ol>
-                <li>The <a>node</a> <a>participates</a> in <var>LOWEST-COMMON-ANCESTOR-TREE</var></li>
-              </ol>
-            </li>
-          </ol>
-        </div>
+      <section>
+        <h3>Retargeting Focus Events</h3>
 
-        <p class="note">The result of the related target resolution algorithm is not always null. Unless that, you should file a bug for this specification.</p>
+        <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding <a>node</a> that is losing focus as a result of <code>target</code> gaining focus or the <a>node</a> that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
+      </section>
 
-        <p>The relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
+      <section>
+        <h3>Event Path Trimming</h3>
+
+        <p>
+          In cases where both <code>relatedTarget</code> and <code>target</code> of a <a title="trusted events">trusted event</a> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.
+        </p>
+        <p>
+           Thus, event listeners for <a>trusted events</a> <strong>must not</strong> be invoked on a <a>node</a> for which the <code>target</code> and <code>relatedTarget</code> are the same.
+        </p>
 
         <p>
           The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for a <a title="trusted events">trusted event</a> that has a <code>relatedTarget</code> attribute and
@@ -795,36 +799,22 @@
             <dt>Input</dt>
             <dd><var>EVENT-PATH</var>, the event path, which is the result of the <a>event path calculation algorithm</a></dd>
             <dt>Output</dt>
-            <dd><var>EVENT-PATH</var> is trimmed so that event listeners aren't invoked on a node for which the target and relatedTarget are the same.</dd>
+            <dd><var>EVENT-PATH</var> is trimmed so that event listeners aren't invoked on a node for which the <code>target</code> and <code>relatedTarget</code> are the same.</dd>
           </dl>
           <ol>
             <li>
-              For each event target <var>A</var> in EVENT-PATH:
+              For each object, <var>A</var>, in <var>EVENT-PATH</var>:
               <ol>
-                <li>Let <var>ADJUSTED-TARGET</var> be the result of <a>retargeting algorithm</a> for <var>A</var>.</li>
-                <li>Let <var>ADJUSTED-RELATED-TARGET</var> be the result of <a>related target resolution algorithm</a> for <var>A</var>.</li>
-                <li>If <var>ADJUSTED-TARGET</var> and <var>ADJUSTED-RELATED-TARGET</var> are the same, remove A from EVENT-PATH.</li>
+                <li>Let <var>RELATIVE-TARGET</var> be the <a>relative target</a> for <var>A</var></li>
+                <li>Let <var>RELATIVE-RELATED-TARGET</var> be the <a>relative related target</a> for <var>A</var></li>
+                <li>If <var>RELATIVE-TARGET</var> and <var>RELATIVE-RELATED-TARGET</var> are the same, remove <var>A</var> from <var>EVENT-PATH</var>.</li>
               </ol>
             </li>
           </ol>
         </div>
-
         <p class="note">
           For an <a title="trusted events" >untrusted event</a>, the <a>event path trimming algorithm</a> is not used.
         </p>
-
-      </section>
-
-      <section>
-        <h3>Retargeting Touch Events</h3>
-
-        <p>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute must be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a title="touches"><code>touches()</code></a>, <a title="changedTouches"><code>changedTouches()</code></a> and <a title="targetTouches"><code>targetTouches()</code></a> must be the result of <a>related target resolution algorithm</a>, given <var>NODE</var> and <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> as arguments.</p>
-      </section>
-
-      <section>
-        <h3>Retargeting Focus Events</h3>
-
-        <p>The <code>focus</code>, <code>DOMFocusIn</code>, <code>blur</code>, and <code>DOMFocusOut</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding <a>node</a> that is losing focus as a result of <code>target</code> gaining focus or the <a>node</a> that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
       </section>
 
       <section>
@@ -832,10 +822,7 @@
 
         <p>At the time of event dispatch:</p>
         <ul>
-          <li>The <a><code>Event</code></a> <a><code>target</code></a> and <a><code>currentTarget</code></a> attributes <strong>must</strong> return the <a>relative target</a> for the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
-          <li>The <a><code>MouseEvent</code></a> <a><code>relatedTarget</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
           <li>The <a><code>MouseEvent</code></a> <a><code>offsetX</code></a> and <a><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a>padding edge</a> of the <a>relative target</a></li>
-          <li>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> attribute <strong>must</strong> return the <a>adjusted related target</a></li>
           <li>When <em>capturing</em>, which entails processing step 6 of the <a title="event dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a title="event listener invoke">invoked</a> on a <a>node</a> <strong>if</strong> it is the same as its <a>relative target</a></li>
           <li>When <em>bubbling</em>, which entails processing step 9 of the <a title="event dispatch">event dispatch algorithm</a>, the <a><code>Event</code></a> <a>eventPhase</a> attribute <strong>must</strong> return <a>AT_TARGET</a> <strong>if</strong> the <a>relative target</a> is same as the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
           <li>If the event's <a><code>bubbles</code></a> attribute value is <strong>false</strong>, run these substeps:
@@ -846,7 +833,7 @@
             </ol></li>
         </ul>
 
-        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>currentTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a title="node">nodes</a> in <a title="shadow tree">shadow trees</a>.</p>
+        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>relatedTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a title="node">nodes</a> in <a title="shadow tree">shadow trees</a>.</p>
       </section>
 
       <section class="informative">
@@ -920,7 +907,7 @@
         <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
           (<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
 
-        <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a>related target resolution algorithm</a>, we should have the following set of ancestors and adjusted related targets:</p>
+        <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a href="#retargeting-relatedtarget">relatedTarget retargeting</a>, we should have the following set of ancestors and adjusted related targets:</p>
 
         <table>
           <thead>
@@ -1016,19 +1003,20 @@
 
         <p>To maintain encapsulation, the value of the <a title="Document object">Document</a> object's focus API property <a>activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
 
-        <p>The <dfn>active <a>element</a> adjustment algorithm</dfn> is used to determine the value of the <a>activeElement</a> property, and it <strong>must</strong> be equivalent to processing the following steps:</p>
+        <p>
+          The <dfn>active element adjustment algorithm</dfn> <strong>must</strong> be used to determine the value of <a>activeElement</a> property, and it <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:
+        </p>
 
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
-            <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
             <dd><var>ROOT</var>, either a <a>document</a> or a <a>shadow root</a></dd>
+            <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
             <dt>Output</dt>
             <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var>.</dd>
           </dl>
           <ol>
-            <li>Let <var>PATH</var> be the result of the <a>event path calculation algorithm</a> with <var>ELEMENT</var> and null as input</li>
-            <li>Let <var>ADJUSTED</var> be the result of the <a>retargeting algorithm</a> with <var>PATH</var> and <var>ROOT</var> as input</li>
+            <li>Let <var>ADJUSTED</var> be the result of the <a>retargeting algorithm</a> with <var>ROOT</var> and <var>ELEMENT</var> as input</li>
           </ol>
         </div>
       </section>
