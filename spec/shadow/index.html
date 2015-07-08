@@ -510,15 +510,17 @@
 
       <section>
         <h3>Changes to Dispatching Events</h3>
+        <p>Insert the following item after item 3 of <a title="event constructor">Constructing events</a>:
+        <ol start="4">
+          <li><ins>Initialize event's <a>scoped flag</a> as defined in
+            Events that are not leaked into ancestor trees.</ins>
+        </ol>
         <p>The item 4 of <a title="event dispatch">Dispatching events</a> is changed to:
         <ol start="4">
-          <li>If event’s target attribute value is participating in a tree,
-            <ins>initialize event's <a>scoped flag</a> as defined in
-            Events that are not leaked into ancestor trees, and</ins>
-            let event path be
-            <ins>the output of the <a>event path calculation algorithm</a> with target and event as inputs.</ins>
-            <del>a static ordered list of all its ancestors in tree order,</del>
-            <ins>Otherwise clear event's <a>scoped flag</a></ins> and let event path be the empty list<del> otherwise</del>.
+          <li>If event’s target attribute value is participating in a tree, let event path be
+            <ins>the output of the <a>event path calculation algorithm</a> with target and event as inputs</ins>
+            <del>a static ordered list of all its ancestors in tree order</del>,
+            and let event path be the empty list otherwise.
         </ol>
       </section>
 
