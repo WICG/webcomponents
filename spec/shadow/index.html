@@ -1240,7 +1240,23 @@
           <dd>
             When invoked, these steps <strong>must</strong> be run:
             <ol>
-              <li>If the <a>context object</a> is an element which has a <a>binding</a> property, throws <code>NotSupportedError</code> exception.</li>
+              <li>
+                If the <a>context object</a> is one of the following elements, throws <code>NotSupportedError</code> exception.
+                <ul>
+                  <li><code>button</code></li>
+                  <li><code>details</code></li>
+                  <li><code>input</code></li>
+                  <li><code>marquee</code></li>
+                  <li><code>meter</code></li>
+                  <li><code>progress</code></li>
+                  <li><code>select</code></li>
+                  <li><code>textarea</code></li>
+                  <li><code>keygen</code></li>
+                </ul>
+                <p class="note">
+                  These are the elements whose rendering is defined through a <a>binding</a> property in HTML's Rendering section.
+                </p>
+              </li>
               <li>If the <a>context object</a> already hosts the shadow tree, throws <code>InvalidStateError</code> exception.</li>
               <li>
                 Create a new instance of the <a><code>ShadowRoot</code></a> object.
