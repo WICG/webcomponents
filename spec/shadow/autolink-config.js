@@ -113,6 +113,7 @@ var autolinkConfig = {
         'MouseEvent': '#interface-MouseEvent',
         'mutation event': '#interface-MutationEvent',
         'relatedTarget': '#widl-MouseEvent-relatedTarget',
+        'topmost event target': '#glossary-topmost-event-target',
         'trusted events': '#trusted-events'
     },
 
