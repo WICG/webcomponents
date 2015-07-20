@@ -62,7 +62,7 @@ This algorithm replaces the [**distribution resolution algorithm**](http://w3c.g
 
 ### `slot` element
 
-```slot``` element represents a **slot** in the shadow tree. Has same rendering behavior is as the ```content``` element.
+```slot``` element represents a **slot** in the shadow tree. Has same rendering behavior as the ```content``` element.
 
 Attributes:
 * ```name``` -- the name of the slot.
