@@ -16,13 +16,12 @@ function resolveAutolink() {
     Array.prototype.slice.call(document.querySelectorAll("a:not([href])")).forEach(function (e) {
         if (e.classList.contains("internalDFN"))
             return;
-        var title = e.getAttribute("title") || e.textContent;
-        if (!title) return;
-        title = title.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
-        if (definitionMap[title]) {
-            e.setAttribute("href", definitionMap[title]);
+        var linkText = e.getAttribute("lt") || e.textContent;
+        if (!linkText) return;
+        linkText = linkText.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
+        if (definitionMap[linkText]) {
+            e.setAttribute("href", definitionMap[linkText]);
             e.classList.add("externalDFN");
         }
     });
 }
-

@@ -86,9 +86,9 @@
 
         <p>A <dfn>document tree</dfn> is a <a>node tree</a> [[!DOM]] whose <a>root</a> <a>node</a> is a <a>document</a>.</p>
 
-        <p>Any element can <dfn title="hosts">host</dfn> zero or one associated <a title="node tree">node trees</a>, called a <dfn>shadow tree</dfn>.
+        <p>Any element can <dfn lt="hosts">host</dfn> zero or one associated <a lt="node tree">node trees</a>, called a <dfn>shadow tree</dfn>.
 
-        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one <a title="node tree">shadow tree</a>.
+        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one <a lt="node tree">shadow tree</a>.
 
         <p>A shadow tree has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.
 
@@ -106,7 +106,7 @@
         </p>
 
         <p>
-          An <dfn>inclusive deep descendant</dfn> is a node or one of its <a title="deep descendant">deep descendants</a>.
+          An <dfn>inclusive deep descendant</dfn> is a node or one of its <a lt="deep descendant">deep descendants</a>.
         </p>
 
         <p>
@@ -120,7 +120,7 @@
         </p>
 
         <p>
-          An <dfn>inclusive deep ancestor</dfn> is a node or one of its <a title="deep ancestor">deep ancestors</a>.
+          An <dfn>inclusive deep ancestor</dfn> is a node or one of its <a lt="deep ancestor">deep ancestors</a>.
         </p>
 
         <p>
@@ -132,22 +132,22 @@
       <section>
         <h3>Trees of trees</h3>
 
-        <p>A <dfn>tree of trees</dfn> is a <a>tree</a> of <a title="node tree">node trees</a>.</p>
+        <p>A <dfn>tree of trees</dfn> is a <a>tree</a> of <a lt="node tree">node trees</a>.</p>
 
         <p class="note">
           The purpose of introducing a tree of trees here is to define algorithms easily in the following sections.
           This is a kind of a notation techchique to make the this specification simpler.
         </p>
 
-        <p>Just like a <a>node tree</a> is defined as <a title="tree">a set of relationships</a> between <a title="node">nodes</a>,
-          a <a>tree of trees</a> is similarly defined as a set of relationships between <a title="node tree">node trees</a>:</p>
+        <p>Just like a <a>node tree</a> is defined as <a lt="tree">a set of relationships</a> between <a lt="node">nodes</a>,
+          a <a>tree of trees</a> is similarly defined as a set of relationships between <a lt="node tree">node trees</a>:</p>
         <ul>
           <li>
             A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if B is a shadow tree and the shadow host which hosts <var>B</var> partitipates in <var>A</var>.
           </li>
           <li>If there is more than one <a>node tree</a> that shares the same <a>parent tree</a>, the <a>tree order</a> between them in the <a>tree of trees</a> is defined as follows:
             <ol>
-              <li>Let <var>A</var> and <var>B</var> be <a title="node tree">node trees</a> that share the same <a>parent tree</a>.</li>
+              <li>Let <var>A</var> and <var>B</var> be <a lt="node tree">node trees</a> that share the same <a>parent tree</a>.</li>
               <li><var>A</var> comes before <var>B</var> if the <a>shadow host</a> which <a>hosts</a> <var>A</var> is <a>preceding</a> the <a>shadow host</a> which <a>hosts</a> <var>B</var>.</li>
             </ol>
           </li>
@@ -155,7 +155,7 @@
             <dfn>descendant tree</dfn>, <dfn>inclusive descendant tree</dfn>,
             <dfn>ancestor tree</dfn>, <dfn>inclusive ancestor tree</dfn>,
             <dfn>preceding tree</dfn>
-            are defined in the similar way as defined in <a title="tree">trees</a>.</li>
+            are defined in the similar way as defined in <a lt="tree">trees</a>.</li>
         </ul>
 
         <p>
@@ -175,7 +175,7 @@
 
         <p>The <a><code>ownerDocument</code></a> property of a <a>node</a> in a shadow tree <strong>must</strong> refers to the <a>document</a> of the <a>shadow host</a> which <a>hosts</a> the shadow tree.</p>
 
-        <p><a><code>Window</code></a> object <a title="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a title="node">nodes</a> in the <a>document tree</a>.</p>
+        <p><a><code>Window</code></a> object <a lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a lt="node">nodes</a> in the <a>document tree</a>.</p>
 
         <section class="informative">
           <h3>Example tree of trees</h3>
@@ -194,12 +194,12 @@
             The following set of relationships holds in the figure:
           </p>
           <ul>
-            <li>The ordered list of <code>A</code>'s <a title="child tree">child trees</a> is [<code>B</code>, <code>C</code>, <code>D</code>].</li>
-            <li>The ordered list of <code>B</code>'s <a title="child tree">child trees</a> is [].</li>
-            <li>The ordered list of <code>C</code>'s <a title="child tree">child trees</a> is [].</li>
-            <li>The ordered list of <code>D</code>'s <a title="child tree">child trees</a> is [<code>E</code>, <code>F</code>].</li>
-            <li>The ordered list of <code>E</code>'s <a title="child tree">child trees</a> is [].</li>
-            <li>The ordered list of <code>F</code>'s <a title="child tree">child trees</a> is [].</li>
+            <li>The ordered list of <code>A</code>'s <a lt="child tree">child trees</a> is [<code>B</code>, <code>C</code>, <code>D</code>].</li>
+            <li>The ordered list of <code>B</code>'s <a lt="child tree">child trees</a> is [].</li>
+            <li>The ordered list of <code>C</code>'s <a lt="child tree">child trees</a> is [].</li>
+            <li>The ordered list of <code>D</code>'s <a lt="child tree">child trees</a> is [<code>E</code>, <code>F</code>].</li>
+            <li>The ordered list of <code>E</code>'s <a lt="child tree">child trees</a> is [].</li>
+            <li>The ordered list of <code>F</code>'s <a lt="child tree">child trees</a> is [].</li>
             <li>The document tree, <code>A</code>, is the <a>root tree</a> of the <a>tree of trees</a>.</li>
           </ul>
 
@@ -208,12 +208,12 @@
               As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between two nodes if they participate in different node trees.
               A shadow root is not a <a>child</a> node of the shadow host. The <a>parent</a> node of a <a>shadow root</a> doesn't exist.
               Because of this nature, most of existing APIs are <strong>scoped</strong> and don't affect other node trees, even though they are forming one tree of trees.
-              For example, <a title="getElementById"><code>document.getElementById(elementId)</code></a> never returns an element in a shadow tree,
+              For example, <a lt="getElementById"><code>document.getElementById(elementId)</code></a> never returns an element in a shadow tree,
               even when the element has the given <code>elementId</code>.
             </p>
             <p>
-              The same thing also applies to CSS <a title="selectors">Selectors</a> matching.
-              For example, a <a title="descendant combinators">descendant combinator</a> never descends into a node in a <a title="child tree">child</a> <a>shadow tree</a>
+              The same thing also applies to CSS <a lt="selectors">Selectors</a> matching.
+              For example, a <a lt="descendant combinators">descendant combinator</a> never descends into a node in a <a lt="child tree">child</a> <a>shadow tree</a>
               because a <a>shadow root</a> is not a <a>child</a> node of the <a>shadow host</a>.
               Unless a special CSS Selector for Shadow DOM, which is mentioned later, is used, a CSS Selector never matches an element in a different node tree.
             </p>
@@ -229,7 +229,7 @@
       <section>
         <h3>Composed trees</h3>
 
-        <p>A <dfn>composed tree</dfn> is a <a>node tree</a> which is constructed out of <a title="node">nodes</a> from multiple <a title="node tree">node trees</a> in a <a>tree of trees</a>.
+        <p>A <dfn>composed tree</dfn> is a <a>node tree</a> which is constructed out of <a lt="node">nodes</a> from multiple <a lt="node tree">node trees</a> in a <a>tree of trees</a>.
           The exact algorithm of constructing a composed tree is specified later.</p>
 
         <figure>
@@ -268,24 +268,24 @@
       <section>
         <h3>Insertion Points</h3>
 
-        <p>An <dfn>insertion point</dfn> is a defined location where <a title="node">nodes</a> in a different <a>node tree</a> appear instead of the nodes's original position when constructing a <a>composed tree</a>.</p>
+        <p>An <dfn>insertion point</dfn> is a defined location where <a lt="node">nodes</a> in a different <a>node tree</a> appear instead of the nodes's original position when constructing a <a>composed tree</a>.</p>
 
         <figure>
           <object data="../../assets/images/distributions.svg" width="663" height="598"></object>
           <figcaption>A distribution</figcaption>
         </figure>
 
-        <p>A <dfn>distribution</dfn> is the mechanism that determines which <a title="node">nodes</a> appear at each <a>insertion point</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
+        <p>A <dfn>distribution</dfn> is the mechanism that determines which <a lt="node">nodes</a> appear at each <a>insertion point</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
       </section>
 
       <section>
         <h3>Content Insertion Points</h3>
 
-        <p>A <dfn>content insertion point</dfn> is an <a>insertion point</a> to where the child <a title="node">nodes</a> of the <a>shadow host</a> are distributed.
+        <p>A <dfn>content insertion point</dfn> is an <a>insertion point</a> to where the child <a lt="node">nodes</a> of the <a>shadow host</a> are distributed.
           The <a>content element</a> that satisfies all of the following conditions represents a <a>content insertion point</a>:</p>
         <ul>
           <li>The <a>root</a> <a>node</a> of the <a>content element</a> is a <a>shadow root</a></li>
-          <li>There is no other <a>content element</a> in the <a title="ancestor">ancestors</a> of the <a>content element</a></li>
+          <li>There is no other <a>content element</a> in the <a lt="ancestor">ancestors</a> of the <a>content element</a></li>
         </ul>
       </section>
 
@@ -293,22 +293,22 @@
         <h3>Distribution Results</h3>
 
         <p>Each <a>tree of trees</a> has the <dfn>distribution result</dfn> which describes the result of distributions.
-          The <a>distribution result</a> <strong>must</strong> be <a title="processing equivalence">equivalent</a> of the following:</p>
+          The <a>distribution result</a> <strong>must</strong> be <a lt="processing equivalence">equivalent</a> of the following:</p>
         <ol>
-          <li>Each <a>insertion point</a> has an ordered list, called <dfn>distributed nodes</dfn>, which consists of <a title="node">nodes</a> which are distributed into the <a>insertion point</a>.</li>
-          <li>Each <a>node</a> that is not an <a>insertion point</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a title="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
+          <li>Each <a>insertion point</a> has an ordered list, called <dfn>distributed nodes</dfn>, which consists of <a lt="node">nodes</a> which are distributed into the <a>insertion point</a>.</li>
+          <li>Each <a>node</a> that is not an <a>insertion point</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a lt="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
         </ol>
 
         <p>An <a>insertion point</a> <var>A</var> is the <dfn>final destination</dfn> of a <a>node</a> <var>B</var> if <var>A</var> is the last item of the <a>destination insertion points</a> of <var>B</var>.</p>
 
-        <p>When a <a>node</a> <var>A</var> is <dfn title="distributes">distributed</dfn> into an <a>insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:</p>
+        <p>When a <a>node</a> <var>A</var> is <dfn lt="distributes">distributed</dfn> into an <a>insertion point</a> <var>B</var>, the following steps <strong>must</strong> happen:</p>
         <ul>
           <li>Add <var>A</var> to the <a>distributed nodes</a> of <var>B</var></li>
           <li>Add <var>B</var> to the <a>destination insertion points</a> of <var>A</var></li>
         </ul>
 
         <div class="note">
-          <p>One case that deserves special consideration is the situation when an <a>insertion point</a> is a child <a>node</a> of another <a>shadow host</a>. In such situations, the <a title="node">nodes</a> <a title="distributes">distributed</a> into that <a>insertion point</a> appear as if they were child <a title="node">nodes</a> of the <a>shadow host</a> in the context of <a>distribution</a>. Thus, the <a title="node">nodes</a> <a title="distributes">distributed</a> to a <a>shadow tree</a> could have already been <a title="distributes">distributed</a> from its parent tree.</p>
+          <p>One case that deserves special consideration is the situation when an <a>insertion point</a> is a child <a>node</a> of another <a>shadow host</a>. In such situations, the <a lt="node">nodes</a> <a lt="distributes">distributed</a> into that <a>insertion point</a> appear as if they were child <a lt="node">nodes</a> of the <a>shadow host</a> in the context of <a>distribution</a>. Thus, the <a lt="node">nodes</a> <a lt="distributes">distributed</a> to a <a>shadow tree</a> could have already been <a lt="distributes">distributed</a> from its parent tree.</p>
 
           <p>Despite being distributed to more than one insertion point, a node still only appears once in the composed tree at the final destination.</p>
         </div>
@@ -327,7 +327,7 @@
       <section>
         <h3>Distribution Algorithms</h3>
 
-        <p>The <dfn>distribution algorithm</dfn> <strong>must</strong> be used to determine the <a>distribution result</a> for a <a>tree of trees</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>distribution algorithm</dfn> <strong>must</strong> be used to determine the <a>distribution result</a> for a <a>tree of trees</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
@@ -337,20 +337,20 @@
             <dd>The <a>distribution result</a> of <var>TREE-OF-TREES</var> is updated</dd>
           </dl>
           <ol>
-            <li>Let all <a>distributed nodes</a> and <a>destination insertion points</a> owned by <a title="node">nodes</a> in <var>TREE-OF-TREES</var> be empty</li>
+            <li>Let all <a>distributed nodes</a> and <a>destination insertion points</a> owned by <a lt="node">nodes</a> in <var>TREE-OF-TREES</var> be empty</li>
             <li>Let <var>ROOT-TREE</var> be the <a>root tree</a> of <var>TREE-OF-TREES</var></li>
             <li>Run the <a>distribution resolution algorithm</a> with <var>ROOT-TREE</var> as input</li>
           </ol>
         </div>
 
-        <p>The <dfn>distribution resolution algorithm</dfn> <strong>must</strong> be used to determine the <a>distribution result</a> for a given <a>node tree</a> and its <a title="descendant tree">descendant trees</a>, and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>distribution resolution algorithm</dfn> <strong>must</strong> be used to determine the <a>distribution result</a> for a given <a>node tree</a> and its <a lt="descendant tree">descendant trees</a>, and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
             <dt>Input</dt>
             <dd><var>NODE-TREE</var>, a <a>node tree</a></dd>
             <dt>Output</dt>
-            <dd>The <a>distribution result</a> is updated for the <a title="inclusive descendant tree">inclusive descendant trees</a> of <var>NODE-TREE</var></dd>
+            <dd>The <a>distribution result</a> is updated for the <a lt="inclusive descendant tree">inclusive descendant trees</a> of <var>NODE-TREE</var></dd>
           </dl>
 
           <ol>
@@ -364,7 +364,7 @@
           </ol>
         </div>
 
-        <p>The <dfn>pool population algorithm</dfn> <strong>must</strong> be used to populate <a title="node">nodes</a> from the child <a title="node">nodes</a> of a given <a>node</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>pool population algorithm</dfn> <strong>must</strong> be used to populate <a lt="node">nodes</a> from the child <a lt="node">nodes</a> of a given <a>node</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
@@ -380,7 +380,7 @@
               <ol>
                 <li>If <var>CHILD</var> is an <a>insertion point</a>:
                   <ol>
-                    <li>Add all <a title="node">nodes</a> in the <a>distributed nodes</a> of <var>CHILD</var> to <var>POOL</var></li>
+                    <li>Add all <a lt="node">nodes</a> in the <a>distributed nodes</a> of <var>CHILD</var> to <var>POOL</var></li>
                   </ol></li>
                 <li>Otherwise:
                   <ol>
@@ -390,7 +390,7 @@
           </ol>
         </div>
 
-        <p>The <dfn>pool distribution algorithm</dfn> <strong>must</strong> be used to distribute <a title="node">nodes</a> in a pool into the <a title="content insertion point">content insertion points</a> in a <a>shadow tree</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>pool distribution algorithm</dfn> <strong>must</strong> be used to distribute <a lt="node">nodes</a> in a pool into the <a lt="content insertion point">content insertion points</a> in a <a>shadow tree</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
@@ -408,15 +408,15 @@
                   <ol>
                     <li>If <var>NODE</var> satisfies <var>CONTENT</var>'s matching criteria:
                       <ol>
-                        <li><a title="distributes">Distribute</a> <var>NODE</var> into <var>CONTENT</var></li>
+                        <li><a lt="distributes">Distribute</a> <var>NODE</var> into <var>CONTENT</var></li>
                         <li>Remove <var>NODE</var> from <var>POOL</var></li>
                       </ol></li>
                   </ol></li>
-                <li>If no <a title="node">nodes</a> are distributed to <var>CONTENT</var>:
+                <li>If no <a lt="node">nodes</a> are distributed to <var>CONTENT</var>:
                   <ol>
                     <li>For each child, <var>CHILD</var>, of <var>CONTENT</var>
                       <ol>
-                        <li><a title="distributes">Distribute</a> <var>CHILD</var> into <var>CONTENT</var></li>
+                        <li><a lt="distributes">Distribute</a> <var>CHILD</var> into <var>CONTENT</var></li>
                       </ol></li>
                   </ol></li>
               </ol></li>
@@ -424,7 +424,7 @@
 
         </div>
 
-        <p class="note">If no nodes are distributed into a <a>content insertion point</a> <var>CONTENT</var>, the child <a title="node">nodes</a> of <var>CONTENT</var> are distributed into <var>CONTENT</var> as fallback nodes.</p>
+        <p class="note">If no nodes are distributed into a <a>content insertion point</a> <var>CONTENT</var>, the child <a lt="node">nodes</a> of <var>CONTENT</var> are distributed into <var>CONTENT</var> as fallback nodes.</p>
 
         <p>If any condition which affects the <a>distribution result</a> changes, the <a>distribution result</a> <strong>must</strong> be updated before any use of the <a>distribution result</a>.</p>
 
@@ -433,20 +433,20 @@
       <section>
         <h3>Satisfying Matching Criteria</h3>
 
-        <p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a title="compound selector">compound selectors</a> [[!SELECTORS4]]. These <a title="compound selector">compound selectors</a> are restricted to contain only these <a title="simple selector">simple selectors</a>:</p>
+        <p>The <dfn>matching criteria</dfn> for an <a>insertion point</a> is a set of <a lt="compound selector">compound selectors</a> [[!SELECTORS4]]. These <a lt="compound selector">compound selectors</a> are restricted to contain only these <a lt="simple selector">simple selectors</a>:</p>
 
         <ul>
           <li>A <a>type selector</a> or a <a>universal selector</a></li>
-          <li><a title="class selector">class selector(s)</a></li>
+          <li><a lt="class selector">class selector(s)</a></li>
           <li>An <a>ID selector</a></li>
-          <li><a title="attribute selector">attribute selector(s)</a></li>
+          <li><a lt="attribute selector">attribute selector(s)</a></li>
           <li>A <a>negation pseudo-class</a>, <code>:not()</code></li>
         </ul>
 
-        <p>A <a>node</a> <dfn title="satisfies-matching-criteria">satisfies</dfn> a <a>matching criteria</a> only if:</p>
+        <p>A <a>node</a> <dfn lt="satisfies-matching-criteria">satisfies</dfn> a <a>matching criteria</a> only if:</p>
         <ol>
-          <li>all <a title="compound selector">compound selectors</a> in the set, contain only the <a title="simple selector">simple selectors</a> specified above; and</li>
-          <li>a <a>node</a> matches at least one <a title="compound selector">compound selectors</a> in the set or the set is empty.</li>
+          <li>all <a lt="compound selector">compound selectors</a> in the set, contain only the <a lt="simple selector">simple selectors</a> specified above; and</li>
+          <li>a <a>node</a> matches at least one <a lt="compound selector">compound selectors</a> in the set or the set is empty.</li>
         </ol>
       </section>
 
@@ -455,7 +455,7 @@
     <section>
       <h2>Composition</h2>
 
-      <p>The <dfn>composed tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child <a title="node">nodes</a> of a <a>node</a> in the <a>composed tree</a> and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+      <p>The <dfn>composed tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child <a lt="node">nodes</a> of a <a>node</a> in the <a>composed tree</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
       <div class="algorithm">
         <dl>
@@ -473,7 +473,7 @@
             </ol></li>
           <li>Otherwise:
             <ol>
-              <li>Let <var>CHILD-POOL</var> be the child <a title="node">nodes</a> of NODE</li>
+              <li>Let <var>CHILD-POOL</var> be the child <a lt="node">nodes</a> of NODE</li>
             </ol></li>
           <li>For each <a>node</a>, <var>CHILD</var>, in <var>CHILD-POOL</var>:
             <ol>
@@ -493,10 +493,10 @@
 
       </div>
 
-      <p>For a given <a>tree of trees</a> <var>TREE-OF-TREES</var>, the <a>composed tree</a> constructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a title="processing equivalence">equivalent</a> to the following tree:</p>
+      <p>For a given <a>tree of trees</a> <var>TREE-OF-TREES</var>, the <a>composed tree</a> constructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to the following tree:</p>
       <ul>
         <li>The <a>root</a> <a>node</a> of the <a>composed tree</a> is the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>TREE-OF-TREES</var>.</li>
-        <li>For a given <a>node</a> which <a>participates</a> in the <a>composed tree</a>, the child <a title="node">nodes</a> of the <a>node</a> is the result of the <a>composed tree children calculation algorithm</a> with the <a>node</a> as input.
+        <li>For a given <a>node</a> which <a>participates</a> in the <a>composed tree</a>, the child <a lt="node">nodes</a> of the <a>node</a> is the result of the <a>composed tree children calculation algorithm</a> with the <a>node</a> as input.
         </li>
       </ul>
     </section>
@@ -506,7 +506,7 @@
 
       <p>In each algorithm in this section, the <a>Window</a> <strong>must</strong> be considered as if it were the parent node of the <a>Document</a> so that the <a>Window</a> also receives an <a>event</a>.</p>
 
-      <p>When an <a>event</a> is <a title="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a title="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the <a title="mutation event">mutation events</a>. The <a title="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
+      <p>When an <a>event</a> is <a lt="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a lt="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the <a lt="mutation event">mutation events</a>. The <a lt="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
 
       <section>
         <h3>Events that are not leaked into ancestor trees</h3>
@@ -533,7 +533,7 @@
       <section>
         <h3>Event Paths</h3>
 
-        <p>The <dfn>event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
@@ -577,7 +577,7 @@
         </div>
 
         <p class="note">
-          For a <a title="trusted events" >trusted event</a> that has a <code>relatedTarget</code> attribute, the event path would be trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
+          For a <a lt="trusted events" >trusted event</a> that has a <code>relatedTarget</code> attribute, the event path would be trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
         </p>
 
       </section>
@@ -599,15 +599,15 @@
             <code>A</code> is a <a>document</a>.
           </li>
           <li>
-            <code>E</code>, <code>J</code>, <code>N</code>, <code>Q</code> and <code>S</code> are <a title="shadow root">shadow roots</a>.
+            <code>E</code>, <code>J</code>, <code>N</code>, <code>Q</code> and <code>S</code> are <a lt="shadow root">shadow roots</a>.
           </li>
           <li>
-            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a title="content insertion point">content insertion points</a>.
+            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a lt="content insertion point">content insertion points</a>.
           </li>
         </ul>
 
         <p>
-          This <a>tree of trees</a> has the following 6 <a title="node tree">node trees</a>, 1 <a>document tree</a> and 5 <a title="shadow tree">shadow trees</a>:
+          This <a>tree of trees</a> has the following 6 <a lt="node tree">node trees</a>, 1 <a>document tree</a> and 5 <a lt="shadow tree">shadow trees</a>:
         </p>
 
         <ul>
@@ -677,20 +677,20 @@
         </figure>
 
         <p>
-          That means if we focus on one <a>node tree</a> and forget all other <a title="node tree">node trees</a>,
+          That means if we focus on one <a>node tree</a> and forget all other <a lt="node tree">node trees</a>,
           the event path would be seen as if the event happened only on the <a>node tree</a> which we are focused on.
           This is an important aspect in a sense that hosting shadow trees doesn't have any effect to the event path <em>within</em> the <a>node tree</a> the <a>shadow host</a> participate in
-          as long as the event is not stopped somewhere in the <a title="descendant tree">descendant trees</a>.
+          as long as the event is not stopped somewhere in the <a lt="descendant tree">descendant trees</a>.
         </p>
 
         <p>
           For example, from the view of the <var>document tree 1</var>, the event path would be seen as <code>[D, C, B, A]</code>.
           From the view of the <var>shadow tree 2</var>, the event path would be seen as <code>[I, H, G, F, E]</code>.
-          The similar things also apply to other <a title="node tree">node trees</a>.
+          The similar things also apply to other <a lt="node tree">node trees</a>.
         </p>
 
         <p>
-          It is also worth pointing out that if we exclude all <a title="insertion point">insertion points</a> and <a title="shadow root">shadow roots</a> from an event path,
+          It is also worth pointing out that if we exclude all <a lt="insertion point">insertion points</a> and <a lt="shadow root">shadow roots</a> from an event path,
           the result would be equivalent to the inclusive ancestors of the node on which the event is dispatched, in the composed tree.
         </p>
 
@@ -698,7 +698,7 @@
           <object data="../../assets/images/event-path-and-composed-tree.svg" width="217" height="1600"></object>
           <figcaption>
             The relationship between an event path and the <a>composed tree</a>. The event path used in the example is shown in the left-hand side and the <a>composed tree</a> is shown in the right-hand side.
-            If we exclude all <a title="insertion point">insertion points</a> and <a title="shadow root">shadow roots</a> from the event path,
+            If we exclude all <a lt="insertion point">insertion points</a> and <a lt="shadow root">shadow roots</a> from the event path,
             the result would be equivalent to the inclusive ancestors of the node, <code>D</code>, in the <a>composed tree</a>.
           </figcaption>
         </figure>
@@ -710,7 +710,7 @@
 
         <p>In the cases where event path is across multiple node trees, the event's information about the target of the event is adjusted in order to maintain <a href="#encapsulation">encapsulation</a>. Event <dfn>retargeting</dfn> is a process of computing relative targets for each ancestor of the <a>node</a> at which the event is dispatched. A <dfn>relative target</dfn> is a <a>node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the encapsulation.</p>
 
-        <p>The <dfn>retargeting algorithm</dfn> is used to determine relative targets and <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <p>The <dfn>retargeting algorithm</dfn> is used to determine relative targets and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
         <div class="algorithm">
           <dl>
@@ -771,7 +771,7 @@
       <section>
         <h3>Retargeting Touch Events</h3>
 
-        <p>The <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute <strong>must</strong> be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a title="touches"><code>touches()</code></a>, <a title="changedTouches"><code>changedTouches()</code></a> and <a title="targetTouches"><code>targetTouches()</code></a> must be the result of the <a>retargeting algorithm</a> with a current target and <a><code>Touch</code></a> <a title="Touch target"><code>target</code></a> as input.</p>
+        <p>The <a><code>Touch</code></a> <a lt="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute <strong>must</strong> be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a lt="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a lt="touches"><code>touches()</code></a>, <a lt="changedTouches"><code>changedTouches()</code></a> and <a lt="targetTouches"><code>targetTouches()</code></a> must be the result of the <a>retargeting algorithm</a> with a current target and <a><code>Touch</code></a> <a lt="Touch target"><code>target</code></a> as input.</p>
       </section>
 
       <section>
@@ -784,15 +784,15 @@
         <h3>Event Path Trimming</h3>
 
         <p>
-          In cases where both <code>relatedTarget</code> and <code>target</code> of a <a title="trusted events">trusted event</a> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.
+          In cases where both <code>relatedTarget</code> and <code>target</code> of a <a lt="trusted events">trusted event</a> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.
         </p>
         <p>
            Thus, event listeners for <a>trusted events</a> <strong>must not</strong> be invoked on a <a>node</a> for which the <code>target</code> and <code>relatedTarget</code> are the same.
         </p>
 
         <p>
-          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for a <a title="trusted events">trusted event</a> that has a <code>relatedTarget</code> attribute and
-          <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:
+          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for a <a lt="trusted events">trusted event</a> that has a <code>relatedTarget</code> attribute and
+          <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:
         </p>
         <div class="algorithm">
           <dl>
@@ -813,7 +813,7 @@
           </ol>
         </div>
         <p class="note">
-          For an <a title="trusted events" >untrusted event</a>, the <a>event path trimming algorithm</a> is not used.
+          For an <a lt="trusted events" >untrusted event</a>, the <a>event path trimming algorithm</a> is not used.
         </p>
       </section>
 
@@ -823,23 +823,23 @@
         <p>At the time of event dispatch:</p>
         <ul>
           <li>The <a><code>MouseEvent</code></a> <a><code>offsetX</code></a> and <a><code>offsetY</code></a> attributes <strong>must</strong> return the coordinates relative to the origin of the <a>padding edge</a> of the <a>relative target</a></li>
-          <li>When <em>capturing</em>, which entails processing step 6 of the <a title="event dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a title="event listener invoke">invoked</a> on a <a>node</a> <strong>if</strong> it is the same as its <a>relative target</a></li>
-          <li>When <em>bubbling</em>, which entails processing step 9 of the <a title="event dispatch">event dispatch algorithm</a>, the <a><code>Event</code></a> <a>eventPhase</a> attribute <strong>must</strong> return <a>AT_TARGET</a> <strong>if</strong> the <a>relative target</a> is same as the <a>node</a> on which event listeners are <a title="event listener invoke">invoked</a></li>
+          <li>When <em>capturing</em>, which entails processing step 6 of the <a lt="event dispatch">event dispatch algorithm</a>, the event listeners <strong>must not</strong> be <a lt="event listener invoke">invoked</a> on a <a>node</a> <strong>if</strong> it is the same as its <a>relative target</a></li>
+          <li>When <em>bubbling</em>, which entails processing step 9 of the <a lt="event dispatch">event dispatch algorithm</a>, the <a><code>Event</code></a> <a>eventPhase</a> attribute <strong>must</strong> return <a>AT_TARGET</a> <strong>if</strong> the <a>relative target</a> is same as the <a>node</a> on which event listeners are <a lt="event listener invoke">invoked</a></li>
           <li>If the event's <a><code>bubbles</code></a> attribute value is <strong>false</strong>, run these substeps:
             <ol>
               <li>Reverse the order of <em>event path</em></li>
               <li>Initialize event's <a><code>eventPhase</code></a> attribute to <a><code>AT_TARGET</code></a></li>
-              <li>For each object in <em>event path</em> where the <a>relative target</a> is same as the object, <a title="event listener invoke">invoke</a> its <a title="event listener">event listeners</a>, with event <em>event</em>, as long as <em>event</em>'s <a>stop propagation flag</a> is unset</li>
+              <li>For each object in <em>event path</em> where the <a>relative target</a> is same as the object, <a lt="event listener invoke">invoke</a> its <a lt="event listener">event listeners</a>, with event <em>event</em>, as long as <em>event</em>'s <a>stop propagation flag</a> is unset</li>
             </ol></li>
         </ul>
 
-        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>relatedTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a title="node">nodes</a> in <a title="shadow tree">shadow trees</a>.</p>
+        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>relatedTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a lt="node">nodes</a> in <a lt="shadow tree">shadow trees</a>.</p>
       </section>
 
       <section class="informative">
         <h3>Event Retargeting Example</h3>
 
-        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a title="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a title="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a title="shadow root">shadow roots</a>:</p>
+        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a lt="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a lt="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a lt="shadow root">shadow roots</a>:</p>
         <pre class="example">
 &lt;div id=&quot;player&quot;&gt;
     <span class=shadow-boundary>&lt;shadow-root id=&quot;player-shadow-root&quot;&gt;</span>
@@ -971,9 +971,9 @@
           <a>Selection</a> [[!EDITING]] is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
         </p>
 
-        <p>Since <a title="node">nodes</a> which are in the different <a title="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a title="range">DOM range</a> that spans multiple <a title="node tree">node trees</a>.</p>
+        <p>Since <a lt="node">nodes</a> which are in the different <a lt="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a lt="range">DOM range</a> that spans multiple <a lt="node tree">node trees</a>.</p>
 
-        <p>Accordingly, <a title="selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method never returns a <a>selection</a> within a <a>shadow tree</a>.</p>
+        <p>Accordingly, <a lt="selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method never returns a <a>selection</a> within a <a>shadow tree</a>.</p>
 
         <p>The <code>getSelection()</code> method of the <a>shadow root</a> object returns the current <a>selection</a> in this <a>shadow tree</a>.</p>
       </section>
@@ -981,7 +981,7 @@
       <section>
         <h3>Focus Navigation</h3>
 
-        <p>If a <a>node</a> doesn’t <a title="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>navigation order</a> [[!CSS3UI]] sequence.</p>
+        <p>If a <a>node</a> doesn’t <a lt="participates">participate</a> in the <a>composed tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>navigation order</a> [[!CSS3UI]] sequence.</p>
 
         <p>For <a>sequential focus navigation</a>, the <a>navigation order</a> sequence for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>navigation order</a> for the <a>parent tree</a> <var>B</var> as follow:</p>
         <ol>
@@ -990,21 +990,21 @@
             The <a>navigation order</a> for A <strong>must</strong> be inserted into the <a>navigation order</a> for <var>B</var>:
             <ol>
               <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
-              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a title="nav-index auto"><code>auto</code></a> for determining its position.</li>
+              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a lt="nav-index auto"><code>auto</code></a> for determining its position.</li>
             </ol>
           </li>
         </ol>
 
-        <p>For <a>directional focus navigation</a>, it is up to the user agent to integrate the <a title="navigation order">navigation orders</a> for <a title="shadow tree">shadow trees</a> into the <a>document</a> <a>navigation order</a>.</p>
+        <p>For <a>directional focus navigation</a>, it is up to the user agent to integrate the <a lt="navigation order">navigation orders</a> for <a lt="shadow tree">shadow trees</a> into the <a>document</a> <a>navigation order</a>.</p>
       </section>
 
       <section>
         <h3>Active Element</h3>
 
-        <p>To maintain encapsulation, the value of the <a title="Document object">Document</a> object's focus API property <a>activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
+        <p>To maintain encapsulation, the value of the <a lt="Document object">Document</a> object's focus API property <a>activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
 
         <p>
-          The <dfn>active element adjustment algorithm</dfn> <strong>must</strong> be used to determine the value of <a>activeElement</a> property, and it <strong>must</strong> be <a title="processing equivalence">equivalent</a> to processing the following steps:
+          The <dfn>active element adjustment algorithm</dfn> <strong>must</strong> be used to determine the value of <a>activeElement</a> property, and it <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:
         </p>
 
         <div class="algorithm">
@@ -1024,13 +1024,13 @@
       <section>
         <h3>Editing</h3>
 
-        <p>The value of the <a><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a>shadow host</a> to its <a title="shadow tree">shadow trees</a>.</p>
+        <p>The value of the <a><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a>shadow host</a> to its <a lt="shadow tree">shadow trees</a>.</p>
       </section>
 
       <section>
         <h3>Assistive Technology</h3>
 
-        <p>User agents with assistive technology traverse the <a>composed tree</a>, and thus enable full use of WAI-ARIA [[!WAI-ARIA]] semantics in the <a title="shadow tree">shadow trees</a>.</p>
+        <p>User agents with assistive technology traverse the <a>composed tree</a>, and thus enable full use of WAI-ARIA [[!WAI-ARIA]] semantics in the <a lt="shadow tree">shadow trees</a>.</p>
 
       </section>
 
@@ -1056,7 +1056,7 @@
       <section>
         <h3>Inertness of HTML Elements in a shadow tree</h3>
 
-        <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a title="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a title="shadow tree">shadow trees</a>, with a few exceptions.</p>
+        <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a lt="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a lt="shadow tree">shadow trees</a>, with a few exceptions.</p>
 
         <p class="note">
           According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a <a>shadow tree</a>, instead of a document tree,
@@ -1095,14 +1095,14 @@
             </p>
             <p>
               A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>, if they participate in a <a>shadow tree</a>.
-              This is consistent how the <a>HTML elements</a> would behave in a <a title="interface DocumentFragment">document fragment</a>.
+              This is consistent how the <a>HTML elements</a> would behave in a <a lt="interface DocumentFragment">document fragment</a>.
             </p>
             <p>
               The following HTML elements <strong>must</strong> be classified to this category:
             </p>
             <ul>
-              <li><a title="base element"><code>base</code></a></li>
-              <li><a title="link element"><code>link</code></a></li>
+              <li><a lt="base element"><code>base</code></a></li>
+              <li><a lt="link element"><code>link</code></a></li>
             </ul>
           </li>
           <li>
@@ -1221,12 +1221,12 @@
           <dt>[TreatNullAs=EmptyString] attribute DOMString innerHTML</dt>
           <dd>
             <p>Represents the markup of <a><code>ShadowRoot</code></a>'s contents.</p>
-            <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a>.</p>
+            <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a>context object</a> as <a lt="shadow host"><code>shadow host</code></a>.</p>
             <p>
               On setting, these steps <strong>must</strong> be run:
             </p>
             <ol>
-              <li>Let <var>FRAGMENT</var> be the result of invoking the <a title="parse fragment">fragment parsing algorithm</a> [[!DOM-PARSING]] with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a title="shadow host"><code>shadow host</code></a></li>
+              <li>Let <var>FRAGMENT</var> be the result of invoking the <a lt="parse fragment">fragment parsing algorithm</a> [[!DOM-PARSING]] with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a lt="shadow host"><code>shadow host</code></a></li>
               <li><a>Replace all</a> with <var>FRAGMENT</var> within the <a>shadow root</a>.</li>
             </ol>
           </dd>
@@ -1282,7 +1282,7 @@
 
           <dt>NodeList getDestinationInsertionPoints()</dt>
           <dd>
-            When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="unclosed node" >unclosed</a> <a title="insertion point">insertion points</a> of <a>the context object</a> in the <a>destination insertion points</a> of the <a>context object</a>.
+            When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a lt="unclosed node" >unclosed</a> <a lt="insertion point">insertion points</a> of <a>the context object</a> in the <a>destination insertion points</a> of the <a>context object</a>.
           </dd>
           <dt>readonly attribute ShadowRoot? shadowRoot</dt>
           <dd>
@@ -1315,14 +1315,14 @@
 
         <dl class="idl" title="partial interface Text">
           <dt>NodeList getDestinationInsertionPoints()</dt>
-          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a title="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
+          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a lt="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
         </dl>
       </section>
 
       <section>
         <h3>The <code>content</code> element</h3>
 
-        <p>The <code><dfn title="content element">content</dfn></code> element represents an <a>insertion point</a> in the <a>shadow tree</a>.</p>
+        <p>The <code><dfn lt="content element">content</dfn></code> element represents an <a>insertion point</a> in the <a>shadow tree</a>.</p>
 
         <p>If a <code>content</code> element does not satisfy the condition of an <a>insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a><code>HTMLUnknownElement</code></a>.</p>
 
@@ -1340,8 +1340,8 @@
           <dd><a>Global attributes</a></dd>
           <dd>
             <dl>
-              <dt><code><dfn title="content element select">select</dfn></code>, a <a title="comma separated tokens">set of comma-separated tokens</a></dt>
-              <dd>Represents the <a>matching criteria</a> for <a title="distribution">distributing</a> child <a title="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a>compound selector</a>.</dd>
+              <dt><code><dfn lt="content element select">select</dfn></code>, a <a lt="comma separated tokens">set of comma-separated tokens</a></dt>
+              <dd>Represents the <a>matching criteria</a> for <a lt="distribution">distributing</a> child <a lt="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a>compound selector</a>.</dd>
             </dl>
           </dd>
 
@@ -1349,7 +1349,7 @@
           <dd>
             <dl class="idl" title="interface HTMLContentElement : HTMLElement">
               <dt>attribute DOMString select</dt>
-              <dd><strong>Must</strong> <a>reflect</a> the <a title="content element select">select</a> attribute.</dd>
+              <dd><strong>Must</strong> <a>reflect</a> the <a lt="content element select">select</a> attribute.</dd>
 
               <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
               <dd>
