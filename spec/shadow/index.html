@@ -41,11 +41,14 @@
   </head>
   <body>
     <section id='abstract'>
+      <p class="issue">
+        This spec is being updated for <em>Shadow DOM v1</em>. In the meantime, the spec might be fragile, including a lot of unresolved references and inconsistency.
+        See Issue <a href="https://github.com/w3c/webcomponents/issues/289">#289</a> to track the progress.
+      </p>
       <p>
         This specification describes a method of combining multiple DOM trees into one hierarchy and how these trees interact with each other within a document, thus
         enabling better composition of the DOM.
       </p>
-
     </section>
 
     <section id='sotd'>
@@ -266,26 +269,25 @@
       <h2>Distributions</h2>
 
       <section>
-        <h3>Insertion Points</h3>
+        <h3>Slots</h3>
 
-        <p>An <dfn>insertion point</dfn> is a defined location where <a lt="node">nodes</a> in a different <a>node tree</a> appear instead of the nodes's original position when constructing a <a>composed tree</a>.</p>
+        <p>
+          A <dfn>slot</dfn> is a defined location where nodes in a different <a>node tree</a> appear instead of the nodes's original position when constructing a <a>composed tree</a>.
+        </p>
+
+        <p>A <dfn>distribution</dfn> is the mechanism that determines which <a lt="node">nodes</a> appear at each <a>slot</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
 
         <figure>
           <object data="../../assets/images/distributions.svg" width="663" height="598"></object>
           <figcaption>A distribution</figcaption>
         </figure>
 
-        <p>A <dfn>distribution</dfn> is the mechanism that determines which <a lt="node">nodes</a> appear at each <a>insertion point</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
-      </section>
-
-      <section>
-        <h3>Content Insertion Points</h3>
-
-        <p>A <dfn>content insertion point</dfn> is an <a>insertion point</a> to where the child <a lt="node">nodes</a> of the <a>shadow host</a> are distributed.
-          The <a>content element</a> that satisfies all of the following conditions represents a <a>content insertion point</a>:</p>
+        <p>
+          The <a>slot element</a> that satisfies all of the following conditions represents a <a>slot</a>:
+        </p>
         <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>content element</a> is a <a>shadow root</a></li>
-          <li>There is no other <a>content element</a> in the <a lt="ancestor">ancestors</a> of the <a>content element</a></li>
+          <li>The <a>root</a> <a>node</a> of the <a>slot element</a> is a <a>shadow root</a></li>
+          <li>There is no other <a>slot element</a> in the <a lt="ancestor">ancestors</a> of the <a>slot element</a></li>
         </ul>
       </section>
 
@@ -295,8 +297,8 @@
         <p>Each <a>tree of trees</a> has the <dfn>distribution result</dfn> which describes the result of distributions.
           The <a>distribution result</a> <strong>must</strong> be <a lt="processing equivalence">equivalent</a> of the following:</p>
         <ol>
-          <li>Each <a>insertion point</a> has an ordered list, called <dfn>distributed nodes</dfn>, which consists of <a lt="node">nodes</a> which are distributed into the <a>insertion point</a>.</li>
-          <li>Each <a>node</a> that is not an <a>insertion point</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a lt="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
+          <li>Each <a>slot</a> has an ordered list, called <dfn>distributed nodes</dfn>, which consists of nodes which are distributed into the <a>insertion point</a>.</li>
+          <li>Each <a>node</a> that is not a <a>slpt</a> has an ordered list, called <dfn>destination insertion points</dfn>, which consists of <a lt="insertion point">insertion points</a> to where the <a>node</a> is distributed</li>
         </ol>
 
         <p>An <a>insertion point</a> <var>A</var> is the <dfn>final destination</dfn> of a <a>node</a> <var>B</var> if <var>A</var> is the last item of the <a>destination insertion points</a> of <var>B</var>.</p>
@@ -1350,6 +1352,63 @@
             <dl class="idl" title="interface HTMLContentElement : HTMLElement">
               <dt>attribute DOMString select</dt>
               <dd><strong>Must</strong> <a>reflect</a> the <a lt="content element select">select</a> attribute.</dd>
+
+              <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
+              <dd>
+                When invoked, it <strong>must</strong> return result of running the following steps:
+                <ol>
+                  <li>
+                    If the <a>context object</a> is a <a>content insertion point</a>:
+                    <ol>
+                      <li>
+                        Return a <a>sequence</a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.
+                      </li>
+                    </ol>
+                  </li>
+                  <li>
+                    Otherwise:
+                    <ol>
+                      <li>Return an empty <a>sequence</a>.</li>
+                    </ol>
+                  </li>
+                </ol>
+              </dd>
+            </dl>
+          </dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3>The <code>slot</code> element</h3>
+
+        <p>The <code><dfn lt="slot element">slot</dfn></code> element represents a <a>slot</a> in the <a>shadow tree</a>.</p>
+
+        <p>If a <code>slot</code> element does not satisfy the condition of a <a>slot</a>, it <strong>must</strong> have the same rendering behavior as the <a><code>HTMLUnknownElement</code></a>.</p>
+
+        <dl>
+          <dt>Context</dt>
+          <dd>Where <a>flow content</a> is expected.</dd>
+
+          <dt>Content model</dt>
+          <dd><a>Transparent</a></dd>
+
+          <dt>Children</dt>
+          <dd>Anything as fallback content</dd>
+
+          <dt>Content attributes</dt>
+          <dd><a>Global attributes</a></dd>
+          <dd>
+            <dl>
+              <dt><code><dfn lt="slot name">name</dfn></code>, the name of the slot</dt>
+              <dd>Represents the <a>slot name</a>.</dd>
+            </dl>
+          </dd>
+
+          <dt>DOM Interface</dt>
+          <dd>
+            <dl class="idl" title="interface HTMLSlotElement : HTMLElement">
+              <dt>attribute DOMString name</dt>
+              <dd><strong>Must</strong> <a>reflect</a> the <a lt="slot name">name</a> attribute.</dd>
 
               <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
               <dd>
