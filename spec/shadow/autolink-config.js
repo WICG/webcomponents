@@ -129,7 +129,6 @@ var autolinkConfig = {
 
     'http://www.w3.org/TR/CSS21/': {
         'CSS rules': 'syndata.html#rule-sets',
-        'inheritance': 'cascade.html#inheritance',
         'box': 'box.html',
         'formating structure': 'intro.html#formatting-structure',
         'text-decoration': 'text.html#lining-striking-props'
@@ -169,9 +168,7 @@ var autolinkConfig = {
 
     'https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html': {
         'selection': '#concept-selection',
-        'window.getSelection()': '#dom-window-getselection',
-        'padding edge': '#padding-edge',
-        'viewport': '#viewport'
+        'window.getSelection()': '#dom-window-getselection'
     },
 
     'http://domparsing.spec.whatwg.org/': {
