@@ -467,7 +467,7 @@
     <section>
       <h2>Composition</h2>
 
-      <p>The <dfn>composed tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child <a lt="node">nodes</a> of a <a>node</a> in the <a>composed tree</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
+      <p>The <dfn>composed tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child nodes of a node in the <a>composed tree</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
       <div class="algorithm">
         <dl>
@@ -479,30 +479,39 @@
 
         <ol>
           <li>Let <var>CHILDREN</var> be an empty ordered list of nodes</li>
-          <li>If <var>NODE</var> is a <a>shadow host</a>:
+          <li>
+            If <var>NODE</var> is a <a>shadow host</a>:
             <ol>
-              <li>Let <var>CHILD-POOL</var> be the children of the <a>shadow root</a> which <var>NODE</var> <a>hosts</a>.</li>
-            </ol></li>
-          <li>Otherwise:
+              <li>Let <var>CHILD-POOL</var> be the child nodes of the <a>shadow root</a> which <var>NODE</var> <a>hosts</a></li>
+            </ol>
+          </li>
+          <li>
+            Otherwise:
             <ol>
-              <li>Let <var>CHILD-POOL</var> be the child <a lt="node">nodes</a> of NODE</li>
-            </ol></li>
-          <li>For each <a>node</a>, <var>CHILD</var>, in <var>CHILD-POOL</var>:
+              <li>Let <var>CHILD-POOL</var> be the child nodes of <var>NODE</var></li>
+            </ol>
+          </li>
+          <li>
+            For each <a>node</a>, <var>CHILD</var>, in <var>CHILD-POOL</var>:
             <ol>
-              <li>If <var>CHILD</var> is an <a>insertion point</a>:
+              <li>
+                If <var>CHILD</var> is a <a>slot</a>:
                 <ol>
-                  <li>For each <a>node</a>, <var>DISTRIBUTED-NODE</var>, in the <a>distributed nodes</a> of the <a>insertion point</a> <var>CHILD</var>:
+                  <li>If <var>CHILD</var> is not assigned to any <a>slot</a>:
                     <ol>
-                      <li>If <var>CHILD</var> is the <a>final destination</a> of <var>DISTRIBUTED-NODE</var>, add <var>DISTRIBUTED-NODE</var> to <var>CHILDREN</var></li>
-                    </ol></li>
-                </ol></li>
+                      <li>Append all nodes of the <a>distributed nodes</a> of <var>CHILD</var> to <var>CHILDREN</var></li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
               <li>Otherwise:
                 <ol>
-                  <li>Add <var>CHILD</var> to <var>CHILDREN</var></li>
-                </ol></li>
-            </ol></li>
+                  <li>Append <var>CHILD</var> to <var>CHILDREN</var></li>
+                </ol>
+              </li>
+            </ol>
+          </li>
         </ol>
-
       </div>
 
       <p>For a given <a>tree of trees</a> <var>TREE-OF-TREES</var>, the <a>composed tree</a> constructed from <var>TREE-OF-TREES</var> <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to the following tree:</p>
