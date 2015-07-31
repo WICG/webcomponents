@@ -440,6 +440,40 @@
 
         <p>If any condition which affects the <a>distribution result</a> changes, the <a>distribution result</a> <strong>must</strong> be updated before any use of the <a>distribution result</a>.</p>
 
+        <p>
+          The <dfn>get distributed nodes algorithm</dfn> <strong>must</strong> be used to determine the <a>distributed nodes</a> for a <a>slot</a> and <strong>must</strong> be <a lt="processing equivalence">equivalent</a> to processing the following steps:
+        </p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>SLOT</var>, a <a>slot</a></dd>
+            <dt>Output</dt>
+            <dd><var>DISTRIBUTED-NODES</var>, an ordered list of distributed nodes.</dd>
+          </dl>
+
+          <ol>
+            <li>
+              For each node <var>NODE</var> that is assigned to <var>SLOT</var>:
+              <ol>
+                <li>
+                  If NODE is a <a>slot</a>:
+                  <ol>
+                    <li>Let <var>SUB-LIST</var> be the result of (recursively) running the <a>get distributed nodes algorithm</a> with <var>NODE</var> as input</li>
+                    <li>Append all nodes in <var>SUB-LIST</var> to <var>DISTRIBUTED-NODES</var></li>
+                  </ol>
+                </li>
+                <li>
+                  Otherwise:
+                  <ol>
+                    <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
       </section>
 
       <section>
