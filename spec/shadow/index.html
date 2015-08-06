@@ -496,18 +496,17 @@
               <ol>
                 <li>Append <var>CURRENT</var> to <var>PATH</var></li>
                 <li>
-                  If the <a>destination insertion points</a> of <var>CURRENT</var> is not empty:
-                  <ol>
-                    <li>Append each <a>insertion point</a> in the <a>destination insertion points</a> of <var>CURRENT</var>, from the first, inclusive, to the last, exclusive, to <var>PATH</var></li>
-                    <li>Let <var>CURRENT</var> be the <a>final destination</a> of <var>CURRENT</var></li>
-                  </ol>
-                </li>
-                <li>
-                  Otherwise if all of the following conditions are satisfied, stop this algorithm:
+                  If all of the following conditions are satisfied, stop this algorithm:
                   <ol>
                     <li><var>CURRENT</var> is a shadow root</li>
                     <li><var>CURRENT</var> is the <a>root</a> node of <var>NODE</var></li>
                     <li><var>EVENT</var>'s <a>scoped flag</a> is set</li>
+                  </ol>
+                </li>
+                <li>
+                  If <var>CURRENT</var> is assigned to a <a>slot</a> <var>SLOT</var>:
+                  <ol>
+                    <li>Let <var>CURRENT</var> be <var>SLOT</var></li>
                   </ol>
                 </li>
                 <li>
