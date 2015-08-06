@@ -1193,7 +1193,7 @@
         <h3>Extensions to <code>Element</code> Interface</h3>
 
         <dl class="idl" title="partial interface Element">
-          <dt>ShadowRoot createShadowRoot(ShadowRootInit shadowRootInitDict)</dt>
+          <dt>ShadowRoot attachShadow(ShadowRootInit shadowRootInitDict)</dt>
           <dd>
             When invoked, these steps <strong>must</strong> be run:
             <ol>
@@ -1511,7 +1511,7 @@ function createStyle()
 
 function makeShadowTree(storyList)
 {
-    var root = storyList.createShadowRoot({mode: 'open'});
+    var root = storyList.attachShadow({mode: 'open'});
     root.appendChild(createStyle());
     root.appendChild(createStoryGroup('breaking', '.breaking'));
     root.appendChild(createStoryGroup('other', ''));
@@ -1541,7 +1541,7 @@ function createElectionStyle()
 
 function makeElectionShadowTree(storyList)
 {
-    var root = storyList.createShadowRoot({mode: 'open'});
+    var root = storyList.attachShadow({mode: 'open'});
     // Add and style election story box.
     root.appendChild(createElectionStyle());
     root.appendChild(createStoryGroup('election', '.election'));
