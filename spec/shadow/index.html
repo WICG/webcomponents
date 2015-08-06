@@ -1224,10 +1224,17 @@
             </ol>
           </dd>
 
-          <dt>NodeList getDestinationInsertionPoints()</dt>
+          <dt>readonly attribute Element? assignedSlot</dt>
           <dd>
-            When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a lt="unclosed node" >unclosed</a> <a lt="insertion point">insertion points</a> of <a>the context object</a> in the <a>destination insertion points</a> of the <a>context object</a>.
+            <p>
+              Represents the <a>assigned slot</a> of the <a>context object</a>.
+            </p>
+            <p>
+              On getting, the attribute <strong>must</strong> return the <a>assigned slot</a> of the <a>context object</a> if there is and it participates in an <a>open</a> shadow tree.
+              Otherwise <strong>must</strong> return <code>null</code>.
+            </p>
           </dd>
+
           <dt>readonly attribute ShadowRoot? shadowRoot</dt>
           <dd>
             <p>Represents the <a>shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
@@ -1258,8 +1265,16 @@
         <h3>Extensions to <code>Text</code> Interface</h3>
 
         <dl class="idl" title="partial interface Text">
-          <dt>NodeList getDestinationInsertionPoints()</dt>
-          <dd>When invoked, the method <strong>must</strong> return a <a>static</a> <a><code>NodeList</code></a> consisting of <a lt="insertion point">insertion points</a> in the <a>destination insertion points</a> of the <a>context object</a>, excluding an <a>insertion point</a> which participates in a <a>closed</a> shadow tree.</dd>
+          <dt>readonly attribute Element? assignedSlot</dt>
+          <dd>
+            <p>
+              Represents the <a>assigned slot</a> of the <a>context object</a>.
+            </p>
+            <p>
+              On getting, the attribute <strong>must</strong> return the <a>assigned slot</a> of the <a>context object</a> if there is and it participates in an <a>open</a> shadow tree.
+              Otherwise <strong>must</strong> return <code>null</code>.
+            </p>
+          </dd>
         </dl>
       </section>
 
