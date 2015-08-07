@@ -319,24 +319,17 @@
               If the parent node of <var>NODE</var> is a <a>shadow host</a>:
               <ol>
                 <li>Let <var>TREE</var> be the <a>shadow tree</a> that the parent node of <var>NODE</var> <a>hosts</a></li>
-                <li>Let <var>NAME</var> be the value of the <a>slot attribute</a> of <var>NODE</var></li>
+                <li>Let <var>NAME</var> be the value of the <a href="#widl-Element-slot">slot attribute</a> of <var>NODE</var></li>
                 <li>
                   If <var>NAME</var> is missing:
                   <ol>
-                    <li>
-                      Let <var>SLOT</var> be the <a>default slot</a> for <var>TREE</var>.
-                      If there is no default slot for <var>TREE</var>, let <var>SLOT</var> be null.
-                    </li>
+                    <li>Let <var>SLOT</var> be a <a>default slot</a> for <var>TREE</var> if it exits, Otherwise, null</li>
                   </ol>
                 </li>
                 <li>
                   Otherwise:
                   <ol>
-                    <li>
-                      Let <var>SLOT</var> be a slot that participates in <var>TREE</var> and it's <a>slot name</a> is <var>NAME</var>.
-                      If there is no such slot, let <var>SLOT</var> be null.
-                      If there are more than one such slots, let <var>SLOT</var> be the most <a>preceding</a> one in <var>TREE</var>.
-                    </li>
+                    <li>Let <var>SLOT</var> be the most <a>preceding</a> <a>slot</a> in <var>TREE</var> whose <a>slot name</a> is <var>NAME</var> if it exists. Otherwise null.
                   </ol>
                 </li>
               </ol>
@@ -359,24 +352,30 @@
             <dt>Input</dt>
             <dd><var>SLOT</var>, a <a>slot</a></dd>
             <dt>Output</dt>
-            <dd><var>DISTRIBUTED-NODES</var>, an ordered list of distributed nodes.</dd>
+            <dd><var>DISTRIBUTED-NODES</var>, an ordered list of nodes.</dd>
           </dl>
 
           <ol>
+            <li>Let <var>HOST</var> be a <a>shadow host</a> which <a>hosts</a> a <a>shadow tree</a> that <var>SLOT</var> participates in</li>
             <li>
-              For each node <var>NODE</var> that is assigned to <var>SLOT</var>, in order from the most <a>preceding</a> one to the most <a>following</a> one:
+              For each child node <var>NODE</var> of <var>HOST</var>:
               <ol>
                 <li>
-                  If <var>NODE</var> is a <a>slot</a>:
+                  If <var>NODE</var> is assinged to <a>SLOT</a>:
                   <ol>
-                    <li>Let <var>SUB-LIST</var> be the result of (recursively) running the <a>get distributed nodes algorithm</a> with <var>NODE</var> as input</li>
-                    <li>Append all nodes in <var>SUB-LIST</var> to <var>DISTRIBUTED-NODES</var></li>
-                  </ol>
-                </li>
-                <li>
-                  Otherwise:
-                  <ol>
-                    <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
+                    <li>
+                      If <var>NODE</var> is a <a>slot</a>:
+                      <ol>
+                        <li>Let <var>SUB-LIST</var> be the result of (recursively) running the <a>get distributed nodes algorithm</a> with <var>NODE</var> as input</li>
+                        <li>Append all nodes in <var>SUB-LIST</var> to <var>DISTRIBUTED-NODES</var></li>
+                      </ol>
+                    </li>
+                    <li>
+                      Otherwise:
+                      <ol>
+                        <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
+                      </ol>
+                    </li>
                   </ol>
                 </li>
               </ol>
