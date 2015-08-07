@@ -1286,63 +1286,6 @@
       </section>
 
       <section>
-        <h3>The <code>content</code> element</h3>
-
-        <p>The <code><dfn lt="content element">content</dfn></code> element represents an <a>insertion point</a> in the <a>shadow tree</a>.</p>
-
-        <p>If a <code>content</code> element does not satisfy the condition of an <a>insertion point</a>, it <strong>must</strong> have the same rendering behavior as the <a><code>HTMLUnknownElement</code></a>.</p>
-
-        <dl>
-          <dt>Context</dt>
-          <dd>Where <a>flow content</a> is expected.</dd>
-
-          <dt>Content model</dt>
-          <dd><a>Transparent</a></dd>
-
-          <dt>Children</dt>
-          <dd>Anything as fallback content</dd>
-
-          <dt>Content attributes</dt>
-          <dd><a>Global attributes</a></dd>
-          <dd>
-            <dl>
-              <dt><code><dfn lt="content element select">select</dfn></code>, a <a lt="comma separated tokens">set of comma-separated tokens</a></dt>
-              <dd>Represents the <a>matching criteria</a> for <a lt="distribution">distributing</a> child <a lt="node">nodes</a> of the <a>shadow host</a>. Each token <strong>must</strong> be a <a>compound selector</a>.</dd>
-            </dl>
-          </dd>
-
-          <dt>DOM Interface</dt>
-          <dd>
-            <dl class="idl" title="interface HTMLContentElement : HTMLElement">
-              <dt>attribute DOMString select</dt>
-              <dd><strong>Must</strong> <a>reflect</a> the <a lt="content element select">select</a> attribute.</dd>
-
-              <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
-              <dd>
-                When invoked, it <strong>must</strong> return result of running the following steps:
-                <ol>
-                  <li>
-                    If the <a>context object</a> is a <a>content insertion point</a>:
-                    <ol>
-                      <li>
-                        Return a <a>sequence</a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.
-                      </li>
-                    </ol>
-                  </li>
-                  <li>
-                    Otherwise:
-                    <ol>
-                      <li>Return an empty <a>sequence</a>.</li>
-                    </ol>
-                  </li>
-                </ol>
-              </dd>
-            </dl>
-          </dd>
-        </dl>
-      </section>
-
-      <section>
         <h3>The <code>slot</code> element</h3>
 
         <p>The <code><dfn lt="slot element">slot</dfn></code> element represents a <a>slot</a> in the <a>shadow tree</a>.</p>
