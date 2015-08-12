@@ -547,7 +547,7 @@
             <code>E</code>, <code>J</code>, <code>N</code>, <code>Q</code> and <code>S</code> are <a lt="shadow root">shadow roots</a>.
           </li>
           <li>
-            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a lt="content insertion point">content insertion points</a>.
+            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a lt="slot">slots</a>.
           </li>
         </ul>
 
@@ -577,19 +577,15 @@
         </ul>
 
         <p>
-          Let's assume that the <a>distribution result</a> of this <a>tree of trees</a> is:
+          Let's assume that the result of slotting are:
         </p>
 
         <ul>
-          <li>
-            The <a>destination insertion points</a> of <code>C</code> are <code>[I, M]</code> (<code>C</code> is re-distributed)
-          </li>
-          <li>
-            The <a>destination insertion points</a> of <code>L</code> are <code>[P, R]</code> (<code>L</code> is re-distributed)
-          </li>
-          <li>
-            The <a>destination insertion points</a> of <code>G</code> are <code>[U]</code>
-          </li>
+          <li><code>C</code> is assigned to the slot <code>I</code></li>
+          <li><code>I</code> is assigned to the slot <code>M</code></li>
+          <li><code>L</code> is assigned to the slot <code>P</code></li>
+          <li><code>P</code> is assigned to the slot <code>R</code></li>
+          <li><code>G</code> is assigned to the slot <code>U</code></li>
         </ul>
 
         <p>
@@ -635,7 +631,7 @@
         </p>
 
         <p>
-          It is also worth pointing out that if we exclude all <a lt="insertion point">insertion points</a> and <a lt="shadow root">shadow roots</a> from an event path,
+          It is also worth pointing out that if we exclude all <a lt="slot">slots</a> and <a lt="shadow root">shadow roots</a> from an event path,
           the result would be equivalent to the inclusive ancestors of the node on which the event is dispatched, in the composed tree.
         </p>
 
@@ -643,7 +639,7 @@
           <object data="../../assets/images/event-path-and-composed-tree.svg" width="217" height="1600"></object>
           <figcaption>
             The relationship between an event path and the <a>composed tree</a>. The event path used in the example is shown in the left-hand side and the <a>composed tree</a> is shown in the right-hand side.
-            If we exclude all <a lt="insertion point">insertion points</a> and <a lt="shadow root">shadow roots</a> from the event path,
+            If we exclude all <a lt="slot">slots</a> and <a lt="shadow root">shadow roots</a> from the event path,
             the result would be equivalent to the inclusive ancestors of the node, <code>D</code>, in the <a>composed tree</a>.
           </figcaption>
         </figure>
