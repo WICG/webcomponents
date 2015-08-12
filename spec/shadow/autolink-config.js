@@ -130,7 +130,7 @@ var autolinkConfig = {
     'http://www.w3.org/TR/CSS21/': {
         'CSS rules': 'syndata.html#rule-sets',
         'box': 'box.html',
-        'formating structure': 'intro.html#formatting-structure',
+        'formatting structure': 'intro.html#formatting-structure',
         'text-decoration': 'text.html#lining-striking-props'
     },
 
