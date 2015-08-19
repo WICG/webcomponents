@@ -455,6 +455,65 @@
         <h3>Composition Example</h3>
       </section>
 
+        <p>
+          Suppose we have the following tree of trees:
+        </p>
+
+        <figure>
+          <object data="../../assets/images/composition-tree-of-trees.svg" width="301" height="1074"></object>
+          <figcaption>An example tree of trees. There are 3 node trees in the tree of trees. Tree boundaries are omitted.</figcaption>
+        </figure>
+
+        <ul>
+          <li>
+            <code>A</code> is a <a>document</a>.
+          </li>
+          <li>
+            <code>J</code> and <code>R</code> are <a lt="shadow root">shadow roots</a>.
+          </li>
+          <li>
+            <code>L</code>, <code>M</code>, <code>O</code> and <code>T</code> are <a lt="slot">slots</a>.
+          </li>
+        </ul>
+
+        <p>
+          This <a>tree of trees</a> has the following 3 <a lt="node tree">node trees</a>, 1 <a>document tree</a> and 2 <a lt="shadow tree">shadow trees</a>:
+        </p>
+
+        <ul>
+          <li>
+            The <var>document tree 1</var>. Node A, B, C, D, E, F, G, H and I participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 2</var> hosted by <code>C</code>. Node J, K, L, M, N, O, P and Q participate in that.
+          </li>
+          <li>
+            The <var>shadow tree 3</var> hosted by <code>N</code>. Node R, S and T participate in that.
+          </li>
+        </ul>
+
+        <p>
+          Let's assume that the result of slotting are:
+        </p>
+
+        <ul>
+          <li><code>D</code> is assigned to the slot <code>L</code></li>
+          <li><code>F</code> is assigned to the slot <code>L</code></li> (Note that more than one nodes can be assigned to the same slot)
+          <li><code>H</code> is assigned to the slot <code>O</code></li>
+          <li><code>O</code> is assigned to the slot <code>T</code></li> (Note that <code>O</code> is a slot. A slot can be assigned to an other slot)
+          <li><code>P</code> is assigned to the slot <code>T</code></li>
+        </ul>
+
+        <p>
+          To roughly speaking, to construct the composed tree, we can traverse a node tree as usual DFS order, however, it we encounter a shadow host,
+          we skip the child nodes of the shadow host. Instead, we visit the child nodes of the shadow root which is hosted by the shadow host.
+          If we encounter a slot, we visit the distributed nodes of it.
+
+          For example, let's construct the document composed tree for the example tree of trees.
+          We start the document, A. Then vist B and C in tree order. C is a shadow host. So insteaad of visiting the child nodes of C, we continue to visit the child nodes of the shaow root, J
+        </p>
+      </section>
+
     </section>
 
     <section>
