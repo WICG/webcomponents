@@ -672,69 +672,25 @@
         <h3>Event Paths Example</h3>
 
         <p>
-          Suppose we have the following tree of trees:
+          Let's re-use the same tree of trees used in the composition example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
+        </p>
+        <p>
+          <code>[I, H, O, T, S, R, N, J, C, A]</code>  (<a>Window</a> is omitted)
+        </p>
+
+        <p>
+          It's worth pointing out that if we exclude all nodes which don't participate in the composed tree from the event path,
+          the result would be equivalent to the inclusive ancestors of the node <code>I</code> in the composed tree.
         </p>
 
         <figure>
-          <object data="../../assets/images/event-path-tree-of-trees.svg" width="301" height="1074"></object>
-          <figcaption>An example tree of trees. Nodes which are not involved in the example event path, which is explained later, are omitted.</figcaption>
+          <object data="../../assets/images/event-path-composed-tree.svg" width="580" height="560"></object>
+          <figcaption>
+            The relationship between the <a>composed tree</a> and an event path.
+            If we exclude O, T, R and J, that don't participate in the composed tree, from the event path,
+            the result would be equivalent to the inclusive ancestors of the node, <code>I</code>, in the <a>composed tree</a>.
+          </figcaption>
         </figure>
-
-        <ul>
-          <li>
-            <code>A</code> is a <a>document</a>.
-          </li>
-          <li>
-            <code>E</code>, <code>J</code>, <code>N</code>, <code>Q</code> and <code>S</code> are <a lt="shadow root">shadow roots</a>.
-          </li>
-          <li>
-            <code>I</code>, <code>M</code>, <code>P</code>, <code>R</code> and <code>U</code> are <a lt="slot">slots</a>.
-          </li>
-        </ul>
-
-        <p>
-          This <a>tree of trees</a> has the following 6 <a lt="node tree">node trees</a>, 1 <a>document tree</a> and 5 <a lt="shadow tree">shadow trees</a>:
-        </p>
-
-        <ul>
-          <li>
-            The <var>document tree 1</var>. Node <code>A</code>, <code>B</code>, <code>C</code> and <code>D</code> participate in that.
-          </li>
-          <li>
-            The <var>shadow tree 2</var> hosted by <code>B</code>. Node <code>E</code>, <code>F</code>, <code>G</code>, <code>H</code> and <code>I</code> participate in that.
-          </li>
-          <li>
-            The <var>shadow tree 3</var> hosted by <code>H</code>. Node <code>J</code>, <code>K</code>, <code>L</code> and <code>M</code> participate in that.
-          </li>
-          <li>
-            The <var>shadow tree 4</var> hosted by <code>K</code>. Node <code>N</code>, <code>O</code> and <code>P</code> participate in that.
-          </li>
-          <li>
-            The <var>shadow tree 5</var> hosted by <code>O</code>. Node <code>Q</code> and <code>R</code> participate in that.
-          </li>
-          <li>
-            The <var>shadow tree 6</var> hosted by <code>F</code>. Node <code>S</code>, <code>T</code> and <code>U</code> participate in that.
-          </li>
-        </ul>
-
-        <p>
-          Let's assume that the result of slotting are:
-        </p>
-
-        <ul>
-          <li><code>C</code> is assigned to the slot <code>I</code></li>
-          <li><code>I</code> is assigned to the slot <code>M</code></li>
-          <li><code>L</code> is assigned to the slot <code>P</code></li>
-          <li><code>P</code> is assigned to the slot <code>R</code></li>
-          <li><code>G</code> is assigned to the slot <code>U</code></li>
-        </ul>
-
-        <p>
-          In this case, if an event is dispatched on node <code>D</code>, the event path will be:
-        </p>
-        <p>
-          <code>[D, C, I, M, L, P, R, Q, O, N, K, J, H, G, U, T, S, F, E, B, A]</code>  (<a>Window</a> is omitted)
-        </p>
 
         <p>
           Note that the <a>event path calculation algorithm</a> is designed to achieve the following goals:
@@ -742,7 +698,7 @@
 
         <ol>
           <li>
-            If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the node tree, the event path also includes <var>PARENT</var>.
+            If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the node tree, the event path always includes <var>PARENT</var>.
             <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
           </li>
           <li>
@@ -751,39 +707,50 @@
         </ol>
 
         <figure>
-          <object data="../../assets/images/event-path-node-trees.svg" width="884" height="473">></object>
+          <object data="../../assets/images/event-path-trees.svg" width="766" height="386">></object>
           <figcaption>
-            The relationship between an event path and node trees. In the figure, a number shown in a left-side of each node represents a zero-based position of each node in the event path.
+            The relationship between an event path and node trees. In the figure, a number shown in a right-side of each node represents a zero-based position of each node in the event path.
             A parent node always has a larger number than that of its child node in each node tree.
           </figcaption>
         </figure>
 
+        <p>A <em>local</em> event path for each node tree would be seen as:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Node tree</th>
+              <th><em>Local</em> Event Path</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>document tree 1</td>
+              <td>[I, H, C, A]</td>
+            </tr>
+            <tr>
+              <td>shadow tree 1</td>
+              <td>[O, N, J]</td>
+            </tr>
+            <tr>
+              <td>shadow tree 2</td>
+              <td>[T, S, R]</td>
+            </tr>
+          </tbody>
+        </table>
+
         <p>
-          That means if we focus on one <a>node tree</a> and forget all other <a lt="node tree">node trees</a>,
-          the event path would be seen as if the event happened only on the <a>node tree</a> which we are focused on.
-          This is an important aspect in a sense that hosting shadow trees doesn't have any effect to the event path <em>within</em> the <a>node tree</a> the <a>shadow host</a> participate in
+          That means, if your concern is only one <a>node tree</a>, you can forget all other node trees.
+          The event path would be seen as if the event happened only on the node tree you are focusing on.
+          This is an important aspect in a sense that hosting a shadow tree doesn't have any effect to the <em>local</em> event path
           as long as the event is not stopped somewhere in the <a lt="descendant tree">descendant trees</a>.
         </p>
-
         <p>
-          For example, from the view of the <var>document tree 1</var>, the event path would be seen as <code>[D, C, B, A]</code>.
-          From the view of the <var>shadow tree 2</var>, the event path would be seen as <code>[I, H, G, F, E]</code>.
-          The similar things also apply to other <a lt="node tree">node trees</a>.
+          If you are a web author and your concern is only a document tree, this might be a good news because an event listener that is registered somewhere on the document tree
+          would <em>continue to work</em> even when you attach a shadow root to an element in the document tree to <em>enhance</em> the element.
+          At the same time, an author of a shadow tree also can receive an event which will happen on a node in the document tree, if the node, or its ancestor, is assigned to a slot in the shadow tree.
         </p>
-
-        <p>
-          It is also worth pointing out that if we exclude all <a lt="slot">slots</a> and <a lt="shadow root">shadow roots</a> from an event path,
-          the result would be equivalent to the inclusive ancestors of the node on which the event is dispatched, in the composed tree.
-        </p>
-
-        <figure>
-          <object data="../../assets/images/event-path-and-composed-tree.svg" width="217" height="1600"></object>
-          <figcaption>
-            The relationship between an event path and the <a>composed tree</a>. The event path used in the example is shown in the left-hand side and the <a>composed tree</a> is shown in the right-hand side.
-            If we exclude all <a lt="slot">slots</a> and <a lt="shadow root">shadow roots</a> from the event path,
-            the result would be equivalent to the inclusive ancestors of the node, <code>D</code>, in the <a>composed tree</a>.
-          </figcaption>
-        </figure>
 
       </section>
 
