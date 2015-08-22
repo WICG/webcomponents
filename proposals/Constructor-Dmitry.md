@@ -54,9 +54,9 @@ If you'd like to register it, you can (although you might hold off on this to al
 document.registerElement("minimal-x-gif", MinimalXGif);
 ```
 
-Note how unlike the current proposal, we do not care about the return value. This is because unlike the current proposal, the second argument is not treated as a dumb `{ prototype }` property back, but instead as a full-fledged class. (This is the essential victory of the original Dmitry proposal.)
+Note how unlike the current proposal, we do not care about the return value. This is because unlike the current proposal, the second argument is not treated as a dumb `{ prototype }` property bag, but instead as a full-fledged class. (This is the essential victory of the original Dmitry proposal.)
 
-### Use after registration
+### Use after registration: from script
 
 Let's say we are content to use our element only after it loads. So we end up with something like
 
@@ -76,6 +76,35 @@ document.querySelector("#placeholder > p").replaceWith(new MinimalXGif("foo.gif"
 ```
 
 Here we see: `new MinimalXGif(...)` runs the constructor, which calls `super()` to initialize the underlying HTML element stuff, then sets the `this.src` to `"foo.gif"`, which in turn sets the `src` attribute. In reaction, the UA enqueues a nanotask (see below) to call the element's `[Element.attributeChanged]` callback, with appropriate parameters. The next transition back from UA code to author code happens precisely as `setAttribute` finishes, so the action is immediate. The shadow DOM thus gets updated even before the element is inserted into the DOM. Once it _is_ inserted, we enqueue the element's `[Element.attached]` callback, which executes right before the `replaceWith` call returns.
+
+### Use after registration: parsing
+
+A different version of the above might create new `<minimal-x-gif>` elements via parsing after loading. This illustrates an important part of the semantics in terms of callback timing:
+
+```html
+<!DOCTYPE html>
+<script src="./minimal-x-gif.js"></script> <!-- blocking download -->
+<script>
+"use strict";
+document.registerElement("minimal-x-gif", MinimalXGif);
+</script>
+<p>Stuff</p>
+<minimal-x-gif src="foo.gif">
+  Fallback content does not display in this example, but
+  it's <strong>important</strong> to illustrate the processing model
+</minimal-x-gif>
+```
+
+In this example, during the parsing of the HTML, immediately upon encountering the opening tag for `minimal-x-gif`, the parser suspends (similar to how it already suspends for `<script>`) and runs the following sequence of steps:
+
+- Create the element using the constructor, `new MinimalXGif()`. Inside the constructor, the element has no attributes or children, and is not in the document. The constructor will call `insertStylesIntoShadowDOMToHideChildren`, which ensures that when it _does_ get children, they are hidden.
+- Call the element's `[Element.attributeChanged]` with appropriate parameters. The URL will be resolved, and the shadow DOM updated.
+- Insert the element into the tree being built.
+- Since the tree is in-document, call the element's `[Element.attached]` callback. (If the tree had not been in-document, as e.g. would have happened with an `innerHTML` setter, this step would be omitted.)
+
+Note that none of these steps happen as enqueued nanotasks; they are done synchronously while the parser suspends.
+
+Parsing then continues, adding children (a text node, a `<strong>`, and another text node) to the `<minimal-x-gif>`. (But these will be hidden, because of how the constructor has set things up.)
 
 ### Use before registration (upgrading)
 
@@ -149,10 +178,6 @@ This example is similar to the previous one, with the exception of the attached 
 
 ## Semi-detailed semantics
 
-### Parsing changes
-
-As in the current proposal, the parser is changed so that [elements named in a way so that they could be custom elements](https://w3c.github.io/webcomponents/spec/custom/#dfn-unresolved-element) are created as `HTMLElement` instead of `HTMLUnknownElement`. This prevents lateral transitions (from `HTMLUnknownElement` to `XCustomElement`) during upgrades, since those would be weird; instead we have a simple upgrade transition from `HTMLElement` to `XCustomElement`.
-
 ### Nanotasks
 
 We should formalize the concept of "nanotasks" and the "nanotask queue" that are currently embodied by the custom element callback queue. See https://www.w3.org/Bugs/Public/show_bug.cgi?id=24579. In the meantime, we use "nanotask" in this document to mean the same.
@@ -182,14 +207,30 @@ Each document has a **custom element registry**, which is a map of names (follow
 
 Unlike the current proposal, no new classes are minted. Somewhat similar to the current proposal, we copy over various things from the constructor and prototype into the definition. This is done so that custom elements have the same "non-disturbable" property that normal elements have. That is, if you do `HTMLParagraphElement.prototype = randomStuff`, that doesn't actually impact the UA's creation of paragraph elements; similar invariants should hold for custom elements.
 
+### Parsing Changes
+
+Similar to in the current proposal, the parser is changed so that [elements named in a way so that they could be custom elements](https://w3c.github.io/webcomponents/spec/custom/#dfn-unresolved-element) are created as `HTMLElement` instead of `HTMLUnknownElement`, _if they are not in the custom element registry_. This prevents lateral transitions (from `HTMLUnknownElement` to `XCustomElement`) during upgrades, since those would be weird; instead we have a simple upgrade transition from `HTMLElement` to `XCustomElement`.
+
+One important change from the current proposal is that elements are not added to the upgrade candidates map until their _closing_ tag is found. This prevents upgrades of elements that have not been fully parsed, e.g. because the parser is stalled on a network boundary.
+
+A new complexity is introduced, which is that upon encountering such an element, _if it is in the custom element registry_, then the parser must suspend and begin running author code. In particular, it must perform the following steps, let's call them the parser-created element creation steps:
+
+1. Let _C_, _attributeChanged_, and _attached_ be the constructor, attributeChanged, and attached entries in the custom elements registry for the name encountered.
+2. Let _el_ be Construct(_C_).
+3. As each attribute is parsed, call _attributeChanged_ appropriately, with its `this` set to _el_ and its arguments derived from the attribute.
+4. Insert _el_.
+5. If _el_ is in-document, call _attached_ with its `this` set to _el_.
+
+These steps are not properly formalized; in reality, the suspension and script execution would look something vaguely like [the steps for parsing `<script>`](https://html.spec.whatwg.org/multipage/syntax.html#scriptTag) (see especially the [end tag section](https://html.spec.whatwg.org/multipage/syntax.html#scriptEndTag), where script is actually executed), although a lot less complex since we don't have to worry about `</script>`, and we could prohibit `document.write` during this time.
+
 ### Creating Already-Registered Elements
 
-To create a custom element, e.g. when parsing an element whose definition has already been registered, you first create a normal `HTMLElement` _el_, then you upgrade _el_.
+To create a custom element in any non-parser context, e.g. when using `document.createElement` or `cloneNode`, you first create a normal `HTMLElement` _el_, then you upgrade _el_.
 
 The consequences of this are that:
 
-- Both parser-created custom elements and upgraded custom elements will have their constructor and attributeChange callbacks called at a time when all their children and attributes are already present.
-- Elements created via `new XCustomElement()` or `document.createElement("x-custom-element")` will have their constructor run at a time when no children or attributes are present.
+- Upgraded custom elements, or elements created via other algorithms that are constructing a larger tree (such as `cloneNode`), will have their constructor and attributeChange callbacks called at a time when all their children and attributes are already present.
+- Elements created via `new XCustomElement()` or `document.createElement("x-custom-element")` or via the parser will have their constructor run at a time when no children or attributes are present.
 
 The mismatch between these two scenarios is known as the "consistent world view" issue, and attempts to solve it are essentially about finding ways to ensure that the world view in the former case looks more like that in the latter.
 
