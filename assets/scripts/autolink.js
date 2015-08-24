@@ -16,7 +16,7 @@ function resolveAutolink() {
     Array.prototype.slice.call(document.querySelectorAll("a:not([href])")).forEach(function (e) {
         if (e.classList.contains("internalDFN"))
             return;
-        var linkText = e.getAttribute("lt") || e.textContent;
+        var linkText = e.getAttribute("data-lt") || e.textContent;
         if (!linkText) return;
         linkText = linkText.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "").split(/\s+/).join(" ");
         if (definitionMap[linkText]) {
