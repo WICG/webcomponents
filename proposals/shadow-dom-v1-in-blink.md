@@ -45,12 +45,12 @@ As of now, I think the followings are relatively big changes:
 
 Checked check box means "Done".
 
-- [ ] Closed Shadow Trees
+- [X] Closed Shadow Trees
 
       - [x] [Spec Issue #85](https://github.com/w3c/webcomponents/issues/85)
-      - [ ] [Spec Issue #100](https://github.com/w3c/webcomponents/issues/100)
+      - [X] [Spec Issue #100](https://github.com/w3c/webcomponents/issues/100)
 
-- [ ] Slots Proposal
+- [X] Slots Proposal
 
       - [Spec Proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md)
       - [Spec Issue #95](https://github.com/w3c/webcomponents/issues/95)
@@ -114,11 +114,124 @@ What changes are coming to Blink for v1?
 
       - [ ] [Chromium Issue #489954](https://code.google.com/p/chromium/issues/detail?id=489954)
 
-It's unclear how the Slots Proposal, `<slot>`, interacts with the `<content>`, which is likely to be deprecated.
+<a name="unified-distribution"></a> It looks that `Element.createShadowRoot()` and `<content>` were removed from the spec. Does Blink continue to support `createShadowRoot` and `<content>`?
 ---
 
-- [ ] I have to tackle this painful issue later in Blink once the Slots proposal will be clear. I'm afraid that it would be extremely difficult to support both model co-exist in the same tree of trees. Blink has to compromise at some level.
+TL;DR: *Yes*.
 
+For convenience, let's define `v0` and `v1` as follows:
+
+- v0: `Element.createShadowRoot`, insertion points (`<content>`) and accompanying distribution algorithm and APIs, which were defined in the past before *v1* came to the spec.
+- v1: `Element.attachShadow`, slots (`<slot>`) and accompanying distribution algorithm and APIs, which other browser vendor will implement.
+
+To continue to support existing users and deployed apps, I've decided to support both, *v0* and *v1*, in Blink.
+Because the Shadow DOM spec is inappropriate place to explain how *v0* and *v1* interact each other, let me explain that here, as an *unofficial spec*.
+
+Disclaimer: This is a tentative plan. If I encounter a technical difficulty to support both, I might change the plan. In any cases, I'll do the best effort to continue to support *v0* in Blink.
+
+
+###Rule 1) A *V0* shadow tree, created by `createShadowRoot`, supports only an insertion point (`<content>`), but it doesn't support a slot.
+
+###Rule 2) A *v1* shadow tree, created by `attachShadow`, supports only a slot (`<slot>`), but it doesn't support an insertion point.
+
+What this means is:
+
+- A `<slot>` element in *v0 shadow tree* never behave as a slot. That would behave as if it were a *HTMLUnknownElement*.
+- A `<content>` element in *v1 shadow tree* never behave as an insertion point. That would behave as if it were a *HTMLUnknownElement*.
+
+Example: `<slot>` is used in *v0* shadow tree (You shouldn't do that!):
+
+
+```html
+[document tree]
+<div id=host1>
+  <div id="a" slot="slotA">
+
+  [shadow tree 1] // a child tree of document tree, created by host1.createShadowRoot()
+  <shadow-root>
+    <slot name="slotA">   // This doesn't work as intended. Don't use <slot> in v0 shadow tree.
+    <content select="#a"> // This works as intended. #a is distributed to this insertion point.
+```
+
+Example: `<content>` is used in *v1* shadow tree. (You shouldn't do that!):
+
+
+```html
+[document tree]
+<div id=host1>
+  <div id="a" slot="slotA">
+
+  [shadow tree 1]  // a child tree of document tree, created by host1.attachShadow(..)
+  <shadow-root>
+    <slot name="slotA">    // This works as intended. #a is assigned to this slot.
+    <content select="#a">  // This doesn't work as intended. Don't use <content> in v1 shadow tree.
+```
+
+I hope this is a reasonable restriction for most users.
+By introducing this simple restriction, we don't have to remember the order of precedence in selecting nodes if both `<slot>` and `<content>` are used in in the same shadow tree.
+
+
+###Rule 3) A tree of trees supports a distribution across v0 and v1 shadow trees, called an *unified distribution*.
+
+Let's explain what this means by examples.
+
+Example): The parent tree is a *v0* shadow tree, and the child tree is a *v1* shadow tree.
+
+
+```html
+[document tree]
+<div id=host1>
+  <div id="a">
+
+
+  [shadow tree 1]  // a child tree of document tree, created by host1.createShadowRoot()
+  <shadow-root>
+    <div id=host2>
+      <content id="c" select="#a" slot="slotA">
+
+
+      [shadow tree 2]  // a child tree of shadow tree 1, created by host2.attachShadow(..)
+      <shadow-root>
+        <slot id="s" name="slotA">
+```
+
+The distribution would be:
+
+```js
+c.getDistributedNodes == [a]  // As usual
+c.assignedSlot == s   // content can be assigned to a slot. This won't be surprising.
+// s.getDistributedNodes != [c]
+s.getDistributedNodes == [a]   // If a <content> is assigned to a slot,  <content> would act like a *slot*.
+a.getDestinationInsertionPoints == [c, s]  // A slot *can* appear in the getDestinationInsertionPoints. It would behave as if it were an insertion point.
+```
+
+
+Example): The parent tree is a *v1* shadow tree, and the child tree is a *v0* shadow tree.
+
+
+```html
+[document tree]
+<div id=host1>
+  <div id="a" slot="slotA">
+
+  [shadow tree 1]  //  a child tree of document tree, created by host1.attachShadow(..)
+  <shadow-root>
+    <div id=host2>
+      <slot id="s" slot="slotA">
+
+      [shadow tree 2]  // a child tree of shadow tree 1, created by host2.createShadowRoot()
+      <shadow-root>
+        <content id="c" select="#a">
+```
+
+The distribution would be:
+
+```js
+a.assignedSlot == s
+s.getDistributedNodes == [a]  // As usual
+c.getDistributedNodes == [a]  // <content> will select a node from the distributed nodes of a slot, not a slot itself. In general, <content select="slot"> doesn't make sense in most scenes.
+a.getDestinationInsertionPoints == [s, c]  // A node can be re-distributed through a slot.
+```
 
 I'm Blink Contributor. What's the impact of v1 for our codebase?
 ----
