@@ -1584,40 +1584,6 @@ document.addEventListener('DOMContentLoaded', function() {
       </pre>
 
       <p>Well done, Bob! With the cup of coffee still half-full, the work is complete. Recognizing his awesomeness, Bob returns to teaching n00bs the ways of <a href="https://en.wikipedia.org/wiki/Splatoon">Splatoon</a>.</p>
-
-      <p>A few months pass.</p>
-
-      <p>It's election time. With Bob at his annual conference, Alice is charged with adding <strong>another</strong>, temporary box to the news widget, filled with election-related stories. Alice studies Bob's code, reads up on the shadow DOM spec and realizes that, thanks to multiple shadow tree support, she doesn't have to touch his code. As usual, her solution is elegant and simple, fitting neatly right under Bob's code:</p>
-      <pre class="example highlight">
-// TODO(alice): BEGIN -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
-var ELECTION_BOX_REMOVAL_DEADLINE = ...;
-
-function createElectionStyle()
-{
-    var style = document.createElement('style');
-    // TODO(alice): Check designer's desk for hallucinogens.
-    style.textContent = 'div.election { color: Magenta; font-size: 24px; border: 2px dotted Fuchsia; }';
-    return style;
-}
-
-function makeElectionShadowTree(storyList)
-{
-    var root = storyList.attachShadow({mode: 'open'});
-    // Add and style election story box.
-    root.appendChild(createElectionStyle());
-    root.appendChild(createStoryGroup('election', '.election'));
-    // Insert Bob's shadow tree under the election story box.
-    root.appendChild(document.createElement('shadow'));
-}
-
-if (Date.now() &lt; ELECTION_BOX_REMOVAL_DEADLINE) {
-    document.addEventListener('DOMContentLoaded', function() {
-        [].forEach.call(document.querySelectorAll('ul.stories'), makeElectionShadowTree);
-    });
-}
-// TODO(alice): END -- DELETE THIS CODE AFTER ELECTIONS ARE OVER.
-      </pre>
-      <p>Using the <code>shadow</code> element allows Alice to compose Bob's widget <strong>inside</strong> of hers&mdash;without having to change a line of production code. Smiling to herself, Alice realizes that Bob may have come up with a way to keep the document markup clean, but <strong>she</strong> is the one who takes the cake for using shadow tree composition in such a cool way.</p>
     </section>
 
     <section class="appendix">
