@@ -888,19 +888,19 @@
 
         <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a data-lt="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a data-lt="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a data-lt="shadow root">shadow roots</a>:</p>
         <pre class="example">
-&lt;div id=&quot;player&quot;&gt;
-    <span class=shadow-boundary>&lt;shadow-root id=&quot;player-shadow-root&quot;&gt;</span>
-        &lt;div id=&quot;controls&quot;&gt;
-            &lt;button id=&quot;play-button&quot;&gt;PLAY&lt;/button&gt;
-            &lt;input type=&quot;range&quot; id=&quot;timeline&quot;&gt;
-                <span class=shadow-boundary>&lt;shadow-root id=&quot;timeline-shadow-root&quot;&gt;</span>
-                    &lt;div id=&quot;slider-thumb&quot; id=&quot;timeline-slider-thumb&quot;&gt;&lt;/div&gt;
+&lt;div id="player"&gt;
+    <span class=shadow-boundary>&lt;shadow-root id="player-shadow-root"&gt;</span>
+        &lt;div id="controls"&gt;
+            &lt;button id="play-button"&gt;PLAY&lt;/button&gt;
+            &lt;input type="range" id="timeline"&gt;
+                <span class=shadow-boundary>&lt;shadow-root id="timeline-shadow-root"&gt;</span>
+                    &lt;div id="slider-thumb" id="timeline-slider-thumb"&gt;&lt;/div&gt;
                 <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
             &lt;/input&gt;
-            &lt;div id=&quot;volume-slider-container&quot;&gt;
-                &lt;input type=&quot;range&quot; id=&quot;volume-slider&quot;&gt;
-                    <span class=shadow-boundary>&lt;shadow-root id=&quot;volume-shadow-root&quot;&gt;</span>
-                        &lt;div id=&quot;slider-thumb&quot; id=&quot;volume-slider-thumb&quot;&gt;&lt;/div&gt;
+            &lt;div id="volume-slider-container"&gt;
+                &lt;input type="range" id="volume-slider"&gt;
+                    <span class=shadow-boundary>&lt;shadow-root id="volume-shadow-root"&gt;</span>
+                        &lt;div id="slider-thumb" id="volume-slider-thumb"&gt;&lt;/div&gt;
                     <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
                 &lt;/input&gt;
             &lt;/div&gt;
@@ -1508,32 +1508,32 @@
     <section>
       <h2>Shadow DOM Example</h2>
 
-      <p class="issue">
-        Update this example for slots.
-      </p>
-
       <p>Bob was asked to turn a simple list of links into a News Widget, which has links organized into two categories: breaking news and just news. The current document markup for the stories looks like this:</p>
       <pre class="example highlight">
-&lt;ul class=&quot;stories&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/1&quot;&gt;A story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/2&quot;&gt;Another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;//example.com/stories/3&quot;&gt;Also a story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/4&quot;&gt;Yet another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;//example.com/stories/4&quot;&gt;Awesome story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class=&quot;breaking&quot;&gt;&lt;a href=&quot;//example.com/stories/5&quot;&gt;Horrible story&lt;/a&gt;&lt;/li&gt;
+&lt;ul class="stories"&gt;
+    &lt;li&gt;&lt;a href="//example.com/stories/1"&gt;A story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="//example.com/stories/2"&gt;Another story&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breaking" slot="breaking"&gt;&lt;a href="//example.com/stories/3"&gt;Also a story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="//example.com/stories/4"&gt;Yet another story&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="//example.com/stories/5"&gt;Awesome story&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="breaking" slot="breaking"&gt;&lt;a href="//example.com/stories/6"&gt;Horrible story&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
       </pre>
 
+      <p class="issue">
+       It's weird that there are slot attributes in this markup because Bob has not decided to use Shadow DOM yet.
+      </p>
+
       <p>To organize the stories, Bob decides to use <strong>shadow DOM</strong>. Doing so will allow Bob to keep the document markup uncluttered, and harnessing the power of insertion point makes sorting stories by class name a very simple task. After getting another cup of <a href="http://en.wikipedia.org/wiki/List_of_coffee_beverages#Green_Eye">Green Eye</a>, he quickly mocks up the following shadow tree, to be hosted by the <code>ul</code> element:</p>
       <pre class="example highlight">
-&lt;div class=&quot;breaking&quot;&gt;
+&lt;div class="breaking"&gt;
     &lt;ul&gt;
-        &lt;content select=&quot;.breaking&quot;&gt;&lt;/content&gt; &lt;!-- insertion point for breaking news --&gt;
+        &lt;slot name="breaking"&gt;&lt;/slot&gt; &lt;!-- slot for breaking news --&gt;
     &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div class=&quot;other&quot;&gt;
+&lt;div class="other"&gt;
     &lt;ul&gt;
-        &lt;content&gt;&lt;/content&gt; &lt;!-- insertion point for the rest of the news --&gt;
+        &lt;slot&gt;&lt;/slot&gt; &lt;!-- slot for the rest of the news --&gt;
     &lt;/ul&gt;
 &lt;/div&gt;
       </pre>
@@ -1553,12 +1553,12 @@
       </pre>
       <p>While pondering if his company should start looking for a new designer, Bob converts the mockup to code:</p>
       <pre class="example highlight">
-function createStoryGroup(className, contentSelector)
+function createStoryGroup(className, slotName)
 {
     var group = document.createElement('div');
     group.className = className;
-    // Empty string in select attribute or absence thereof work the same, so no need for special handling.
-    group.innerHTML = '&lt;ul&gt;&lt;content select=&quot;' + contentSelector + '&quot;&gt;&lt;/content&gt;&lt;/ul&gt;';
+    // Empty string in slot name attribute or absence thereof work the same, so no need for special handling.
+    group.innerHTML = '&lt;ul&gt;&lt;slot name="' + slotName + '"&gt;&lt;/slot&gt;&lt;/ul&gt;';
     return group;
 }
 
@@ -1574,7 +1574,7 @@ function makeShadowTree(storyList)
 {
     var root = storyList.attachShadow({mode: 'open'});
     root.appendChild(createStyle());
-    root.appendChild(createStoryGroup('breaking', '.breaking'));
+    root.appendChild(createStoryGroup('breaking', 'breaking'));
     root.appendChild(createStoryGroup('other', ''));
 }
 
