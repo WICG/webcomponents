@@ -131,7 +131,8 @@ var autolinkConfig = {
         'CSS rules': 'syndata.html#rule-sets',
         'box': 'box.html',
         'formatting structure': 'intro.html#formatting-structure',
-        'text-decoration': 'text.html#lining-striking-props'
+        'text-decoration': 'text.html#lining-striking-props',
+        'visual formatting model': 'visuren.html'
     },
 
     'http://www.w3.org/TR/css3-ui/': {
