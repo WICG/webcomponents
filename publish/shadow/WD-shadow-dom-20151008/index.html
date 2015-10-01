@@ -1687,22 +1687,23 @@ table.simple {
       <section property="bibo:hasPart" resource="#focus-navigation" typeof="bibo:Chapter" id="focus-navigation">
         <h3 resource="#h-focus-navigation" id="h-focus-navigation"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.2 </span>Focus Navigation</span></h3>
 
-        <p>If a <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-node">node</a> doesn’t <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-tree-participate" data-lt="participates">participate</a> in the <a data-link-type="dfn" class="internalDFN" href="#dfn-composed-tree">composed tree</a>, the <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-node">node</a> <strong>must</strong> be skipped from the <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> [<cite><a href="#bib-CSS3UI" class="bibref">CSS3UI</a></cite>] sequence.</p>
+        <p>If a <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-node">node</a> doesn’t <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-tree-participate" data-lt="participates">participate</a> in the <a data-link-type="dfn" class="internalDFN" href="#dfn-document-composed-tree">document composed tree</a>, the <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-node">node</a> <strong>must</strong> be skipped from the <a class="externalDFN" href="http://html.spec.whatwg.org/#sequential-focus-navigation">sequential focus navigation</a>.</p>
 
-        <p>For <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">sequential focus navigation</a>, the <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> sequence for a given <a data-link-type="dfn" class="internalDFN" href="#dfn-shadow-tree">shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for the <a data-link-type="dfn" class="internalDFN" href="#dfn-parent-tree">parent tree</a> <var>B</var> as follow:</p>
+        <p>The <a class="externalDFN" href="http://html.spec.whatwg.org/#sequential-focus-navigation-order">sequential focus navigation order</a> for a given <a data-link-type="dfn" class="internalDFN" href="#dfn-shadow-tree">shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a class="externalDFN" href="http://html.spec.whatwg.org/#sequential-focus-navigation-order">sequential focus navigation order</a> for the <a data-link-type="dfn" class="internalDFN" href="#dfn-parent-tree">parent tree</a> <var>B</var> as follows:</p>
         <ol>
           <li>Let <var>HOST</var> be the <a data-link-type="dfn" class="internalDFN" href="#dfn-shadow-host">shadow host</a> which <a data-link-type="dfn" class="internalDFN" href="#dfn-host">hosts</a> A</li>
           <li>
-            The <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for A <strong>must</strong> be inserted into the <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a> for <var>B</var>:
+            The <a class="externalDFN" href="http://html.spec.whatwg.org/#sequential-focus-navigation-order">sequential focus navigation order</a> for A <strong>must</strong> be inserted into the <a class="externalDFN" href="http://html.spec.whatwg.org/#sequential-focus-navigation-order">sequential focus navigation order</a> for <var>B</var>:
             <ol>
               <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a class="externalDFN" href="http://html.spec.whatwg.org/#focusable-area">focusable</a>; or</li>
-              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the value of <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#nav-index" data-lt="nav-index auto"><code>auto</code></a> for determining its position.</li>
+              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the <a class="externalDFN" href="http://html.spec.whatwg.org/#attr-tabindex">tabindex</a> value 0 for determining its position.</li>
             </ol>
           </li>
         </ol>
 
-        <p>For <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#nav-dir">directional focus navigation</a>, it is up to the user agent to integrate the <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard" data-lt="navigation order">navigation orders</a> for <a data-link-type="dfn" class="internalDFN" href="#dfn-shadow-tree" data-lt="shadow tree">shadow trees</a> into the <a class="externalDFN" href="http://dom.spec.whatwg.org/#concept-document">document</a> <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#keyboard">navigation order</a>.</p>
-      </section>
+        <p>For <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#nav-dir">directional focus navigation</a> [<cite><a href="#bib-CSS3-UI" class="bibref">CSS3-UI</a></cite>], it is up to the user agent to integrate the <a data-link-type="dfn" class="internalDFN" href="#dfn-shadow-tree" data-lt="shadow tree">shadow trees</a> into the document's <a class="externalDFN" href="http://www.w3.org/TR/css3-ui/#nav-dir">directional focus navigation</a>.
+      </p>
+    </section>
 
       <section property="bibo:hasPart" resource="#active-element" typeof="bibo:Chapter" id="active-element">
         <h3 resource="#h-active-element" id="h-active-element"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3 </span>Active Element</span></h3>
