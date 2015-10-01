@@ -84,7 +84,10 @@ var autolinkConfig = {
         'object element': '#the-object-element',
         'progress element': '#the-progress-element',
         'reflect': '#reflect',
+        'sequential focus navigation': '#sequential-focus-navigation',
+        'sequential focus navigation order': '#sequential-focus-navigation-order',
         'style': '#the-style-attribute',
+        'tabindex': '#attr-tabindex',
         'textarea element': '#the-textarea-element',
         'transparent': '#transparent',
         'tree accessors': '#dom-tree-accessors',
@@ -136,10 +139,7 @@ var autolinkConfig = {
     },
 
     'http://www.w3.org/TR/css3-ui/': {
-        'directional focus navigation': '#nav-dir',
-        'nav-index auto': '#nav-index',
-        'navigation order': '#keyboard',
-        'sequential focus navigation': '#keyboard'
+        'directional focus navigation': '#nav-dir'
     },
 
     'http://www.w3.org/TR/css3-cascade/': {
