@@ -3,23 +3,31 @@ Shadow DOM v1 in Blink
 
 Hayato Ito <hayato@google.com>
 
-This document attempts to summarize what *"Shadow DOM v1"* means for Blink. The document will be updated as needed to reflect the latest status.
+This document summarizes what *"Shadow DOM v1"* means and its status in Blink.
+
+Last update: 2015-10-09 Fri
+
+What is Shadow DOM?
+----
+
+Shadow DOM is one of the pieces of Web Components. Numerous online resources about Web Components are available. I recommend http://webcomponents.org/, which is well-maintained.
 
 
 What is Shadow DOM v1? Does *v* represents for *version*? I thought that Shadow DOM spec is *"Living Standard"*.
 ----
 
-Shadow DOM spec should be considered as [Living Standard], as [HTML] spec and [DOM] spec have already adapted [Living Standard] model. That hasn't changed.
+Shadow DOM spec should be considered as [Living Standard]. [HTML Standard] and [DOM Standard] have already adapted [Living Standard] model.
 
-Although you could read `v1` as *version 1*, please don't take it seriously. We, browser vendors, need a good terminology which represents *something* that all of us can agree to implement.
-`v1` is a convenient term for that.
+You could read `v1` as *version 1*, however, please don't take it seriously. We, browser vendors, need a good terminology which represents *something* on which all of us can agree to implement Shadow DOM.
+`v1` is a convenient term in a discussion.
 
-If you are uncomfortable for a term of `v1`, you can think it as `p1`, priority 1. Actually, I am using a label of `v1` when I label an issue which must be resolved asap so that other browser vendors can agree and start to implement Shadow DOM. There is no extra meaning.
+If you are uncomfortable with `v1`, you can think it as `p1`, priority 1. I am using `v1` label for an issue if the issue must be resolved asap so other browser vendors can start to implement Shadow DOM.
+There is no extra meaning with `v1` other than that.
 
-
+[Shadow DOM spec]: https://w3c.github.io/webcomponents/spec/shadow/
 [Living Standard]: https://wiki.whatwg.org/wiki/FAQ#What_does_.22Living_Standard.22_mean.3F
-[HTML]: https://html.spec.whatwg.org/
-[DOM]: https://dom.spec.whatwg.org/
+[HTML Standard]: https://html.spec.whatwg.org/
+[DOM Standard]: https://dom.spec.whatwg.org/
 
 Relevant Links:
 
@@ -31,103 +39,87 @@ Relevant Links:
 What is Shadow DOM v2?
 ----
 
-There is no significant meaning for a label of `v2`. I am using a label of `v2` in the issue tracker if we don't think an issue is a high priority issue.
+As you can imagine, there is no significant meaning for `v2` label. I am using `v2` label for a spec issue if the issue doesn't need to be resolved soon.
 
-You can take `v2` as "*fix it later*". `v2` is a convenient term for the discussion, give that we are using `v1`. We can say "Let's defer it to v2 since we can consider it later".
+You can consider `v2` as "*fix it later*". `v2` is also a convenient term in the discussion because we are already using `v1`.
+We can say something like: "Let's defer it to v2 since we can consider it later".
 
-Now I'm focusing on solving all Shadow DOM v1 issues because it might block other vendors to implement Shadow DOM. All other issues are labeled with `v2`.
+Now I'm focusing on solving all Shadow DOM v1 issues because it might block other vendors to implement Shadow DOM.
 
 
-Okay, so what big changes are coming to the Shadow DOM spec for v1?
+What's the status of Shadow DOM in Blink?
 ----
 
-As of now, I think the followings are relatively big changes:
+In short:
 
-Checked check box means "Done".
+1. Shadow DOM `v0`: Supported. Blink shipped Shadow DOM in M35. Let me call what Blink is shipping now `v0` so we can distinguish it from `v1`. `v0` will be deprecated once Blink supports `v1`.
+2. Shadow DOM `v1`: In development.
+    - ["Intent to Implement: Shadow DOM v1"](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/Ez2cuT0KmQo/eUpSsU-uAgAJ) thread in blink-dev
 
-- [X] Closed Shadow Trees
 
-      - [x] [Spec Issue #85](https://github.com/w3c/webcomponents/issues/85)
-      - [X] [Spec Issue #100](https://github.com/w3c/webcomponents/issues/100)
-
-- [X] Slots Proposal
-
-      - [Spec Proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md)
-      - [Spec Issue #95](https://github.com/w3c/webcomponents/issues/95)
-      - [public-webapps: How about let's go with slots?](https://lists.w3.org/Archives/Public/public-webapps/2015AprJun/0649.html)
-
-- [ ] Cascading order for Shadow Trees
-
-      - There is an on-going discussion: [www-style: [css-scoping] Shadow Cascading](https://lists.w3.org/Archives/Public/www-style/2015Jun/0118.html)
-
-What changes are coming to Blink for v1?
+What's difference between v0 and v1?
 ----
 
+TODO(hayato): This list is incomplete as of 2015-10-09. Update the list and add more links for details.
 
-- [x] Deprecate multiple shadow roots
 
-      - [CL](https://codereview.chromium.org/1159563012/)
+- Removed:
+    - Element.createShadowRoot()
+    - `<content>`, `<shadow>`
+    - Multiple Shadow Roots
+        - [Intent to Deprecate](TODO)
+        - [Chromium Issue #489947](https://code.google.com/p/chromium/issues/detail?id=489947)
+        - [CL](https://codereview.chromium.org/1159563012/)
+    - Shadow piecing descendant combinator, `/deep/` and shadow pseudo elements, `::shadow`
+        - [Intent to Deprecate](TODO)
+        - [Chromium Issue #489954](https://code.google.com/p/chromium/issues/detail?id=489954)
+        - [CL](https://codereview.chromium.org/1166833002/)
 
-- [x] Deprecate shadow-piecing descendant combinators, `/deep/`.
+- Added:
+    - attachShadow (<= createShadowRoot was renamed to)
+    - Disallow attachShadow() for some elements.
+        - [Spec Issue #102](https://github.com/w3c/webcomponents/issues/102)
+    - Closed Shadow Trees
+        - [Spec Issue #85](https://github.com/w3c/webcomponents/issues/85)
+        - [Spec Issue #100](https://github.com/w3c/webcomponents/issues/100)
+        - [Chromium Issue](https://code.google.com/p/chromium/issues/detail?id=459136)
+    - Slots
+        - [Spec Issue #95](https://github.com/w3c/webcomponents/issues/95)
+        - [public-webapps: How about let's go with slots?](https://lists.w3.org/Archives/Public/public-webapps/2015AprJun/0649.html)
+    - NonDocumentTypeChildNode.assignedSlot
+    - Slot.getAssignedNodes()
+    - Event.deepPath (<= Event.path was renamed to)
+        - [Intent to Implement and Ship: Event.deepPath](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/8_x0OHYQdx0)
 
-      - [CL](https://codereview.chromium.org/1166833002/)
+- On-going discussion which might affect both `v0` and `v1`
 
-- [x] Deprecate shadow-pseudo elements, `::shadow`
+    - Cascading order for Shadow Trees
+        - [www-style: [css-scoping] Shadow Cascading](https://lists.w3.org/Archives/Public/www-style/2015Jun/0118.html)
+    - Events dispatching model. Only trusted events are subject to the event path trimming algorithm.
+    - Event.scoped
+        - [Spec Issue #107](https://github.com/w3c/webcomponents/issues/107)
+        - [Spec Issue #61](https://github.com/w3c/webcomponents/issues/61)
+    - The return type of getDistributedNodes() will change, from NodeList to sequence<Node>.
+        - [Spec Issue 108](https://github.com/w3c/webcomponents/issues/108)
 
-      - [CL](https://codereview.chromium.org/1166833002/)
 
-- [ ] event.deepPath
+Does Blink continue to support `v0`? You said `v0` will be deprecated. Do you have a schedule?
+----
 
-      - [Intent to Implement and Ship: Event.deepPath](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/8_x0OHYQdx0)
+Todo(hayato): Have a plan to deprecate.
 
-- [ ] The return type of getDistributedNodes() will change, from NodeList to sequence<Node>.
+The deprecation won't happen soon.
 
-      - [x] [Spec Issue 108](https://github.com/w3c/webcomponents/issues/108)
-      - [ ] File a bug and implement it in Blink
 
-- [ ] The Slots Proposal
-
-- [ ] Closed Shadow Trees
-
-      - [ ] [Chromium Issue](https://code.google.com/p/chromium/issues/detail?id=459136)
-
-- [ ] Make createShadowRoot() throws an Exception for some elements.
-
-      - [ ] [Spec Issue #102](https://github.com/w3c/webcomponents/issues/102)
-      - [ ] Implement it in Blink.
-
-- [ ] event.scoped
-
-      - [x] [Spec Issue #107](https://github.com/w3c/webcomponents/issues/107)
-      - [ ] [Spec Issue #61](https://github.com/w3c/webcomponents/issues/61)
-      - [ ] Implement it in Blink. Bug should be filed later.
-
-- [ ] Remove multiple shadow roots
-
-      - [ ] [Chromium Issue #489947](https://code.google.com/p/chromium/issues/detail?id=489947)
-
-- [ ] Remove shadow-piecing descendant combinator, `/deep/`
-
-      - [ ] [Chromium Issue #489954](https://code.google.com/p/chromium/issues/detail?id=489954)
-
-- [ ] Remove shadow-pseudo element, `::shadow`
-
-      - [ ] [Chromium Issue #489954](https://code.google.com/p/chromium/issues/detail?id=489954)
-
-<a name="unified-distribution"></a> It looks that `Element.createShadowRoot()` and `<content>` were removed from the spec. Does Blink continue to support `createShadowRoot` and `<content>`?
+<a name="unified-distribution"></a> How `v0` and `v1` can interact each other in the transition period? It looks they can not be used at the same time in the same document.
 ---
 
-TL;DR: *Yes*.
+In the transition period from `v0` to `v1`, it is highly expected that one document would happen to mix web components based on `v0` and web components based on `v1. Users might want to mix third-party libraries in their web pages.
+To support such a situation, I've decided to support both, *v0* and *v1*, co-exist in the same document in Blink.
 
-For convenience, let's define `v0` and `v1` as follows:
+Because the Shadow DOM spec is inappropriate place to explain how *v0* and *v1* interact each other, let me explain its behavior, as an *unofficial spec*, here.
 
-- v0: `Element.createShadowRoot`, insertion points (`<content>`) and accompanying distribution algorithm and APIs, which were defined in the past before *v1* came to the spec.
-- v1: `Element.attachShadow`, slots (`<slot>`) and accompanying distribution algorithm and APIs, which other browser vendor will implement.
-
-To continue to support existing users and deployed apps, I've decided to support both, *v0* and *v1*, in Blink.
-Because the Shadow DOM spec is inappropriate place to explain how *v0* and *v1* interact each other, let me explain that here, as an *unofficial spec*.
-
-Disclaimer: This is a tentative plan. If I encounter a technical difficulty to support both, I might change the plan. In any cases, I'll do the best effort to continue to support *v0* in Blink.
+Disclaimer: This is a tentative plan. If I encounter a technical difficulty to support both in the same document, I might change the plan. In any cases, I'll do the best effort to continue to support *v0* in the transition time even after `v1` comes to Blink.
 
 
 ###Rule 1) A *V0* shadow tree, created by `createShadowRoot`, supports only an insertion point (`<content>`), but it doesn't support a slot.
@@ -233,7 +225,7 @@ c.getDistributedNodes == [a]  // <content> will select a node from the distribut
 a.getDestinationInsertionPoints == [s, c]  // A node can be re-distributed through a slot.
 ```
 
-I'm Blink Contributor. What's the impact of v1 for our codebase?
+I'm a Blink developer. What's the impact of v1 for our codebase?
 ----
 
 - [ ] I'd like to remove [ElementShadow] and relevant classes someday. However, we can't remove it until we drop the support of multiple shadow roots from Blink.
