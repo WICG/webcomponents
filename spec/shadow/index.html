@@ -346,6 +346,38 @@
       </section>
 
       <section>
+        <h2>Assigned Nodes Algorithm</h2>
+
+        <p>
+          The <dfn>get assigned nodes algorithm</dfn> <strong>must</strong> be used to determine the <dfn>assigned nodes</dfn> for a <a>slot</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+        </p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>Input</dt>
+            <dd><var>SLOT</var>, a <a>slot</a></dd>
+            <dt>Output</dt>
+            <dd><var>ASSIGNED-NODES</var>, an ordered list of nodes</dd>
+          </dl>
+
+          <ol>
+            <li>Let <var>HOST</var> be a <a>shadow host</a> which <a>hosts</a> a <a>shadow tree</a> that <var>SLOT</var> participates in</li>
+            <li>
+              For each child node <var>NODE</var> of <var>HOST</var>:
+              <ol>
+                <li>
+                  If <var>NODE</var> is <a data-lt="assigned slot">assigned</a> to <var>SLOT</var>:
+                  <ol>
+                    <li>Append <var>NODE</var> to <var>ASSIGNED-NODES</var></li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section>
         <h2>Distributed Nodes Algorithm</h2>
 
         <p>
@@ -361,26 +393,20 @@
           </dl>
 
           <ol>
-            <li>Let <var>HOST</var> be a <a>shadow host</a> which <a>hosts</a> a <a>shadow tree</a> that <var>SLOT</var> participates in</li>
             <li>
-              For each child node <var>NODE</var> of <var>HOST</var>:
+              For each node <var>NODE</var> of the <a>assigned nodes</a> of <var>SLOT</var>:
               <ol>
                 <li>
-                  If <var>NODE</var> is assinged to <a>SLOT</a>:
+                  If <var>NODE</var> is a <a>slot</a>:
                   <ol>
-                    <li>
-                      If <var>NODE</var> is a <a>slot</a>:
-                      <ol>
-                        <li>Let <var>SUB-LIST</var> be the result of (recursively) running the <a>get distributed nodes algorithm</a> with <var>NODE</var> as input</li>
-                        <li>Append all nodes in <var>SUB-LIST</var> to <var>DISTRIBUTED-NODES</var></li>
-                      </ol>
-                    </li>
-                    <li>
-                      Otherwise:
-                      <ol>
-                        <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
-                      </ol>
-                    </li>
+                    <li>Let <var>SUB-LIST</var> be the result of (recursively) running the <a>get distributed nodes algorithm</a> with <var>NODE</var> as input</li>
+                    <li>Append all nodes in <var>SUB-LIST</var> to <var>DISTRIBUTED-NODES</var></li>
+                  </ol>
+                </li>
+                <li>
+                  Otherwise:
+                  <ol>
+                    <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
                   </ol>
                 </li>
               </ol>
@@ -1410,6 +1436,27 @@
             <dl class="idl" title="interface HTMLSlotElement : HTMLElement">
               <dt>attribute DOMString name</dt>
               <dd><strong>Must</strong> <a>reflect</a> the <a data-lt="slot name">name</a> attribute.</dd>
+
+              <dt>sequence&lt;Node&gt; getAssignedNodes()</dt>
+              <dd>
+                When invoked, it <strong>must</strong> return result of running the following steps:
+                <ol>
+                  <li>
+                    If the <a>context object</a> is a <a>slot</a>:
+                    <ol>
+                      <li>
+                        Return a <a>sequence</a> consisting of nodes in the <a>assigned nodes</a> of the <a>context object</a>.
+                      </li>
+                    </ol>
+                  </li>
+                  <li>
+                    Otherwise:
+                    <ol>
+                      <li>Return an empty <a>sequence</a>.</li>
+                    </ol>
+                  </li>
+                </ol>
+              </dd>
 
               <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
               <dd>
