@@ -268,8 +268,13 @@
         <h3>Slots</h3>
 
         <p>
-          A <dfn>slot</dfn> is a defined location in a <a>shadow tree</a> into which some of a shadow host's children are inserted in its <a>composed tree</a>.
+          The <a>slot element</a> represents an <em>instruction element</em>, called <dfn>slot</dfn>.
+          When constructing a <a>composed tree</a>, a <a>slot</a> does not participate in the composed tree. Instead, the <a>slot</a> cherry-picks its contents from other places in the tree of trees.
           The exact algorithm of constructing a <a>composed tree</a> is specified later.
+        </p>
+
+        <p class="note">
+          A slot usually cherry-picks its contents from the shadow host.
         </p>
 
         <p>
@@ -283,12 +288,6 @@
           <figcaption>A distribution</figcaption>
         </figure>
 
-        <p>
-          The <a>slot element</a> that satisfies the following condition defines a <a>slot</a> at the location of the element:
-        </p>
-        <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>slot element</a> is a <a>shadow root</a></li>
-        </ul>
 
         <p>
           A <dfn>slot name</dfn> is the name of a <a>slot</a>.
@@ -296,7 +295,7 @@
 
         <p>
           A <dfn>default slot</dfn> is a slot whose <a>slot name</a> is the empty string or missing.
-          If there are more than one slots which don't have a <a>slot name</a> in the same <a>shadow tree</a>, the most <a>preceding</a> one is the <a>default slot</a>. The others are not.
+          If there are more than one slots which don't have a <a>slot name</a> in the same <a>node tree</a>, the most <a>preceding</a> one is the <a>default slot</a>. The others are not.
         </p>
       </section>
 
@@ -361,14 +360,19 @@
           </dl>
 
           <ol>
-            <li>Let <var>HOST</var> be a <a>shadow host</a> which <a>hosts</a> a <a>shadow tree</a> that <var>SLOT</var> participates in</li>
             <li>
-              For each child node <var>NODE</var> of <var>HOST</var>:
+              If <var>SLOT</var> participates in a shadow tree:
               <ol>
+                <li>Let <var>HOST</var> be a <a>shadow host</a> which <a>hosts</a> the <a>shadow tree</a></li>
                 <li>
-                  If <var>NODE</var> is <a data-lt="assigned slot">assigned</a> to <var>SLOT</var>:
+                  For each child node <var>NODE</var> of <var>HOST</var>:
                   <ol>
-                    <li>Append <var>NODE</var> to <var>ASSIGNED-NODES</var></li>
+                    <li>
+                      If <var>NODE</var> is <a data-lt="assigned slot">assigned</a> to <var>SLOT</var>:
+                      <ol>
+                        <li>Append <var>NODE</var> to <var>ASSIGNED-NODES</var></li>
+                      </ol>
+                    </li>
                   </ol>
                 </li>
               </ol>
@@ -1415,8 +1419,6 @@
         <h3>The <code>slot</code> element</h3>
 
         <p>The <dfn>slot element</dfn> is used to define a location of a <a>slot</a>.</p>
-
-        <p>If a <code>slot</code> element does not satisfy the condition of a <a>slot</a>, it <strong>must</strong> have the same rendering behavior as the <a><code>HTMLUnknownElement</code></a>.</p>
 
         <dl>
           <dt>Context</dt>
