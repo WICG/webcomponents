@@ -311,7 +311,7 @@
             <dt>Input</dt>
             <dd><var>NODE</var>, a node</dd>
             <dt>Output</dt>
-            <dd>(nullable) <var>SLOT</var>, a <var>slot</var> to where <var>NODE</var> is assigned.</dd>
+            <dd>(nullable) <var>SLOT</var>, a <var>slot</var> to which <var>NODE</var> is assigned.</dd>
           </dl>
 
           <ol>
@@ -323,7 +323,7 @@
                 <li>
                   If <var>NAME</var> is the empty string or missing:
                   <ol>
-                    <li>Let <var>SLOT</var> be a <a>default slot</a> for <var>TREE</var> if it exits, Otherwise, null</li>
+                    <li>Let <var>SLOT</var> be a <a>default slot</a> for <var>TREE</var> if it exists, Otherwise, null</li>
                   </ol>
                 </li>
                 <li>
@@ -377,12 +377,6 @@
                 </li>
               </ol>
             </li>
-            <li>
-              If <var>ASSIGNED-NODES</var> is empty:
-              <ol>
-                <li>Append all child nodes of <var>SLOT</var> to <var>ASSIGNED-NODES</var></li>
-              </ol>
-            </li>
           </ol>
         </div>
       </section>
@@ -404,7 +398,19 @@
 
           <ol>
             <li>
-              For each node <var>NODE</var> of the <a>assigned nodes</a> of <var>SLOT</var>:
+              If the <a>assigned nodes</a> of <var>SLOT</var> is empty:
+              <ol>
+                <li>Let <var>ASSIGNED-OR-FALLBACK-CONTENT</var> be the child nodes of <var>SLOT</var></li>
+              </ol>
+            </li>
+            <li>
+              Otherwise:
+              <ol>
+                <li>Let <var>ASSIGNED-OR-FALLBACK-CONTENT</var> be the <a>assigned nodes</a> of <var>SLOT</var></li>
+              </ol>
+            </li>
+            <li>
+              For each node <var>NODE</var> of <var>ASSIGNED-OR-FALLBACK-CONTENT</var>:
               <ol>
                 <li>
                   If <var>NODE</var> is a <a>slot</a>:
