@@ -5,7 +5,7 @@ Hayato Ito <hayato@google.com>
 
 This document summarizes what *"Shadow DOM v1"* means and its status in Blink.
 
-Last update: 2015-10-09 Fri
+Last update: `<2015-10-14 Wed>`
 
 What is Shadow DOM?
 ----
@@ -103,12 +103,37 @@ TODO(hayato): This list is incomplete as of 2015-10-09. Update the list and add 
         - [Spec Issue 108](https://github.com/w3c/webcomponents/issues/108)
 
 
-Does Blink continue to support `v0`? You said `v0` will be deprecated. Do you have a schedule?
+<a name="v0-deprecation"></a>Does Blink continue to support `v0`? You said `v0` will be deprecated. Do you have a schedule?
 ----
 
-Todo(hayato): Have a plan to deprecate.
+A tentative schedule to deprecate Shadow DOM v0:
 
-The deprecation won't happen soon.
+
+1. [2015 Q3 (Done at M45)] Deprecate Multiple Shadow Roots
+
+    - [Intent to Deprecate](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/9qDsRePDALE/7c8kOkJfLgkJ)
+    - [Chrome Status](https://www.chromestatus.com/features/4668884095336448)
+
+2. [2015 Q3 (Done at M45)] Deprecate `/deep/` and `::shadow`
+
+    - [Intent to Deprecate](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/68qSZM5QMRQ/pT2YCqZSomAJ)
+    - [Chrome Status](https://www.chromestatus.com/feature/6750456638341120)
+
+3. [2016 Q1] Finish the implementation of Shadow DOM v1 (guarded by `ShadowDOMV1` runtime flag) so user can experiment v1 in Blink.
+
+    - [Intent to Implement](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/Ez2cuT0KmQo/eUpSsU-uAgAJ)
+
+4. [2016 Q2] Ship Shadow DOM v1 in Blink
+
+5. Wait for major libraries, such as Polymer, to switch to use Shadow DOM v1 and be shipped.
+
+6. [2016 Q4 or later] Send an "Intent to Deprecate: Element.createShadowRoot()" to blink-dev.
+
+    - TODO(hayato): Deprecate all v0 related APIs together?
+        - e.g. Deprecate `event.path` at this timing?
+
+7. [2017 or later] Send an "Intent to Remove: Shadow DOM v0" to blink-dev if we can feel it's ready to remove.
+
 
 
 <a name="unified-distribution"></a> How `v0` and `v1` can interact each other in the transition period? It looks they can not be used at the same time in the same document.
