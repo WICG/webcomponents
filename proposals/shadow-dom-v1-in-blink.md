@@ -113,11 +113,14 @@ A tentative schedule to deprecate Shadow DOM v0:
 
     - [Intent to Deprecate](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/9qDsRePDALE/7c8kOkJfLgkJ)
     - [Chrome Status](https://www.chromestatus.com/features/4668884095336448)
+    - [Chrome Metrics](https://www.chromestatus.com/metrics/feature/popularity#ElementCreateShadowRootMultiple)
 
 2. [2015 Q3 (Done at M45)] Deprecate `/deep/` and `::shadow`
 
     - [Intent to Deprecate](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/68qSZM5QMRQ/pT2YCqZSomAJ)
     - [Chrome Status](https://www.chromestatus.com/feature/6750456638341120)
+    - [Chrome Metrics for `/deep/`](https://www.chromestatus.com/metrics/feature/popularity#CSSDeepCombinator)
+    - [Chrome Metrics for `::shadow`](https://www.chromestatus.com/metrics/feature/popularity#CSSSelectorPseudoShadow)
 
 3. [2016 Q1] Finish the implementation of Shadow DOM v1 (guarded by `ShadowDOMV1` runtime flag) so user can experiment v1 in Blink.
 
