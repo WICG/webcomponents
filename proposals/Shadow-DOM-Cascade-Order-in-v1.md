@@ -116,11 +116,11 @@ Note that `host4` is in **host1's shadow tree**.
 
      - `... { color: #000; }`
 
-2.   A selectors declared in the same node tree (*host1' shadow tree*):
+2.   A selectors declared in the same node tree (*host1's shadow tree*):
 
      It can match `host4`, as usual.
 
-     e.g. A selector in the *host1' shadow tree* in the example:
+     e.g. A selector in the *host1's shadow tree* in the example:
 
      - `host4 { color: #002; }`
 
