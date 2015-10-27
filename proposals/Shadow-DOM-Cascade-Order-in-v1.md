@@ -238,3 +238,20 @@ For `!important` rules:
 [Composition example]:https://w3c.github.io/webcomponents/spec/shadow/#composition-example
 
 [Tab's proposal]: https://github.com/w3c/webcomponents/issues/316#issuecomment-149735841
+
+Let's merge the proposals
+----
+
+They look different, however, some of them do not contradict each other. We can merge these proposals into the following two proposals, as far as I understand the intention of each proposal correctly:
+
+
+### Proposal 1
+
+-  [D !important] > [C !important] > [B style-attribute !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+
+
+### Proposal 2
+
+- [B style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D] > [E]
+
+Let's decide which proposal we are going on.
