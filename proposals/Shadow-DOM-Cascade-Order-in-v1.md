@@ -20,16 +20,16 @@ In summary:
 
 In v0:
 
--   We have a `/deep/` and `::shadow`
--   We have a `::content`, which can be followed by an arbitrary selector.
+-   We had `/deep/` and `::shadow`
+-   We had `::content`, which can be followed by an arbitrary selector.
 
     e.g.  `::content div p /deep/ div p ::content h1` is valid.
 
--    We have `:host` and `:host-context`.
+-    We had `:host` and `:host-context`.
 
 In v1:
 
--   We have neither `/deep/` and `::shadow`.
+-   We have neither `/deep/` nor `::shadow`.
 -   `::content` was *renamed* to `::slotted`, with a different behavior. Now `::slotted` can take only a simple selector.
     See [Issue #331].
 
@@ -78,7 +78,7 @@ Here is an example, explaining how a selector defined in various locations can m
            <!-- shadow-root of host2 end -->
            <!-- Note: host4 is a child of host2 -->
            <host4 slot='slot1' style="color: #008" (or style="color: #009 !important")>
-             <!-- shadow-root of host3 start -->
+             <!-- shadow-root of host4 start -->
                <style>
                   :host { color: #00a; }
                   :host { color: #00b !important; }
