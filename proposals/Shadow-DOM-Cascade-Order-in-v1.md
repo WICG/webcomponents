@@ -4,7 +4,7 @@ Proposals: CSS Cascade Order for Shadow DOM v1
 by Hayato Ito (hayato@google.com)
 ----
 
-It looks there are still confusions in the [issue #316]((https://github.com/w3c/webcomponents/issues/316)).
+It looks there are still confusions in the [Issue #316].
 
 Definitely, we need a good summary before the meeting on TPAC 2015.
 
@@ -169,12 +169,12 @@ Let's focus on the node tree **B** and selectors which can match an element in *
 We have the following locations where a selector, or a style attribute, is defined, and can be applied to an element in B:
 
 
-- [A]                     (e.g. color: #000)
-- [B]                     (e.g. color: #002)
-- [B style-attribute]     (e.g. color: #008)
-- [C]                     (e.g. color: #004)
-- [D]                     (e.g. color: #006)
-- [E]                     (e.g. color: #00a)
+- [A]: (`color: #000` in the example)
+- [B]: (`color: #002` in the example)
+- [B style-attribute] (`color: #008` in the example)
+- [C]: (`color: #004` in the example)
+- [D]: (`color: #006` in the example)
+- [E]: (`color: #00a` in the example)
 
 
 As I said, [A] never matches an element in B in the current spec.
