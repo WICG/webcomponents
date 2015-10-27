@@ -255,3 +255,10 @@ They look different, however, some of them do not contradict each other. We can 
 - [B style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D] > [E]
 
 Let's decide which proposal we are going on.
+
+
+Notes:
+
+- Both proposals, proposal 1 and proposal 2, satisfy the essential part of Tab's proposal.
+- Proposal 1 is basically the same to Rune's proposal.
+- Proposal 2 is basically the same to Hayato's proposal, which is covering a case which Option2 doesn't cover.
