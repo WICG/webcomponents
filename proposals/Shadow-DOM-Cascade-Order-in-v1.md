@@ -171,7 +171,7 @@ We have the following locations where a selector, or a style attribute, is defin
 
 - [A]: (`color: #000` in the example)
 - [B]: (`color: #002` in the example)
-- [B style-attribute] (`color: #008` in the example)
+- [style-attribute (of host4 in B)] (`color: #008` in the example)
 - [C]: (`color: #004` in the example)
 - [D]: (`color: #006` in the example)
 - [E]: (`color: #00a` in the example)
@@ -184,35 +184,35 @@ That's the reason I've added [A] there.
 
 ### [Tab's proposal] is:
 
--  [B style-attribute] > [B] > ([C] or [E])
+-  [style-attribute] > [B] > `::slotted` ([C]) > `:host` ([E])
 
 For `!important` rules,
 
--   ([C !important] or [E !important]) > [B style-attribute !important] > [B !important] > [B style-attribute] > [B] > ([C] or [E])
+-  [E !important]  > [C !important] > [style-attribute !important] > [B !important] > [style-attribute] > [B] > [C]  > [E]
 
-Hayato's comment: It sounds that the proposal said that a kind of pseudo-classes (or pseudo-elements) used in a selector, such as `::content` or `:host`, can determines the preference order, but I don't think we have a special rule for `:host` or `:slotted`. A specificity or the order of appearance can be a tie-breaker, can't it?
+Hayato's comment: It sounds that the proposal said that a kind of pseudo-classes (or pseudo-elements) used in a selector, such as `::slotted` or `:host`, can determine the preference order, but it would be nice to avoid mentioning particular pseudo-classes (or pseudo-elements) in defining the cascading order.
 
 
 ### Rune's proposal, Option 1 in [Issue #316], is:
 
-- [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+- [A] > [style-attribute] > [B] > [C] > [D] > [E]
 
-Basically, that's the tree order of tree of trees, plus [B style attribute] is inserted in the *middle*, before the [B].
+Basically, that's the tree order of tree of trees, plus [style attribute] is inserted in the *middle*, before the [B].
 
 For `!important` rules,
 
--  [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+-  [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [A] > [style-attribute] > [B] > [C] > [D] > [E]
 
-Todo: Clarify where [B style-attribute !important] is inserted.
+Todo: Clarify where [style-attribute !important] should be inserted in Rune's proposal.
 
 
 ###  Option2 in [Issue #316] is:
 
-- [B style-attribute] > [A] > [B] > [C] > [D]
+- [style-attribute] > [A] > [B] > [C] > [D]
 
 For `!important` rules,
 
-- [B style-attribute !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D]
+- [style-attribute !important] > [D !important] > [C !important] > [B !important] > [A !important] > [style-attribute] > [A] > [B] > [C] > [D]
 
 It looks Option2 is missing the possibility that selectors which are defined in the sibling trees, such as C and E, can match an element in the parent tree of that, such as B. I chatted with koji@ on this and we agreed that Option2 is not comprehensive because it doesn't define the order between C and E.
 
@@ -221,13 +221,13 @@ It looks Option2 is missing the possibility that selectors which are defined in 
 
 I have yet another proposal here, clarifying Option2, mixing Rune's proposal:
 
-- [B style-attribute] > [A] > [B] > [C] > [D] > [E]
+- [style-attribute] > [A] > [B] > [C] > [D] > [E]
 
 That's the tree order of tree of trees, plus 'style attribute' is inserted at the beginning, like Option2.
 
 For `!important` rules:
 
-[B style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D] > [E]
+[style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [style-attribute] > [A] > [B] > [C] > [D] > [E]
 
 
 
@@ -247,12 +247,12 @@ They look different, however, some of them do not contradict each other. We can 
 
 ### Proposal 1
 
--  [E !important] > [D !important] > [C !important] > [B style-attribute !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+-  [E !important] > [D !important] > [C !important] > [style-attribute !important] > [B !important] > [A !important] > [A] > [style-attribute] > [B] > [C] > [D] > [E]
 
 
 ### Proposal 2
 
-- [B style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D] > [E]
+- [style-attribute !important] > [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [style-attribute] > [A] > [B] > [C] > [D] > [E]
 
 Let's decide which proposal we are going on.
 
