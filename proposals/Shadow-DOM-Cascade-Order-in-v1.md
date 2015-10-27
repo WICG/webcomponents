@@ -116,7 +116,7 @@ Note that `host4` is in **host1's shadow tree**.
 
      - `... { color: #000; }`
 
-2.   A selectors declared in the same node tree (*host1's shadow tree*):
+2.   A selector declared in the same node tree (*host1's shadow tree*):
 
      It can match `host4`, as usual.
 
@@ -138,7 +138,7 @@ Note that `host4` is in **host1's shadow tree**.
 
      - `:host { color: #00a; }`
 
-4.   A selectors declared in an (indirect) descendant tree of *host1's shadow tree*. `Indirect` means it's not a direct child tree
+4.   A selector declared in an (indirect) descendant tree of *host1's shadow tree*. `Indirect` means it's not a direct child tree
 
      It can match `host4` because `::slotted` matches the distributed nodes, instead of assigned nodes. Note that we still support *re-distribution* mechanism. See [Composition example] for details.
 
@@ -214,7 +214,7 @@ For `!important` rules,
 
 - [B style-attribute !important] > [D !important] > [C !important] > [B !important] > [A !important] > [B style-attribute] > [A] > [B] > [C] > [D]
 
-It looks Option2 is missing the possibility that selectors which are defined in the sibling trees, such as C and E, can match an element in the parent tree of that, such as B.
+It looks Option2 is missing the possibility that selectors which are defined in the sibling trees, such as C and E, can match an element in the parent tree of that, such as B. I chatted with koji@ on this and we agreed that Option2 is not comprehensive because it doesn't define the order between C and E.
 
 
 ### Hayato's proposal is:
