@@ -201,7 +201,7 @@ Basically, that's the tree order of tree of trees, plus [B style attribute] is i
 
 For `!important` rules,
 
--  [D !important] > [C !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+-  [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
 
 Todo: Clarify where [B style-attribute !important] is inserted.
 
@@ -247,7 +247,7 @@ They look different, however, some of them do not contradict each other. We can 
 
 ### Proposal 1
 
--  [D !important] > [C !important] > [B style-attribute !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
+-  [E !important] > [D !important] > [C !important] > [B style-attribute !important] > [B !important] > [A !important] > [A] > [B style-attribute] > [B] > [C] > [D] > [E]
 
 
 ### Proposal 2
