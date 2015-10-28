@@ -277,4 +277,4 @@ Side notes:
     We tried to land the patch which is based on Proposal 1, where `[A] > [style-attribute]`, however,
     that caused a serious regression on some internal sites because they use `/deep/` in outer tree, and style attribute in a shadow tree. If we are to re-land Proposal 1 in Blink, we should ask the internal sites to add `!important' to style attribute.
 
-    At the last resort, we keep the current behavior for v0, and use the proposal 2 for v1. However, I doubt it's technical feasibility because it requires a huge burden on our style engine. We don't want to have a technical debt in such a critical part.
+    As the last resort, we could keep the current behavior for v0, and use the Proposal 2 for v1. However, I doubt it's technical feasibility because it requires a huge burden on our style engine. We don't want to have a technical debt in such a critical part.
