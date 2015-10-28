@@ -192,6 +192,7 @@ For `!important` rules,
 
 Hayato's comment: It sounds that the proposal said that a kind of pseudo-classes (or pseudo-elements) used in a selector, such as `::slotted` or `:host`, can determine the preference order, but it would be nice to avoid mentioning particular pseudo-classes (or pseudo-elements) in defining the cascading order.
 
+This proposal doesn't seem to define where [D] is inserted. We should argument that.
 
 ### Rune's proposal, Option 1 in [Issue #316], is:
 
@@ -203,7 +204,7 @@ For `!important` rules,
 
 -  [E !important] > [D !important] > [C !important] > [B !important] > [A !important] > [A] > [style-attribute] > [B] > [C] > [D] > [E]
 
-Todo: Clarify where [style-attribute !important] should be inserted in Rune's proposal.
+It looks unclear where [style-attribute !important] should be inserted in the proposal.
 
 
 ###  Option2 in [Issue #316] is:
@@ -266,3 +267,14 @@ Notes:
 -   Proposal 1 is basically the same to Rune's proposal.
 
 -   Proposal 2 is basically the same to Hayato's proposal, which is covering a case which Option2 doesn't cover.
+
+
+
+Side notes:
+
+-   The current Blink's implementation is `[style-attribute] > [A]`, which matches Proposal 2.
+
+    We tried to land the patch which is based on Proposal 1, where `[A] > [style-attribute]`, however,
+    that caused a serious regression on some internal sites because they use `/deep/` in outer tree, and style attribute in a shadow tree. If we are to re-land Proposal 1 in Blink, we should ask the internal sites to add `!important' to style attribute.
+
+    At the last resort, we keep the current behavior for v0, and use the proposal 2 for v1. However, I doubt it's technical feasibility because it requires a huge burden on our style engine. We don't want to have a technical debt in such a critical part.
