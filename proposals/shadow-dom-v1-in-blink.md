@@ -5,7 +5,7 @@ Hayato Ito <hayato@google.com>
 
 This document summarizes what *"Shadow DOM v1"* means and its status in Blink.
 
-Last update: `<2015-10-14 Wed>`
+Last update: `<2015-11-12 Thu>`
 
 What is Shadow DOM?
 ----
@@ -106,7 +106,10 @@ TODO(hayato): This list is incomplete as of 2015-10-09. Update the list and add 
 <a name="v0-deprecation"></a>Does Blink continue to support `v0`? You said `v0` will be deprecated. Do you have a schedule?
 ----
 
-A tentative schedule to deprecate Shadow DOM v0:
+WARNING: Regarding with a date, the following is a *very* rough estimate and is likely to change.
+I hope I could give you more precise schedule after I finish to implement the prototype of v1.
+
+A tentative schedule to deprecate Shadow DOM v0 is:
 
 
 1. [2015 Q3 (Done at M45)] Deprecate Multiple Shadow Roots
@@ -126,7 +129,13 @@ A tentative schedule to deprecate Shadow DOM v0:
 
     - [Intent to Implement](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/Ez2cuT0KmQo/eUpSsU-uAgAJ)
 
-4. [2016 Q2] Ship Shadow DOM v1 in Blink
+    - TODO(hayato): Decide the mandatory features of v1 which we should ship at first.
+      Some of the features can be implemented later as long as an interoperability risk is low.
+
+4. [2016 Q2] Ship (the essential parts of) Shadow DOM v1 in Blink
+
+    - TODO(hayato): What's the criteria of shipping? How can we make sure that the spec is stable enough?
+
 
 5. Wait for major libraries, such as Polymer, to switch to use Shadow DOM v1 and be shipped.
 
