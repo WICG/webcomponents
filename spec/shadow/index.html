@@ -86,7 +86,11 @@
 
         <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
 
-        <p>A <dfn>component tree</dfn> is either a <a>document tree</a> or a <a>shadow tree</a>.
+        <p>A <dfn>primary component tree</dfn> is either a <a>document tree</a> or a <a>shadow tree</a>.</p>
+
+        <p>A <dfn>fragment tree</dfn> is a node tree which is not a <a>primary component tree</a>.</p>
+
+        <p>A <dfn>component tree</dfn> is either a <a>fragment tree</a> or a <a>primary component tree</a>.</p>
 
         <p>
           A node <var>A</var> is called a <dfn>deep child</dfn> of a node <var>B</var>,
@@ -431,6 +435,13 @@
           </ol>
         </div>
       </section>
+
+      <p class="note">
+        A <a>root tree</a> of a <a>tree of trees</a> is either a <a>document tree</a> or a <a>fragment tree</a> by definition.
+        The algorithms described in the section are applied even if a node participates in a <a>component tree</a> whose <a>root tree</a> is a <a>fragment tree</a>.
+        For example, a node which participates in a <a>fragment tree</a> can be assigned to a slot, if the parent node hosts a <a>shadow tree</a>.
+      </p>
+
     </section>
 
     <section>
