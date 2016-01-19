@@ -1464,14 +1464,14 @@
               <dt>attribute DOMString name</dt>
               <dd><strong>Must</strong> <a>reflect</a> the <a data-lt="slot name">name</a> attribute.</dd>
 
-              <dt>sequence&lt;Node&gt; getAssignedNodes()</dt>
+              <dt>FrozenArray&lt;Node&gt; getAssignedNodes()</dt>
               <dd>
-                When invoked, it <strong>must</strong> return a <a>sequence</a> consisting of nodes in the <a>assigned nodes</a> of the <a>context object</a>.
+                When invoked, it <strong>must</strong> return a FrozenArray consisting of the <a>assigned nodes</a> of the <a>context object</a>.
               </dd>
 
-              <dt>sequence&lt;Node&gt; getDistributedNodes()</dt>
+              <dt>FrozenArray&lt;Node&gt; getDistributedNodes()</dt>
               <dd>
-                When invoked, it <strong>must</strong> return a <a>sequence</a> consisting of nodes in the <a>distributed nodes</a> of the <a>context object</a>.
+                When invoked, it <strong>must</strong> return a FrozenArray consisting of the <a>distributed nodes</a> of the <a>context object</a>.
               </dd>
             </dl>
           </dd>
@@ -1493,12 +1493,11 @@
         <h3>Extensions to <code>Event</code> Interface</h3>
 
         <dl class="idl" title="partial interface Event">
-          <dt>readonly attribute object deepPath</dt>
+          <dt>readonly attribute FrozenArray&lt;EventTarget&gt; deepPath</dt>
           <dd>
             <p>Represents the event path.</p>
             <p>
-              On getting, the attribute <strong>must</strong> create and return a new JavaScript Array object,
-              that <strong>must</strong> be equivalent to processing the following steps:
+              On getting, the attribute <strong>must</strong> return a FrozenArray consisting of event targets, that <strong>must</strong> be equivalent to processing the following steps:
             </p>
 
             <div class="algorithm">
@@ -1532,11 +1531,6 @@
                 </li>
               </ol>
             </div>
-
-            <p class="issue">
-              The API is not stable and may change. Use <code>FrozenArray</code> as the return type of the <code>deepPath</code> attribute in WebIDL.
-              See <a href="https://github.com/w3c/webcomponents/issues/101">Issue #101</a>
-            </p>
           </dd>
           <dt>readonly attribute boolean scoped</dt>
           <dd>
