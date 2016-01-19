@@ -1463,17 +1463,23 @@
             <dl class="idl" title="interface HTMLSlotElement : HTMLElement">
               <dt>attribute DOMString name</dt>
               <dd><strong>Must</strong> <a>reflect</a> the <a data-lt="slot name">name</a> attribute.</dd>
-
-              <dt>FrozenArray&lt;Node&gt; getAssignedNodes()</dt>
+              <dt>FrozenArray&lt;Node&gt; getAssignedNodes(optional AssignedNodesOptions options)</dt>
               <dd>
-                When invoked, it <strong>must</strong> return a FrozenArray consisting of the <a>assigned nodes</a> of the <a>context object</a>.
-              </dd>
-
-              <dt>FrozenArray&lt;Node&gt; getDistributedNodes()</dt>
-              <dd>
-                When invoked, it <strong>must</strong> return a FrozenArray consisting of the <a>distributed nodes</a> of the <a>context object</a>.
+                When invoked, it <strong>must</strong> return a FrozenArray consisting of either the <a>assigned nodes</a> or the <a>distributed nodes</a> of the <a>context object</a>.
+                If the optional <var>options</var> is given and its <code>flatten</code> is true, the <a>distributed nodes</a> <strong>must</strong> be returned.
+                Otherwise, the <a>assigned nodes</a> <strong>must</strong> be returned.
               </dd>
             </dl>
+          </dd>
+        </dl>
+      </section>
+
+      <section>
+        <h3><code>AssignedNodesOptions</code> dictionary</h3>
+        <dl class="idl" title="dictionary AssignedNodesOptions">
+          <dt>boolean flatten = false</dt>
+          <dd>
+            <p>Specifies whether <code>getAssignedNodes()</code> returns <a>assigned nodes</a> or <a>distributed nodes</a></p>
           </dd>
         </dl>
       </section>
