@@ -286,6 +286,10 @@
           A node can be <dfn>assigned</dfn> to a slot, called an <dfn>assigned slot</dfn>. The exact algorithm of determining the <a>assigned slot</a> for a node is specified later.
         </p>
 
+        <p>
+          A node is called <dfn>slot assignable</dfn> if it is either <code>Text</code> or <code>Element</code>.
+        </p>
+
         <p>A <dfn>distribution</dfn> is the mechanism that determines which <a data-lt="node">nodes</a> appear at each <a>slot</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
 
         <figure>
@@ -302,6 +306,7 @@
           A <dfn>default slot</dfn> is a slot whose <a>slot name</a> is the empty string or missing.
           If there are more than one slots which don't have a <a>slot name</a> in the same <a>component tree</a>, the most <a>preceding</a> one is the <a>default slot</a>. The others are not.
         </p>
+
       </section>
 
       <section>
@@ -321,7 +326,7 @@
 
           <ol>
             <li>
-              If the parent node of <var>NODE</var> is a <a>shadow host</a>:
+              If <var>NODE</var> is <a>slot assignable</a> and the parent node of <var>NODE</var> is a <a>shadow host</a>:
               <ol>
                 <li>Let <var>TREE</var> be the <a>shadow tree</a> that the parent node of <var>NODE</var> <a>hosts</a></li>
                 <li>Let <var>NAME</var> be the value of the <a href="#widl-Element-slot">slot attribute</a> of <var>NODE</var></li>
@@ -427,7 +432,7 @@
                 <li>
                   Otherwise:
                   <ol>
-                    <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var></li>
+                    <li>Append <var>NODE</var> to <var>DISTRIBUTED-NODES</var> if <var>NODE</var> is <a>slot assignable</a></li>
                   </ol>
                 </li>
               </ol>
@@ -490,7 +495,7 @@
                 </li>
                 <li>Otherwise:
                   <ol>
-                    <li>Append <var>CHILD</var> to <var>CHILDREN</var></li>
+                    <li>Append <var>CHILD</var> to <var>CHILDREN</var> if <var>CHILD</var> is <a>slot assignable</a></li>
                   </ol>
                 </li>
               </ol>
@@ -1384,6 +1389,17 @@
             </ol>
           </dd>
 
+          <dt>readonly attribute HTMLSlotElement? assignedSlot</dt>
+          <dd>
+            <p>
+              Represents the <a>assigned slot</a> of the <a>context object</a>.
+            </p>
+            <p>
+              On getting, the attribute <strong>must</strong> return the <a>assigned slot</a> of the <a>context object</a>, if there is, and the assigned slot participates in an <a>open</a> shadow tree.
+              Otherwise <strong>must</strong> return <code>null</code>.
+            </p>
+          </dd>
+
           <dt>attribute DOMString slot</dt>
           <dd>
             <p>
@@ -1418,9 +1434,9 @@
       </section>
 
       <section>
-        <h3>Extensions to <code>NonDocumentTypeChildNode</code> Interface</h3>
+        <h3>Extensions to <code>Text</code> Interface</h3>
 
-        <dl class="idl" title="partial interface NonDocumentTypeChildNode">
+        <dl class="idl" title="partial interface Text">
           <dt>readonly attribute HTMLSlotElement? assignedSlot</dt>
           <dd>
             <p>
