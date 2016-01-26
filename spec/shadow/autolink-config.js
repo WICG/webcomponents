@@ -95,7 +95,7 @@ var autolinkConfig = {
         'window': '#window'
     },
 
-    'http://dev.w3.org/csswg/selectors4/': {
+    'https://drafts.csswg.org/selectors-4/': {
         'attribute selector': '#attribute-selector',
         'class selector': '#class-selector',
         'compound selector': '#compound',
@@ -112,7 +112,7 @@ var autolinkConfig = {
         'universal selector': '#universal-selector'
     },
 
-    'http://www.w3.org/TR/DOM-Level-3-Events/': {
+    'https://w3c.github.io/uievents/': {
         'MouseEvent': '#interface-MouseEvent',
         'mutation event': '#interface-MutationEvent',
         'relatedTarget': '#widl-MouseEvent-relatedTarget',
@@ -172,7 +172,7 @@ var autolinkConfig = {
         'window.getSelection()': '#dom-window-getselection'
     },
 
-    'http://domparsing.spec.whatwg.org/': {
+    'https://w3c.github.io/DOM-Parsing/': {
         'parse fragment': '#concept-parse-fragment'
     }
 
