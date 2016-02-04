@@ -17,6 +17,7 @@ var autolinkConfig = {
         'document': '#concept-document',
         'document element': '#document-element',
         'element': '#concept-element',
+        'event constructor': '#concept-event-constructor',
         'event dispatch': '#concept-event-dispatch',
         'event listener invoke': '#concept-event-listener-invoke',
         'event listener': '#concept-event-listener',

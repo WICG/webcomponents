@@ -655,9 +655,25 @@
       <p>When an <a>event</a> is <a data-lt="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a data-lt="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the <a data-lt="mutation event">mutation events</a>. The <a data-lt="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
 
       <section>
-        <h3>Events that are not leaked into ancestor trees</h3>
+        <h3>Changes to Dispatching Events</h3>
+        <p>The item 4 of <a title="event dispatch">Dispatching events</a> is changed to:
+        <ol start="4">
+          <li>If event’s target attribute value is participating in a tree,
+            <ins>initialize the <a>scoped flag</a> if the event is a <a>scoped events</a>, and </ins>
+            let event path be
+            <ins>the output of the <a>event path calculation algorithm</a> with target and event as inputs.</ins>
+            <del>a static ordered list of all its ancestors in tree order, and</del>
+            <ins>Otherwise</ins> let event path be the empty list<del> otherwise</del>.
+        </ol>
+      </section>
 
-        <p>For the following events, <a>scoped flag</a> is initialized to true by default if the events are dispatched by the user agent:</p>
+      <section>
+        <h3>Scoped Events</h3>
+
+        <p>The <dfn>scoped events</dfn> are events whose <a>scoped flag</a> is initialized to true
+          when the events are <a title="event dispatch">dispatched</a> by the user agent,
+          before the event path is calculated.</p>
+        <p>The following events are the scoped events, but not limited to:</p>
         <ul>
           <li><code>abort</code></li>
           <li><code>error</code></li>
