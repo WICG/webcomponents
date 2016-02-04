@@ -650,279 +650,429 @@
     <section>
       <h2>Events</h2>
 
-      <p>In each algorithm in this section, the <a>Window</a> <strong>must</strong> be considered as if it were the parent node of the <a>Document</a> so that the <a>Window</a> also receives an <a>event</a>.</p>
-
-      <p>When an <a>event</a> is <a data-lt="event dispatch">dispatched</a> in a <a>shadow tree</a>, its path either crosses the <a data-lt="shadow tree">shadow trees</a> or is terminated at the <a>shadow root</a>. One exception are the <a data-lt="mutation event">mutation events</a>. The <a data-lt="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.</p>
-
-      <section>
-        <h3>Events that are not leaked into ancestor trees</h3>
-
-        <p>For the following events, <a>scoped flag</a> is initialized to true by default if the events are dispatched by the user agent:</p>
-        <ul>
-          <li><code>abort</code></li>
-          <li><code>error</code></li>
-          <li><code>select</code></li>
-          <li><code>change</code></li>
-          <li><code>load</code></li>
-          <li><code>reset</code></li>
-          <li><code>resize</code></li>
-          <li><code>scroll</code></li>
-          <li><code>selectstart</code></li>
-        </ul>
-
-        <p class="issue">
-          Upstream this section into relevant specs, instead of having a fixed list here.
-        </p>
-
-      </section>
+      <p>
+        In each algorithm in this section, the <a>Window</a> <strong>must</strong> be considered as if it were the parent node of the <a>Document</a> so that the <a>Window</a> also receives an <a>event</a>.
+      </p>
 
       <section>
         <h3>Event Paths</h3>
 
-        <p>The <dfn>event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
+        <section>
+          <h3>scoped flag</h3>
 
-        <div class="algorithm">
-          <dl>
-            <dt>Input</dt>
-            <dd><var>NODE</var>, a node</dd>
-            <dd><var>EVENT</var>, an event</dd>
-            <dt>Output</dt>
-            <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
-          </dl>
+          <p>
+            A trusted event's <a><code>scoped flag</code></a> <strong>must</strong> be initialized to true
+            if the event is one of the following events: <code>abort</code>, <code>error</code>, <code>select</code>, <code>change</code>, <code>load</code>, <code>reset</code>,
+            <code>resize</code>, <code>scroll</code> and <code>selectstart</code>.
+          </p>
+        </section>
+
+        <section>
+          <h3>relatedTargetScoped flag</h3>
+
+          <p>
+            A trusted event's <a><code>relatedTargetScoped flag</code></a> <strong>must</strong> be initialized to true
+            if the event has a <code>relatedTarget</code> property [[!DOM-Level-3-Events]].
+          </p>
+        </section>
+
+        <section>
+          <h3>Event Paths</h3>
+
+          <p>
+            The <dfn>event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          </p>
+
+          <div class="algorithm">
+            <dl>
+              <dt>Input</dt>
+              <dd><var>NODE</var>, a node</dd>
+              <dd><var>EVENT</var>, an event</dd>
+              <dt>Output</dt>
+              <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
+            </dl>
+            <ol>
+              <li>
+                Let <var>PATH</var> be the result of the <a>composed event path calculation algorithm</a> with NODE and EVENT as input
+              </li>
+              <li>
+                If <var>EVENT</var>'s <a><code>relatedTargetScoped flag</code></a> is set and <var>EVENT</var> has a <code>relatedTarget</code> property:
+                <ol>
+                  <li>Let <var>PATH</var> be the result of the <a>event path trimming algorithm</a> with PATH as input</li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+
+          <p>The <dfn>composed event path calculation algorithm</dfn> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
+
+          <div class="algorithm">
+            <dl>
+              <dt>Input</dt>
+              <dd><var>NODE</var>, a node</dd>
+              <dd><var>EVENT</var>, an event</dd>
+              <dt>Output</dt>
+              <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
+            </dl>
+            <ol>
+              <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
+              <li>Let <var>CURRENT</var> be <var>NODE</var></li>
+              <li>
+                Repeat while <var>CURRENT</var> exists:
+                <ol>
+                  <li>Append <var>CURRENT</var> to <var>PATH</var></li>
+                  <li>
+                    If all of the following conditions are satisfied, stop this algorithm:
+                    <ol>
+                      <li><var>CURRENT</var> is a shadow root</li>
+                      <li><var>CURRENT</var> is the <a>root</a> node of <var>NODE</var></li>
+                      <li><var>EVENT</var>'s <a>scoped flag</a> is set</li>
+                    </ol>
+                  </li>
+                  <li>
+                    If <var>CURRENT</var> is assigned to a <a>slot</a> <var>SLOT</var>:
+                    <ol>
+                      <li>Let <var>CURRENT</var> be <var>SLOT</var></li>
+                    </ol>
+                  </li>
+                  <li>
+                    Otherwise:
+                    <ol>
+                      <li>Let <var>CURRENT</var> be the <a>deep parent</a> of <var>CURRENT</var></li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+
+          <p>
+            The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          </p>
+
+          <div class="algorithm">
+            <dl>
+              <dt>Input</dt>
+              <dd><var>EVENT-PATH</var>, the event path, which is the result of the <a>composed event path calculation algorithm</a></dd>
+              <dt>Output</dt>
+              <dd><var>EVENT-PATH</var> is trimmed</dd>
+            </dl>
+            <ol>
+              <li>
+                For each object, <var>A</var>, in <var>EVENT-PATH</var>:
+                <ol>
+                  <li>Let <var>RELATIVE-TARGET</var> be the <a>relative target</a> for <var>A</var></li>
+                  <li>Let <var>RELATIVE-RELATED-TARGET</var> be the <a>relative related target</a> for <var>A</var></li>
+                  <li>If <var>RELATIVE-TARGET</var> and <var>RELATIVE-RELATED-TARGET</var> are the same, remove <var>A</var> from <var>EVENT-PATH</var>.</li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+
+          <p>
+            The definitions of <a>relative target</a> and <a>relative related target</a> are specified later.
+          </p>
+
+          <div class="note">
+            <p>
+              The motivation of the <a>event path trimming algorithm</a> is to avoid the appearance of spurious events, such as <code>mouseover</code> or <code>mouseout</code> events, firing at the node in ancestor trees
+              in cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a>shadow tree</a>,
+            </p>
+          </div>
+
+        </section>
+
+        <section class="informative">
+          <h3>Event Paths Example</h3>
+
+          <p>
+            Let's re-use the same tree of trees used in the composition example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
+          </p>
+          <p>
+            <code>[I, H, O, T, S, R, N, J, C, A]</code>  (<a>Window</a> is omitted)
+          </p>
+
+          <p>
+            It's worth pointing out that if we exclude all nodes which don't participate in the composed tree from the event path,
+            the result would be equivalent to the inclusive ancestors of the node <code>I</code> in the composed tree.
+          </p>
+
+          <figure>
+            <object data="../../assets/images/event-path-composed-tree.svg" width="580" height="560"></object>
+            <figcaption>
+              The relationship between the <a>composed tree</a> and an event path.
+              If we exclude O, T, R and J, that don't participate in the composed tree, from the event path,
+              the result would be equivalent to the inclusive ancestors of the node, <code>I</code>, in the <a>composed tree</a>.
+            </figcaption>
+          </figure>
+
+          <p>
+            Note that the <a>event path calculation algorithm</a> is designed to achieve the following goals:
+          </p>
+
           <ol>
-            <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
-            <li>Let <var>CURRENT</var> be <var>NODE</var></li>
             <li>
-              Repeat while <var>CURRENT</var> exists:
-              <ol>
-                <li>Append <var>CURRENT</var> to <var>PATH</var></li>
-                <li>
-                  If all of the following conditions are satisfied, stop this algorithm:
-                  <ol>
-                    <li><var>CURRENT</var> is a shadow root</li>
-                    <li><var>CURRENT</var> is the <a>root</a> node of <var>NODE</var></li>
-                    <li><var>EVENT</var>'s <a>scoped flag</a> is set</li>
-                  </ol>
-                </li>
-                <li>
-                  If <var>CURRENT</var> is assigned to a <a>slot</a> <var>SLOT</var>:
-                  <ol>
-                    <li>Let <var>CURRENT</var> be <var>SLOT</var></li>
-                  </ol>
-                </li>
-                <li>
-                  Otherwise:
-                  <ol>
-                    <li>Let <var>CURRENT</var> be the <a>deep parent</a> of <var>CURRENT</var></li>
-                  </ol>
-                </li>
-              </ol>
+              If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the component tree, the event path always includes <var>PARENT</var>.
+              <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
+            </li>
+            <li>
+              Nodes in the event path form a <em>linear ancestor chain</em> in each <a>component tree</a>. There are no <em>branch points</em> in each <a>component tree</a>.
             </li>
           </ol>
-        </div>
 
-        <p class="note">
-          For a <a data-lt="trusted events" >trusted event</a> that has a <code>relatedTarget</code> attribute, the event path would be trimmed. See the <a>event path trimming algorithm</a>, which is specified later.
-        </p>
+          <figure>
+            <object data="../../assets/images/event-path-trees.svg" width="766" height="386">></object>
+            <figcaption>
+              The relationship between an event path and component trees. In the figure, a number shown in a right-side of each node represents a zero-based position of each node in the event path.
+              A parent node always has a larger number than that of its child node in each component tree.
+            </figcaption>
+          </figure>
 
-      </section>
+          <p>A <em>local</em> event path for each component tree would be seen as:
+          </p>
 
-      <section class="informative">
-        <h3>Event Paths Example</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>component tree</th>
+                <th><em>Local</em> Event Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>document tree 1</td>
+                <td>[I, H, C, A]</td>
+              </tr>
+              <tr>
+                <td>shadow tree 1</td>
+                <td>[O, N, J]</td>
+              </tr>
+              <tr>
+                <td>shadow tree 2</td>
+                <td>[T, S, R]</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <p>
-          Let's re-use the same tree of trees used in the composition example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
-        </p>
-        <p>
-          <code>[I, H, O, T, S, R, N, J, C, A]</code>  (<a>Window</a> is omitted)
-        </p>
+          <p>
+            That means, if your concern is only one <a>component tree</a>, you can forget all other component trees.
+            The event path would be seen as if the event happened only on the component tree you are focusing on.
+            This is an important aspect in a sense that hosting a shadow tree doesn't have any effect to the <em>local</em> event path
+            as long as the event is not stopped somewhere in the <a data-lt="descendant tree">descendant trees</a>.
+          </p>
+          <p>
+            If you are a web author and your concern is only a document tree, this might be a good news because an event listener that is registered somewhere on the document tree
+            would <em>continue to work</em> even when you attach a shadow root to an element in the document tree to <em>enhance</em> the element.
+            At the same time, an author of a shadow tree also can receive an event which will happen on a node in the document tree, if the node, or its ancestor, is assigned to a slot in the shadow tree.
+          </p>
 
-        <p>
-          It's worth pointing out that if we exclude all nodes which don't participate in the composed tree from the event path,
-          the result would be equivalent to the inclusive ancestors of the node <code>I</code> in the composed tree.
-        </p>
-
-        <figure>
-          <object data="../../assets/images/event-path-composed-tree.svg" width="580" height="560"></object>
-          <figcaption>
-            The relationship between the <a>composed tree</a> and an event path.
-            If we exclude O, T, R and J, that don't participate in the composed tree, from the event path,
-            the result would be equivalent to the inclusive ancestors of the node, <code>I</code>, in the <a>composed tree</a>.
-          </figcaption>
-        </figure>
-
-        <p>
-          Note that the <a>event path calculation algorithm</a> is designed to achieve the following goals:
-        </p>
-
-        <ol>
-          <li>
-            If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the component tree, the event path always includes <var>PARENT</var>.
-            <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
-          </li>
-          <li>
-            Nodes in the event path form a <em>linear ancestor chain</em> in each <a>component tree</a>. There are no <em>branch points</em> in each <a>component tree</a>.
-          </li>
-        </ol>
-
-        <figure>
-          <object data="../../assets/images/event-path-trees.svg" width="766" height="386">></object>
-          <figcaption>
-            The relationship between an event path and component trees. In the figure, a number shown in a right-side of each node represents a zero-based position of each node in the event path.
-            A parent node always has a larger number than that of its child node in each component tree.
-          </figcaption>
-        </figure>
-
-        <p>A <em>local</em> event path for each component tree would be seen as:
-        </p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>component tree</th>
-              <th><em>Local</em> Event Path</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>document tree 1</td>
-              <td>[I, H, C, A]</td>
-            </tr>
-            <tr>
-              <td>shadow tree 1</td>
-              <td>[O, N, J]</td>
-            </tr>
-            <tr>
-              <td>shadow tree 2</td>
-              <td>[T, S, R]</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>
-          That means, if your concern is only one <a>component tree</a>, you can forget all other component trees.
-          The event path would be seen as if the event happened only on the component tree you are focusing on.
-          This is an important aspect in a sense that hosting a shadow tree doesn't have any effect to the <em>local</em> event path
-          as long as the event is not stopped somewhere in the <a data-lt="descendant tree">descendant trees</a>.
-        </p>
-        <p>
-          If you are a web author and your concern is only a document tree, this might be a good news because an event listener that is registered somewhere on the document tree
-          would <em>continue to work</em> even when you attach a shadow root to an element in the document tree to <em>enhance</em> the element.
-          At the same time, an author of a shadow tree also can receive an event which will happen on a node in the document tree, if the node, or its ancestor, is assigned to a slot in the shadow tree.
-        </p>
-
+        </section>
       </section>
 
       <section>
         <h3>Event Retargeting</h3>
 
-        <p>In the cases where event path is across multiple component trees, the event's information about the target of the event is adjusted in order to maintain encapsulation. Event <dfn>retargeting</dfn> is a process of computing relative targets for each ancestor of the <a>node</a> at which the event is dispatched. A <dfn>relative target</dfn> is a <a>node</a> that most accurately represents the target of a dispatched event at a given ancestor while maintaining the encapsulation.</p>
+        <section>
+          <h3>Event <code>target</code> Retargeting</h3>
 
-        <p>The <dfn>retargeting algorithm</dfn> is used to determine relative targets and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
+          <p>The value of the <code>Event</code> object's <a><code>target</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and original <code>target</code> value, before adjusted, as input. The result is called a <dfn>relative target</dfn>.
+          </p>
 
-        <div class="algorithm">
-          <dl>
-            <dt>Input</dt>
-            <dd><var>BASE</var>, a base node for which a target node should be adjusted</dd>
-            <dd><var>TARGET</var>, a target node which should be adjusted</dd>
-            <dt>Output</dt>
-            <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
-          </dl>
-          <ol>
-            <li>Let <var>BASE-TREE</var> be the <a>component tree</a> which <var>BASE</var> <a>participates</a> in</li>
-            <li>Let <var>TARGET-TREE</var> be the <a>component tree</a> which <var>TARGET</var> <a>participates</a> in</li>
-            <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>tree of trees</a>:
-              <ol>
-                <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
-              </ol>
-            </li>
-            <li>Otherwise:
-              <ol>
-                <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
-              </ol>
-            </li>
-            <li>
-              For each <a>node</a>, <var>ANCETOR</var>, in an <a>inclusive deep ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
-              <ol>
-                <li>
-                  If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
-                  <ol>
-                    <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
-                    <li>Stop this algorithm</li>
-                  </ol>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </div>
+          <p>The <dfn>retargeting algorithm</dfn> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
-        <p>The value of the <code>Event</code> object's <a><code>target</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and <code>target</code> as input.</p>
-        <p>The event target retargeting process <strong>must</strong> occur prior to dispatch of an event.</p>
-      </section>
+          <div class="algorithm">
+            <dl>
+              <dt>Input</dt>
+              <dd><var>BASE</var>, a base node for which a target node should be adjusted</dd>
+              <dd><var>TARGET</var>, a target node which should be adjusted</dd>
+              <dt>Output</dt>
+              <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
+            </dl>
+            <ol>
+              <li>Let <var>BASE-TREE</var> be the <a>component tree</a> which <var>BASE</var> <a>participates</a> in</li>
+              <li>Let <var>TARGET-TREE</var> be the <a>component tree</a> which <var>TARGET</var> <a>participates</a> in</li>
+              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>tree of trees</a>:
+                <ol>
+                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
+                </ol>
+              </li>
+              <li>Otherwise:
+                <ol>
+                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
+                </ol>
+              </li>
+              <li>
+                For each <a>node</a>, <var>ANCETOR</var>, in an <a>inclusive deep ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
+                <ol>
+                  <li>
+                    If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
+                    <ol>
+                      <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
+                      <li>Stop this algorithm</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </div>
 
-      <section>
-        <h3>Retargeting <code>relatedTarget</code></h3>
+          <p>
+            Event <dfn>retargeting</dfn> is a process of computing relative targets for each ancestor of the <a>node</a> at which the event is dispatched.
+            The event target <a>retargeting</a> process <strong>must</strong> occur prior to dispatch of an event.
+            In other words, any DOM mutation occurred in an event listener does not have any affect on the result of retargeting process.
+          </p>
 
-        <p>Some events have a <a><code>relatedTarget</code></a> [[!DOM-Level-3-Events]] property, which holds a <a>node</a> that's not the event's target, but is related to the event.</p>
+          <p class="note">
+            The motivation of <a>retargeting</a> is to maintain an encapsulation in the cases where event path is across multiple component trees.
+            The event's <code>target</code> might not be an <a>unclosed node</a> at some of nodes in the event path without <a>retargeting</a>.
+            A <a>relative target</a> is a <a>unclosed node</a> that most accurately represents the target of a dispatched event at each node in the event path.
+          </p>
+        </section>
 
-        <p>
-          For instance, a <code>mouseover</code> event's <a><code>relatedTarget</code></a> may hold the <a>node</a> from which the mouse has moved to event's <code>target</code>. In the case where <code>relatedTarget</code> is in a <a>shadow tree</a>, the conforming UAs <strong>must</strong> not leak its actual value outside of this tree.
-        </p>
-        <p>
-          The value of the <code>Event</code> object's <a><code>relatedTarget</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and <code>relatedTarget</code> as input. The result is called a <dfn>relative related target</dfn>.
-        </p>
-        <p>
-          The event relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.
-        </p>
-      </section>
+        <section>
+          <h3>Event <code>relatedTarget</code> Retargeting</h3>
 
-      <section>
-        <h3>Retargeting Touch Events</h3>
+          <p>Some events have a <a><code>relatedTarget</code></a> property, which holds a <a>node</a> that's not the event's target, but is related to the event.</p>
 
-        <p>The <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute <strong>must</strong> be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a data-lt="touches"><code>touches()</code></a>, <a data-lt="changedTouches"><code>changedTouches()</code></a> and <a data-lt="targetTouches"><code>targetTouches()</code></a> must be the result of the <a>retargeting algorithm</a> with a current target and <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> as input.</p>
-      </section>
+          <p>
+            The value of the <code>Event</code> object's <a><code>relatedTarget</code></a> attribute <strong>must</strong> be the result of the <a>retargeting algorithm</a> with the event's <code>currentTarget</code> and <code>relatedTarget</code> as input.
+            The result is called a <dfn>relative related target</dfn>.
+          </p>
 
-      <section>
-        <h3>Retargeting Focus Events</h3>
+          <p>
+            The event relatedTarget retargeting process <strong>must</strong> occur prior to dispatch of an event.
+          </p>
+        </section>
 
-        <p>The <code>focus</code>, <code>focusin</code>, <code>blur</code>, and <code>focusout</code> events <strong>must</strong> be treated in the same way as events with a <code>relatedTarget</code>, where the corresponding <a>node</a> that is losing focus as a result of <code>target</code> gaining focus or the <a>node</a> that is gaining focus, and thus causing the blurring of <code>target</code> acts as the related target.</p>
-      </section>
+        <section>
+          <h3>Touch Events Retargeting </h3>
 
-      <section>
-        <h3>Event Path Trimming</h3>
+          <p>The <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> [[!TOUCH-EVENTS]] attribute <strong>must</strong> be adjusted in the same way as an event with a <a><code>relatedTarget</code></a>. Each <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> in the <a><code>TouchList</code></a> returned from <a><code>TouchEvent</code></a> <a data-lt="touches"><code>touches()</code></a>, <a data-lt="changedTouches"><code>changedTouches()</code></a> and <a data-lt="targetTouches"><code>targetTouches()</code></a> must be the result of the <a>retargeting algorithm</a> with a current target and <a><code>Touch</code></a> <a data-lt="Touch target"><code>target</code></a> as input.</p>
+        </section>
 
-        <p>
-          In cases where both <code>relatedTarget</code> and <code>target</code> of a <a data-lt="trusted events">trusted event</a> are part of the same <a>shadow tree</a>, the conforming UAs <strong>must</strong> <em>stop</em> events at the shadow root to avoid the appearance of spurious <code>mouseover</code> and <code>mouseout</code> events firing from the same node.
-        </p>
-        <p>
-           Thus, event listeners for <a>trusted events</a> <strong>must not</strong> be invoked on a <a>node</a> for which the <code>target</code> and <code>relatedTarget</code> are the same.
-        </p>
+        <section class="informative">
+          <h3>Event Retargeting Example</h3>
 
-        <p>
-          The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be used to trim the event path for a <a data-lt="trusted events">trusted event</a> that has a <code>relatedTarget</code> attribute and
-          <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
-        </p>
-        <div class="algorithm">
-          <dl>
-            <dt>Input</dt>
-            <dd><var>EVENT-PATH</var>, the event path, which is the result of the <a>event path calculation algorithm</a></dd>
-            <dt>Output</dt>
-            <dd><var>EVENT-PATH</var> is trimmed so that event listeners aren't invoked on a node for which the <code>target</code> and <code>relatedTarget</code> are the same.</dd>
-          </dl>
-          <ol>
-            <li>
-              For each object, <var>A</var>, in <var>EVENT-PATH</var>:
-              <ol>
-                <li>Let <var>RELATIVE-TARGET</var> be the <a>relative target</a> for <var>A</var></li>
-                <li>Let <var>RELATIVE-RELATED-TARGET</var> be the <a>relative related target</a> for <var>A</var></li>
-                <li>If <var>RELATIVE-TARGET</var> and <var>RELATIVE-RELATED-TARGET</var> are the same, remove <var>A</var> from <var>EVENT-PATH</var>.</li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-        <p class="note">
-          For an <a data-lt="trusted events" >untrusted event</a>, the <a>event path trimming algorithm</a> is not used.
-        </p>
+          <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a data-lt="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a data-lt="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a data-lt="shadow root">shadow roots</a>:</p>
+          <pre class="example">
+  &lt;div id="player"&gt;
+      <span class=shadow-boundary>&lt;shadow-root id="player-shadow-root"&gt;</span>
+          &lt;div id="controls"&gt;
+              &lt;button id="play-button"&gt;PLAY&lt;/button&gt;
+              &lt;input type="range" id="timeline"&gt;
+                  <span class=shadow-boundary>&lt;shadow-root id="timeline-shadow-root"&gt;</span>
+                      &lt;div id="slider-thumb" id="timeline-slider-thumb"&gt;&lt;/div&gt;
+                  <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
+              &lt;/input&gt;
+              &lt;div id="volume-slider-container"&gt;
+                  &lt;input type="range" id="volume-slider"&gt;
+                      <span class=shadow-boundary>&lt;shadow-root id="volume-shadow-root"&gt;</span>
+                          &lt;div id="slider-thumb" id="volume-slider-thumb"&gt;&lt;/div&gt;
+                      <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
+                  &lt;/input&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;
+      <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
+  &lt;/div&gt;
+          </pre>
+
+          <p>Let's have a user position their pointing device over the volume slider's thumb (<code>#volume-slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
+
+          <p>Per the <a>retargeting algorithm</a>, we should have the following set of ancestors and relative targets:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Ancestor</th>
+                <th>Relative Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>#player</code></td>
+                <td><code><strong>#player</strong></code></td>
+              </tr>
+              <tr>
+                <td><code>#player-shadow-root</code></td>
+                <td><code>#volume-slider</code></td>
+              </tr>
+              <tr>
+                <td><code>#controls</code></td>
+                <td><code>#volume-slider</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider-container</code></td>
+                <td><code>#volume-slider</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider</code></td>
+                <td><code><strong>#volume-slider</strong></code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-shadow-root</code></td>
+                <td><code>#volume-slider-thumb</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider-thumb</code></td>
+                <td><code><strong>#volume-slider-thumb</strong></code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
+            (<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
+
+          <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a href="#retargeting-relatedtarget">relatedTarget retargeting</a>, we should have the following set of ancestors and adjusted related targets:</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Ancestor</th>
+                <th>Relative Target</th>
+                <th>Relative Related Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>#player</code></td>
+                <td><code><strong>#player</strong></code></td>
+                <td><code><strong>#player</strong></code></td>
+              </tr>
+              <tr>
+                <td><code>#player-shadow-root</code></td>
+                <td><code>#volume-slider</code></td>
+                <td><code>#timeline</code></td>
+              </tr>
+              <tr>
+                <td><code>#controls</code></td>
+                <td><code>#volume-slider</code></td>
+                <td><code>#timeline</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider-container</code></td>
+                <td><code>#volume-slider</code></td>
+                <td><code>#timeline</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider</code></td>
+                <td><code><strong>#volume-slider</strong></code></td>
+                <td><code>#timeline</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-shadow-root</code></td>
+                <td><code>#volume-slider-thumb</code></td>
+                <td><code>#timeline</code></td>
+              </tr>
+              <tr>
+                <td><code>#volume-slider-thumb</code></td>
+                <td><code><strong>#volume-slider-thumb</strong></code></td>
+                <td><code><strong>#timeline</strong></code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The node, <code>#player</code>, has both <code>target</code> and <code>relatedTarget</code> being the same value (<code>#player</code>), which means that we do not dispatch the event on this <a>node</a> and its ancestors.</p>
+        </section>
+
       </section>
 
       <section>
@@ -941,130 +1091,12 @@
             </ol></li>
         </ul>
 
-        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>relatedTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a>. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a data-lt="node">nodes</a> in <a data-lt="shadow tree">shadow trees</a>.</p>
-      </section>
+        <p>Upon completion of the event dispatch, the <a><code>Event</code></a> object's <a><code>target</code></a> and <a><code>relatedTarget</code></a> <strong>must</strong> be to the highest ancestor's <a>relative target</a> and <a>relative related target</a>, respectively. Since it is possible for a script to hold on to the <code>Event</code> object past the scope of event dispatch, this step is necessary to avoid revealing the <a data-lt="node">nodes</a> in <a data-lt="shadow tree">shadow trees</a>.</p>
 
-      <section class="informative">
-        <h3>Event Retargeting Example</h3>
+        <p>
+          The <a data-lt="mutation event">mutation event types</a> <strong>must</strong> never be dispatched in a <a>shadow tree</a>.
+        </p>
 
-        <p>Suppose we have a user interface for a media controller, represented by this tree, composed of both <a>document tree</a> and the <a data-lt="shadow tree">shadow trees</a>. In this example, we will assume that selectors are allowed to cross the shadow boundaries and we will use these selectors to identify the <a data-lt="element">elements</a>. Also, we will invent a fictional <code>shadow-root</code> <a>element</a> to demarcate the shadow boundaries and represent <a data-lt="shadow root">shadow roots</a>:</p>
-        <pre class="example">
-&lt;div id="player"&gt;
-    <span class=shadow-boundary>&lt;shadow-root id="player-shadow-root"&gt;</span>
-        &lt;div id="controls"&gt;
-            &lt;button id="play-button"&gt;PLAY&lt;/button&gt;
-            &lt;input type="range" id="timeline"&gt;
-                <span class=shadow-boundary>&lt;shadow-root id="timeline-shadow-root"&gt;</span>
-                    &lt;div id="slider-thumb" id="timeline-slider-thumb"&gt;&lt;/div&gt;
-                <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
-            &lt;/input&gt;
-            &lt;div id="volume-slider-container"&gt;
-                &lt;input type="range" id="volume-slider"&gt;
-                    <span class=shadow-boundary>&lt;shadow-root id="volume-shadow-root"&gt;</span>
-                        &lt;div id="slider-thumb" id="volume-slider-thumb"&gt;&lt;/div&gt;
-                    <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
-                &lt;/input&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    <span class=shadow-boundary>&lt;/shadow-root&gt;</span>
-&lt;/div&gt;
-        </pre>
-
-        <p>Let's have a user position their pointing device over the volume slider's thumb (<code>#volume-slider-thumb</code>), thus triggering a <code>mouseover</code> event on that node. For this event, let's pretend it has no associated <code>relatedTarget</code>.</p>
-
-        <p>Per the <a>retargeting algorithm</a>, we should have the following set of ancestors and relative targets:</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Ancestor</th>
-              <th>Relative Target</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>#player</code></td>
-              <td><code><strong>#player</strong></code></td>
-            </tr>
-            <tr>
-              <td><code>#player-shadow-root</code></td>
-              <td><code>#volume-slider</code></td>
-            </tr>
-            <tr>
-              <td><code>#controls</code></td>
-              <td><code>#volume-slider</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider-container</code></td>
-              <td><code>#volume-slider</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider</code></td>
-              <td><code><strong>#volume-slider</strong></code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-shadow-root</code></td>
-              <td><code>#volume-slider-thumb</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider-thumb</code></td>
-              <td><code><strong>#volume-slider-thumb</strong></code></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>After we dispatch the <code>mouseover</code> event using these newly computed relative targets, the user decides to move their pointing device over the thumb of the timeline
-          (<code>#timeline-slider-thumb</code>). This triggers both a <code>mouseout</code> event for the volume slider thumb and the <code>mouseover</code> event for the timeline thumb.</p>
-
-        <p>Let's see how the <code>relatedTarget</code> value of the volume thumb's <code>mouseout</code> event is affected. For this event, the <code>relatedTarget</code> is the timeline thumb (<code>#timeline-slider-thumb</code>). Per the <a href="#retargeting-relatedtarget">relatedTarget retargeting</a>, we should have the following set of ancestors and adjusted related targets:</p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Ancestor</th>
-              <th>Relative Target</th>
-              <th>Adjusted related Target</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>#player</code></td>
-              <td><code><strong>#player</strong></code></td>
-              <td><code><strong>#player</strong></code></td>
-            </tr>
-            <tr>
-              <td><code>#player-shadow-root</code></td>
-              <td><code>#volume-slider</code></td>
-              <td><code>#timeline</code></td>
-            </tr>
-            <tr>
-              <td><code>#controls</code></td>
-              <td><code>#volume-slider</code></td>
-              <td><code>#timeline</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider-container</code></td>
-              <td><code>#volume-slider</code></td>
-              <td><code>#timeline</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider</code></td>
-              <td><code><strong>#volume-slider</strong></code></td>
-              <td><code>#timeline</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-shadow-root</code></td>
-              <td><code>#volume-slider-thumb</code></td>
-              <td><code>#timeline</code></td>
-            </tr>
-            <tr>
-              <td><code>#volume-slider-thumb</code></td>
-              <td><code><strong>#volume-slider-thumb</strong></code></td>
-              <td><code><strong>#timeline</strong></code></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>The node, <code>#player</code>, has both <code>target</code> and <code>relatedTarget</code> being the same value (<code>#player</code>), which means that we do not dispatch the event on this <a>node</a> and its ancestors.</p>
       </section>
 
     </section>
@@ -1537,6 +1569,10 @@
           <dd>
             <p>Specifies the <a>scoped flag</a> of <code>Event</code></p>
           </dd>
+          <dt>boolean relatedTargetScoped = false</dt>
+          <dd>
+            <p>Specifies the <a>relatedTargetScoped flag</a> of <code>Event</code></p>
+          </dd>
         </dl>
       </section>
 
@@ -1585,6 +1621,12 @@
           <dd>
             <p>
               Returns the <dfn>scoped flag</dfn>.
+            </p>
+          </dd>
+          <dt>readonly attribute boolean relatedTargetScoped</dt>
+          <dd>
+            <p>
+              Returns the <dfn>relatedTargetScoped flag</dfn>.
             </p>
           </dd>
         </dl>
