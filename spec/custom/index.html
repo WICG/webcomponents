@@ -257,7 +257,7 @@ Effectively, the registry is consulted whenever a new DOM element is created, wh
 
 <p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a href="#dfn-custom-element">custom element</a> of an <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> is determined by <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> that was flattened by replacing every <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a> <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
 
-<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceeding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> in the first encountered <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, that has not yet <a href="https://html.spec.whatwg.org/multipage/syntax.html#completely-loaded">completely loaded</a>. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a>.</p>
+<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceding the <a href="#dfn-custom-element-order">custom element order</a> of an <a href="#dfn-custom-element">element</a> in the first encountered <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, that has not yet <a href="https://html.spec.whatwg.org/multipage/syntax.html#completely-loaded">completely loaded</a>. If there is no such <a href="#dfn-custom-element">element</a>, the <a href="#dfn-highest-stable-order">highest stable order</a> is the highest custom element order in the flattened <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a>.</p>
 
 <div class="informative">
 <p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
@@ -590,7 +590,7 @@ var foo = document.createElement('p', 'x-foo');
 
 <h2 id="instantiating-custom-elements">Instantiating Custom Elements</h2>
 
-<p>The <a href="#dfn-custom-element-type">custom element type</a> is given to a <a href="#dfn-custom-element">custom element</a> at the time of its instantation in one of the two ways:</p>
+<p>The <a href="#dfn-custom-element-type">custom element type</a> is given to a <a href="#dfn-custom-element">custom element</a> at the time of its instantiation in one of the two ways:</p>
 <ol>
     <li>As the <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of the <a href="#dfn-custom-element">custom element</a>. These types of <a href="#dfn-custom-element-type">custom element types</a> are called <dfn id="dfn-custom-tag">custom tags</dfn>.</li>
     <li>As the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> of the <a href="#dfn-custom-element">custom element</a>. <a href="#dfn-custom-element-type">custom element types</a> given this way are called <dfn id="dfn-type-extension">type extensions</dfn>.</li>
@@ -786,7 +786,7 @@ steps:</p>
 &lt;!-- taco-button represents a focusable span with a fancy name and a text label -->
 &lt;taco-button tabindex=&quot;0&quot; <mark>aria-label=&quot;Eat Me&quot;</mark>&gt;Eat Me&lt;/taco-button&gt;</code>
 </pre>
-<p>The addition of  keyboard event handlers to the custom element element provides the means for keyboard users to operate the control, but does not convey the presence of the functionality. </p>
+<p>The addition of  keyboard event handlers to the custom element provides the means for keyboard users to operate the control, but does not convey the presence of the functionality. </p>
 
 <pre><code class="prettyprint">
 &lt;!-- taco-button represents focusable span with a fancy name, a text label and button like event handling -->
