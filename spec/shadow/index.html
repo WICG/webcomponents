@@ -1157,10 +1157,30 @@
             <dd><var>ROOT</var>, either a <a>document</a> or a <a>shadow root</a></dd>
             <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
             <dt>Output</dt>
-            <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var>.</dd>
+            <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var></dd>
           </dl>
           <ol>
-            <li>Let <var>ADJUSTED</var> be the result of the <a>retargeting algorithm</a> with <var>ROOT</var> and <var>ELEMENT</var> as input</li>
+            <li>Let <var>ADJUSTED</var> be <var>ELEMENT</var></li>
+	    <li>Repeat the following steps
+	      <ol>
+                <li>If <var>ROOT</var> is the root node of <var>ADJUSTED</var>:
+                  <ol>
+		    <li>Stop this algorithm</li>
+		  </ol>
+		  </li>
+		<li>If <var>ADJUSTED</var> is in a <a>shadow tree</a>:
+		  <ol>
+		    <li>Let <var>ADJUSTED</var> be the <a>shadow host</a> which hosts the root node of <var>ADJUSTED</var></li>
+		  </ol>
+		</li>
+		<li>Otherwise:
+		  <ol>
+		    <li>Let <var>ADJUSTED</var> be null</li>
+		    <li>Stop this algorithm</li>
+		  </ol>
+		</li>
+	      </ol>
+	    </li>
           </ol>
         </div>
       </section>
