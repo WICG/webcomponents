@@ -1130,6 +1130,8 @@
         <p>The <a>sequential focus navigation order</a> for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for the <a>parent tree</a> <var>B</var> as follows:</p>
         <ol>
           <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
+          <li>The <a>sequential focus navigation order</a> for A <strong>must</strong> be
+            skipped if <var>HOST</var> is given the <a>tabindex</a> value -1.</li>
           <li>
             The <a>sequential focus navigation order</a> for A <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for <var>B</var>:
             <ol>
@@ -1138,6 +1140,27 @@
             </ol>
           </li>
         </ol>
+
+        <p>Likewise, the <a>sequential focus navigation order</a> for <a>distributed nodes</a>
+          under a given <a>slot</a> <var>A</var> <strong>must</strong> be inserted into
+          the <a>sequential focus navigation order</a> of the containing <a>shadow tree</a>'s
+          <a>sequential focus navigation order</a> as follows:</p>
+        <ol>
+          <li>The <a>sequential focus navigation order</a> for its <a>distributed nodes</a>
+            <strong>must</strong> be skipped if A is assigned <a>tabindex</a> value -1.
+          <li>If <var>A</var> is not given <a>tabindex</a>,
+            The <a>sequential focus navigation order</a> for its <a>distributed nodes</a>
+            <strong>must</strong> be inserted in place of <var>A</var> as if <var>A</var>
+            were assigned the <a>tabindex</a> value 0 for determining its position.</li>
+          <li>Otherwise the <a>sequential focus navigation order</a> for its
+            <a>distributed nodes</a> <strong>must</strong> be inserted in place of
+            <var>A</var> according to its <a>tabindex</a> value.</li>
+        </ol>
+        <p class="note">When a <a>slot</a> <var>A</var> is assigned to another
+          <a>slot</a> <var>B</var>,
+          the <a>sequential focus navigation order</a> of <var>A</var>'s <a>distributed nodes</a>
+          is inserted into <var>B</var>'s <a>sequential focus navigation order</a> following
+          the steps shown above.</p>
 
         <p>For <a>directional focus navigation</a> [[!CSS3-UI]], it is up to the user agent to integrate the <a data-lt="shadow tree">shadow trees</a> into the document's <a>directional focus navigation</a>.
       </section>
