@@ -1149,11 +1149,42 @@
       </section>
 
       <section>
-        <h3>Focus Navigation</h3>
+        <h3>Sequential Focus Navigation</h3>
 
         <p>If a <a>node</a> doesn’t <a data-lt="participates">participate</a> in the <a>document flat tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>sequential focus navigation</a>.</p>
 
-        <p>The <a>sequential focus navigation order</a> for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for the <a>parent tree</a> <var>B</var> as follows:</p>
+        <p>Each <a>shadow root</a> and <a>slot</a> element is a <a>control group owner</a> and
+          forms its <a>control group</a>.
+        </p>
+
+        <p>For a given <a>shadow root</a>, its <a>sequential focus navigation order</a> consists of
+          <a data-lt="focusable area">focusable areas</a> in its <a>shadow tree</a>
+          except descendants of a <a>shadow host</a>.
+          The order is tree order.
+        </p>
+
+        <p>For a given <a>slot</a> element,
+          its <a>sequential focus navigation order</a> consists of
+          <a data-lt="focusable area">focusable areas</a> of its <a>assigned nodes</a>
+          and descendants of the <a>assigned nodes</a>.
+          If a given slot's assigned nodes is empty, its
+          <a>sequential focus navigation order</a> consists of
+          <a data-lt="focusable area">focusable areas</a> of its fallback contents.
+          They are ordered by tree order of assigned nodes,
+          whose order is defined by <a>get assigned nodes algorithm</a>,
+          or if they are fallback contents, they are ordered by tree order of fallback contents.
+        </p>
+
+        <p>
+          Any <a>focusable area</a> that is a descendant of a shadow host is excluded
+          from the <a>sequential focus navigation order</a> of its component tree.
+          Thus, if a child of a shadow host is not assigned to any slot, the child and
+          its descendants are considered <a>inert</a> and do not participate in any
+          <a>sequential focus navigation order</a>.
+        </p>
+
+        <p>
+          The <a>sequential focus navigation order</a> for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for the <a>parent tree</a> <var>B</var> as follows:</p>
         <ol>
           <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
           <li>The <a>sequential focus navigation order</a> for A <strong>must</strong> be
@@ -1167,26 +1198,23 @@
           </li>
         </ol>
 
-        <p>Likewise, the <a>sequential focus navigation order</a> for <a>distributed nodes</a>
-          under a given <a>slot</a> <var>A</var> <strong>must</strong> be inserted into
-          the <a>sequential focus navigation order</a> of the containing <a>shadow tree</a>'s
-          <a>sequential focus navigation order</a> as follows:</p>
+        <p>Likewise, the <a>sequential focus navigation order</a> for a given <a>slot</a>
+          <var>C</var> <strong>must</strong> be inserted into
+          the <a>sequential focus navigation order</a> of the containing <a>shadow tree</a>
+          <var>D</var>'s <a>sequential focus navigation order</a> as follows:</p>
         <ol>
-          <li>The <a>sequential focus navigation order</a> for its <a>distributed nodes</a>
-            <strong>must</strong> be skipped if A is assigned <a>tabindex</a> value -1.
-          <li>If <var>A</var> is not given <a>tabindex</a>,
-            The <a>sequential focus navigation order</a> for its <a>distributed nodes</a>
-            <strong>must</strong> be inserted in place of <var>A</var> as if <var>A</var>
+          <li>Let <var>ORDER</var> be the <a>sequential focus navigation order</a> of
+            the <a>assigned nodes</a> and their descendant nodes, or fallback contents of
+            <a>slot</a> <var>C</var>.</li>
+          <li>If <var>C</var> is assigned <a>tabindex</a> value -1, <var>ORDER</var>
+            <strong>must</strong> be skipped in <var>D</var>'s
+            <a>sequential focus navigation order</a>
+          <li>If <var>C</var> is not given <a>tabindex</a>, <var>ORDER</var>
+            <strong>must</strong> be inserted in place of <var>C</var> as if <var>C</var>
             were assigned the <a>tabindex</a> value 0 for determining its position.</li>
-          <li>Otherwise the <a>sequential focus navigation order</a> for its
-            <a>distributed nodes</a> <strong>must</strong> be inserted in place of
-            <var>A</var> according to its <a>tabindex</a> value.</li>
+          <li>Otherwise <var>ORDER</var> <strong>must</strong> be inserted in place of
+            <var>C</var> according to its <a>tabindex</a> value.</li>
         </ol>
-        <p class="note">When a <a>slot</a> <var>A</var> is assigned to another
-          <a>slot</a> <var>B</var>,
-          the <a>sequential focus navigation order</a> of <var>A</var>'s <a>distributed nodes</a>
-          is inserted into <var>B</var>'s <a>sequential focus navigation order</a> following
-          the steps shown above.</p>
 
         <p>For <a>directional focus navigation</a> [[!CSS3-UI]], it is up to the user agent to integrate the <a data-lt="shadow tree">shadow trees</a> into the document's <a>directional focus navigation</a>.
       </section>
