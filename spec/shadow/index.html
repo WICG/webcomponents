@@ -1598,24 +1598,12 @@
               </dl>
 
               <ol>
-                <li>If <var>EVENT</var> hasn't been dispatched, return a new empty array.</li>
+                <li>If <var>EVENT</var> hasn't been dispatched or <var>EVENT</var> is no longer dispatched, return a new empty array.</li>
                 <li>
                   Otherwise:
                   <ol>
                     <li>Let <var>PATH</var> be the event path of <var>EVENT</var>.</li>
-                    <li>
-                      If <var>EVENT</var> is being dispatched:
-                      <ol>
-                        <li>Let <var>CURRENT-TARGET</var> be the <a>current target</a> of <var>EVENT</var>.</li>
-                      </ol>
-                    </li>
-                    <li>
-                      Otherwise:
-                      <ol>
-                        <li>Let <var>CURRENT-TARGET</var> be the last node of <var>PATH</var>.</li>
-                      </ol>
-                    </li>
-                    <li>Let PATH contain only a node which is an <a>unclosed node</a> of <var>CURRENT-TARGET</var>.</li>
+                    <li>Let PATH contain only a node which is an <a>unclosed node</a> of the <a>current target</a> of <var>EVENT</var>.</li>
                   </ol>
                 </li>
               </ol>
