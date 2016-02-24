@@ -8,7 +8,7 @@
     <script class='remove'>
       var respecConfig = {
           specStatus: "ED",
-          shortName: "imports",
+          shortName: "html-imports",
           editors: [
           { name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc.", w3cid: 40456 },
           { name: "Hajime Morrita", url: "mailto:morrita@chromium.org", company: "Google, Inc.", w3cid: 50024 }],
@@ -108,7 +108,7 @@ The list is initially empty, and items are added to it as specified by the <a hr
 
 <p>An <a href="#dfn-imported-document">imported document</a> also has one or more <dfn id="dfn-import-import-predecessor">import predecessors</dfn>. An <a href="#dfn-import-import-predecessor">import predecessor</a> is a document. If the URL of document <var>A</var> is located before the URL of document <var>B</var> in the <a href="#dfn-import-link-list">import link list</a> of <var>B</var>'s <a href="#dfn-import-parent">import parent</a>, and the located <a href="#dfn-import-link-link">link</a> is marked as a <a href="#dfn-import-link-list-branch">branch</a>, then <var>A</var> is <a href="#dfn-import-import-predecessor">import predecessor</a> of <var>B</var>.</p>
 
-<p>The <dfn id="dfn-import-import-ancestor-predecessor">import ancestor predecessors</dfn> of document <var>A</var> is defined as follows: If document <var>B</var> is an <a href="#dfn-import-import-predecessor">import predecessor</a> of document <var>C</var>, and <var>C</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>A</var>, <var>B</var> is an <a href="#dfn-import-import-ancestor- predecessor">import ancestor predecessors</a> of <var>A</var>.</p>
+<p>The <dfn id="dfn-import-import-ancestor-predecessor">import ancestor predecessors</dfn> of document <var>A</var> is defined as follows: If document <var>B</var> is an <a href="#dfn-import-import-predecessor">import predecessor</a> of document <var>C</var>, and <var>C</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>A</var>, <var>B</var> is an <a href="#dfn-import-import-ancestor-predecessor">import ancestor predecessors</a> of <var>A</var>.</p>
 
 <p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> that is in either <a href="#dfn-import-import-ancestor-predecessor">import ancestor predecessors</a> or <a href="#dfn-import-import-predecessor">import predecessors</a> of document <var>A</var>, or is linked from <a href="#dfn-import-link-list-branch">branch</a> item of <var>A</var>'s <a href="#dfn-import-link-list">import link list</a>, is the <dfn id="dfn-import-dependent">import dependent</dfn> of <var>A</var>.</p>
 
@@ -261,7 +261,7 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 </ol>
 </section>
 
-<h3 id="additions-to-document-write">Additions to <code>document.close()</code> method</h3>
+<h3 id="additions-to-document-close">Additions to <code>document.close()</code> method</h3>
 
 <p>Add following step as the first step of the definition:</p>
 
@@ -340,14 +340,14 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 <dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
 <ol>
-    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:</li>
-    <li><ol>
+    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:
+    <ol>
       <li>Let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
     </ol></li>
-    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var> with <a href="http://fetch.spec.whatwg.org/#concept-request-origin">request's origin</a> set to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/origin-0.html#origin">origin</a> of the <a href="#dfn-master-document">master document</a>, the <a href="http://fetch.spec.whatwg.org/#concept-request-mode">mode</a> to <i>CORS</i> and the <a href="http://fetch.spec.whatwg.org/#concept-request-credentials-mode">credentials mode</a> to <i>same-origin</i>.</li>
+    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var> with <a href="http://fetch.spec.whatwg.org/#concept-request-origin">request's origin</a> set to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/origin-0.html#origin">origin</a> of the <a href="#dfn-master-document">master document</a>, the <a href="http://fetch.spec.whatwg.org/#concept-request-mode">mode</a> to <i>CORS</i> and the <a href="http://fetch.spec.whatwg.org/#concept-request-credentials-mode">credentials mode</a> to <i>same-origin</i>.
     <ol>
-        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i> or the response has a <a href="https://fetch.spec.whatwg.org/#concept-header">header</a> whose name is <code>Content-Disposition</code>:</li>
-        <li><ul>
+        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i> or the response has a <a href="https://fetch.spec.whatwg.org/#concept-header">header</a> whose name is <code>Content-Disposition</code>:
+        <ul>
           <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-map">import map</a> and <strong>stop</strong>.
         </ul></li>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
@@ -504,14 +504,14 @@ the external resources of the <code><a href="http://www.whatwg.org/specs/web-app
   <li>Let <var>TREE</var>'s value be <var>CURRENT</var>
   <li>Let <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> be <var>PARENT</var>.</li>
   <li>Make <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list empty.</li>
-  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:</li>
+  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:
   <ol>
     <li>Let <var>IMPORT</var> be the import of <var>LINK</var>.</li>
     <li>If <var>IMPORT</var> is not in <var>POOL<var>, try next.</li>
     <li>Remove <var>LINK</var> from <var>POOL</var>.</li>
     <li>Invoke the <a href="#dfn-import-link-tree-forming">import tree forming</a> algorithm with <var>TREE</var> as <var>PARENT</var>, <var>IMPORT</var> as <var>CURRENT</var> and <var>POOL</var> as <var>POOL</var>, let the result be <var>CHILD</var>.
     <li>Append <var>CHILD</var> to <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list.</li>
-  </ol>
+  </ol></li>
   <li><strong>stop</strong>.</li>
 </ol>
 </section>
