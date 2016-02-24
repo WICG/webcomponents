@@ -1,106 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<title>HTML Imports</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<link rel="stylesheet" href="../../assets/styles/spec.css" type="text/css">
-<link rel="stylesheet" href="../../assets/styles/prettify.css" type="text/css">
-<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-ED" type="text/css" >
-<script src="../../assets/scripts/spec-assist.js"></script>
-<script src="../../assets/scripts/prettify.js"></script>
+    <meta charset='utf-8'/>
+    <title>HTML Imports</title>
+    <link rel="stylesheet" href="../../assets/styles/respec-complement.css" type="text/css" />
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+          specStatus: "ED",
+          shortName: "html-imports",
+          editors: [
+          { name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc.", w3cid: 40456 },
+          { name: "Hajime Morrita", url: "mailto:morrita@chromium.org", company: "Google, Inc.", w3cid: 50024 }],
+          wg: "Web Platform Working Group",
+          wgURI: "http://www.w3.org/WebPlatform/WG/",
+          wgPublicList: "public-webapps",
+          wgPatentURI: "http://www.w3.org/2004/01/pp-impl/83482/status",
+          license: "w3c-software-doc",
+          edDraftURI: "http://w3c.github.io/webcomponents/spec/imports/",
+          otherLinks: [
+              {
+                  key: "Participate",
+                  data: [
+                    {value:"We are on Github", href:"https://github.com/w3c/webcomponents/labels/html-imports"},
+                    {value:"Discuss on public-webapps@w3.org", href:"http://lists.w3.org/Archives/Public/public-webapps/"},
+                    {value:"Web Platform Working Group", href:"http://www.w3.org/WebPlatform/WG/"}
+                    ]
+              },
+              {
+                  key: "Revision history",
+                  href: "https://github.com/w3c/webcomponents/commits/gh-pages/spec/imports/"
+              },
+              {
+                  key: "Bugs filed",
+                  href: "https://github.com/w3c/webcomponents/labels/html-imports"
+              }
+          ]
+      };
+    </script>
 </head>
 
 <body>
+<section id='abstract'>
+  <p>HTML Imports are a way to include and reuse HTML documents in other HTML documents.</p>
+</section>
 
-<div class="head">
-
-<div class="logo">
-    <a href="http://www.w3.org/"><img width="72" height="48" src="//www.w3.org/Icons/w3c_home" alt="W3C"></a>
-</div>
-
-<h1>HTML Imports</h1>
-<h2 id="editors-draft">W3C Editor's Draft</h2>
-<dl>
-<dt>This version</dt>
-    <dd><a href="http://w3c.github.io/webcomponents/spec/imports/">http://w3c.github.io/webcomponents/spec/imports/</a></dd>
-<dt>Latest version</dt>
-    <dd><a href="http://www.w3.org/TR/html-imports/">http://www.w3.org/TR/html-imports/</a></dd>
-<dt>Latest editor's draft</dt>
-    <dd><a href="http://w3c.github.io/webcomponents/spec/imports/">http://w3c.github.io/webcomponents/spec/imports/</a></dd>
-<dt>Previous version</dt>
-    <dd>none</dd>
-<dt>Revision history</dt>
-    <dd><a id="log" href="https://github.com/w3c/webcomponents/commits/gh-pages/spec/imports/">https://github.com/w3c/webcomponents/commits/gh-pages/spec/imports/</a></dd>
-<dt>Participate</dt>
-    <dd>Discuss on <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps@w3.org</a> (<a href="http://www.w3.org/WebPlatform/WG/">Web Platform Working Group</a>)</dd>
-<dt>Bugs filed</dt>
-  <dd><a href="https://github.com/w3c/webcomponents/labels/html-imports">https://github.com/w3c/webcomponents/labels/html-imports</a></dd>
-<dt>Editor</dt>
-    <dd class="vcard"><span class="fn">Dimitri Glazkov</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:dglazkov@chromium.org">dglazkov@chromium.org</a>&gt;</dd>
-    <dd class="vcard"><span class="fn">Hajime Morrita</span>, <span class="org">Google</span>, &lt;<a class="email" href="mailto:morrita@chromium.org">morrita@chromium.org</a>&gt;</dd>
-</dl>
-
-<p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> &copy; 2013 <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>&copy;</sup> (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>, <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>, <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a rel="license" href="http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document">permissive document license</a> rules apply.</p>
-
-<hr>
-
-<h2 id="abstract">Abstract</h2>
-
-<p>HTML Imports are a way to include and reuse HTML documents in other HTML documents.</p>
-
-<h2 id="status">Status of This Document</h2>
-
-<p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at http://www.w3.org/TR/.</em></p>
-
-<p>This document was published by the <a href="http://www.w3.org/WebPlatform/WG/">Web Platform Working Group</a> as an Editor's Draft. If you wish to make comments regarding this document, please send them to <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>, <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>). All feedback is welcome.</p><p>Publication as an Editor's Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr> Membership. This is a draft document and may be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite this document as other than work in progress.</p>
-
-<p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/83482/status" rel="disclosure">public list of any patent disclosures</a> made in connection with the deliverables of the group; that page also includes instructions for disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section 6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.</p>
-
-<p>This document is governed by the <a id="w3c_process_revision" href="http://www.w3.org/2015/Process-20150901/">1 September 2015 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.</p>
-
-</div>
-
-<section class="toc">
-<h2 id="toc">Table of Contents</h2>
-<ol>
-    <li><a href="#about">About this Document</a>
-    <li><a href="#dependencies">Dependencies</a>
-    <li><a href="#terminology">Terminology</a>
-    <ol>
-      <li><a href="#import-dependent">Import Dependent</a>
-    </ol>
-    <li><a href="#link-type-import">Link Type "<code>import</code>"</a>
-    <li><a href="#interface-import">Extensions to <code>HTMLLinkElement</code> interface</a>
-    <li><a href="#interface-document">Extensions to <code>Document</code> interface</a>
-    <li><a href="#loading-imports">Loading Imports</a>
-    <ol>
-      <li><a href="#updateing-branch">Updating Branch</a>
-      <li><a href="#requesting-import">Requesting Import</a>
-      <li><a href="#fetching-import">Fetching Import</a>
-      <li><a href="#imports-and-csp">Imports and Content Security Policy</a>
-    </ol>
-    <li><a href="#parsing-imports">Parsing Imports</a>
-    <ol>
-        <li><a href="#additions-to-prepare-a-script-algorithm">Additions to Prepare A Script Algorithm</a>
-        <li><a href="#additions-to-tree-construction-algorithm">Additions to Tree Construction Algorithm</a>
-        <li><a href="#additions-to-parsing-xhtml-documents">Additions to Parsing XHTML Documents</a>
-    </ol>
-    <li><a href="#scripts-imports">Scripting in Imports</a>
-    <ol>
-       <li><a href="#additions-to-script-enabling-criteria">Additions to Script Enabling Criteria</a>
-       <li><a href="#additions-to-dom-document-currentscript">Additions to document.currentScript</a>
-    </ol>
-    <li><a href="#style-imports">Style processing with Imports</a>
-    <ol>
-      <li><a href="#import-link-tree">Import Link Tree</a></li>
-      <li><a href="#order-of-appearances">Order of appearances and Imports</a></li>
-    </ol>
-    <li><a href="#events-imports">Events in Imports</a>
-    <ol>
-      <li><a href="#additions-to-event-handlers">Additions to Event Handlers</a>
-    </ol>
-    <li><a href="#acknowledgements" class="no-number">Acknowledgements</a>
-</ol>
+<section id='sotd'>
 </section>
 
 <section class="spec">
@@ -111,8 +56,10 @@
 <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in the normative parts of this document are to be interpreted as described in <a href="http://dev.w3.org/2006/xbl2/#refsRFC2119">RFC2119</a>. For readability, these words do not appear in all uppercase letters in this specification.</p>
 
 <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn id="dfn-processing-equivalence">processing equivalence</dfn> is a constraint imposed on the algorithm implementers, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
+</section>
 
-<h2 id="dependencies">Dependencies</h2>
+<section id="dependencies">
+<h2>Dependencies</h2>
 
 <p>This document relies on the following specifications:</p>
 
@@ -130,8 +77,10 @@
     <li><a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a></li>
     <li><a href="http://www.w3.org/TR/WebIDL/">Web IDL</a></li> -->
 </ul>
+</section>
 
-<h2 id="terminology">Terminology</h2>
+<section id="terminology">
+<h2>Terminology</h2>
 
 <p>HTML Imports, or just <dfn id="dfn-import">imports</dfn> from here on, are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML documents</a> that are <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">linked</a> as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resources</a> from another <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html">HTML document</a>. The document that links to an <a href="#dfn-import">import</a> is called an <dfn id="dfn-import-referrer">import referrer</dfn>. For any given <a href="#dfn-import">import</a>, an <dfn id="dfn-import-referrer-ancestor">import referrer ancestor</dfn> is its <a href="#dfn-import-referrer">import referrer</a> or any <a href="#dfn-import-referrer-ancestor">import referrer ancestor</a> of its <a href="#dfn-import-referrer">import referrer</a>. There are one or more <a href="#dfn-import-referrer">import referrers</a> and <a href="#dfn-import-referrer-ancestor">import referrer ancestors</a> for each import because same import can be referred from multiple <a href="#dfn-import-referrer">import referrers</a>.</p>
 
@@ -141,28 +90,29 @@
 
 <p>In each <a href="#dfn-import-referrer">import referrer</a>, an <a href="#dfn-import">import</a> is represented as a <a href="http://dom.spec.whatwg.org/#interface-document"><code>Document</code></a>, called the <dfn id="dfn-imported-document">imported document</dfn>.<p>
 
-<div class="fixme">
-<p>The <a href="#dfn-imported-document">imported documents</a> don't have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>. (See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26682">bug 26682</a>.)</p></div>
+<section class="fixme">
+<p>The <a href="#dfn-imported-document">imported documents</a> don't have <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a>. (See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26682">bug 26682</a>.)</p></section>
 
 <p>The set of all <a href="#dfn-import">imports</a> associated with the <a href="#dfn-master-document">master document</a> forms an <dfn id="dfn-import-map">import map</dfn> of the <a href="#dfn-master-document">master document</a>. The maps stores <a href="#dfn-import">imports</a> as its items with their <a href="#dfn-import-location">import locations</a> as keys. The import map is empty at beginning. New items are added to the map as <a href="#dfn-import-fetching">import fetching algorithm</a> specifies.</p>
 
-<h3 id="import-dependent">Import Dependent</h3>
+<section id="import-dependent">
+<h3>Import Dependent</h3>
 
 <p>To track <a href="#requesting-import">requested</a> imports, each document has an <dfn id="dfn-import-link-list">import link list</dfn>. Each of its item consists of <dfn id="dfn-import-link-link">link</dfn>, a <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element">link</a></code> element and <dfn id="import-link-list-location">location</dfn>, a URL.
 Also, the item is optionally <dfn id="dfn-import-link-list-branch">marked as branch</dfn>.
 The list is initially empty, and items are added to it as specified by the <a href="#dfn-import-request">import request</a> algorithm.</p>
 
-<p>Each <a href="#dfn-imported-document">imported document</a> has an <dfn id="dfn-import-parent">import parent</dfn>: If the <a href="#dfn-import-link-list">import link list</a> of document <var>A</var> contains a <a href="#dfn-import-link-list-branch">branch</a> item whose <a href="#import-link-list-location">location</a> points document <var>B</var>, <var>A</var> is an <a href="#dfn-import-import-parent">import parent</a> of <var>B</var>.</a>
+<p>Each <a href="#dfn-imported-document">imported document</a> has an <a href="#dfn-import-parent">import parent</a>: If the <a href="#dfn-import-link-list">import link list</a> of document <var>A</var> contains a <a href="#dfn-import-link-list-branch">branch</a> item whose <a href="#import-link-list-location">location</a> points document <var>B</var>, <var>A</var> is an <a href="#dfn-import-import-parent">import parent</a> of <var>B</var>.</a>
 
-<p>Each <a href="#dfn-imported-document">imported document</a> also has one or more <dfn id="dfn-import-import-ancestor">import ancestors</dfn>: Document <var>A</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of another document <var>B</var> if <var>A</var> is <dfn id="dfn-import-parent">import parent</dfn> of <var>B</var>. Being an <a href="#dfn-import-import-ancestor">import ancestor</a> is transitive: If <var>A</var> is an <dfn id="dfn-import-parent">import parent</dfn> of <var>B</var> and <var>B</var> is an <dfn id="dfn-import-parent">import parent</dfn> of <var>C</var>, <var>A</var> is an <dfn id="dfn-import-parent">import parent</dfn> of <var>C</var> as well.
+<p>Each <a href="#dfn-imported-document">imported document</a> also has one or more <dfn id="dfn-import-import-ancestor">import ancestors</dfn>: Document <var>A</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of another document <var>B</var> if <var>A</var> is <a href="#dfn-import-parent">import parent</a> of <var>B</var>. Being an <a href="#dfn-import-import-ancestor">import ancestor</a> is transitive: If <var>A</var> is an <a href="#dfn-import-parent">import parent</a> of <var>B</var> and <var>B</var> is an <a href="#dfn-import-parent">import parent</a> of <var>C</var>, <var>A</var> is an <a href="#dfn-import-parent">import parent</a> of <var>C</var> as well.
 
 <p>An <a href="#dfn-imported-document">imported document</a> also has one or more <dfn id="dfn-import-import-predecessor">import predecessors</dfn>. An <a href="#dfn-import-import-predecessor">import predecessor</a> is a document. If the URL of document <var>A</var> is located before the URL of document <var>B</var> in the <a href="#dfn-import-link-list">import link list</a> of <var>B</var>'s <a href="#dfn-import-parent">import parent</a>, and the located <a href="#dfn-import-link-link">link</a> is marked as a <a href="#dfn-import-link-list-branch">branch</a>, then <var>A</var> is <a href="#dfn-import-import-predecessor">import predecessor</a> of <var>B</var>.</p>
 
-<p>The <dfn id="dfn-import-import-ancestor-predecessor">import ancestor predecessors</dfn> of document <var>A</var> is defined as follows: If document <var>B</var> is an <a href="#dfn-import-import-predecessor">import predecessor</a> of document <var>C</var>, and <var>C</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>A</var>, <var>B</var> is an <a href="#dfn-import-import-ancestor- predecessor">import ancestor predecessors</a> of <var>A</var>.</p>
+<p>The <dfn id="dfn-import-import-ancestor-predecessor">import ancestor predecessors</dfn> of document <var>A</var> is defined as follows: If document <var>B</var> is an <a href="#dfn-import-import-predecessor">import predecessor</a> of document <var>C</var>, and <var>C</var> is an <a href="#dfn-import-import-ancestor">import ancestor</a> of <var>A</var>, <var>B</var> is an <a href="#dfn-import-import-ancestor-predecessor">import ancestor predecessors</a> of <var>A</var>.</p>
 
 <p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> that is in either <a href="#dfn-import-import-ancestor-predecessor">import ancestor predecessors</a> or <a href="#dfn-import-import-predecessor">import predecessors</a> of document <var>A</var>, or is linked from <a href="#dfn-import-link-list-branch">branch</a> item of <var>A</var>'s <a href="#dfn-import-link-list">import link list</a>, is the <dfn id="dfn-import-dependent">import dependent</dfn> of <var>A</var>.</p>
 
-<div class="informative">
+<section class="informative">
 <p>The <a href="#dfn-import-link-list">import link list</a> and the <a href="#dfn-import-dependent">import dependent</a> constrains the order of script execution in imports. It is intend to give a deterministic order of script execution which is defined by the order of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element in each import. The edges of each node is ordered in terms of <a href="#dfn-import-link-list">import link list</a>. The <a href="#dfn-import-import-predecessor">import predecessors</a> selection is aware of the order.</p>
 
 <p>The linking structure of <a href="#dfn-import-link-list">import link lists</a> forms a directed graph. Each node of the graph is a document and its edge is a <a href="#dfn-import-link-link">link</a>. <a href="#dfn-import-link-list-branch">Branches</a> are intended to form a spanning tree of the graph. This tree gives the deterministic order of the script execution.</p>
@@ -203,13 +153,16 @@ In the figure,
 
 <p>The difference between the <a href="#dfn-import-referrer">import referrer</a> and the <a href="#dfn-import-parent">import parent</a> is that <a href="#dfn-import-referrer">import referrer</a> reflects the state of the <a href="http://www.w3.org/TR/dom/#node-tree">node tree</a> and that the <a href="#dfn-import-parent">import parent</a> is built by the algorithm described in this document.</p>
 
-</div>
+</section>
+</section>
+</section>
 
-<h2 id="link-type-import">Link Type "<code>import</code>"</h2>
+<section id="link-type-import">
+<h2>Link Type "<code>import</code>"</h2>
 
 <p>To enable declaring <a href="#dfn-import">imports</a> in HTML, a new link type is added to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#linkTypes">HTML link types</a>:</p>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <p>The <a href="#link-type-import"><code>import</code></a> keyword may be used with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> elements. This keyword creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to an <a href="#dfn-import">import</a>.</p>
 
 <p>The default type for resources given by the <a href="#link-type-import"><code>import</code></a> keyword is <code>text/html</code>.</p>
@@ -220,9 +173,9 @@ In the figure,
 
 <p>The import is fetched and applied regardless of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-link-media"><code>media</code></a> attribute of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> matches the environment or not.</p>
 
-</div>
+</section>
 
-<div class="informative">
+<section class="informative">
 <p>The following document has one import, located at <kbd>/imports/heart.html</kbd>:</p>
 
 <pre><code class="prettyprint">
@@ -237,9 +190,11 @@ In the figure,
     &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-</div>
+</section>
+</section>
 
-<h2 id="interface-import">Extensions to <code>HTMLLinkElement</code> Interface</h2>
+<section id="interface-import">
+<h2>Extensions to <code>HTMLLinkElement</code> Interface</h2>
 
 <pre><code class="prettyprint">
 partial interface <dfn id="dfn-link-import">HTMLLinkElement</dfn> {
@@ -256,7 +211,7 @@ partial interface <dfn id="dfn-link-import">HTMLLinkElement</dfn> {
 
 <p>The same object <strong>must</strong> be returned each time.</p>
 
-<div class="informative">
+<section class="informative">
 <p>Here's how one could access the imported document, mentioned in the previous example:</p>
 <pre><code class="prettyprint">
 var link = document.querySelector('link[rel=import]');
@@ -264,59 +219,65 @@ var heart = link.import;
 // Access DOM of the document in /imports/heart.html
 var pulse = heart.querySelector('div.pulse');
 </code></pre>
-</div>
+</section>
 
 <p>An <a href="#dfn-import">import</a> in the context of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> of an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML Parser</a> is said to be <dfn id="dfn-an-import-that-is-blocking-scripts">an import that is blocking scripts</dfn> if the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by that <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>'s parser, or and the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> is a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> of type <A href="#link-type-import"><code>import</code></a> when the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was created by the parser, and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> is not <a href="#dfn-import-link-async">marked as async</a>, and the the import is yet to be <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#completely-loaded">completely loaded</a>, and, the last time the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#event-loop">event loop</a> has reached step 1, the <a href="http://dom.spec.whatwg.org/#concept-element">element</a> was <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#in-a-document">in that <code>Document</code></a>, and the user agent hasn't given up on that <a href="#dfn-import">import</a> yet. A user agent may give up on an <a href="#dfn-import">import</a> at any time.</p>
 
 
-<div class="informative">
+<section class="informative">
 <p>
 Giving up an import before it loads, even if the import eventually does still load, means that the script might end up operating with incorrect information. For example, if an import registers a custom element and a script relies on the availability of this element, the script will find that this element is unavailable if the user agent gives up early. Implementers have to balance the likelihood of a script using incorrect information with the performance impact of doing nothing while waiting for a slow network request to finish.
 </p>
-</div>
+</section>
 
 <p>A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> <dfn id="dfn-has-an-import-that-is-blocking-scripts">has an import that is blocking scripts</dfn> if there is <a href="#dfn-an-import-that-is-blocking-scripts">an import that is blocking scripts</a> in the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a>'s <a href="#dfn-import-dependent">import dependent</a>.
 A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> <dfn id="dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</dfn> if it does not <a href="#dfn-has-no-import-that-is-blocking-scripts">have an import that is blocking scripts</a> as defined in the previous paragraph.</p>
 
-<div class="informative">
+<section class="informative">
 <p>The state of "<a href="#dfn-has-an-import-that-is-blocking-scripts">has an import that is blocking scripts</a>" can change each time an existing import is completely loaded or new import loading is started. HTML parser has changes to unblock it for each of such timings.</p>
-</div>
+</section>
+</section>
 
-<h2 id="interface-document">Extensions to <code>Document</code> Interface</h2>
+<section id="interface-document">
+<h2>Extensions to <code>Document</code> Interface</h2>
 
 <h3 id="additions-to-document-open">Additions to <code>document.open() method</code></h3>
 
 <p>Add following step as the first step of the definition:</p>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ol>
   <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
 </ol>
-</div>
+</section>
 
 <h3 id="additions-to-document-write">Additions to <code>document.write()</code> method</h3>
 
 <p>Add following step as the first step of the definition:</p>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ol>
   <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
 </ol>
-</div>
+</section>
 
-<h3 id="additions-to-document-write">Additions to <code>document.close()</code> method</h3>
+<h3 id="additions-to-document-close">Additions to <code>document.close()</code> method</h3>
 
 <p>Add following step as the first step of the definition:</p>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ol>
   <li>Throws an <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#invalidstateerror">InvalidStateError</a></code> exception if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> is an <a href="#dfn-import">import</a>.</li>
 </ol>
-</div>
+</section>
 
-<h2 id="loading-imports">Loading Imports</h2>
+</section>
 
-<h3 id="updateing-branch">Updating Branch</h3>
+<section id="loading-imports">
+<h2>Loading Imports</h2>
+
+<section id="updateing-branch">
+<h3>Updating Branch</h3>
 
 <p>After a <a href="#dfn-import-link-link">link</a> is added to the <a href="#dfn-import-link-list">import link list</a>, the <dfn id="dfn-update-marking">update marking</dfn> algorithm <strong>must</strong> be run with the <a href="#dfn-master-document">master document</a>. which is <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
@@ -337,18 +298,21 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
   </ol></li>
 </ol>
 
-<h3 id="requesting-import">Requesting Import</h3>
+</section>
+
+<section id="requesting-import">
+<h3>Requesting Import</h3>
 
 <p>When user agents attempt to <a href="#dfn-obtaining-import">obtain</a> a linked import, they <strong>must</strong> also run the <dfn id="dfn-import-request">import request</dfn> algorithm, which is <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
 
-<div class="algorithm">
+<section class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>LINK</var>, the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element that creates an <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</dd>
 <dd><var>LOCATION</var>, the <a href="http://dom.spec.whatwg.org/#concept-document-url">URL</a> of the linked resource.</dd>
 </dl>
 <ol>
-  <li>If the <a href="#dfn-import-async-attribute">async</a> attribute of <var>LINK</var> is true, mark <var>LINK</var> as <dfn id="dfn-import-link-async">async</dfn>.
+  <li>If the <a href="#dfn-import-async-attribute">async</a> attribute of <var>LINK</var> is true, mark <var>LINK</var> as <a href="#dfn-import-link-async">async</a>.
   <li>Let <var>DOCUMENT</var> be a document of <var>LINK</var>.
   <li>Let <var>LIST</var> be an <a href="#dfn-import-link-list">import link list</a> of <var>DOCUMENT</var>.
   <li>Let <var>ITEM</var> be <var>LINK</var> and <var>LOCATION</var>:</li>
@@ -357,14 +321,17 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
     <li>Invoke <a href="#dfn-update-marking">update marking</a> algorithm with the <a href="#dfn-master-document">master document</a>.
   </ol></li>
 </ol>
-</div>
+</section>
 
-<h3 id="fetching-import">Fetching Import</h3>
+</section>
+
+<section id="fetching-import">
+<h3>Fetching Import</h3>
 
 <p>All <a href="#dfn-import">imports</a> linked from documents that is the <a href="#dfn-master-document">master document</a> or the one in the <a href="#dfn-import-map">import map</a> <strong>must</strong> be fetched using the <a href="#dfn-import-fetching">import fetching algorithm</a> described below, instead of the one that HTML specifies to <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#concept-link-obtain">obtain a linked resouce</a>.</a></p>
 
 <p>The <dfn id="dfn-import-fetching">import fetching</dfn> algorithm <strong>must</strong> be <a href="#dfn-processing-equivalence">equivalent</a> to running these steps:</p>
-<div class="algorithm">
+<section class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>LINK</var>, a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element which makes the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#external-resource-link">external resource link</a> to the import.</dd>
@@ -373,14 +340,14 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
 <dd><var>IMPORT</var>, the <a href="#dfn-imported-document">imported document</a>.</dd>
 </dl>
 <ol>
-    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:</li>
-    <li><ol>
+    <li>If <var>LOCATION</var> is already in the <a href="#dfn-import-map">import map</a>:
+    <ol>
       <li>Let <var>IMPORT</var> be the <a href="#dfn-imported-document">imported document</a> for <var>LOCATION</var> and <strong>stop</strong>.</li>
     </ol></li>
-    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var> with <a href="http://fetch.spec.whatwg.org/#concept-request-origin">request's origin</a> set to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/origin-0.html#origin">origin</a> of the <a href="#dfn-master-document">master document</a>, the <a href="http://fetch.spec.whatwg.org/#concept-request-mode">mode</a> to <i>CORS</i> and the <a href="http://fetch.spec.whatwg.org/#concept-request-credentials-mode">credentials mode</a> to <i>same-origin</i>.</li>
+    <li><a href="http://fetch.spec.whatwg.org/#concept-fetch">Fetch a resource</a> from <var>LOCATION</var> with <a href="http://fetch.spec.whatwg.org/#concept-request-origin">request's origin</a> set to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/origin-0.html#origin">origin</a> of the <a href="#dfn-master-document">master document</a>, the <a href="http://fetch.spec.whatwg.org/#concept-request-mode">mode</a> to <i>CORS</i> and the <a href="http://fetch.spec.whatwg.org/#concept-request-credentials-mode">credentials mode</a> to <i>same-origin</i>.
     <ol>
-        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i> or the response has a <a href="https://fetch.spec.whatwg.org/#concept-header">header</a> whose name is <code>Content-Disposition</code>:</li>
-        <li><ul>
+        <li>If fetched <a href="http://fetch.spec.whatwg.org/#concept-response-type">response type</a> is <i>error</i> or the response has a <a href="https://fetch.spec.whatwg.org/#concept-header">header</a> whose name is <code>Content-Disposition</code>:
+        <ul>
           <li>Add <var>LOCATION</var> and <strong>null</strong> to the <a href="#dfn-import-map">import map</a> and <strong>stop</strong>.
         </ul></li>
         <li>Let <var>IMPORT</var> be a new <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a>, <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#the-document's-address">the document's address</a> of which is <var>LOCATION</var></li>
@@ -397,11 +364,11 @@ A <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#
         </ol>
     </ol></li>
 </ol>
-</div>
+</section>
 
-<div class="informative">
+<section class="informative">
 All of loaded imports and imports under loading are in the <a href="#dfn-import-link-list">import link list</a>, thus every <a href="#dfn-import">import</a> which is linked from imports in the list will also be loaded using the <a href="#dfn-import-fetching">import fetching</a> algorithm, with  <var>LOCATION</var> be the <a href="#dfn-import-location">import location</a> of the import.
-</div>
+</section>
 
 <p>
 The loading attempt <strong>must</strong> be considered successful if <var>IMPORT</var> is not null on the algorithm completion, and failed otherwise.
@@ -409,13 +376,16 @@ The loading attempt <strong>must</strong> be considered successful if <var>IMPOR
 
 <p>Every import that is not <a href="#dfn-import-link-async">marked as async</a> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-end.html#delay-the-load-event">delays the load event in the Document</a>.
 
-<div class="informative">
+<section class="informative">
 <p>The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#the-link-element"><code>link</code></a> element <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#fire-a-simple-event">fires a simple event</a> called <code>load</code>
 for successful loading attempt. For failed attempt, it <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#fire-a-simple-event">fires a simple event</a> named <code>error</code>.</p>
 <p>As an import delays the load event, the <a href="http://dom.spec.whatwg.org/#document"><code>Document</code></a> isn't <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#completely-loaded">completely loaded</a> until loading attempts of all of its linked imports are finished.</p>
-</div>
+</section>
 
-<h3 id="imports-and-csp">Imports and Content Security Policy</h3>
+</section>
+
+<section id="imports-and-csp">
+<h3>Imports and Content Security Policy</h3>
 
 <p>
 <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html">Content Security Policy</a> <strong>must</strong> restrict import loading through the <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#script-src">script-src</a> directive.
@@ -426,76 +396,100 @@ Each import <strong>must</strong> be restricted by the Content Security Policy o
 For example, if <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#content-security-policy-header-field">Content Security Header Field</a> is sent to an import, the user agent must <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#enforce">enforce</a> the policy of the <a href="#dfn-master-document">master document</a> to the imported document.
 </p>
 
-<h2 id="parsing-imports">Parsing Imports</h2>
+</section>
+</section>
+
+<section id="parsing-imports">
+<h2>Parsing Imports</h2>
 
 <p>Parsing behaviour of <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#parsing">HTML Parsing</a>.</p>
 
-<h3 id="additions-to-prepare-a-script-algorithm">Additions to Prepare A Script Algorithm</h3>
+<section id="additions-to-prepare-a-script-algorithm">
+<h3>Additions to Prepare A Script Algorithm</h3>
 
 <p>In step 15 of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">prepare a script</a> algorithm, modify the last part of condition which begins with <em>If element does not have a <code>src</code> attribute</em> to read:</p>
-<div class="monkeypatch">
+<section class="monkeypatch">
 <p>... and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document"><code>Document</code></a> of the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/parsing.html#html-parser">HTML parser</a> or <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-xhtml-syntax.html#xml-parser">XML parser</a> that created the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-a-style-sheet-that-is-blocking-scripts">has a style sheet that is blocking scripts</a> or <a href="#dfn-has-an-import-that-is-blocking-scripts">has an import that is blocking scripts</a></p>
-</div>
+</section>
 
-<h3 id="additions-to-tree-construction-algorithm">Additions to Tree Construction Algorithm</h3>
+</section>
+
+<section id="additions-to-tree-construction-algorithm">
+<h3>Additions to Tree Construction Algorithm</h3>
 
 <p>At the DOCTYPE part of section <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#the-initial-insertion-mode">12.2.5.4.1 The "initial" insertion mode</a>, modify text <q>if the document is not an iframe srcdoc document...</q> as follows</a>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <p>if the document is not an iframe src document nor an <a href="#dfn-import">import</a>...</p>
-</div>
+</section>
 
 <p>In sub-condition named <em>Otherwise</em> of condition <em>An end tag whose name is "script"</em> in <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-incdata">"text" insertion mode</a>, modify step 3 to read:</p>
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ol start="3">
     <li>If the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-a-style-sheet-that-is-blocking-scripts">has a style sheet that is blocking scripts</a> or <a href="#dfn-has-an-import-that-is-blocking-scripts">has an import that is blocking scripts</a> or <em>the script</em>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is not set: <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">spin the event loop</a> until the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> and <a href="#dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</a> and the script's <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is set.</li>
 </ol>
-</div>
+</section>
 
-<h3 id="additions-to-parsing-xhtml-documents">Additions to Parsing XHTML Documents</h3>
+</section>
+
+<section id="additions-to-parsing-xhtml-documents">
+<h3>Additions to Parsing XHTML Documents</h3>
 
 <p>Modify step 3 of steps that run following <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#prepare-a-script">preparing</a> the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#the-script-element"><code>script</code></a> element to read:</p>
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ol start="3">
     <li><p><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#spin-the-event-loop">Spin the event loop</a> until the parser's <code><a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a></code> <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#has-no-style-sheet-that-is-blocking-scripts">has no style sheet that is blocking scripts</a> and <a href="#dfn-has-no-import-that-is-blocking-scripts">has no import that is blocking scripts</a> and the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#pending-parsing-blocking-script">pending parsing-blocking script</a>'s <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/scripting-1.html#ready-to-be-parser-executed">"ready to be parser-executed"</a> flag is set.</p></li>
 </ol>
-</div>
+</section>
 
-<h2 id="scripts-imports">Scripting in Imports</h2>
+</section>
+</section>
 
-<h3 id="additions-to-script-enabling-criteria">Additions to Script Enabling Criteria</h3>
+<section id="scripts-imports">
+<h2>Scripting in Imports</h2>
+
+<section id="additions-to-script-enabling-criteria">
+<h3>Additions to Script Enabling Criteria</h3>
 
 <p>Add following condition to the list of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#enabling-and-disabling-scripting">Enabling and disabling scripting</a> criteria:</p>
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <ul>
   <li>Scripting is enabled for a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#node">node</a> if the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> object of the node is in the <a href="#dfn-import-map">import map</a>.</li>
 </ul>
-</div>
+</section>
 
-<h3 id="additions-to-dom-document-currentscript">Additions to document.currentScript</h3>
+</section>
+
+<section id="additions-to-dom-document-currentscript">
+<h3>Additions to document.currentScript</h3>
 
 <p>
 Modify the definition of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#dom-document-currentscript"><code>document.currentScript</code></a>
 as follows:
 </p>
-<div class="monkeypatch">
+<section class="monkeypatch">
 The <dfn id="dom-document-currentscript" title="dom-document-currentScript"><code>currentScript</code></dfn> attribute, on getting,
 must return the value to which it was most recently initialized in the document or the <a href="#dfn-import-map">import map</a> of the document.
 When the Document is created, the <code>currentScript</code> must be initialized to null.
 If the Document is an <a href="#dfn-imported-document">imported document</a>, its <code>currentScript</code> is always null.
-</div>
+</section>
 
-<h2 id="style-imports">Style processing with Imports</h2>
+</section>
+</section>
+
+<section id="style-imports">
+<h2>Style processing with Imports</h2>
 
 <p>The contents of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-style-element">style</a></code> elements and
 the external resources of the <code><a href="http://www.whatwg.org/specs/web-apps/current-work/#the-link-element">link</a></code> elements in <a href="#dfn-import">imports</a> <strong>must</strong> be considered as input sources of the <a href="http://www.w3.org/TR/CSS21/intro.html#processing-model">style processing model</a> of the <a href="#dfn-master-document">master document</a>.</p>
 
-<h3 id="import-link-tree">Import Link Tree</h4>
+<section id="import-link-tree">
+<h3>Import Link Tree</h3>
 
 <p>A set of imports that are associated with a <a href="#dfn-master-document">master document</a> forms an <dfn id="dfn-import-link-tree">import link tree</dfn>, a <a href="dfn-master-document">tree</a> structure. Following <dfn id="dfn-import-link-tree-forming">import link tree forming</dfn> algorithm, being applied with <code>null</code> as <var>PARENT</var>, <a href="#dfn-master-document">master document</a> as <var>TREE</var> and all of its imports as <var>POOL</var>, defines the <a href="#dfn-import-link-tree">import link tree</a>:</p>
 
-<div class="algorithm">
+<section class="algorithm">
 <dl>
 <dt>Input</dt>
 <dd><var>PARENT</var>, a document tree node</dd>
@@ -510,42 +504,54 @@ the external resources of the <code><a href="http://www.whatwg.org/specs/web-app
   <li>Let <var>TREE</var>'s value be <var>CURRENT</var>
   <li>Let <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-parent">parent</a> be <var>PARENT</var>.</li>
   <li>Make <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list empty.</li>
-  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:</li>
+  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:
   <ol>
     <li>Let <var>IMPORT</var> be the import of <var>LINK</var>.</li>
     <li>If <var>IMPORT</var> is not in <var>POOL<var>, try next.</li>
     <li>Remove <var>LINK</var> from <var>POOL</var>.</li>
     <li>Invoke the <a href="#dfn-import-link-tree-forming">import tree forming</a> algorithm with <var>TREE</var> as <var>PARENT</var>, <var>IMPORT</var> as <var>CURRENT</var> and <var>POOL</var> as <var>POOL</var>, let the result be <var>CHILD</var>.
     <li>Append <var>CHILD</var> to <var>TREE</var>'s <a href="http://dom.spec.whatwg.org/#concept-tree-child">child</a> list.</li>
-  </ol>
+  </ol></li>
   <li><strong>stop</strong>.</li>
 </ol>
-</div>
+</section>
 
-<div class="informative">
+<section class="informative">
 The <a href="#dfn-import-link-tree">import link tree</a> algorithm defines a order of imports using a depth first traversal. This <a href="#dfn-import-link-tree">import link tree</a> is different from the one formed by <a href="#dfn-import-link-list">import link list</a>. The former is based on the document tree of each import. The later is built through <a href="#loading-imports">import loading process</a> and isn'taffected by document tree mutation.
-</div>
+</section>
 
-<h3 id="order-of-appearances">Order of Appearances and Imports</h3>
+</section>
+
+<section id="order-of-appearances">
+<h3>Order of Appearances and Imports</h3>
 
 <p>The <a href="http://www.w3.org/TR/css3-cascade/#cascade-order">order of appearances</a> of declarations which come from different documents are determined by the <a href="#dfn-import-link-tree">import link tree</a>. If <a href="http://dom.spec.whatwg.org/#concept-node-document">node documents</a> of two declarations differ, compare the <a href="http://dom.spec.whatwg.org/#concept-tree-order">tree order</a> of these documents in the <a href="#dfn-import-link-tree">import link tree</a>. The last one wins.</p>
 
-<h2 id="events-imports">Events in Imports</h2>
+</section>
+</section>
+
+<section id="events-imports">
+<h2>Events in Imports</h2>
 
 <p>Events in <a href="#dfn-import">imports</a> is defined as a set of changes to the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#events">HTML Events</a>.</p>
 
-<h3 id="additions-to-event-handlers">Additions to Event Handlers</h3>
+<section id="additions-to-event-handlers">
+<h3>Additions to Event Handlers</h3>
 
 <p>
 Modify the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/webappapis.html#event-handler-content-attributes">event handler content attribute</a>'s
 script creation criteria by expanding the first paragraph:
 
-<div class="monkeypatch">
+<section class="monkeypatch">
 <p>When an event handler content attribute is set, if the element is owned by a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/dom.html#document">Document</a> that is in a <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/browsers.html#browsing-context">browsing context</a> or
 in an <a href="#dfn-import-map">import map</a>, ...</p>
-</div>
+</section>
 
-<h2 id="acknowledgements">Acknowledgements</h2>
+</section>
+</section>
+
+<section class="appendix">
+<h2>Acknowledgements</h2>
 
 <p><span class="vcard">David Hyatt</span> developed <a href="http://dev.w3.org/2006/xbl2/">XBL 1.0</a>, and <span class="vcard">Ian Hickson</span> co-wrote <a href="http://dev.w3.org/2006/xbl2/">XBL 2.0</a>. These documents provided tremendous insight into the problem of behavior attachment and greatly influenced this specification.</p>
 
