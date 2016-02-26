@@ -496,11 +496,11 @@ The effect of this statement is that any HTML (or SVG) element with the local na
 <section id="extensions-to-document-interface-to-register">
 <h3>Extensions to <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Interface</h3>
 
-<p>The <dfn for='Document'>registerElement</dfn> method of the <a href="https://dom.spec.whatwg.org/#document">Document</a> interface provides a way to <a data-lt="element registration">register</a> a <a>custom element</a> and returns its <a>custom element constructor</a>.</p>
+<p>The <dfn for='Document'>defineElement</dfn> method of the <a href="https://dom.spec.whatwg.org/#document">Document</a> interface provides a way to <a data-lt="element registration">register</a> a <a>custom element</a> and returns its <a>custom element constructor</a>.</p>
 
 <pre class='idl'>
 partial interface Document {
-    Function registerElement(DOMString type, optional ElementRegistrationOptions options);
+    void defineElement(DOMString type, optional ElementRegistrationOptions options);
 };
 
 dictionary ElementRegistrationOptions {
@@ -509,7 +509,7 @@ dictionary ElementRegistrationOptions {
 };
 </pre>
 
-<p>When called, the <a for='Document'>registerElement</a> method MUST run these steps:</p>
+<p>When called, the <a for='Document'>defineElement</a> method MUST run these steps:</p>
 
 <div class="algorithm">
 <dl>
@@ -532,13 +532,13 @@ dictionary ElementRegistrationOptions {
 </div>
 
 <div class="note">
-<p><a>ElementRegistrationOptions</a> is an abstraction that enables using function objects and ES6 classes as the second argument of <a>document.registerElement</a> method.</p>
+<p><a>ElementRegistrationOptions</a> is an abstraction that enables using function objects and ES6 classes as the second argument of <a>document.defineElement</a> method.</p>
 </div>
 
 <div class="note">
-<p>In order to <a data-lt="element registration">register</a> a <a>custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <a>document.registerElement</a> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
+<p>In order to <a data-lt="element registration">register</a> a <a>custom element</a> with a prototype, other than <code>HTMLElement</code> or <code>SVGElement</code>, the caller of <a>document.defineElement</a> has to first build a proper prototype object that inherits from <code>HTMLElement</code>. Here's a simple example of how one could do this:</p>
 <pre class="highlight">
-document.registerElement('x-foo', {
+document.defineElement('x-foo', {
     prototype: Object.create(HTMLParagraphElement.prototype, {
         firstMember: {
             get: function() { return "foo"; },
@@ -653,11 +653,11 @@ steps:</p>
 
 <p>Once the ECMAScript Standard Edition 6 [[ECMASCRIPT-6.0]] is released, this section will be integrated into the respective areas of this specification. Until then, here is an overview of how ECMAScript 6 and Custom Elements integrate.</p>
 
-<p>If the user agent implements the <a href="https://tc39.github.io/ecma262/#sec-well-known-symbols"><code>@@create</code></a> method, this specification would stop treating the <code>ElementRegistrationOptions options</code> argument in <a for="Document">registerElement</a> as a dictionary, and instead view it as a the <a>custom element constructor</a>.</p>
+<p>If the user agent implements the <a href="https://tc39.github.io/ecma262/#sec-well-known-symbols"><code>@@create</code></a> method, this specification would stop treating the <code>ElementRegistrationOptions options</code> argument in <a for="Document">defineElement</a> as a dictionary, and instead view it as a the <a>custom element constructor</a>.</p>
 
 <p>Instead of generating a constructor, the user agent will now mutate this argument to have a new <a href="https://tc39.github.io/ecma262/#sec-well-known-symbols"><code>@@create</code></a> method that creates a new element object.</p>
 
-<p>Since the <a for='Document'>registerElement</a>'s second argument is now a constructor function, the <a>element definition</a> should change to hold that constructor function, rather than the <a>custom element prototype</a>.</p>
+<p>Since the <a for='Document'>defineElement</a>'s second argument is now a constructor function, the <a>element definition</a> should change to hold that constructor function, rather than the <a>custom element prototype</a>.</p>
 
 <p>To accommodate this change, the <a data-lt="element registration">element registration algorithm</a> to the following steps:</p>
 
@@ -682,7 +682,7 @@ steps:</p>
 </ol>
 </div>
 
-<p>The steps run when calling <a for='Document'>registerElement</a> will change to:</p>
+<p>The steps run when calling <a for='Document'>defineElement</a> will change to:</p>
 
 <div class="algorithm">
 <dl>
