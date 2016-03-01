@@ -7,7 +7,14 @@
     <script src='../../assets/scripts/autolink.js' class='remove'></script>
     <link rel="stylesheet" href="../../assets/styles/respec-complement.css" type="text/css" />
     <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+    <script src='//resources.whatwg.org/dfn.js' defer class='remove'></script>
     <script class='remove'>
+      function resolveBacklink() {
+          // For dfn.js
+          if (window.initDfn) {
+              initDfn();
+          }
+      }
       var respecConfig = {
           specStatus: "ED",
           shortName: "shadow-dom",
@@ -31,6 +38,7 @@
               }
           ],
           preProcess: [resolveAutolink],
+          postProcess: [resolveBacklink],
           localBiblio: {
               "EDITING": {
                   title: "HTML Editing APIs",
