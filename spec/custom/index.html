@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <title>Custom Elements</title>
   <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+  <script src='https://resources.whatwg.org/dfn.js' defer class='remove'></script>
+  <link rel="stylesheet" href="../../assets/styles/respec-complement.css">
   <script class='remove'>
+  function resolveBacklink() {
+      // For dfn.js
+      if (window.initDfn) {
+          initDfn();
+      }
+  }
   var respecConfig = {
     shortName: "custom-elements",
     specStatus: "ED",
@@ -19,6 +27,7 @@
     wgURI: "http://www.w3.org/WebPlatform/WG/",
     wgPublicList: "public-webapps",
     subjectPrefix: "[custom-elements]",
+    postProcess: [resolveBacklink],
     license: "w3c-software-doc",
     otherLinks: [{
       key: 'Repository',
