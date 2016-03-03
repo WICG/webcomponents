@@ -84,6 +84,7 @@ var autolinkConfig = {
         'object element': '#the-object-element',
         'progress element': '#the-progress-element',
         'reflect': '#reflect',
+        'root element of a document object': '#root-element-of-a-document-object',
         'sequential focus navigation': '#sequential-focus-navigation',
         'sequential focus navigation order': '#sequential-focus-navigation-order',
         'style': '#the-style-attribute',
