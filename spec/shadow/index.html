@@ -95,12 +95,6 @@
 
         <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
 
-        <p>A <dfn>primary component tree</dfn> is either a <a>document tree</a> or a <a>shadow tree</a>.</p>
-
-        <p>A <dfn>fragment tree</dfn> is a node tree which is not a <a>primary component tree</a>.</p>
-
-        <p>A <dfn>component tree</dfn> is either a <a>fragment tree</a> or a <a>primary component tree</a>.</p>
-
         <p>
           A node <var>A</var> is called a <dfn>composed child</dfn> of a node <var>B</var>,
           if either <var>A</var> is a child of <var>B</var> or A is the <a>root</a> node of the <a>shadow tree</a> that B <a>hosts</a>.
@@ -139,21 +133,21 @@
       <section>
         <h3>Composed trees</h3>
 
-        <p>A <dfn>composed tree of component trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
+        <p>A <dfn>composed tree of node trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
 
         <p class="note">
-          The purpose of introducing a composed tree of component trees here is to define algorithms easily in the following sections.
+          The purpose of introducing a composed tree of node trees here is to define algorithms easily in the following sections.
           This is a kind of a notation techchique to make the this specification simpler.
         </p>
 
         <p>Just like a <a>node tree</a> is defined as <a data-lt="tree">a set of relationships</a> between <a data-lt="node">nodes</a>,
-          a <a>composed tree of component trees</a> is similarly defined as a set of relationships between <a data-lt="component tree">component trees</a>:</p>
+          a <a>composed tree of node trees</a> is similarly defined as a set of relationships between node trees:</p>
         <ul>
           <li>
-            A <a>component tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>component tree</a> <var>B</var> if B is a shadow tree and the shadow host which hosts <var>B</var> participates in <var>A</var>.
+            A <a>node tree</a> <var>A</var> is called a <dfn>parent tree</dfn> of a <a>node tree</a> <var>B</var> if B is a shadow tree and the shadow host which hosts <var>B</var> participates in <var>A</var>.
           </li>
           <li>
-            A <a>component tree</a> <var>A</var> is called a <dfn>preceding sibling tree</dfn> of a <a>component tree</a> <var>B</var> if all of the following conditions are satisfied:
+            A <a>node tree</a> <var>A</var> is called a <dfn>preceding sibling tree</dfn> of a <a>node tree</a> <var>B</var> if all of the following conditions are satisfied:
             <ol>
               <li><var>A</var> and <var>B</var> share the same <a>parent tree</a>.</li>
               <li>The <a>shadow host</a> which <a>hosts</a> <var>A</var> is <a>preceding</a> the <a>shadow host</a> which <a>hosts</a> <var>B</var>.</li>
@@ -167,38 +161,38 @@
         </ul>
 
         <p>
-          A <a>component tree</a> <var>A</var> is called an <dfn>unclosed tree</dfn> of a <a>component tree</a> <var>B</var> if and only if one, at least, of the following conditions is satisfied:
+          A <a>node tree</a> <var>A</var> is called an <dfn>unclosed tree</dfn> of a <a>node tree</a> <var>B</var> if and only if one, at least, of the following conditions is satisfied:
         </p>
 
         <ul>
           <li><var>A</var> is an <a>inclusive ancestor tree</a> of <var>B</var>.</li>
           <li>The <a>encapsulation mode</a> of <var>A</var> is <a>open</a> and <var>A</var> is a <a>child tree</a> of <var>B</var>.</li>
-          <li><var>A</var> is an <a>unclosed tree</a> of a <a>component tree</a> <var>C</var> that is an <a>unclosed tree</a> of <var>B</var>.</li>
+          <li><var>A</var> is an <a>unclosed tree</a> of a <a>node tree</a> <var>C</var> that is an <a>unclosed tree</a> of <var>B</var>.</li>
         </ul>
 
         <p>
-          A node <var>A</var> is called an <dfn>unclosed node</dfn> of a node <var>B</var> if and only if the <a>component tree</a> that <var>A</var> <a>participates</a> in
-          is an <a>unclosed tree</a> of the <a>component tree</a> that <var>B</var> <a>participates</a> in.
+          A node <var>A</var> is called an <dfn>unclosed node</dfn> of a node <var>B</var> if and only if the <a>node tree</a> that <var>A</var> <a>participates</a> in
+          is an <a>unclosed tree</a> of the <a>node tree</a> that <var>B</var> <a>participates</a> in.
         </p>
 
         <p>
-          A <dfn>composed document</dfn> is a <a>composed tree of component trees</a> whose <a>root tree</a> is a <a>document tree</a>.
+          A <dfn>composed document</dfn> is a <a>composed tree of node trees</a> whose <a>root tree</a> is a <a>document tree</a>.
         </p>
 
         <p><a><code>Window</code></a> object <a data-lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a data-lt="node">nodes</a> in the <a>document tree</a>.</p>
 
         <section class="informative">
-          <h3>Example composed tree of component trees</h3>
+          <h3>Example composed tree of node trees</h3>
 
           <figure>
             <object data="../../assets/images/composed-tree.svg" width="650" height="823"></object>
             <figcaption>
-              A composed tree of component trees.
+              A composed tree of node trees.
             </figcaption>
           </figure>
 
           <p>
-            In the figure, there are six component trees, named <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code> and <code>F</code>.
+            In the figure, there are six node trees, named <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code> and <code>F</code>.
             The shadow trees, <code>B</code>, <code>C</code> and <code>D</code>, are hosted by elements which participate in the document tree <code>A</code>.
             The shadow trees, <code>E</code> and <code>F</code>, are hosted by elements which participates in the shadow tree <code>D</code>.
             The following set of relationships holds in the figure:
@@ -210,14 +204,14 @@
             <li>The ordered list of <code>D</code>'s <a data-lt="child tree">child trees</a> is [<code>E</code>, <code>F</code>].</li>
             <li>The ordered list of <code>E</code>'s <a data-lt="child tree">child trees</a> is [].</li>
             <li>The ordered list of <code>F</code>'s <a data-lt="child tree">child trees</a> is [].</li>
-            <li>The document tree, <code>A</code>, is the <a>root tree</a> of the <a>composed tree of component trees</a>.</li>
+            <li>The document tree, <code>A</code>, is the <a>root tree</a> of the <a>composed tree of node trees</a>.</li>
           </ul>
 
           <div class="note">
             <p>
-              As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between two nodes if they participate in different component trees.
+              As for a relationship between nodes, it's worth mentioning that there is no <a>ancestor</a>/<a>descendant</a> relationships between two nodes if they participate in different node trees.
               A shadow root is not a <a>child</a> node of the shadow host. The <a>parent</a> node of a <a>shadow root</a> doesn't exist.
-              Because of this nature, most of existing APIs are <strong>scoped</strong> and don't affect other component trees, even though they are forming one composed tree of component trees.
+              Because of this nature, most of existing APIs are <strong>scoped</strong> and don't affect other node trees, even though they are forming one composed tree of node trees.
               For example, <a data-lt="getElementById"><code>document.getElementById(elementId)</code></a> never returns an element in a shadow tree,
               even when the element has the given <code>elementId</code>.
             </p>
@@ -225,13 +219,31 @@
               The same thing also applies to CSS <a data-lt="selectors">Selectors</a> matching.
               For example, a <a data-lt="descendant combinators">descendant combinator</a> never descends into a node in a <a data-lt="child tree">child</a> <a>shadow tree</a>
               because a <a>shadow root</a> is not a <a>child</a> node of the <a>shadow host</a>.
-              Unless a special CSS Selector for Shadow DOM, which is mentioned later, is used, a CSS Selector never matches an element in a different component tree.
+              Unless a special CSS Selector for Shadow DOM, which is mentioned later, is used, a CSS Selector never matches an element in a different node tree.
             </p>
           </div>
           <p class="note">
             Because <code>ShadowRoot</code> inherits <code>DocumentFragment</code>, as <a href="#idl-def-ShadowRoot">specified</a> later,
             you can use <code>ShadowRoot.getElementByID(elementId)</code> to get a node in the <a>shadow tree</a>.
           </p>
+
+          <ul class="note">
+            <li>
+              A <a>document tree</a> is always the <a>root tree</a> of a <a>composed tree of node trees</a>.
+            </li>
+            <li>
+              A <a>shadow tree</a> is never the <a>root tree</a> of a <a>composed tree of node trees</a>. It always has a <a>parent tree</a>.
+            </li>
+            <li>
+              A <a>root tree</a> of a <a>composed tree of node trees</a> is not always a <a>document tree</a>.
+              For example, a <a>node tree</a> whose <a>root</a> is <code>DocumentFragment</code>, but which is not a <a>shadow root</a>, is the <a>root tree</a> of a <a>composed tree of node trees</a>.
+            </li>
+            <li>
+              The algorithms described in the following sections are applied even if the <a>root tree</a> of a <a>composed tree of node trees</a> is not a <a>document tree</a>.
+              In other words, Shadow DOM doesn't care what the <a>root tree</a> is for any particular feature to work or not work.
+            </li>
+          </ul>
+
         </section>
 
       </section>
@@ -239,7 +251,7 @@
       <section>
         <h3>Flat trees</h3>
 
-        <p>A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> from multiple <a data-lt="component tree">component trees</a> in a <a>composed tree of component trees</a>.
+        <p>A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> from multiple <a data-lt="node tree">node trees</a> in a <a>composed tree of node trees</a>.
           The exact algorithm of constructing a flat tree is specified later.</p>
 
         <figure>
@@ -287,7 +299,7 @@
 
         <p>
           The <a>slot element</a> represents an <em>instruction element</em>, called <dfn>slot</dfn>.
-          When constructing a <a>flat tree</a>, a <a>slot</a> does not participate in the flat tree. Instead, the <a>slot</a> cherry-picks its contents from other places in the composed tree of component trees.
+          When constructing a <a>flat tree</a>, a <a>slot</a> does not participate in the flat tree. Instead, the <a>slot</a> cherry-picks its contents from other places in the composed tree of node trees.
           The exact algorithm of constructing a <a>flat tree</a> is specified later.
         </p>
 
@@ -316,7 +328,7 @@
         </p>
 
         <p>
-          A <dfn>default slot</dfn> is the first <a>slot</a> element, in tree order, in a <a>component tree</a>, whose <a>slot name</a> is the empty string or missing.
+          A <dfn>default slot</dfn> is the first <a>slot</a> element, in tree order, in a <a>node tree</a>, whose <a>slot name</a> is the empty string or missing.
         </p>
 
       </section>
@@ -453,12 +465,6 @@
         </div>
       </section>
 
-      <p class="note">
-        A <a>root tree</a> of a <a>composed tree of component trees</a> is either a <a>document tree</a> or a <a>fragment tree</a> by definition.
-        The algorithms described in the section are applied even if a node participates in a <a>component tree</a> whose <a>root tree</a> is a <a>fragment tree</a>.
-        For example, a node which participates in a <a>fragment tree</a> can be assigned to a slot, if the parent node hosts a <a>shadow tree</a>.
-      </p>
-
     </section>
 
     <section>
@@ -515,7 +521,7 @@
           </ol>
         </div>
 
-        <p>For a given <a>composed tree of component trees</a> <var>COMPOSED-TREE</var>, the <a>flat tree</a> constructed from <var>COMPOSED-TREE</var> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:</p>
+        <p>For a given <a>composed tree of node trees</a> <var>COMPOSED-TREE</var>, the <a>flat tree</a> constructed from <var>COMPOSED-TREE</var> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:</p>
         <ul>
           <li>The <a>root</a> <a>node</a> of the <a>flat tree</a> is the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>COMPOSED-TREE</var>.</li>
           <li>For a given <a>node</a> which <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <a>node</a> as input.
@@ -527,22 +533,22 @@
         <h3>Flattening Example</h3>
 
         <p>
-          Suppose that we have the following composed tree of component trees:
+          Suppose that we have the following composed tree of node trees:
         </p>
 
         <figure>
           <object data="../../assets/images/example-composed-tree.svg" width="581" height="616"></object>
-          <figcaption>An example composed tree of component trees. A node whose color is red represents a <a>slot</a>. Unlike the previous figures, a box surrounding a component tree is omitted here. </figcaption>
+          <figcaption>An example composed tree of node trees. A node whose color is red represents a <a>slot</a>. Unlike the previous figures, a box surrounding a node tree is omitted here. </figcaption>
         </figure>
 
         <p>
-          This <a>composed tree of component trees</a> is composed of the following 3 <a data-lt="component tree">component trees</a>, one <a>document tree</a> and two <a data-lt="shadow tree">shadow trees</a>:
+          This <a>composed tree of node trees</a> is composed of the following 3 <a data-lt="node tree">node trees</a>, one <a>document tree</a> and two <a data-lt="shadow tree">shadow trees</a>:
         </p>
 
         <table>
           <thead>
             <tr>
-              <th>component tree</th>
+              <th>node tree</th>
               <th>Root node is: </th>
               <th>Hosted by:</th>
               <th>Composed of: (in tree order)</th>
@@ -594,7 +600,7 @@
         <table>
           <thead>
             <tr>
-              <th>component tree</th>
+              <th>node tree</th>
               <th>Root node is: </th>
               <th>Hosted by:</th>
               <th>Composed of: (in tree order)</th>
@@ -798,7 +804,7 @@
           <h3>Event Paths Example</h3>
 
           <p>
-            Let's re-use the same composed tree of component trees used in the flattening example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
+            Let's re-use the same composed tree of node trees used in the flattening example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
           </p>
           <p>
             <code>[I, H, O, T, S, R, N, J, C, A]</code>  (For the purpose of the explanation, <a>Window</a> is not shown here. The actual event path contains <a>Window</a>.)
@@ -824,29 +830,29 @@
 
           <ol>
             <li>
-              If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the component tree, the event path always includes <var>PARENT</var>.
+              If there is a node, <var>CHILD</var>, in the event path and <var>CHILD</var> has a parent node, <var>PARENT</var>, in the node tree, the event path always includes <var>PARENT</var>.
               <var>PARENT</var> always appears somewhere after <var>CHILD</var> in the event path.
             </li>
             <li>
-              Nodes in the event path form a <em>linear ancestor chain</em> in each <a>component tree</a>. There are no <em>branch points</em> in each <a>component tree</a>.
+              Nodes in the event path form a <em>linear ancestor chain</em> in each <a>node tree</a>. There are no <em>branch points</em> in each <a>node tree</a>.
             </li>
           </ol>
 
           <figure>
             <object data="../../assets/images/event-path-component-trees.svg" width="766" height="386">></object>
             <figcaption>
-              The relationship between an event path and component trees. In the figure, a number shown in a right-side of each node represents a zero-based position of each node in the event path.
-              A parent node always has a larger number than that of its child node in each component tree.
+              The relationship between an event path and node trees. In the figure, a number shown in a right-side of each node represents a zero-based position of each node in the event path.
+              A parent node always has a larger number than that of its child node in each node tree.
             </figcaption>
           </figure>
 
-          <p>A <em>local</em> event path for each component tree would be seen as:
+          <p>A <em>local</em> event path for each node tree would be seen as:
           </p>
 
           <table>
             <thead>
               <tr>
-                <th>component tree</th>
+                <th>node tree</th>
                 <th><em>Local</em> Event Path</th>
               </tr>
             </thead>
@@ -867,8 +873,8 @@
           </table>
 
           <p>
-            That means, if your concern is only one <a>component tree</a>, you can forget all other component trees.
-            The event path would be seen as if the event happened only on the component tree you are focusing on.
+            That means, if your concern is only one <a>node tree</a>, you can forget all other node trees.
+            The event path would be seen as if the event happened only on the node tree you are focusing on.
             This is an important aspect in a sense that hosting a shadow tree doesn't have any effect to the <em>local</em> event path
             as long as the event is not stopped somewhere in the <a data-lt="descendant tree">descendant trees</a>.
           </p>
@@ -901,9 +907,9 @@
               <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
             </dl>
             <ol>
-              <li>Let <var>BASE-TREE</var> be the <a>component tree</a> which <var>BASE</var> <a>participates</a> in</li>
-              <li>Let <var>TARGET-TREE</var> be the <a>component tree</a> which <var>TARGET</var> <a>participates</a> in</li>
-              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>composed tree of component trees</a>:
+              <li>Let <var>BASE-TREE</var> be the <a>node tree</a> which <var>BASE</var> <a>participates</a> in</li>
+              <li>Let <var>TARGET-TREE</var> be the <a>node tree</a> which <var>TARGET</var> <a>participates</a> in</li>
+              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>composed tree of node trees</a>:
                 <ol>
                   <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
                 </ol>
@@ -935,7 +941,7 @@
           </p>
 
           <p class="note">
-            The motivation of <a>retargeting</a> is to maintain an encapsulation in the cases where event path is across multiple component trees.
+            The motivation of <a>retargeting</a> is to maintain an encapsulation in the cases where event path is across multiple node trees.
             The event's <code>target</code> might not be an <a>unclosed node</a> at some of nodes in the event path without <a>retargeting</a>.
             A <a>relative target</a> is a <a>unclosed node</a> that most accurately represents the target of a dispatched event at each node in the event path.
           </p>
@@ -1123,9 +1129,9 @@
           <a>Selection</a> [[!EDITING]] is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
         </p>
 
-        <p>Since <a data-lt="node">nodes</a> which are in the different <a data-lt="component tree">component trees</a> never have the same <a>root</a>, there may never exist a valid <a data-lt="range">DOM range</a> that spans multiple <a data-lt="component tree">component trees</a>.</p>
+        <p>Since <a data-lt="node">nodes</a> which are in the different <a data-lt="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a data-lt="range">DOM range</a> that spans multiple <a data-lt="node tree">node trees</a>.</p>
 
-        <p>Accordingly, <a data-lt="selection">selections</a> may only exist within one <a>component tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method never returns a <a>selection</a> within a <a>shadow tree</a>.</p>
+        <p>Accordingly, <a data-lt="selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method never returns a <a>selection</a> within a <a>shadow tree</a>.</p>
 
         <p>The <code>getSelection()</code> method of the <a>shadow root</a> object returns the current <a>selection</a> in this <a>shadow tree</a>.</p>
       </section>
