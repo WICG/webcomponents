@@ -337,7 +337,7 @@
         <h2>Slotting Algorithm</h2>
 
         <p>
-          The <dfn>slotting algorithm</dfn> <strong>must</strong> be used to determine the <a>assigned slot</a> for each node and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          The <dfn>slotting algorithm</dfn> <strong>must</strong> be used to determine the <a>assigned slot</a> of each node and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
         </p>
 
         <div class="algorithm">
@@ -382,7 +382,7 @@
         <h2>Assigned Nodes Algorithm</h2>
 
         <p>
-          The <dfn>get assigned nodes algorithm</dfn> <strong>must</strong> be used to determine the <dfn>assigned nodes</dfn> for a <a>slot</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          The <dfn>get assigned nodes algorithm</dfn> <strong>must</strong> be used to determine the <dfn>assigned nodes</dfn> of a <a>slot</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
         </p>
 
         <div class="algorithm">
@@ -419,7 +419,7 @@
         <h2>Distributed Nodes Algorithm</h2>
 
         <p>
-          The <dfn>get distributed nodes algorithm</dfn> <strong>must</strong> be used to determine the <dfn>distributed nodes</dfn> for a <a>slot</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          The <dfn>get distributed nodes algorithm</dfn> <strong>must</strong> be used to determine the <dfn>distributed nodes</dfn> of a <a>slot</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
         </p>
 
         <div class="algorithm">
@@ -577,15 +577,15 @@
         </table>
 
         <p>
-          Suppose that an assigned slot for each node, if it exists, is:
+          Suppose that an <a>assigned slot</a> of each node, if it exists, is:
         </p>
 
         <ul>
-          <li>(D => L) (You can read this as <strong>"D is assigned to L</strong>")</li>
-          <li>(F => L)</li>
-          <li>(H => O)</li>
-          <li>(O => T)</li>
-          <li>(P => T)</li>
+          <li>D: => L (You can read this as <strong>"D is assigned to L</strong>")</li>
+          <li>F: => L</li>
+          <li>H: => O</li>
+          <li>O: => T</li>
+          <li>P: => T</li>
         </ul>
 
         <figure>
@@ -594,7 +594,7 @@
         </figure>
 
         <p>
-          Then, the distributed nodes for each slot will be:
+          Then, the <a>assigned nodes</a> and the <a>distributed nodes</a> of each slot will be:
         </p>
 
         <table>
@@ -604,8 +604,9 @@
               <th>Root node is: </th>
               <th>Hosted by:</th>
               <th>Composed of: (in tree order)</th>
-              <th>Assigned Slot for a node</th>
-              <th>Distributed nodes for a slot</th>
+              <th><a>Assigned slot</a> of each node</th>
+              <th><a>Assigned nodes</a> of each slot</th>
+              <th><a>Distributed nodes</a> of each slot</th>
             </tr>
           </thead>
           <tbody>
@@ -614,7 +615,14 @@
               <td>A</td>
               <td>-</td>
               <td>A, B, C, D, E, F, G, H, I</td>
-              <td>(D => L), (F => L), (H => O)</td>
+              <td>
+                <ul>
+                  <li>D: => L</li>
+                  <li>F: => L</li>
+                  <li>H: => O</li>
+                </ul>
+              </td>
+              <td>-</td>
               <td>-</td>
             </tr>
             <tr>
@@ -622,8 +630,26 @@
               <td>J</td>
               <td>C</td>
               <td>J, K, L, M, N, O, P, Q</td>
-              <td>(O => T), (P => T)</td>
-              <td>L <= [D, F], M <= [], O <= [H]</td>
+              <td>
+                <ul>
+                  <li>O: => T</li>
+                  <li>P: => T</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li>L: [D, F]</li>
+                  <li>M: []</li>
+                  <li>O: [H]</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li>L: [D, F]</li>
+                  <li>M: []</li>
+                  <li>O: [H]</li>
+                </ul>
+              </td>
             </tr>
             <tr>
               <td>shadow tree 2</td>
@@ -631,16 +657,26 @@
               <td>N</td>
               <td>R, S, T</td>
               <td>-</td>
-              <td>T <= [H, P] </td>
+              <td>
+                <ul>
+                  <li>T: [O, P]</li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li>T: [H, P]
+                  </li>
+                </ul>
+              </td>
             </tr>
           </tbody>
         </table>
 
         <ul class="note">
-          <li>More than one nodes can be assigned to the same slot. e.g. (D => L), (F => L)</li>
-          <li>A slot can be assigned to an other slot, e.g. (O => T)</li>
+          <li>More than one nodes can be assigned to the same slot. e.g. D: => L, F: => L</li>
+          <li>A slot can be assigned to an other slot, e.g. O: => T</li>
           <li>
-            The distributed nodes for T are [H, P]. That aren't [O, P].
+            The <a>distributed nodes</a> of T are [H, P]. That aren't [O, P].
             A slot is never a member of distributed nodes of an other slot.
             If a slot <var>A</var> is assigned to an other slot <var>B</var>, the distributed nodes for <var>A</var> are appended to the distributed nodes for <var>B</var>,
             instead of <var>A</var> itself, as per the <a>get distributed nodes algorithm</a>.
