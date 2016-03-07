@@ -159,13 +159,18 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <p>Each <a>custom element definition</a>'s <a href="#dfn-element-definition-construction-stack">construction stack</a> is manipulated by the <a>upgrade a custom element</a> algorithm and the <a href="#dom-htmlelement-constructor"><code>HTMLElement</code> constructor</a>. Each entry in the list will be either an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> or an <dfn id="dfn-already-constructed-marker"><i>already constructed</i></dfn> marker.</p>
 
-<p>At the time of creation, a <a href="https://dom.spec.whatwg.org/#concept-document">document</a> could be associated with a <a>registry</a>. A <dfn id="dfn-registry">registry</dfn> is a <a href="https://en.wikipedia.org/wiki/Set_(computer_science)">set</a> of <a data-lt="custom element definition">custom element definitions</a>.</p>
+<p>Each <a href="https://dom.spec.whatwg.org/#concept-document">document</a> has an associated <dfn id="dfn-registry">custom element registry</dfn>, which is either a set of <a data-lt="custom element definition">custom element definitions</a> or is null. Unless stated otherwise, a <a href="https://dom.spec.whatwg.org/#concept-document">document</a>'s <a>custom element registry</a> is null.</p>
 
-<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of adding an <a>custom element definition</a> to a <a>registry</a>. One <a>custom element definition</a> can only be <a data-lt="element registration">registered</a> with one <a>registry</a>.</p>
+<p class="note">In general, only <a href="https://dom.spec.whatwg.org/#concept-document">documents</a> associated with a <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a> have non-null <a data-lt="custom element registry">custom element registries</a>. Trying to <a data-lt="element registration">register</a> or create custom elements in other documents, such as those created by <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createDocument</code></a> method or a <a href="https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document">template contents owner document</a>, will fail.</p>
 
-<p>If a <a href="https://dom.spec.whatwg.org/#concept-document">document</a> does not have a <a>registry</a> associated with it, all attempts at <a>element registration</a> will fail.</p>
+<section id="registry-modifications-to-html">
+<h3>Registry-Related Changes to the HTML Standard</h3>
 
-<p>The exact nature of creating <a data-lt="registry">registries</a>, their association with  <a href="https://dom.spec.whatwg.org/#concept-document">documents</a>, and <a>element registration</a> are defined further in this specification.</p>
+<p>Inside the <a href="https://html.spec.whatwg.org/multipage/browsers.html#initialise-the-document-object">initialization of a new <code>Document</code> object</a> during navigation, set the new <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a> object's <a>custom element registry</a> to a new empty set.</p>
+
+<p>Inside the algorithm for the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open"><code>document.open()</code></a> method, add a step (near step 18, replacing the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s singleton objects) that sets the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s custom element registry to a new empty set.</p>
+</section>
+
 </section>
 
 <section id="custom-element-lifecycle">
@@ -298,23 +303,12 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 </section>
 </section>
-<section id="creating-and-passing-registries">
-<h2>Creating and Passing Registries</h2>
-
-<p>When an <a href="https://dom.spec.whatwg.org/#html-document">HTML Document</a> is <a href="https://html.spec.whatwg.org/multipage/browsers.html#read-html">loaded</a> in a <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a>, a new <a>registry</a> MUST be created and associated with this <a href="https://dom.spec.whatwg.org/#html-document">document</a>.</p>
-
-<p>A new <a href="https://dom.spec.whatwg.org/#concept-document">document</a> instance MUST be associated with an existing <a>registry</a> in these cases:</p>
-
-<ul>
-    <li>When <a href="https://dom.spec.whatwg.org/#interface-domimplementation"><code>DOMImplementation</code></a>'s <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createdocument"><code>createDocument</code></a> method is invoked with <em>namespace</em> set to <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> or when the <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createHTMLDocument</code></a> method is invoked, use the <a>registry</a> of the <a href="https://dom.spec.whatwg.org/#interface-domimplementation"><code>DOMImplementation</code></a>'s associated <a href="https://dom.spec.whatwg.org/#concept-document">document</a>.</li>
-    <li>When creating a <a href="https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document">template contents owner document</a>, use a new empty <a>registry</a>.</li>
-</ul>
-
-<p>In all other cases, new <a href="https://dom.spec.whatwg.org/#concept-document">documents</a> MUST NOT have a <a>registry</a>.</p>
 
 </section>
 <section id="registering-custom-elements">
 <h2>Registering Custom Elements</h2>
+
+<p><dfn id="dfn-element-registration">Element registration</dfn> is a process of adding an <a>custom element definition</a> to a <a>custom element registry</a>.</p>
 
 <p>Because <a>element registration</a> can occur at any time, a <a>custom element</a> could be created before its <a data-lt="custom element definition">definition</a> is <a data-lt="element registration">registered</a>. Such <a>custom element</a> instances are called <dfn id="dfn-unresolved-element" data-lt='unresolved element'>unresolved elements</dfn>. When an <a>unresolved element</a> is created, <em>and</em> if its  <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> was not defined by <a href="https://html.spec.whatwg.org/multipage/">HTML</a> or <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">other applicable specifications</a>, the <a>unresolved element</a>'s <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> MUST be <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a>.</p>
 
@@ -322,7 +316,7 @@ The list of names above is the summary of all hyphen-containing element names fr
 The effect of this statement is that any HTML element with a local name that is a valid <a>custom element name</a> will have <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> as its element interface, rather than <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>.
 </div>
 
-<p>Each <a>registry</a> has an associated <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> of all instances of <a data-lt="unresolved element">unresolved elements</a>, mapping a <a>custom element name</a> to a <a>sorted element queue</a>. It is is initially empty.</p>
+<p>Each <a>custom element registry</a> has an associated <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> of all instances of <a data-lt="unresolved element">unresolved elements</a>, mapping a <a>custom element name</a> to a <a>sorted element queue</a>. It is is initially empty.</p>
 
 <p>Whenever an <a>unresolved element</a> is created, it MUST be added to the respective <a>sorted element queue</a> in <a>upgrade candidates map</a>.</p>
 
@@ -352,7 +346,7 @@ dictionary ElementRegistrationOptions {
 
     <li>If <var>name</var> is an invalid <a>custom element name</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>SyntaxError</code> and abort these steps.</li>
 
-    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>registry</a>. If <var>registry</var> does not exist, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
+    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>. If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
 
     <li>If <var>registry</var> contains an entry with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
 
@@ -466,7 +460,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
     <li>Let <var>realm</var> be the result of <a href="https://tc39.github.io/ecma262/#sec-getfunctionrealm">GetFunctionRealm</a>(the currently executing <code>HTMLElement</code> function).</li>
     <li>Let <var>document</var> be the <a href="https://html.spec.whatwg.org/multipage/#concept-document-window">associated document</a> of <var>realm</var>'s [[\GlobalObject]].</li>
 
-    <li>Let <var>registry</var> be <var>document</var>'s <a>registry</a>. If <var>document</var> has no <a>registry</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> and abort these steps.</li>
+    <li>Let <var>registry</var> be <var>document</var>'s <a>custom element registry</a>. If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> and abort these steps.</li>
 
     <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-constructor">constructor</a> equal to NewTarget. If there is no such definition, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> and abort these steps.</li>
 
@@ -528,12 +522,14 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, typeExte
 
     <li>If the <a href="https://dom.spec.whatwg.org/#context-object">context object</a> is an <a href="https://dom.spec.whatwg.org/#html-document">HTML document</a>, let <var>localName</var> be <a href="https://dom.spec.whatwg.org/#converted-to-ascii-lowercase">converted to ASCII lowercase</a>.</li>
 
-    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>registry</a>.</li>
+    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
 
     <li>
         <p>If <var>typeExtension</var> is provided:</p>
 
         <ol>
+            <li>If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
+
             <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
 
             <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
@@ -547,7 +543,7 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, typeExte
     </li>
 
     <li>
-        <p>Otherwise, if <var>registry</var> contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
+        <p>Otherwise, if <var>registry</var> is not null and contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
 
         <ol>
             <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>.</li>
@@ -574,12 +570,14 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 <ol>
     <li>Let <var>namespace</var>, <var>prefix</var>, and <var>localName</var> be the result of passing <var>namespace</var> and <var>qualifiedName</var> to <a href="https://dom.spec.whatwg.org/#validate-and-extract">validate and extract</a>. Rethrow any exceptions.</li>
 
-    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>registry</a>.</li>
+    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
 
     <li>
         <p>If <var>typeExtension</var> is provided:</p>
 
         <ol>
+            <li>If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
+
             <li>If <var>namespace</var> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, or if <var>prefix</var> is not null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
 
             <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
@@ -595,7 +593,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
     </li>
 
     <li>
-        <p>Otherwise, if <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a> and <var>registry</var> contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
+        <p>Otherwise, if <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>registry</var> contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
 
         <ol>
             <li>If <var>prefix</var> is not null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
@@ -620,9 +618,9 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
         <p>Otherwise:</p>
 
         <ol>
-            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
+            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and <var>namespace</var>.</li>
 
-            <li>Return a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
+            <li>Return a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
         </ol>
     </li>
 </ol>
