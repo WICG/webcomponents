@@ -193,34 +193,32 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <p>To facilitate invoking callbacks, each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-processing-stack">processing stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a>element queue</a> is a <a>custom element</a>.</p>
 
-<p>Each <a>custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn> and an <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag. The flag is initially set to <strong>false</strong> and the <a>callback queue</a> is initially empty. Each item in the queue consists of the callback itself and zero or more string values that are used as callback arguments.</p>
+<p>Each <a>custom element</a> has an associated <dfn id="dfn-callback-queue">callback queue</dfn> and an <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag. The flag is initially set to false and the <a>callback queue</a> is initially empty. Each item in the <a>callback queue</a> consists of the callback itself and a list of arguments.</p>
 
-<p>To <dfn id="dfn-invoke-callbacks-in-element-queue">invoke callbacks</dfn> in an <a>element queue</a>, the user agent MUST run these steps or their <a data-lt="processing equivalence">equivalent</a>:</p>
+<p>To <dfn id="dfn-invoke-callbacks-in-element-queue">invoke custom element callbacks</dfn> in an <a>element queue</a> <var>queue</var>, run the following steps:</p>
 
-<div class="algorithm">
-<dl>
-<dt>Input</dt>
-    <dd><var>QUEUE</var>, an <a>element queue</a></dd>
-<dt>Output</dt>
-    <dd>None</dd>
-</dl>
-<ol class='algorithm'>
-    <li>For each <a>custom element</a> <var>ELEMENT</var> in <var>QUEUE</var>:
-    <ol>
-        <li>Let <var>CALLBACKS</var> be the <var>ELEMENT</var>'s <a>callback queue</a></li>
-        <li>Repeat until <var>CALLBACKS</var> is empty:
+<ol>
+    <li>
+        <p>For each <a>custom element</a> <var>element</var> in <var>queue</var>:</p>
+
         <ol>
-            <li>Remove the first item from <var>CALLBACKS</var> and let <var>CALLBACK</var> be this item</li>
-            <li>Invoke <var>CALLBACK</var> with <var>ELEMENT</var> as <a href="https://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a> and, if present, using string values in <var>CALLBACK</var> as arguments</li>
-        </ol></li>
-    </ol></li>
+            <li>Let <var>callbacks</var> be <var>element</var>'s <a>callback queue</a>.</li>
+            <li>
+                <p>Repeat until <var>callbacks</var> is empty:</p>
+
+                <ol>
+                    <li>Remove the first element of <var>callbacks</var>, letting <var>callback</var> and <var>args</var> be the result.</li>
+                    <li><a href="https://heycam.github.io/webidl/#es-invoking-callback-functions">Invoke</a> <var>callback</var> with <var>args</var> and with <var>element</var> as the <a href="https://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a>. If this throws any exception, <a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">report the exception</a>.</li>
+                </ol>
+            </li>
+        </ol>
+    </li>
 </ol>
-</div>
 
 <p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions MUST occur:</p>
 <ul>
     <li>When transitioning from script to the user agent code, push a new <a>element queue</a> to the <a>processing stack</a></li>
-    <li>When transitioning back from the user agent code to script, pop the <a>element queue</a> from the <a>processing stack</a> and <a>invoke callbacks</a> in that queue.</li>
+    <li>When transitioning back from the user agent code to script, pop the <a>element queue</a> from the <a>processing stack</a> and <a>invoke custom element callbacks</a> in that queue.</li>
 </ul>
 
 <div class="note">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a lifecycle callback, the user agent could choose not to wrap it as a performance optimization.</div>
@@ -252,7 +250,7 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li>Let <var>PROCESSING</var> be the <a data-lt="process base element queue">processing base element queue</a> flag</li>
     <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
     <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
-    <li><a>Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a></li>
+    <li><a>Invoke custom element callbacks</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a></li>
     <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
