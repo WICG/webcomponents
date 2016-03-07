@@ -222,37 +222,11 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <p>In addition to an <a>element queue</a>, there is also a <dfn id="dfn-sorted-element-queue">sorted element queue</dfn>. The <a data-lt='custom element'>custom elements</a> are kept in the order of increasing <a>custom element order</a>.</p>
 
-<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a sum of <a>document custom element order</a> and <a>import tree order</a>, in which the <a>import tree order</a> is scaled so that its lowest value is always larger than the highest possible value of <a>document custom element order</a>.</p>
-
-<p>The <dfn id="dfn-document-custom-element-order">document custom element order</dfn>  is a numerical value, associated with every <a>custom element</a>. This value is as a result of <a>custom element</a>'s <a href="https://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned to <a>custom element</a> as its <a>custom element order</a> whenever the following occurs:</p>
+<p>The <dfn id="dfn-custom-element-order">custom element order</dfn> is a numerical value, associated with every <a>custom element</a>. This value is assigned as a result of <a>custom element</a>'s <a href="https://dom.spec.whatwg.org/#concept-document">document</a> keeping a numerical value that is incremented and assigned to <a>custom element</a> as its <a>custom element order</a> whenever the following occurs:</p>
 <ul>
     <li>A <a>custom element</a> is popped from the <a href="https://html.spec.whatwg.org/multipage/syntax.html#stack-of-open-elements">stack of open elements</a></li>
     <li>A <a>custom element</a> is created with means other than a parser</li>
 </ul>
-
-<p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a>custom element</a> of an <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> [[!HTML-IMPORTS]] is determined by <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a> that was flattened by replacing every <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a> <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-imported-document">imported document</a>.</p>
-
-<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceding the <a>custom element order</a> of an <a data-lt="custom element">element</a> in the first encountered <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, that has not yet <a href="https://html.spec.whatwg.org/multipage/syntax.html#completely-loaded">completely loaded</a>. If there is no such <a data-lt="custom element">element</a>, the <a>highest stable order</a> is the highest custom element order in the flattened <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import-link-tree">import link tree</a>.</p>
-
-<div class="note">
-<p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
-
-<div id='document-structure'>
-<p>index.html:</p>
-<pre class='highlight'>
-&lt;link rel="import" href="import.html">
-...
-&lt;me-second>&lt;/me-second>
-...
-</pre>
-
-<p>import.html:</p>
-<pre class='highlight'>&lt;me-first>&lt;/me-first></pre>
-</div>
-
-<p>The order of custom elements in the flattened import link tree is <code>me-first</code> (1), <code>me-second</code> (2). However, it's very likely that the parser will find out about <code>me-second</code> sooner than <code>me-first</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at the beginning position. When <code>import.html</code> is ready, the order jumps all the way to <code>me-second</code> (2).</p>
-
-</div>
 
 <p>Each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has an initially-empty <a>sorted element queue</a>, called <dfn id="dfn-base-element-queue">base element queue</dfn>.</p>
 
@@ -273,7 +247,7 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li>Let <var>PROCESSING</var> be the <a data-lt="process base element queue">processing base element queue</a> flag</li>
     <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
     <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
-    <li><a>Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a> up to the <a>highest stable order</a>, inclusively</li>
+    <li><a>Invoke callbacks</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a></li>
     <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
@@ -333,7 +307,6 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <ul>
     <li>When <a href="https://dom.spec.whatwg.org/#interface-domimplementation"><code>DOMImplementation</code></a>'s <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createdocument"><code>createDocument</code></a> method is invoked with <em>namespace</em> set to <a href="http://www.w3.org/1999/xhtml">HTML Namespace</a> or when the <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createHTMLDocument</code></a> method is invoked, use the <a>registry</a> of the <a href="https://dom.spec.whatwg.org/#interface-domimplementation"><code>DOMImplementation</code></a>'s associated <a href="https://dom.spec.whatwg.org/#concept-document">document</a>.</li>
-    <li>When creating an <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-import">import</a>, use the <a>registry</a> of the <a href="https://w3c.github.io/webcomponents/spec/imports/index.html#dfn-master-document">master document</a>.</li>
     <li>When creating a <a href="https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document">template contents owner document</a>, use a new empty <a>registry</a>.</li>
 </ul>
 
