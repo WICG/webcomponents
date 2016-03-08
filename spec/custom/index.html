@@ -415,7 +415,7 @@ The list of names above is the summary of all hyphen-containing element names fr
         <ol>
             <li>Run the <a href="https://dom.spec.whatwg.org/#concept-node-insert-ext">insertion steps</a> with <var>inclusiveDescendant</var> and <var>parent</var>.</li>
 
-            <li>If <var>inclusiveDescendant</var> is a <a>custom element</a>, and was previously not <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty arguments list.</li>
+            <li>If <var>inclusiveDescendant</var> is a <a>custom element</a>, and was previously not <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
         </ol>
     </li>
 </ol>
@@ -429,7 +429,7 @@ The list of names above is the summary of all hyphen-containing element names fr
         <ol>
             <li>Run the <a href="https://dom.spec.whatwg.org/#concept-node-remove-ext">removing steps</a> with <var>inclusiveDescendant</var> and <var>parent</var>.</li>
 
-            <li>If <var>inclusiveDescendant</var> is a <a>custom element</a>, and was previously <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is not, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty arguments list.</li>
+            <li>If <var>inclusiveDescendant</var> is a <a>custom element</a>, and was previously <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is not, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty argument list.</li>
         </ol>
     </li>
 </ol>
@@ -437,25 +437,25 @@ The list of names above is the summary of all hyphen-containing element names fr
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-change">change an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an arguments list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>value</var>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>value</var>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">append an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an arguments list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-remove">remove an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an arguments list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, null, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, null, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-replace">replace an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an arguments list containing <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>newAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is a <a>custom element</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>newAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 </section>
@@ -708,6 +708,8 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 <p class="warning">This section needs a lot more detail added on how exactly it is going to patch [[HTML]], in order to execute script during parsing.</p>
 
 <p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a>create an element</a> with the appropriate argument, including with the <var>synchronous custom elements flag</var> set.</p>
+
+<p>For each attribute in the given token, the parser must <a>enqueue a custom element callback action</a> given the new node, "<code>attributeChangedCallback</code>", and an argument list containing the attribute's local name, null, the attribute's value, and the attribute's namespace.</p>
 
 <div class="note">
 <p>This modification to <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a> has the consequence of <a data-lt="custom element">custom elements</a> being created when <a href="https://html.spec.whatwg.org/multipage/syntax.html#parsing">parsing HTML documents</a> or <a href="https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-parsing-algorithm">fragments</a>. Probably we need to tweak this a bit so that fragment parsing is done differently (with upgrade semantics).</p>
