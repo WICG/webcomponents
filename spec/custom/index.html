@@ -175,6 +175,19 @@ var {
         <p class="note">The list of names above is the summary of all hyphen-containing element names from the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely <a href="https://www.w3.org/TR/SVG/eltindex.html">SVG</a> and <a href="https://www.w3.org/TR/MathML/">MathML</a>. [[SVG11]] [[MathML]]</p>
 </ul>
 
+<div class="note">
+    <p>These requirements ensure a number of goals for <a lt="valid custom element name">valid custom element names</a>:</p>
+
+    <ul>
+        <li>They start with a lowercase ASCII letter, ensuring that the HTML parser will treat them as tags instead of as text.</li>
+        <li>They do not contain any uppercase ASCII letters, ensuring that the user agent can always treat HTML elements ASCII-case-insensitively.</li>
+        <li>They contain a hyphen, used for namespacing and to ensure forward compatibility (since no elements will be added to HTML with hyphen-containing tag names in the future).</li>
+        <li>They can always be created with <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>document.createElement</code></a> and <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><code>document.createElementNS</code></a>, which have restrictions that go beyond the parser's.</li>
+    </ul>
+
+    <p>Apart from these restrictions, a large variety of names is allowed, to give maximum flexibility for use cases like <code>&lt;math-α></code> or <code>&lt;emotion-😍>.</code>
+</div>
+
 <p>A <dfn id="dfn-element-definition">custom element definition</dfn> describes a <a>custom element</a> and consists of:</p>
 <ul>
     <li>a <dfn id="dfn-element-definition-name" for="custom element definition">name</dfn>, which is a <a>valid custom element name</a>;</li>
@@ -730,7 +743,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 <section id="extensions-to-document-interface-to-instantiate">
 <h3>DOM+: <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Methods</h3>
 
-<p class="monkeypatch">To allow creating both <a>custom tag</a> and <a>type extension</a>-style <a data-lt="custom element">custom elements</a>, the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods gain optional <var>typeExtension</var> arguments. Their new definitions are:</p>
+<p class="monkeypatch">To allow creating both <a>custom tag</a> and <a>type extension</a>-style <a data-lt="custom element">custom elements</a>, the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><code>createElementNS</code></a> methods gain optional <var>typeExtension</var> arguments. Their new definitions are:</p>
 
 <pre class='idl'>
 partial interface Document {
