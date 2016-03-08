@@ -89,6 +89,10 @@ var {
     color: #005A9C;
     font-style: normal;
 }
+
+.monkeypatch {
+    background: #fff9b5;
+}
 </style>
 
 </head>
@@ -97,7 +101,7 @@ var {
 
 <section id='abstract'>
 
-<p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It will eventually be upstreamed into [[!WHATWG-DOM]], [[!HTML]], and [[!WEBIDL]].</p>
+<p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It will eventually be upstreamed into [[!WHATWG-DOM]], [[!HTML]], and [[!WEBIDL]]. Sections which explicitly modify existing parts of these specifications are denoted with "DOM+", "HTML+", or "Web IDL+" in their titles.</p>
 
 </section>
 
@@ -128,6 +132,9 @@ var {
 
 <section>
 <h2>Concepts</h2>
+
+<section>
+<h3>Custom Elements</h3>
 
 <p>A <dfn id="dfn-custom-element">custom element</dfn> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> whose constructor and prototype are defined by a developer, instead of by the user agent. The developer-supplied constructor function is called the <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>.</p>
 
@@ -165,7 +172,7 @@ var {
             <li><code>font-face-name</code></li>
             <li><code>missing-glyph</code></li>
         </ul>
-        <p class="note">The list of names above is the summary of all hyphen-containing element names from the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely <a href="https://www.w3.org/TR/SVG/eltindex.html">SVG</a> and <a href="https://www.w3.org/TR/MathML/">MathML</a>. [[SVG11]] [[MathML]]
+        <p class="note">The list of names above is the summary of all hyphen-containing element names from the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely <a href="https://www.w3.org/TR/SVG/eltindex.html">SVG</a> and <a href="https://www.w3.org/TR/MathML/">MathML</a>. [[SVG11]] [[MathML]]</p>
 </ul>
 
 <p>A <dfn id="dfn-element-definition">custom element definition</dfn> describes a <a>custom element</a> and consists of:</p>
@@ -190,6 +197,49 @@ var {
 <p>Because <a>element registration</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that might in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is <a data-lt="element registration">registered</a>. Such <a href="https://dom.spec.whatwg.org/#concept-element">elements</a> are called <dfn id="dfn-undefined-potentially-custom-element">undefined potentially-custom elements</dfn>. If such a definition is ever registered, the element will be <a lt="upgrade a custom element">upgraded</a>, becoming a <a>custom element</a>.</p>
 
 <p>Each <a>custom element registry</a> has an associated <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> tracking <a>undefined potentially-custom elements</a>. Each entry has a key that is a <a>valid custom element name</a> and a value that is a <a>sorted element queue</a>. It is is initially empty.</p>
+
+</section>
+
+<section id="registry-modifications-to-html">
+<h3>HTML+: Registry-Related Changes</h3>
+
+<p>Inside the <a href="https://html.spec.whatwg.org/multipage/browsers.html#initialise-the-document-object">initialization of a new <code>Document</code> object</a> during navigation, set the new <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a> object's <a>custom element registry</a> to a new empty set.</p>
+
+<p>Inside the algorithm for the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open"><code>document.open()</code></a> method, add a step (near step 18, replacing the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s singleton objects) that sets the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s custom element registry to a new empty set.</p>
+</section>
+
+<section id="element-interface-modifications-to-html">
+<h3>HTML+: Element Interfaces</h3>
+
+<p class="monkeypatch">HTML currently does not do a great job of defining DOM's <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> concept. There is a definition hidden inside <a href="https://html.spec.whatwg.org/#create-an-element-for-the-token">the parser</a>, but it isn't explicit that this also covers other element creation cases. We should create a section that is more explicit, and it should roughly contain the following (including the note afterward):</p>
+
+<p>The <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for an element with name <var>name</var> in the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a> is determined as follows:</p>
+
+<ol>
+    <li>If this specification defines an interface appropriate for the element type corresponding to the tag name <var>name</var>, return that interface.</li>
+    <li>If <a href="https://html.spec.whatwg.org/multipage/#other-applicable-specifications">other applicable specifications</a> define such an appropriate interface for <var>name</var>, return the interface they define.</li>
+    <li>If <var>name</var> is a <a>valid custom element name</a>, return <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a>.</li>
+    <li>Otherwise, return <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</li>
+</ol>
+
+<p class="note">
+    The use of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> instead of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> in the case of <a lt="valid custom element name">valid custom element names</a> is done to ensure that any potential future <a lt="upgrade a custom element">upgrades</a> only cause a linear transition of the element's prototype chain, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> to a subclass, instead of a lateral one, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> to an unrelated subclass.
+</p>
+
+</section>
+
+<section id="element-modifications-to-dom">
+<h3>DOM+: Elements</h3>
+
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#interface-element"><code>Element</code> interface section</a> will need to be modified as follows. The paragraph listing the values associated with an element should be modified to read as follows, including the note afterward:</p>
+
+<p><a href="https://dom.spec.whatwg.org/#concept-element">Elements</a> have an associated <dfn id="dfn-element-monkeypatch-namespace">namespace</dfn>, <dfn id="dfn-element-monkeypatch-namespace-prefix">namespace prefix</dfn>, <dfn id="dfn-element-monkeypatch-local-name">local name</dfn>, and <dfn id="dfn-element-defined">defined flag</dfn>. When an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> is <a lt="create an element">created</a>, all of these values are set. An element whose <a>defined flag</a> is set is said to be <dfn id="dfn-defined-element">defined</dfn>.</p>
+
+<p class="note">
+    As detailed elsewhere in this specification, all elements that are not <a lt="custom element">custom elements</a> are already <a>defined</a> upon their <a lt="create an element">creation</a>. <a lt="custom element">Custom elements</a> become defined once their constructor has been called, either synchronously or during the <a lt="upgrade a custom element">upgrade</a> process.
+</p>
+
+<p class="monkeypatch">Additionally, after the talk about qualified names but before the discussion of attributes, the following algorithm should be inserted:</p>
 
 <p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and optional <var>synchronous custom elements flag</var>, run the following steps:</p>
 
@@ -294,51 +344,12 @@ var {
         </ol>
     </li>
 </ol>
-
-<section id="registry-modifications-to-html">
-<h3>Registry-Related Changes to the HTML Standard</h3>
-
-<p>Inside the <a href="https://html.spec.whatwg.org/multipage/browsers.html#initialise-the-document-object">initialization of a new <code>Document</code> object</a> during navigation, set the new <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a> object's <a>custom element registry</a> to a new empty set.</p>
-
-<p>Inside the algorithm for the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open"><code>document.open()</code></a> method, add a step (near step 18, replacing the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s singleton objects) that sets the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s custom element registry to a new empty set.</p>
-</section>
-
-<section id="element-interface-modifications-to-html">
-<h3>Element Interface Addition to the HTML Standard</h3>
-
-<p>HTML currently does not do a great job of defining DOM's <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> concept. There is a definition hidden inside <a href="https://html.spec.whatwg.org/#create-an-element-for-the-token">the parser</a>, but it isn't explicit that this also covers other element creation cases. We should create a section that is more explicit, and it should roughly contain the following (including the note afterward):</p>
-
-<p>The <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for an element with name <var>name</var> in the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a> is determined as follows:</p>
-
-<ol>
-    <li>If this specification defines an interface appropriate for the element type corresponding to the tag name <var>name</var>, return that interface.</li>
-    <li>If <a href="https://html.spec.whatwg.org/multipage/#other-applicable-specifications">other applicable specifications</a> define such an appropriate interface for <var>name</var>, return the interface they define.</li>
-    <li>If <var>name</var> is a <a>valid custom element name</a>, return <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a>.</li>
-    <li>Otherwise, return <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>.</li>
-</ol>
-
-<p class="note">
-    The use of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> instead of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> in the case of <a lt="valid custom element name">valid custom element names</a> is done to ensure that any potential future <a lt="upgrade a custom element">upgrades</a> only cause a linear transition of the element's prototype chain, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> to a subclass, instead of a lateral one, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> to an unrelated subclass.
-</p>
-
-</section>
-
-<section id="element-modifications-to-dom">
-<h3>Element Changes to the DOM Standard</h3>
-
-<p>The <a href="https://dom.spec.whatwg.org/#interface-element"><code>Element</code> interface section</a> will need to be modified as follows. The paragraph listing the values associated with an element should be modified to read as follows, including the note afterward:</p>
-
-<p><a href="https://dom.spec.whatwg.org/#concept-element">Elements</a> have an associated <dfn id="dfn-element-monkeypatch-namespace">namespace</dfn>, <dfn id="dfn-element-monkeypatch-namespace-prefix">namespace prefix</dfn>, <dfn id="dfn-element-monkeypatch-local-name">local name</dfn>, and <dfn id="dfn-element-defined">defined flag</dfn>. When an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> is <a lt="create an element">created</a>, all of these values are set. An element whose <a>defined flag</a> is set is said to be <dfn id="dfn-defined-element">defined</dfn>.</p>
-
-<p class="note">
-    As detailed elsewhere in this specification, all elements that are not <a lt="custom element">custom elements</a> are already <a>defined</a> upon their <a lt="create an element">creation</a>. <a lt="custom element">Custom elements</a> become defined once their constructor has been called, either synchronously or during the <a lt="upgrade a custom element">upgrade</a> process.
-</p>
 </section>
 
 <section id="clone-modifications-to-dom">
-<h3>Cloning Changes to the DOM Standard</h3>
+<h3>DOM+: Cloning</h3>
 
-<p>The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
 
 </section>
 
@@ -487,7 +498,9 @@ var {
 
 </section>
 <section id="types-of-callbacks">
-<h3>Changes to DOM's Mutation Algorithms</h3>
+<h3>DOM+: Mutation Algorithms</h3>
+
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#mutation-algorithms">mutation algorithms</a> sections need to be modified as follows to properly enqueue custom element callbacks.</p>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-node-insert">insert</a> algorithm as follows. Replace step 6.2 with:</p>
 
@@ -657,13 +670,15 @@ dictionary ElementRegistrationOptions {
 <h2>Instantiating Custom Elements</h2>
 
 <section id="htmlelement-constructor">
-<h3>The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> Constructor</h3>
+<h3>HTML+: The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> Constructor</h3>
 
-The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface gains following annotation:
+<p class="monkeypatch">The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface gains following annotation:</p>
 
 <pre>
 [Constructor]
 </pre>
+
+<p class="monkeypatch">We then add the following definition:</p>
 
 The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</dfn>, when invoked, must perform the following steps:
 
@@ -713,9 +728,9 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 </section>
 
 <section id="extensions-to-document-interface-to-instantiate">
-<h3>Changes to <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Methods</h3>
+<h3>DOM+: <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Methods</h3>
 
-<p>To allow creating both <a>custom tag</a> and <a>type extension</a>-style <a data-lt="custom element">custom elements</a>, the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods gain optional <var>typeExtension</var> arguments. Their new definitions are:</p>
+<p class="monkeypatch">To allow creating both <a>custom tag</a> and <a>type extension</a>-style <a data-lt="custom element">custom elements</a>, the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><codE>createElementNS</code></a> methods gain optional <var>typeExtension</var> arguments. Their new definitions are:</p>
 
 <pre class='idl'>
 partial interface Document {
@@ -757,7 +772,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 </section>
 
 <section id="parsing">
-<h3>Changes to the HTML Parser</h3>
+<h3>HTML+: The Parser</h3>
 
 <p class="warning">This section needs a lot more detail added on how exactly it is going to patch [[HTML]], in order to execute script during parsing.</p>
 
@@ -809,18 +824,12 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
 </section>
 
-<section>
-<h3>Changes to Cloning</h3>
-
-The following informational note should be added to the <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone</a> algorithm's section on cloning elements:
-
-<p class="note">Custom elements will be <a data-lt="upgrade a custom element">upgraded</a> when the calling operation finishes and <a data-lt="invoke custom element actions">invokes custom element actions</a>.</p>
-
-</section>
 </section>
 
 <section id="unresolved-element-pseudoclass">
 <h2>Additions to CSS</h2>
+
+<p class="monkeypatch">The following should be added to some relevant CSS specification. Or maybe it would belong in HTML? It looks like it's mostly a collaboration so far?</p>
 
 <section>
 <h3>The Defined Element Pseudo-class: <a>':defined'</a></h3>
