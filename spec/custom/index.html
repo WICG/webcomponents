@@ -249,6 +249,13 @@ The list of names above is the summary of all hyphen-containing element names fr
 <p>Inside the algorithm for the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open"><code>document.open()</code></a> method, add a step (near step 18, replacing the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s singleton objects) that sets the <a href="https://html.spec.whatwg.org/multipage/dom.html#document"><code>Document</code></a>'s custom element registry to a new empty set.</p>
 </section>
 
+<section id="clone-modifications-to-dom">
+<h3>Cloning Changes to the DOM Standard</h3>
+
+<p>The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
+
+</section>
+
 </section>
 
 <section id="custom-element-lifecycle">
@@ -354,8 +361,6 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li>When transitioning from script to the user agent code, push a new <a>element queue</a> to the <a>processing stack</a></li>
     <li>When transitioning back from the user agent code to script, pop the <a>element queue</a> from the <a>processing stack</a> and <a>invoke custom element actions</a> in that queue.</li>
 </ul>
-
-<p>Additionally, any time an element is created in the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, the user agent must <a>enqueue a custom element upgrade</a>.</p>
 
 <p class="warning">This needs to become more precise. Find all platform APIs that can create elements? Or invent a new algorithm for creating elements and make sure everyone calls it?</p>
 
@@ -694,7 +699,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
 <p class="warning">This section needs a lot more detail added on how exactly it is going to patch [[HTML]], in order to execute script during parsing.</p>
 
-<p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(the relevant <a>custom element constructor</a>). It'll need to handle errors and cases where the wrong interface is returned.</p>
+<p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a>create an element</a> with the appropriate argument, including with the <var>synchronous custom elements flag</var> set.</p>
 
 <div class="note">
 <p>This modification to <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a> has the consequence of <a data-lt="custom element">custom elements</a> being created when <a href="https://html.spec.whatwg.org/multipage/syntax.html#parsing">parsing HTML documents</a> or <a href="https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-parsing-algorithm">fragments</a>. Probably we need to tweak this a bit so that fragment parsing is done differently (with upgrade semantics).</p>
