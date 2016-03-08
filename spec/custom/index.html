@@ -572,7 +572,7 @@ partial interface Document {
 };
 
 dictionary ElementRegistrationOptions {
-     DOMString? extends = null;
+     DOMString extends;
 };
 </pre>
 
@@ -593,7 +593,7 @@ dictionary ElementRegistrationOptions {
 
     <li>Let <var>localName</var> be <var>name</var>.</li>
 
-    <li>Let <var>extends</var> be the value of the <code>extends</code> member of <var>options</var>.</li>
+    <li>Let <var>extends</var> be the value of the <code>extends</code> member of <var>options</var>, or null if no such member exists.</li>
 
     <li>
         <p>If <var>extends</var> is not null:</p>
@@ -739,7 +739,7 @@ partial interface Document {
 };
 
 dictionary ElementCreationOptions {
-    DOMString? is = null;
+    DOMString is;
 };
 </pre>
 
@@ -752,7 +752,7 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, options)
 
     <li>If the <a href="https://dom.spec.whatwg.org/#context-object">context object</a> is an <a href="https://dom.spec.whatwg.org/#html-document">HTML document</a>, let <var>localName</var> be <a href="https://dom.spec.whatwg.org/#converted-to-ascii-lowercase">converted to ASCII lowercase</a>.</li>
 
-    <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>.</li>
+    <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
     <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
@@ -762,7 +762,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 <ol>
     <li>Let <var>namespace</var>, <var>prefix</var>, and <var>localName</var> be the result of passing <var>namespace</var> and <var>qualifiedName</var> to <a href="https://dom.spec.whatwg.org/#validate-and-extract">validate and extract</a>. Rethrow any exceptions.</li>
 
-    <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>.</li>
+    <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
     <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
