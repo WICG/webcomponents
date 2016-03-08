@@ -163,6 +163,84 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <p class="note">In general, only <a href="https://dom.spec.whatwg.org/#concept-document">documents</a> associated with a <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a> have non-null <a data-lt="custom element registry">custom element registries</a>. Trying to <a data-lt="element registration">register</a> or create custom elements in other documents, such as those created by <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createDocument</code></a> method or a <a href="https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document">template contents owner document</a>, will fail.</p>
 
+<p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, optional <var>typeExtension</var>, and optional <var>synchronous custom elements flag</var>, run the following steps:</p>
+
+<ol>
+    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
+
+    <li>
+        <p>If <var>typeExtension</var> is provided:</p>
+
+        <ol>
+            <li>If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
+
+            <li>If <var>namespace</var> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
+
+            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
+
+            <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
+
+            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
+
+            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
+
+            <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
+
+            <li><a>Enqueue a custom element upgrade</a> given <var>result</var>.</li>
+
+            <li>Return <var>result</var>.</li>
+        </ol>
+    </li>
+
+    <li>
+        <p>Otherwise, if <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>registry</var> contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
+
+        <ol>
+            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>.</li>
+
+            <li>
+                <p>If <var>synchronous custom elements flag</var> is set:</p>
+
+                <ol>
+                    <li>Let <var>C</var> be <var>definition</var>'s <a href="#dfn-element-definition-constructor">constructor</a>.</li>
+
+                    <li>Let <var>result</var> be <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(<var>C</var>). Rethrow any exceptions.</li>
+
+                    <li>
+                        <p>If <var>result</var> does not implement the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</p>
+
+                        <p class="note">This is meant to be a brand check to ensure that the object was allocated by the <a href="#dom-htmlelement-constructor"><code>HTMLElement</code></a> constructor. Eventually Web IDL may give us a more precise way to do brand checks.</p>
+                    </li>
+
+                    <li>Return <var>result</var>.</li>
+                </ol>
+            </li>
+
+            <li>
+                <p>Otherwise:</p>
+
+                <ol>
+                    <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set <var>document</var>.</li>
+
+                    <li><a>Enqueue a custom element upgrade</a> given <var>result</var>.</li>
+
+                    <li>Return <var>result</var>.</li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+
+    <li>
+        <p>Otherwise:</p>
+
+        <ol>
+            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and <var>namespace</var>.</li>
+
+            <li>Return a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
+        </ol>
+    </li>
+</ol>
+
 <section id="registry-modifications-to-html">
 <h3>Registry-Related Changes to the HTML Standard</h3>
 
@@ -596,47 +674,7 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, typeExte
 
     <li>If the <a href="https://dom.spec.whatwg.org/#context-object">context object</a> is an <a href="https://dom.spec.whatwg.org/#html-document">HTML document</a>, let <var>localName</var> be <a href="https://dom.spec.whatwg.org/#converted-to-ascii-lowercase">converted to ASCII lowercase</a>.</li>
 
-    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
-
-    <li>
-        <p>If <var>typeExtension</var> is provided:</p>
-
-        <ol>
-            <li>If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
-
-            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
-
-            <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
-
-            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
-
-            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
-
-            <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using <code>is</code> and <var>type</var>.</li>
-        </ol>
-    </li>
-
-    <li>
-        <p>Otherwise, if <var>registry</var> is not null and contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
-
-        <ol>
-            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>.</li>
-
-            <li>Let <var>C</var> be <var>definition</var>'s <a href="#dfn-element-definition-constructor">constructor</a>.</li>
-
-            <li>Return the result of <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(<var>C</var>), rethrowing any exceptions.</li>
-        </ol>
-    </li>
-
-    <li>
-        <p>Otherwise:</p>
-
-        <ol>
-            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
-
-            <li>Return a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
-        </ol>
-    </li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var> if provided, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
 
 The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qualifiedName, typeExtension)</code></dfn> method, when invoked, must run these steps:
@@ -644,59 +682,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 <ol>
     <li>Let <var>namespace</var>, <var>prefix</var>, and <var>localName</var> be the result of passing <var>namespace</var> and <var>qualifiedName</var> to <a href="https://dom.spec.whatwg.org/#validate-and-extract">validate and extract</a>. Rethrow any exceptions.</li>
 
-    <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
-
-    <li>
-        <p>If <var>typeExtension</var> is provided:</p>
-
-        <ol>
-            <li>If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
-
-            <li>If <var>namespace</var> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, or if <var>prefix</var> is not null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
-
-            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
-
-            <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
-
-            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
-
-            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
-
-            <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using <code>is</code> and <var>type</var>.</li>
-        </ol>
-    </li>
-
-    <li>
-        <p>Otherwise, if <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>registry</var> contains an entry with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>:</p>
-
-        <ol>
-            <li>If <var>prefix</var> is not null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
-
-            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>.</li>
-
-            <li>Let <var>C</var> be <var>definition</var>'s <a href="#dfn-element-definition-constructor">constructor</a>.</li>
-
-            <li>Let <var>result</var> be <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(<var>C</var>). Rethrow any exceptions.</li>
-
-            <li>
-                <p>If <var>result</var> does not implement the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</p>
-
-                <p class="note">This is meant to be a brand check to ensure that the object was allocated by the <a href="#dom-htmlelement-constructor"><code>HTMLElement</code></a> constructor. Eventually Web IDL may give us a more precise way to do brand checks.</p>
-            </li>
-
-            <li>Return <var>result</var>.</li>
-        </ol>
-    </li>
-
-    <li>
-        <p>Otherwise:</p>
-
-        <ol>
-            <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and <var>namespace</var>.</li>
-
-            <li>Return a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
-        </ol>
-    </li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var> if provided, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
 
 </div>
