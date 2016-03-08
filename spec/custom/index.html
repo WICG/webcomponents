@@ -144,6 +144,12 @@ var {
     <li>A <dfn id="dfn-type-extension">type extension</dfn>, which is registered with an <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to the value passed in their <code>extends</code> option, and their <a href="#dfn-element-definition-name">registered name</a> is used as the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a>.</li>
 </ol>
 
+<div class="note">
+    <p><a lt="type extension">Type extensions</a> exist to allow reuse of behaviors from existing HTML elements, many of which can (unfortunately) not be duplicated by custom elements. They allow the installation of custom element lifecycle hooks, as well as a custom prototype, onto existing elements, essentially "mixing in" these capabilities on top of the already-existing behavior.</p>
+
+    <p><a lt="type extension">Type extensions</a> require a distinct syntax from <a lt="custom tag">custom tags</a> because user agents and other software key off an <a href="https://dom.spec.whatwg.org/#concept-element">element</a>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in order to identify the element's desired characteristics and behavior. That is, the concept of <a lt="type extension">type extensions</a> depends crucially on the extended elements retaining their original <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>.</p>
+</div>
+
 <p class="note">After a <a>custom element</a> is <a lt="create an element">created</a>, changing the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> does not change the element's behavior.</p>
 
 <p>A <dfn id="valid-custom-element-name">valid custom element name</dfn> is a sequence of characters <var>name</var> that meets all of the following requirements:</p>
