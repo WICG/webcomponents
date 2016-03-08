@@ -149,11 +149,12 @@ The list of names above is the summary of all hyphen-containing element names fr
 
 <p>A <dfn id="dfn-element-definition">custom element definition</dfn> describes a <a>custom element</a> and consists of:</p>
 <ul>
-    <li>a <dfn id="dfn-element-definition-name" for="custom element definition">name</dfn>, which is a <a>custom element name</a>,</li>
-    <li>a <dfn id="dfn-element-definition-local-name" for="custom element definition">local name</dfn>, which is a <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>,</li>
-    <li>a <dfn id="dfn-element-definition-constructor" for="custom element definition">konstructor</dfn>, which is a <a>custom element constructor</a>,</li> <!-- https://github.com/w3c/respec/issues/582 for why it's k -->
+    <li>a <dfn id="dfn-element-definition-name" for="custom element definition">name</dfn>, which is a <a>custom element name</a>;</li>
+    <li>a <dfn id="dfn-element-definition-local-name" for="custom element definition">local name</dfn>, which is a <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>;</li>
+    <li>a <dfn id="dfn-element-definition-constructor" for="custom element definition">konstructor</dfn>, which is a <a>custom element constructor</a>;</li> <!-- https://github.com/w3c/respec/issues/582 for why it's k -->
     <li>a <dfn id="dfn-element-definition-prototype" for="custom element definition">prototype</dfn>, which is a JavaScript object;</li>
-    <li>a collection of <dfn id="dfn-element-definition-lifecycle-callbacks" dfn-for="custom element definition">lifecycle callbacks</dfn>, which is a <a>collection of lifecycle callbacks</a>; and</li>
+    <li>a list of <dfn id="dfn-element-definition-observed-attributes">observed attributes</dfn>, which is a <code>sequence&lt;DOMString></code>; </li>
+    <li>a collection of <dfn id="dfn-element-definition-lifecycle-callbacks" dfn-for="custom element definition">lifecycle callbacks</dfn>, which is a <a>collection of lifecycle callbacks</a>; and </li>
     <li>a <dfn id="dfn-element-definition-construction-stack" for="custom element definition">construction stack</dfn>, which is a list (initially empty).</li>
 </ul>
 
@@ -301,6 +302,15 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li>Let <var>callbacks</var> be <var>definition</var>'s <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a>.</li>
 
     <li>Let <var>callback</var> be callback in <var>callbacks</var> named <var>callbackName</var>. If there is no such callback, abort these steps.</li>
+
+    <li>
+        <p>If <var>callbackName</var> is "<code>attributeChangedCallback</code>":</p>
+
+        <ol>
+            <li>Let <var>attributeName</var> be the the first element of <var>args</var>.</li>
+            <li>If <var>definition</var>'s <a href="#dfn-element-definition-observed-attributes">observed attributes</a> does not contain <var>attributeName</var>, abort these steps.</li>
+        </ol>
+    </li>
 
     <li>Add a <a>callback action</a> to <var>element</var>'s <a>custom element action queue</a>, with <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> <var>callback</var> and arguments <var>args</var>.</li>
 
@@ -523,6 +533,10 @@ dictionary ElementRegistrationOptions {
         </ol>
     </li>
 
+    <li>Let <var>observedAttributesIterable</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "observedAttributes"). Rethrow any exceptions.</li>
+
+    <li>If <var>observedAttributesIterable</var> is undefined, let <var>observedAttributes</var> be an empty <code>sequence&lt;DOMString></code>. Otherwise, let <var>observedAttributes</var> be the result of <a href="https://heycam.github.io/webidl/#es-sequence">converting</a> <var>observedAttributesIterable</var> to a <code>sequence&lt;DOMString></code>. Rethrow any exceptions.</code>
+
     <li>Let <var>prototype</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "prototype"). Rethrow any exceptions.</li>
 
     <li>If <a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a>(<var>prototype</var>) is not Object, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
@@ -533,7 +547,7 @@ dictionary ElementRegistrationOptions {
 
     <li>Let <var>attributeChangedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "attributeChangedCallback"). Rethrow any exceptions.</li>
 
-    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">custom element name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>attachedCallback</var>, <var>detachedCallback</var>, and <var>attributeChangedCallback</var>.</li>
+    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">custom element name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>attachedCallback</var>, <var>detachedCallback</var>, and <var>attributeChangedCallback</var>.</li>
 
     <li>Add <var>definition</var> to <var>registry</var>.</li>
 
