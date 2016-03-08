@@ -131,25 +131,46 @@ var {
 
 <p>A <dfn id="dfn-custom-element">custom element</dfn> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> whose constructor and prototype are defined by a developer, instead of by the user agent. The developer-supplied constructor function is called the <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>.</p>
 
-<p>The <dfn id="dfn-custom-element-name">custom element name</dfn> identifies a <a>custom element</a> <a href="https://heycam.github.io/webidl/#dfn-interface">interface</a> and is a sequence of characters that MUST match the <a href="https://www.w3.org/TR/xml-names/#NT-NCName">NCName</a> production [[!XML-NAMES]], MUST contain a <var>U+002D HYPHEN-MINUS</var> character, and MUST NOT contain any <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#uppercase-ascii-letters">uppercase ASCII letters</a> [[!HTML]]. The <a>custom element name</a> MUST NOT be one of the following values:</p>
-<ul>
-    <li><code>annotation-xml</code></li>
-    <li><code>color-profile</code></li>
-    <li><code>font-face</code></li>
-    <li><code>font-face-src</code></li>
-    <li><code>font-face-uri</code></li>
-    <li><code>font-face-format</code></li>
-    <li><code>font-face-name</code></li>
-    <li><code>missing-glyph</code></li>
-</ul>
+<p>A <a>custom element</a> falls into one of two categories:</p>
+<ol>
+    <li>A <dfn id="dfn-custom-tag">custom tag</dfn>, which is registered with no <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to their <a href="#dfn-element-definition-name">registered name</a>.</li>
+    <li>A <dfn id="dfn-type-extension">type extension</dfn>, which is registered with an <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to the value passed in their <code>extends</code> option, and their <a href="#dfn-element-definition-name">registered name</a> is used as the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a>.</li>
+</ol>
 
-<div class="note">
-The list of names above is the summary of all hyphen-containing element names from the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely <a href="https://www.w3.org/TR/SVG/eltindex.html">SVG</a> [[SVG11]] and <a href="https://www.w3.org/TR/MathML/">MathML</a> [[MathML]].
-</div>
+<p class="note">After a <a>custom element</a> is <a lt="create an element">created</a>, changing the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> does not change the element's behavior.</p>
+
+<p>A <dfn id="valid-custom-element-name">valid custom element name</dfn> is a sequence of characters <var>name</var> that meets all of the following requirements:</p>
+
+<ul>
+    <li>
+        <p><var>name</var> must match the <a><code>PotentialCustomElementName</code></a> production:</p>
+
+        <dl>
+            <dt><code><dfn id="prod-PotentialCustomElementName">PotentialCustomElementName</dfn> ::=</code></dt>
+            <dd><code>[a-z] (<a>PCENChar</a>)* '-' (<a>PCENChar</a>)*</code></dd>
+
+          <dt><code><dfn id="prod-PCENChar">PCENChar</dfn> ::=</code></dt>
+            <dd><code>"-" | "." | [0-9] | "_" | [a-z] | #xB7 | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x300-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x203F-#x2040] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]</code></dd>
+        </dl>
+    </li>
+    <li>
+        <p><var>name</var> must not be any of the following:</p>
+        <ul class="brief">
+            <li><code>annotation-xml</code></li>
+            <li><code>color-profile</code></li>
+            <li><code>font-face</code></li>
+            <li><code>font-face-src</code></li>
+            <li><code>font-face-uri</code></li>
+            <li><code>font-face-format</code></li>
+            <li><code>font-face-name</code></li>
+            <li><code>missing-glyph</code></li>
+        </ul>
+        <p class="note">The list of names above is the summary of all hyphen-containing element names from the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">applicable specifications</a>, namely <a href="https://www.w3.org/TR/SVG/eltindex.html">SVG</a> and <a href="https://www.w3.org/TR/MathML/">MathML</a>. [[SVG11]] [[MathML]]
+</ul>
 
 <p>A <dfn id="dfn-element-definition">custom element definition</dfn> describes a <a>custom element</a> and consists of:</p>
 <ul>
-    <li>a <dfn id="dfn-element-definition-name" for="custom element definition">name</dfn>, which is a <a>custom element name</a>;</li>
+    <li>a <dfn id="dfn-element-definition-name" for="custom element definition">name</dfn>, which is a <a>valid custom element name</a>;</li>
     <li>a <dfn id="dfn-element-definition-local-name" for="custom element definition">local name</dfn>, which is a <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>;</li>
     <li>a <dfn id="dfn-element-definition-constructor" for="custom element definition">konstructor</dfn>, which is a <a>custom element constructor</a>;</li> <!-- https://github.com/w3c/respec/issues/582 for why it's k -->
     <li>a <dfn id="dfn-element-definition-prototype" for="custom element definition">prototype</dfn>, which is a JavaScript object;</li>
@@ -177,7 +198,7 @@ The list of names above is the summary of all hyphen-containing element names fr
 
             <li>If <var>namespace</var> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
 
-            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">custom element name</a> <var>typeExtension</var>.</li>
+            <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-name">name</a> <var>typeExtension</var>.</li>
 
             <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception and abort these steps.</li>
 
@@ -294,7 +315,7 @@ The list of names above is the summary of all hyphen-containing element names fr
     <li>Assert: <var>registry</var> is not null.</li>
 
     <li>
-        Let <var>definition</var> be the the entry in <var>registry</var> with entry name equal to <var>element</var>'s <a>custom element name</a>.
+        Let <var>definition</var> be the the entry in <var>registry</var> with entry name equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>.
 
         <p class="note">This algorithm can only be called when such a definition exists.</p>
     </li>
@@ -478,10 +499,10 @@ The list of names above is the summary of all hyphen-containing element names fr
 <p>Because <a>element registration</a> can occur at any time, a <a>custom element</a> could be created before its <a data-lt="custom element definition">definition</a> is <a data-lt="element registration">registered</a>. Such <a>custom element</a> instances are called <dfn id="dfn-unresolved-element" data-lt='unresolved element'>unresolved elements</dfn>. When an <a>unresolved element</a> is created, <em>and</em> if its  <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> was not defined by <a href="https://html.spec.whatwg.org/multipage/">HTML</a> or <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">other applicable specifications</a>, the <a>unresolved element</a>'s <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> MUST be <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a>.</p>
 
 <div class="note">
-The effect of this statement is that any HTML element with a local name that is a valid <a>custom element name</a> will have <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> as its element interface, rather than <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>.
+The effect of this statement is that any HTML element with a local name that is a <a>valid custom element name</a> will have <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> as its element interface, rather than <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>.
 </div>
 
-<p>Each <a>custom element registry</a> has an associated <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> of all instances of <a data-lt="unresolved element">unresolved elements</a>, mapping a <a>custom element name</a> to a <a>sorted element queue</a>. It is is initially empty.</p>
+<p>Each <a>custom element registry</a> has an associated <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn> of all instances of <a data-lt="unresolved element">unresolved elements</a>, mapping a <a>valid custom element name</a> to a <a>sorted element queue</a>. It is is initially empty.</p>
 
 <p>Whenever an <a>unresolved element</a> is created, it MUST be added to the respective <a>sorted element queue</a> in <a>upgrade candidates map</a>.</p>
 
@@ -509,7 +530,7 @@ dictionary ElementRegistrationOptions {
 
     <li>If the <a href="https://dom.spec.whatwg.org/#context-object">context object</a> is an <a href="https://dom.spec.whatwg.org/#html-document">HTML document</a>, let <var>name</var> be <a href="https://dom.spec.whatwg.org/#converted-to-ascii-lowercase">converted to ASCII lowercase</a>.</li>
 
-    <li>If <var>name</var> is an invalid <a>custom element name</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>SyntaxError</code> and abort these steps.</li>
+    <li>If <var>name</var> is not a <a>valid custom element name</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>SyntaxError</code> and abort these steps.</li>
 
     <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>. If <var>registry</var> is null, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
 
@@ -547,7 +568,7 @@ dictionary ElementRegistrationOptions {
 
     <li>Let <var>attributeChangedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "attributeChangedCallback"). Rethrow any exceptions.</li>
 
-    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">custom element name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>attachedCallback</var>, <var>detachedCallback</var>, and <var>attributeChangedCallback</var>.</li>
+    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>attachedCallback</var>, <var>detachedCallback</var>, and <var>attributeChangedCallback</var>.</li>
 
     <li>Add <var>definition</var> to <var>registry</var>.</li>
 
@@ -603,16 +624,6 @@ dictionary ElementRegistrationOptions {
 </section>
 <section id="instantiating-custom-elements">
 <h2>Instantiating Custom Elements</h2>
-
-<p>The <a>custom element name</a> is given to a <a>custom element</a> at the time of its instantiation in one of the two ways:</p>
-<ol>
-    <li>As the <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> of the <a>custom element</a>. These types of <a data-lt="custom element name">custom element names</a> are called <dfn id="dfn-custom-tag" data-lt='custom tag'>custom tags</dfn>.</li>
-    <li>As the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> of the <a>custom element</a>. <a data-lt="custom element name">Custom element names</a> given this way are called <dfn id="dfn-type-extension" data-lt='type extension'>type extensions</dfn>.</li>
-</ol>
-
-<p>After a <a>custom element</a> is instantiated, changing the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> MUST NOT affect this element's <a>custom element name</a>.</p>
-
-<p>If both types of <a data-lt="custom element name">custom element names</a> are provided at the time of element's instantiation, the <a>custom tag</a> MUST win over the <a>type extension</a>.
 
 <section id="htmlelement-constructor">
 <h3>The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> Constructor</h3>
@@ -734,7 +745,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 <p>To <dfn id="dfn-element-upgrade-algorithm">upgrade a newly-defined element</dfn>, given a <a>custom element definition</a> <var>definition</var> and an <a>upgrade candidates map</a> <var>map</var>, perform the following steps:</p>
 
 <ol>
-    <li>Let <var>name</var> be <var>definition</var>'s <a href="#dfn-element-definition-name">custom element name</a>.</li>
+    <li>Let <var>name</var> be <var>definition</var>'s <a href="#dfn-element-definition-name">name</a>.</li>
 
     <li>Let <var>candidates</var> be the <a>sorted element queue</a> which is the value of the entry in <var>map</var> with key <var>name</var>.</li>
 
