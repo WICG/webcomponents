@@ -209,6 +209,8 @@ var {
 
 <p>Each <a href="https://dom.spec.whatwg.org/#concept-document">document</a> has an associated <dfn id="dfn-registry">custom element registry</dfn>, which is either a set of <a data-lt="custom element definition">custom element definitions</a> or is null. Unless stated otherwise, a <a href="https://dom.spec.whatwg.org/#concept-document">document</a>'s <a>custom element registry</a> is null.</p>
 
+<p>A <a href="https://dom.spec.whatwg.org/#concept-document">document</a>'s <dfn id="dfn-document-list-of-defined-custom-elements">list of defined custom element local names</dfn> is the list containing all of the <a href="#dfn-element-definition-local-name">local names</a> of the <a href="#dfn-element-definition">custom element definitions</a> in the <a href="https://dom.spec.whatwg.org/#concept-document">document</a>'s <a>custom element registry</a>.</p>
+
 <p class="note">In general, only <a href="https://dom.spec.whatwg.org/#concept-document">documents</a> associated with a <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a> have non-null <a data-lt="custom element registry">custom element registries</a>. Trying to <a data-lt="element registration">register</a> or create custom elements in other documents, such as those created by <a href="https://dom.spec.whatwg.org/#dom-domimplementation-createhtmldocument"><code>createDocument</code></a> method or a <a href="https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document">template contents owner document</a>, will fail.</p>
 
 <p><dfn id="dfn-element-registration">Element registration</dfn> is a process of adding a <a>custom element definition</a> to a <a>custom element registry</a>.</p>
@@ -351,7 +353,7 @@ var {
         <ol>
             <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and <var>namespace</var>.</li>
 
-            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> is set, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
+            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> set, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
 
             <li>
                 <p>If <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>localName</var> is a <a>valid custom element name</a>, and the <var>auto-upgrade custom elements flag</var> is set:</p>
@@ -798,17 +800,77 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 </section>
 
 <section id="parsing">
-<h3>HTML+: The Parser</h3>
+<h3>HTML+: Parsing HTML Documents</h3>
 
-<p class="warning">This section needs a lot more detail added on how exactly it is going to patch [[HTML]], in order to execute script during parsing.</p>
+<p class="monkeypatch">The <a href="https://html.spec.whatwg.org/#create-an-element-for-the-token">create an element for a token</a> algorithm should be adjusted by replacing step 1 with the following steps, and adjusting further steps to refer to <var>element</var> instead of "the element" or "the newly created element".</p>
 
-<p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a>create an element</a> with the appropriate argument, including with the <var>synchronous custom elements flag</var> and <var>auto-upgrade custom elements flag</var> both set.</p>
+<ol>
+    <li>Let <var>document</var> be <var>intended parent</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>.</li>
 
-<p>For each attribute in the given token, the parser must <a>enqueue a custom element callback action</a> given the new node, "<code>attributeChangedCallback</code>", and an argument list containing the attribute's local name, null, the attribute's value, and the attribute's namespace.</p>
+    <li>Let <var>localName</var> be the tag name of the token.</li>
 
-<div class="note">
-<p>This modification to <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a> has the consequence of <a data-lt="custom element">custom elements</a> being created when <a href="https://html.spec.whatwg.org/multipage/syntax.html#parsing">parsing HTML documents</a> or <a href="https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-parsing-algorithm">fragments</a>. Probably we need to tweak this a bit so that fragment parsing is done differently (with the <var>synchronous custom elements flag</var> and <var>auto-upgrade custom elements flag</var> both unset).</p>
-</div>
+    <li>Let <var>typeExtension</var> be null.</li>
+
+    <li>Let <var>will execute script</var> be false.</li>
+
+    <li>
+        <p>If <var>given namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>localName</var> is in the <a>list of defined custom element local names</a> for <var>document</var>:</p>
+
+        <ol>
+            <li>Set <var>typeExtension</var> to the value of the "<code>is</code>" attribute in the given token, if such an attribute exists.</li>
+
+            <li>Set <var>will execute script</var> to true if the parser was not originally created for the <a href="https://html.spec.whatwg.org/#html-fragment-parsing-algorithm">HTML fragment parsing algorithm</a>.</li>
+        </ol>
+    </li>
+
+    <li>
+        <p>If <var>will execute script</var> is true:</p>
+
+        <ol>
+            <li>Increment the parser's <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a>.</li>
+
+            <li>Set the <a href="https://html.spec.whatwg.org/#parser-pause-flag">parser pause flag</a> to true.</li>
+
+            <li>If the <a href="https://tc39.github.io/ecma262/#execution-context-stack">JavaScript execution context stack</a> is empty, <a href="https://html.spec.whatwg.org/#perform-a-microtask-checkpoint">perform a microtask checkpoint</a>.</li>
+        </ol>
+    </li>
+
+    <li>
+        <p>Let <var>element</var> be the result of <a lt="create an element">creating an element</a> given <var>document</var>, <var>localName</var>, null, <var>given namespace</var>, and <var>typeExtension</var>. If <var>will execute script</var> is true, set the <var>synchronous custom elements flag</var> and the <var>auto-upgrade custom elements flag</var>; otherwise, leave them unset.</p>
+
+        <p class="note">This will cause <a lt="custom element constructor">custom element constructors</a> to run, if <var>will execute script</var> is true. However, even if this causes <a href="https://html.spec.whatwg.org/#dom-document-write">new characters to be inserted into the tokenizer</a>, the parser will not be executed reentrantly, since the <a href="https://html.spec.whatwg.org/#parser-pause-flag">parser pause flag</a> is true. Similarly, <a href="https://html.spec.whatwg.org/#dom-document-open">blowing away the document</a> is not possible, since the <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> is greater than zero.</p>
+
+        <p>If this step throws an exception, <a href="https://html.spec.whatwg.org/#report-the-exception">report the exception</a>, and let <var>element</var> be instead a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <a href="https://html.spec.whatwg.org/#htmlunknownelement"><code>HTMLUnknownElement</code></a>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>given namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to null, <a>defined flag</a> set, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>. This is not a <a>custom element</a>.</p>
+    </li>
+
+    <li>
+        <p><a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">Append</a> each attribute in the given token to <var>element</var>.</p>
+
+        <p class="note">This can <a>enqueue a custom element callback action</a> for the <code>attributeChangedCallback</code>, which might run immediately (in the next step).</p>
+    </li>
+
+    <li>
+        <p>If <var>will execute script</var> is true:</p>
+
+        <ol>
+            <li><a>Invoke custom element actions</a> (for which queue!?! just for <var>element</var> maybe!?)</li>
+
+            <li>Decrement the <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> by one.</li>
+
+            <li>If the parser's <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> is zero, then set the <a href="https://html.spec.whatwg.org/#parser-pause-flag">parser pause flag</a> to false.</li>
+        </ol>
+    </li>
+</ol>
+
+</section>
+
+<section>
+<h3>HTML+: Parsing XHTML Documents</h3>
+
+<p class="monkeypatch">It turns out there's not actually a spec for the XML parser. Awesome! (Not actually awesome.) The HTML Standard has a nice vague paragraph about "This <a href="https://html.spec.whatwg.org/#document"><code>Document</code></a> must then be populated with DOM nodes that represent the tree structure of the input passed..." which should get something like the following inserted (probably by inserting it after the first sentence, then splitting the mutation events/observers prose into a new paragraph).</p>
+
+<p>When creating DOM nodes representing elements, the <a href="https://html.spec.whatwg.org/#create-an-element-for-the-token">create an element for a token</a> algorithm or some equivalent that operates on appropriate XML datastructures must be used, to ensure the proper <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interfaces</a> are created and that <a lt="custom element">custom elements</a> are set up correctly.</p>
+
 </section>
 
 <section id="upgrading">
