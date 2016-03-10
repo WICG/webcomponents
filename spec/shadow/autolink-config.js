@@ -23,6 +23,7 @@ var autolinkConfig = {
         'event': '#events',
         'eventPhase': '#dom-event-eventphase',
         'getElementById': '#dom-nonelementparentnode-getelementbyid',
+        'get the parent': '#get-the-parent',
         'inclusive ancestor': '#concept-tree-inclusive-ancestor',
         'interface Document': '#interface-document',
         'interface DocumentFragment': '#interface-documentfragment',

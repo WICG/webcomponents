@@ -738,105 +738,74 @@
         </section>
 
         <section>
-          <h3>Event Paths</h3>
+          <h3>get the parent</h3>
 
           <p>
-            The <dfn>event path calculation algorithm</dfn> must be used to determine event path and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+            The <a>get the parent</a> algorithm associated with <code>Node</code> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
           </p>
 
           <div class="algorithm">
             <dl>
               <dt>Input</dt>
-              <dd><var>NODE</var>, a node</dd>
+              <dd><var>NODE</var>, a context object</dd>
+              <dd><var>TARGET</var>, an eventPath's last item</dd>
               <dd><var>EVENT</var>, an event</dd>
               <dt>Output</dt>
-              <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
+              <dd><var>PARENT</var>, the parent</dd>
             </dl>
             <ol>
               <li>
-                Let <var>PATH</var> be the result of the <a>composed event path calculation algorithm</a> with NODE and EVENT as input
-              </li>
-              <li>
-                If <var>EVENT</var>'s <a><code>relatedTargetScoped flag</code></a> is set and <var>EVENT</var> has a <code>relatedTarget</code> property:
+                If all of the following conditions are satisfied, let <var>PARENT</var> be null:
                 <ol>
-                  <li>Let <var>PATH</var> be the result of the <a>event path trimming algorithm</a> with PATH as input</li>
+                  <li><var>NODE</var> is a <a>shadow root</a></li>
+                  <li><var>NODE</var> is the <a>root</a> node of <var>TARGET</var></li>
+                  <li><var>EVENT</var>'s <a>scoped flag</a> is true</li>
                 </ol>
               </li>
-            </ol>
-          </div>
-
-          <p>The <dfn>composed event path calculation algorithm</dfn> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
-
-          <div class="algorithm">
-            <dl>
-              <dt>Input</dt>
-              <dd><var>NODE</var>, a node</dd>
-              <dd><var>EVENT</var>, an event</dd>
-              <dt>Output</dt>
-              <dd><var>PATH</var>, an event path, a ordered list of an event target</dd>
-            </dl>
-            <ol>
-              <li>Let <var>PATH</var> be the empty ordered list of nodes</li>
-              <li>Let <var>CURRENT</var> be <var>NODE</var></li>
               <li>
-                Repeat while <var>CURRENT</var> exists:
+                Otherwise, if all of the following conditions are satisfied, let <var>PARENT</var> be null:
                 <ol>
-                  <li>Append <var>CURRENT</var> to <var>PATH</var></li>
                   <li>
-                    If all of the following conditions are satisfied, stop this algorithm:
-                    <ol>
-                      <li><var>CURRENT</var> is a shadow root</li>
-                      <li><var>CURRENT</var> is the <a>root</a> node of <var>NODE</var></li>
-                      <li><var>EVENT</var>'s <a>scoped flag</a> is set</li>
-                    </ol>
+                    <var>EVENT</var>'s <a>relatedTargetScoped flag</a> is true
                   </li>
                   <li>
-                    If <var>CURRENT</var> is assigned to a <a>slot</a> <var>SLOT</var>:
-                    <ol>
-                      <li>Let <var>CURRENT</var> be <var>SLOT</var></li>
-                    </ol>
+                    <var>EVENT</var> has a <code>relatedTarget</code> property
                   </li>
                   <li>
-                    Otherwise:
-                    <ol>
-                      <li>Let <var>CURRENT</var> be the <a>composed parent</a> of <var>CURRENT</var></li>
-                    </ol>
+                    The <a>relative target</a> and the <a>relative related target</a> are the same, where:
+                    <ul>
+                      <li>
+                        The <a>relative target</a> is the result of <a>retargeting algorithm</a> with <var>NODE</var> and <var>TARGET</var> as input
+                      </li>
+                      <li>
+                        The <a>relative related target</a> is the result of <a>retargeting algorithm</a> with <var>NODE</var> and <var>EVENT</var>'s <code>related target</code> as input
+                      </li>
+                    </ul>
                   </li>
                 </ol>
+                <li>
+                  Otherwise, if <var>NODE</var> is assigned to a <a>slot</a> <var>SLOT</var>:
+                  <ol>
+                    <li>Let <var>PARENT</var> be <var>SLOT</var></li>
+                  </ol>
+                </li>
+                <li>
+                  Otherwise:
+                  <ol>
+                    <li>Let <var>PARENT</var> be the <a>composed parent</a> of <var>NODE</var></li>
+                  </ol>
+                </li>
               </li>
             </ol>
           </div>
 
           <p>
-            The <dfn>event path trimming algorithm</dfn> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
-          </p>
-
-          <div class="algorithm">
-            <dl>
-              <dt>Input</dt>
-              <dd><var>EVENT-PATH</var>, the event path, which is the result of the <a>composed event path calculation algorithm</a></dd>
-              <dt>Output</dt>
-              <dd><var>EVENT-PATH</var> is trimmed</dd>
-            </dl>
-            <ol>
-              <li>
-                For each object, <var>A</var>, in <var>EVENT-PATH</var>:
-                <ol>
-                  <li>Let <var>RELATIVE-TARGET</var> be the <a>relative target</a> for <var>A</var></li>
-                  <li>Let <var>RELATIVE-RELATED-TARGET</var> be the <a>relative related target</a> for <var>A</var></li>
-                  <li>If <var>RELATIVE-TARGET</var> and <var>RELATIVE-RELATED-TARGET</var> are the same, remove <var>A</var> from <var>EVENT-PATH</var>.</li>
-                </ol>
-              </li>
-            </ol>
-          </div>
-
-          <p>
-            The definitions of <a>relative target</a> and <a>relative related target</a> are specified later.
+            The definitions of <a>retargeting algorithm</a> is specified later.
           </p>
 
           <div class="note">
             <p>
-              The motivation of the <a>event path trimming algorithm</a> is to avoid the appearance of spurious events, such as <code>mouseover</code> or <code>mouseout</code> events, firing at the node in ancestor trees
+              The motivation of the <a>relatedTargetScoped flag</a> is to avoid the appearance of spurious events, such as <code>mouseover</code> or <code>mouseout</code> events, firing at the node in ancestor trees
               in cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a>shadow tree</a>,
             </p>
           </div>
@@ -868,7 +837,7 @@
           </figure>
 
           <p>
-            Note that the <a>event path calculation algorithm</a> is designed to achieve the following goals:
+            Note that the <a>get the parent</a> algorithm associated with <code>Node</code> is designed to achieve the following goals:
           </p>
 
           <ol>
