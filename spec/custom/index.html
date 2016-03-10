@@ -260,7 +260,7 @@ var {
 
 <p class="monkeypatch">Additionally, after the talk about qualified names but before the discussion of attributes, the following algorithm should be inserted:</p>
 
-<p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and optional <var>synchronous custom elements flag</var>, run the following steps:</p>
+<p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, an optional <var>synchronous custom elements flag</var>, and an optional <var>upgradeable custom elements flag</var>, run the following steps:</p>
 
 <ol>
     <li>Let <var>registry</var> be the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>'s <a>custom element registry</a>.</li>
@@ -353,11 +353,17 @@ var {
 
             <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> is set, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
 
-            <li>If <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>localName</var> is a <a>valid custom element name</a>, unset <var>result</var>'s <a>defined flag</a>.</li>
+            <li>
+                <p>If <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>localName</var> is a <a>valid custom element name</a>, and the <var>upgradeable custom elements flag</var> is set:</p>
 
-            <li>Let <var>upgrade queue</var> be the <a>sorted element queue</a> that is the value of the entry in <var>registry</var>'s <a>upgrade candidates map</a> with key <var>localName</var>, creating an empty <a>sorted element queue</a> if no such entry exists.</li>
+                <ol>
+                    <li>Unset <var>result</var>'s <a>defined flag</a>.</li>
 
-            <li>Enqueue <var>result</var> in <var>upgrade queue</var>.</li>
+                    <li>Let <var>upgrade queue</var> be the <a>sorted element queue</a> that is the value of the entry in <var>registry</var>'s <a>upgrade candidates map</a> with key <var>localName</var>, creating an empty <a>sorted element queue</a> if no such entry exists.</li>
+
+                    <li>Enqueue <var>result</var> in <var>upgrade queue</var>.</li>
+                </ol>
+            </li>
 
             <li>Return <var>result</var>.</li>
         </ol>
@@ -368,7 +374,7 @@ var {
 <section id="clone-modifications-to-dom">
 <h3>DOM+: Cloning</h3>
 
-<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset, but the <var>upgradeable custom elements flag</var> should be set.</p>
 
 </section>
 
@@ -759,6 +765,7 @@ partial interface Document {
 
 dictionary ElementCreationOptions {
     DOMString is;
+    boolean upgrade = false;
 };
 </pre>
 
@@ -773,7 +780,7 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, options)
 
     <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
-    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var>, with the <var>synchronous custom elements flag</var> set, and with the <var>upgradeable custom elements flag</var> set if the <code>upgrade</code> member of <var>options</var> is true. Rethrow any exceptions.</li>
 </ol>
 
 The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qualifiedName, options)</code></dfn> method, when invoked, must run these steps:
@@ -783,7 +790,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
     <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
-    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, with the <var>synchronous custom elements flag</var> set, and with the <var>upgradeable custom elements flag</var> set if the <code>upgrade</code> member of <var>options</var> is true. Rethrow any exceptions.</li>
 </ol>
 
 </div>
@@ -795,12 +802,12 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
 <p class="warning">This section needs a lot more detail added on how exactly it is going to patch [[HTML]], in order to execute script during parsing.</p>
 
-<p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a>create an element</a> with the appropriate argument, including with the <var>synchronous custom elements flag</var> set.</p>
+<p>To enable instantiating <a data-lt="custom element">custom elements</a> during <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a>, whenever <a href="https://html.spec.whatwg.org/multipage/syntax.html#create-an-element-for-the-token">creating</a> a <a>custom element</a>, the user agent must pause (similar to when parsing <code>&lt;script&gt;</code>) and run <a>create an element</a> with the appropriate argument, including with the <var>synchronous custom elements flag</var> and <var>upgradeable custom elements flag</var> both set.</p>
 
 <p>For each attribute in the given token, the parser must <a>enqueue a custom element callback action</a> given the new node, "<code>attributeChangedCallback</code>", and an argument list containing the attribute's local name, null, the attribute's value, and the attribute's namespace.</p>
 
 <div class="note">
-<p>This modification to <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a> has the consequence of <a data-lt="custom element">custom elements</a> being created when <a href="https://html.spec.whatwg.org/multipage/syntax.html#parsing">parsing HTML documents</a> or <a href="https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-parsing-algorithm">fragments</a>. Probably we need to tweak this a bit so that fragment parsing is done differently (with upgrade semantics).</p>
+<p>This modification to <a href="https://html.spec.whatwg.org/multipage/syntax.html#tree-construction">tree construction</a> has the consequence of <a data-lt="custom element">custom elements</a> being created when <a href="https://html.spec.whatwg.org/multipage/syntax.html#parsing">parsing HTML documents</a> or <a href="https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-parsing-algorithm">fragments</a>. Probably we need to tweak this a bit so that fragment parsing is done differently (with the <var>synchronous custom elements flag</var> not set).</p>
 </div>
 </section>
 
