@@ -589,9 +589,9 @@ var {
 <h2>Registering Custom Elements</h2>
 
 <section id="extensions-to-document-interface-to-register">
-<h3>New <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Method</h3>
+<h3>DOM+: New <a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> Method</h3>
 
-<p>The <a href="#dom-document-defineelement"><code>defineElement</code></a> method of the <a href="https://dom.spec.whatwg.org/#document">Document</a> interface provides a way to <a data-lt="element registration">register</a> a <a>custom element</a>.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#interface-document"><a href="https://dom.spec.whatwg.org/#document"><code>Document</code></a> interface section</a> should be extended with the following IDL:</p>
 
 <pre class='idl'>
 partial interface Document {
@@ -602,6 +602,15 @@ dictionary ElementRegistrationOptions {
      DOMString extends;
 };
 </pre>
+
+<p class="monkeypatch">Before the Note outlining the creation methods, the following section should be inserted:</p>
+
+<div class="note">
+    <dl class="domintro">
+        <dt><var>document</var> . <a href="#dom-document-defineelement"><code>defineElement(name, constructor [, options])</code></a></dt>
+        <dd>Defines a new <a>custom element</a> in the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</dd>
+    </dl>
+</div>
 
 <p>The <dfn id="dom-document-defineelement"><code>defineElement(<var>name</var>, <var>constructor</var>, <var>options</var>)</code></dfn> method, when invoked, must run these steps:</p>
 
@@ -658,37 +667,78 @@ dictionary ElementRegistrationOptions {
 </ol>
 
 <div class="example">
-    <p>A simple example of registering a custom element using [[!ECMASCRIPT]] <code>class</code> syntax:</p>
+    <p>An example of registering a <a>custom tag</a> would be:</p>
 
     <pre class="highlight">
-    document.defineElement("x-foo", class XFoo extends HTMLElement {
-        constructor() {
-            super(); // this is mandatory
+document.defineElement("flag-icon", class FlagIcon extends HTMLElement {
+  constructor() {
+    super()
+    this._countryCode = null
+  }
 
-            this._initialData = "foo";
-        }
-    });</pre>
+  static get observedAttributes() { return ["country"]; }
 
-    <p>An example of registering an element that uses a type extension:</p>
+  attributeChangedCallback(name, newValue) {
+    // name will always be "country" due to observedAttributes
+    this._countryCode = newValue
+    this._updateRendering()
+  }
+  attachedCallback() {
+    this._updateRendering()
+  }
+
+  get country() {
+    return this._countryCode
+  }
+  set country(v) {
+    this.setAttribute("country", v)
+  }
+
+  _updateRendering() {
+    // Left as an exercise for the reader. But, you'll probably want to
+    // check this.ownerDocument.defaultView to see if we've been
+    // inserted into a document with a browsing context, and avoid
+    // doing any work if not.
+  }
+})</pre>
+
+    <p>You can then create such elements directly:</p>
 
     <pre class="highlight">
-    document.defineElement("x-bar", class XBar extends HTMLParagraphElement {
-        constructor() {
-            super(); // still mandatory
+const flagIcon = document.createElement("flag-icon")
+flagIcon.country = "jp"
+document.body.appendChild(flagIcon)</pre>
 
-            this._initialData = "bar";
-        }
-    }, { extends: "p" });</pre>
+    <p>Or you can let the parser create them for you in your HTML:</p>
+    <pre class="highlight">
+&lt;flag-icon country="nl">&lt;/flag-icon></pre>
+</div>
 
-    <p>This latter example does not introduce a new tag (like the <a>custom tag</a> elements do), but rather extends an existing element of type <a href="https://html.spec.whatwg.org/multipage/#htmlparagraphelement"><code>HTMLParagraphElement</code></a>. Here's how one could instantiate this element:</p>
+<div class="example">
+    <p>An example of registering a <a>type extension</a> would be:</p>
 
     <pre class="highlight">
-    &lt;p is="x-foo"&gt;Paragraph of amazement&lt;/p&gt;</pre>
+document.defineElement("plastic-button", class PlasticButton extends HTMLButtonElement {
+  constructor() {
+    super();
 
-    Or imperatively, in JavaScript:
+    this.addEventListener("click", () => {
+      // Draw some fancy animation effects!
+    });
+  }
+}, { extends: "button" });</pre>
+
+    <p>This does not introduce a new tag (like the <a>custom tag</a> elements do), but rather extends the existing <a href="https://html.spec.whatwg.org/#the-button-element"><code>button</code></a> element. Again, it can be created directly:</p>
 
     <pre class="highlight">
-    var foo = document.createElement("p", { is: "x-foo" });</pre>
+const plasticButton = document.createElement("button", { is: "plastic-button" })
+plasticButton.textContent = "Click me!"</pre>
+
+    <p>Or via the parser:</p>
+    <pre class="highlight">
+&lt;button is="plastic-button">Click Me!&lt;/button></pre>
+
+    <p>Notably, all the of the ways in which <a href="https://html.spec.whatwg.org/#the-button-element"><code>button</code></a> is special apply to such "plastic buttons" as well: their focus behavior, ability to participate in <a href="https://html.spec.whatwg.org/#form-submission-2">form submission</a>, the <a href="https://html.spec.whatwg.org/#attr-fe-disabled"><code>disabled</code></a> attribute, and so on.</p>
 </div>
 
 </section>
@@ -1024,6 +1074,10 @@ onkeypress=&quot;if(event.keyCode==32||event.keyCode==13){alert('tasty eh?');};&
 
 <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem within the confines of the Web platform and provided a solid foundation for this document.</p>
 <p><a href="mailto:sfaulkner@paciellogroup.com">Steve Faulkner</a>, The Paciello Group, for writing the content of the section <a href="#semantics"></a>.</p>
+
+<div itemscope itemtype="http://n.whatwg.org/work">
+    <p>The &lt;flag-icon> example was inspired by <a itemprop="work" href="https://customelements.io/stevenrskelton/flag-icon/">a custom element</a> by <a itemprop="https://creativecommons.org/ns#attributionURL" href="http://stevenskelton.ca/">Steven Skelton</a>. (<a itemprop="license" href="https://opensource.org/licenses/MIT">MIT</a>)</p>
+</div>
 
 <p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Boris Zbarsky</span>, <span class="vcard">Daniel Buchner</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Elliott Sprehn</span>, <span class="vcard">Hayato Ito</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Scott Miles</span>, <span class="vcard">Simon Pieters</span>, <span class="vcard">Steve Orvell</span>, <span class="vcard">Tab Atkins</span>, and <span class="vcard">William Chen</span> for their comments and contributions to this specification.</p>
 
