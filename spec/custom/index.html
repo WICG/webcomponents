@@ -755,7 +755,7 @@ plasticButton.textContent = "Click me!"</pre>
 
 <ul>
     <li>A parameter-less call to <code>super()</code> must be the first statement in the constructor body, to establish the correct prototype chain and <code>this</code> value before any further code is run.</li>
-    <li>A <code>return</code> statement must not appear anywhere inside the constructor body.</li>
+    <li>A <code>return</code> statement must not appear anywhere inside the constructor body, unless it is a simple early-return (<code>return</code> or <code>return this</code>).</li>
     <li>The element's attributes and children must not be inspected, as in the non-<a lt="upgrade a custom element">upgrade</a> case none will be present, and relying on upgrades makes the element less usable.</li>
     <li>The element must not gain any attributes or children, as this violates the expectations of consumers who use the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><code>createElementNS</code></a> methods.</li>
     <li>In general, work should be deferred to <code>attachedCallback</code> as much as possible—especially work involving fetching resources or rendering.</li>
