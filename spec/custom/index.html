@@ -395,7 +395,7 @@ var {
     <li><a>Custom element</a>'s <a href="https://dom.spec.whatwg.org/#concept-attribute">attribute</a> is created, removed, or modified.</li>
 </ul>
 
-<p>Various callbacks can be invoked when a <a>custom element</a> goes through some of these changes. These callbacks are stored internally as a <dfn id="dfn-lifecycle-callbacks">collection of lifecycle callbacks</dfn>. They can be looked up by name, which is one of <code>attachedCallback</code>, <code>detachedCallback</code>, or <code>attributeChangedCallback</code>.</p>
+<p>Various callbacks can be invoked when a <a>custom element</a> goes through some of these changes. These callbacks are stored internally as a <dfn id="dfn-lifecycle-callbacks">collection of lifecycle callbacks</dfn>. They can be looked up by name, which is one of <code>connectedCallback</code>, <code>disconnectedCallback</code>, or <code>attributeChangedCallback</code>.</p>
 
 <section id="enqueuing-and-invoking-callbacks">
 <h3>Enqueuing and Invoking Callbacks</h3>
@@ -653,19 +653,19 @@ dictionary ElementRegistrationOptions {
 
     <li>If <a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a>(<var>prototype</var>) is not Object, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
-    <li>Let <var>attachedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "attachedCallback"). Rethrow any exceptions.</li>
+    <li>Let <var>connectedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "connectedCallback"). Rethrow any exceptions.</li>
 
-    <li>If <var>attachedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>attachedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
+    <li>If <var>connectedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>connectedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
-    <li>Let <var>detachedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "detachedCallback"). Rethrow any exceptions.</li>
+    <li>Let <var>disconnectedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "disconnectedCallback"). Rethrow any exceptions.</li>
 
-    <li>If <var>detachedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>detachedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
+    <li>If <var>disconnectedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>disconnectedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
     <li>Let <var>attributeChangedCallback</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>prototype</var>, "attributeChangedCallback"). Rethrow any exceptions.</li>
 
     <li>If <var>attributeChangedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>attributeChangedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
-    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>attachedCallback</var>, <var>detachedCallback</var>, and <var>attributeChangedCallback</var> (stored with their corresponding name).</li>
+    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>connectedCallback</var>, <var>disconnectedCallback</var>, and <var>attributeChangedCallback</var> (stored with their corresponding name).</li>
 
     <li>Add <var>definition</var> to <var>registry</var>.</li>
 
@@ -691,7 +691,7 @@ document.defineElement("flag-icon", class FlagIcon extends HTMLElement {
     this._countryCode = newValue
     this._updateRendering()
   }
-  attachedCallback() {
+  connectedCallback() {
     this._updateRendering()
   }
 
@@ -758,7 +758,7 @@ plasticButton.textContent = "Click me!"</pre>
     <li>A <code>return</code> statement must not appear anywhere inside the constructor body, unless it is a simple early-return (<code>return</code> or <code>return this</code>).</li>
     <li>The element's attributes and children must not be inspected, as in the non-<a lt="upgrade a custom element">upgrade</a> case none will be present, and relying on upgrades makes the element less usable.</li>
     <li>The element must not gain any attributes or children, as this violates the expectations of consumers who use the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><code>createElementNS</code></a> methods.</li>
-    <li>In general, work should be deferred to <code>attachedCallback</code> as much as possible—especially work involving fetching resources or rendering. However, note that <code>attachedCallback</code> can be called more than once, so any initialization work that is truly one-time will need a guard to prevent it from running twice.</li>
+    <li>In general, work should be deferred to <code>connectedCallback</code> as much as possible—especially work involving fetching resources or rendering. However, note that <code>connectedCallback</code> can be called more than once, so any initialization work that is truly one-time will need a guard to prevent it from running twice.</li>
     <li>In general, the constructor should be used to set up initial state and default values, and to set up <a href="https://dom.spec.whatwg.org/#concept-event-listener">event listeners</a>.</li>
 </ul>
 
