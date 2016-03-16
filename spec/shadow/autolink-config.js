@@ -24,6 +24,7 @@ var autolinkConfig = {
         'eventPhase': '#dom-event-eventphase',
         'getElementById': '#dom-nonelementparentnode-getelementbyid',
         'get the parent': '#get-the-parent',
+        'host': '#concept-documentfragment-host',
         'inclusive ancestor': '#concept-tree-inclusive-ancestor',
         'interface Document': '#interface-document',
         'interface DocumentFragment': '#interface-documentfragment',
