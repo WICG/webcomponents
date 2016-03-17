@@ -1375,22 +1375,20 @@
 
           <dt>[TreatNullAs=EmptyString] attribute DOMString innerHTML</dt>
           <dd>
-            <p>Represents the markup of <a><code>ShadowRoot</code></a>'s contents.</p>
-            <p>On getting, the attribute <strong>must</strong> return the result of running the <a>HTML fragment serialization algorithm</a> with the <a>context object</a> as <a data-lt="shadow host"><code>shadow host</code></a>.</p>
-            <p>
-              On setting, these steps <strong>must</strong> be run:
-            </p>
-            <ol>
-              <li>Let <var>FRAGMENT</var> be the result of invoking the <a data-lt="parse fragment">fragment parsing algorithm</a> [[!DOM-PARSING]] with the new value as <var>MARKUP</var>, and the <a>context object</a> as <a data-lt="shadow host"><code>shadow host</code></a></li>
-              <li><a>Replace all</a> with <var>FRAGMENT</var> within the <a>shadow root</a>.</li>
-            </ol>
+            This is similarly defined in Element's innerHTML with the following exceptions:
+            <ul>
+              <li>
+                The <a>fragment serializing algorithm</a> <strong>must</strong> be invoked with the <a>shadow host</a> as input.
+              </li>
+              <li>
+                The <a>fragment parsing algorithm</a> <strong>must</strong> use the <a>shadow host</a> as the context element.
+              </li>
+            </ul>
 
             <p class="note">
-              Because <code>DocumentFragment</code> does not always have a <a>host</a>, which can be used as the context object in parsing algorithm,
-              <code>innerHTML</code> can not be defined in <code>DocumentFragment</code>.
+              Because <code>DocumentFragment</code> does not always have a <a>host</a>, <code>innerHTML</code> can not be defined in <code>DocumentFragment</code>.
             </p>
           </dd>
-
         </dl>
 
         <p>The <a><code>nodeType</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <a><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a><code>nodeName</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>

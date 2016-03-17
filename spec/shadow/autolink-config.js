@@ -53,7 +53,6 @@ var autolinkConfig = {
         'Global attributes': '#global-attributes',
         'HTML': '',
         'HTML elements': '#semantics',
-        'HTML fragment serialization algorithm': '#html-fragment-serialization-algorithm',
         'HTMLUnknownElement': '#htmlunknownelement',
         'activeElement': '#dom-document-activeelement',
         'audio element': '#the-audio-element',
@@ -176,6 +175,8 @@ var autolinkConfig = {
     },
 
     'https://w3c.github.io/DOM-Parsing/': {
+        'fragment parsing algorithm': '#dfn-concept-fragment-serialization-algorithm',
+        'fragment serializing algorithm': '#dfn-concept-fragment-serializing-algorithm',
         'parse fragment': '#concept-parse-fragment'
     }
 
