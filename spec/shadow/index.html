@@ -1333,54 +1333,35 @@
       <h2>Elements and DOM interfaces</h2>
 
       <section>
+        <h3>Extensions to the <code><a href="https://dom.spec.whatwg.org/#documentorshadowroot">DocumentOrShadowRoot</a></code> Mixin</h3>
+
+        <pre class='idl'>
+          partial interface DocumentOrShadowRoot {
+            Selection? getSelection ();
+            sequence&lt;Element&gt; elementsFromPoint(double x, double y);
+            CaretPosition? caretPositionFromPoint(double x, double y);
+            readonly attribute Element? activeElement;
+            readonly attribute StyleSheetList styleSheets;
+          };
+        </pre>
+
+        <ul class="note">
+          <li>
+            Except for <code>activeElement</code>, these methods and attributes are defined in the similar way as currently defined in Document,
+            considering only the current node tree.
+          </li>
+          <li>
+            These methods will be removed from Document, eventually.
+          </li>
+        </ul>
+      </section>
+
+      <section>
         <h3>The <code>ShadowRoot</code> interface</h3>
 
         <p>The <code>ShadowRoot</code> interface represents the <a>shadow root</a>.</p>
 
         <dl class="idl" title="interface ShadowRoot : DocumentFragment">
-          <dt>Selection? getSelection()</dt>
-          <dd>
-            <p>Returns the current selection in the <a>shadow tree</a>.</p>
-            <p>When invoked, it <strong>must</strong> return the <a>selection</a> in the <a>shadow tree</a>.</p>
-          </dd>
-
-          <dt>Element? elementFromPoint(double x, double y)</dt>
-          <dd>
-            <p>Returns an <a>element</a> at specified coordinates.</p>
-            <p class="note">
-              Eventually, this needs to be part of CSSOM View Module specification [[!CSSOM-VIEW]]. See also <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27829">W3C bug 27829</a>.
-            </p>
-            <p>
-              When invoked, it <strong>must</strong> return result of running the following steps:
-            </p>
-            <ol>
-              <li>If <a>context object</a> is not a <a><code>ShadowRoot</code></a> instance, throw an <a><code>InvalidNodeTypeError</code></a>.</li>
-              <li>If either argument is negative, <code>x</code> is greater than the <a>viewport</a> width excluding the size of a rendered scroll bar (if any), or if <code>y</code> is greater than the <a>viewport</a> height excluding the size of a rendered scroll bar (if any), return <strong>null</strong>.</li>
-              <li>Let <var>HIT</var> be the <a>element</a> at coordinates <code>x</code> and <code>y</code> in the <a>viewport</a>, determined through hit testing</li>
-              <li>Return the result of running the <a>retargeting algorithm</a> with <a>context object</a> and <var>HIT</var> as input</li>
-            </ol>
-          </dd>
-
-          <dt>sequence&lt;Element&gt; elementsFromPoint(double x, double y)</dt>
-          <dd>
-            <p class="note">
-              It could be defined in roughly the same way as <a>elementFromPoint</a>.
-              Eventually, this needs to be part of CSSOM View Module specification [[!CSSOM-VIEW]]. See also <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27829">W3C bug 27829</a>.
-            </p>
-          </dd>
-
-          <dt>CaretPosition? caretPositionFromPoint(double x, double y)</dt>
-          <dd>
-            <p class="note">
-              It could be defined in roughly the same way as <a>caretPositionFromPoint</a> [[!CSSOM-VIEW]].
-              Eventually, this needs to be part of CSSOM View Module specification [[!CSSOM-VIEW]]. See also <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27829">W3C bug 27829</a>.
-          </dd>
-
-          <dt>readonly attribute Element? activeElement</dt>
-          <dd>
-            <p>Represents the currently focused <a>element</a> in the <a>shadow tree</a>.</p>
-            <p>On getting, the attribute <strong>must</strong> return the currently focused <a>element</a> in the <a>shadow tree</a> or <code>null</code>, if there is none.</p>
-          </dd>
 
           <dt>readonly attribute Element host</dt>
           <dd>
@@ -1406,13 +1387,6 @@
             </p>
           </dd>
 
-          <dt>readonly attribute StyleSheetList styleSheets</dt>
-          <dd>
-            <p>Represents the style sheets in the shadow tree.</p>
-            <p>
-              This is defined in the similar way as defined in Document's <code>styleSheets</code>. On getting, the attribute <strong>must</strong> return a <a><code>StyleSheetList</code></a> sequence containing the style sheets in the <a>shadow tree</a>.
-            </p>
-          </dd>
         </dl>
 
         <p>The <a><code>nodeType</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <a><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a><code>nodeName</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
