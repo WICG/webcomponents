@@ -176,7 +176,7 @@ class FlagIcon extends HTMLElement {
 <p>We then need to use this class to define the element:</p>
 
 <pre class="highlight">
-document.defineElement("flag-icon", FlagIcon);</pre>
+document.registerElement("flag-icon", FlagIcon);</pre>
 
 <p>At this point, our above code will work! The parser, whenever it sees the <code>flag-icon</code> tag, will construct a new instance of our <code>FlagIcon</code> class, and tell our code about its new <code>country</code> attribute, which we then use to set the element's internal state and update its rendering (when appropriate).</p>
 
@@ -219,7 +219,7 @@ class PlasticButton extends HTMLButtonElement {
 <p>When registering our custom element, we have to also specify the <code>extends</code> option:</p>
 
 <pre class="highlight">
-document.defineElement("plastic-button", PlasticButton, { extends: "button" });</pre>
+document.registerElement("plastic-button", PlasticButton, { extends: "button" });</pre>
 
 <p>In general, the name of the element being extended cannot be determined simply by looking at what element interface it extends, as many elements share the same interface (such as <code>q</code> and <code>blockquote</code> both sharing <code>HTMLQuoteElement</code>).</p>
 
