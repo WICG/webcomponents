@@ -1338,6 +1338,7 @@
         <pre class='idl'>
           partial interface DocumentOrShadowRoot {
             Selection? getSelection ();
+            Element? elementFromPoint(double x, double y);
             sequence&lt;Element&gt; elementsFromPoint(double x, double y);
             CaretPosition? caretPositionFromPoint(double x, double y);
             readonly attribute Element? activeElement;
@@ -1351,7 +1352,10 @@
             considering only the current node tree.
           </li>
           <li>
-            These methods will be removed from Document, eventually.
+            Regarding <code>elementFromPoint</code> and <code>elementsFromPoints</code>, they should return the result of running the <a>retargeting algorithm</a> with <a>context object</a> and the original result as input.
+          </li>
+          <li>
+            We should remove these methods and attributes from Document when this section is upstreamed to DOM Standard.
           </li>
         </ul>
       </section>
