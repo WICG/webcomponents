@@ -19,8 +19,7 @@
           specStatus: "ED",
           shortName: "shadow-dom",
           useExperimentalStyles: true,
-          editors: [{ name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc.", w3cid: 40456 },
-                    { name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc.", w3cid: 49814 }],
+          editors: [{ name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc.", w3cid: 49814 }],
           wg: "Web Platform Working Group",
           wgURI: "http://www.w3.org/WebPlatform/WG/",
           wgPublicList: "public-webapps",
@@ -85,15 +84,30 @@
       <section>
         <h3>Shadow trees</h3>
 
-        <p>A <dfn>document tree</dfn> is a <a>node tree</a> [[!DOM]] whose <a>root</a> <a>node</a> is a <a>document</a>.</p>
+        <p class="note">
+          Shadow DOM specification is being upstreamed to DOM Standard [[!WHATWG-DOM]]. Some of the concepts are now being defined in DOM Standard.
+        </p>
 
-        <p>Any element can <dfn data-lt="hosts">host</dfn> zero or one associated <a data-lt="node tree">node trees</a>, called a <dfn>shadow tree</dfn>.</p>
+        <p>A <dfn>document tree</dfn> is a <a>node tree</a> whose <a>root</a> is a <a>document</a>.</p>
 
-        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one <a data-lt="node tree">shadow tree</a>.</p>
+        <p>A <dfn>shadow tree</dfn> is a <a>node tree</a> whose <a>root</a> is a <a>shadow root</a>.</p>
 
-        <p>A shadow tree has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.</p>
+        <ul class="note">
+          <li>
+            <code>ShadowRoot</code> extends <code>DocumentFragment</code>.
+          </li>
+          <li>
+            A <a>shadow root</a> can be created only by calling <code>attachShadow</code> on an element, which is explained later.
+            The <a>context object</a> becomes a <a>host</a> of the created <a>shadow root</a>.
+          </li>
+        </ul>
 
-        <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
+        <p>
+          An element <var>A</var> is a <dfn>shadow host</dfn> if <var>A</var> is a <a>host</a> that is associated with a <a>shadow root</a> <var>B</var>.
+          In this case, <var>A</var> <dfn>hosts</dfn> a <a>shadow tree</a> whose <a>root</a> is <var>B</var>.
+        </p>
+
+        <p>A <a>shadow root</a> has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.</p>
 
         <p>
           A node <var>A</var> is called a <dfn>composed child</dfn> of a node <var>B</var>,

@@ -40,6 +40,7 @@ var autolinkConfig = {
         'range': '#range',
         'replace all': '#concept-node-replace-all',
         'root': '#concept-tree-root',
+        'shadow root': '#concept-shadow-root',
         'static': '#concept-collection-static',
         'stop propagation flag': '#stop-propagation-flag',
         'target': '#dom-event-target',
