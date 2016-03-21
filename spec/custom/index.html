@@ -368,8 +368,6 @@ dictionary ElementRegistrationOptions {
 
 <p>A <code>CustomElementsRegistry</code>'s <dfn id="dfn-document-list-of-defined-custom-elements">list of defined local names</dfn> is the list containing all of the <a href="#dfn-element-definition-local-name">local names</a> of the <a href="#dfn-element-definition">custom element definitions</a> in the registry.</p>
 
-<p>Every <code>CustomElementsRegistry</code> has an <dfn id="dfn-upgrade-candidates-map">upgrade candidates map</dfn>, which tracks <a>undefined potentially-custom elements</a>. Each entry has a key that is a <a>valid custom element name</a> and a value that is a <a>sorted element queue</a>. It is is initially empty.</p>
-
 <p><dfn id="dfn-element-definition">Element definition</dfn> is a process of adding a <a>custom element definition</a> to the <code>CustomElementsRegistry</code>. This is accomplished by the <a href="#dom-customelementsregistry-define"><code>define</code></a> method. When invoked, the <dfn id="dom-customelementsregistry-define"><code>define(<var>name</var>, <var>constructor</var>, <var>options</var>)</code></dfn> method must run these steps:</p>
 
 <ol>
@@ -422,14 +420,6 @@ dictionary ElementRegistrationOptions {
     <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>connectedCallback</var>, <var>disconnectedCallback</var>, and <var>attributeChangedCallback</var> (stored with their corresponding name).</li>
 
     <li>Add <var>definition</var> to this <code>CustomElementsRegistry</code>.</li>
-
-    <li>Let <var>map</var> be this <code>CustomElementsRegistry</code>'s <a>upgrade candidates map</a>.</li>
-
-    <li>Let <var>candidates</var> be the <a>sorted element queue</a> which is the value of the entry in <var>map</var> with key <var>name</var>.</li>
-
-    <li>For each element <var>candidate</var> in <var>candidates</var>, <a>enqueue a custom element upgrade</a> given <var>candidate</var> and <var>definition</var>.</li>
-
-    <li>Set the value of the entry in <var>map</var> whose key is <var>name</var> to an empty <a>sorted element queue</a>.</li>
 </ol>
 
 <p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that might in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such <a href="https://dom.spec.whatwg.org/#concept-element">elements</a> are called <dfn id="dfn-undefined-potentially-custom-element">undefined potentially-custom elements</dfn>. If such a definition is ever registered, the element will be <a lt="upgrade an element">upgraded</a>, becoming a <a>custom element</a>.</p>
@@ -523,7 +513,7 @@ partial interface Window {
 
 <p class="monkeypatch">Additionally, after the talk about qualified names but before the discussion of attributes, the following algorithm should be inserted:</p>
 
-<p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, an optional <var>synchronous custom elements flag</var>, and an optional <var>auto-upgrade custom elements flag</var>, run the following steps:</p>
+<p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and an optional <var>synchronous custom elements flag</var>, run the following steps:</p>
 
 <ol>
     <li>Let <var>registry</var> be null.</li>
@@ -563,10 +553,6 @@ partial interface Window {
                     <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
 
                     <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
-
-                    <li>Let <var>upgrade queue</var> be the <a>sorted element queue</a> that is the value of the entry in <var>registry</var>'s <a>upgrade candidates map</a> with key <var>typeExtension</var>, creating an empty <a>sorted element queue</a> if no such entry exists.</li>
-
-                    <li>Enqueue <var>result</var> in <var>upgrade queue</var>.</li>
                 </ol>
             </li>
         </ol>
@@ -634,17 +620,7 @@ partial interface Window {
 
             <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> set, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>.</li>
 
-            <li>
-                <p>If <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>localName</var> is a <a>valid custom element name</a>, and the <var>auto-upgrade custom elements flag</var> is set:</p>
-
-                <ol>
-                    <li>Unset <var>result</var>'s <a>defined flag</a>.</li>
-
-                    <li>Let <var>upgrade queue</var> be the <a>sorted element queue</a> that is the value of the entry in <var>registry</var>'s <a>upgrade candidates map</a> with key <var>localName</var>, creating an empty <a>sorted element queue</a> if no such entry exists.</li>
-
-                    <li>Enqueue <var>result</var> in <var>upgrade queue</var>.</li>
-                </ol>
-            </li>
+            <li>If <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>localName</var> is a <a>valid custom element name</a>, unset <var>result</var>'s <a>defined flag</a>.</li>
 
             <li>Return <var>result</var>.</li>
         </ol>
@@ -655,7 +631,7 @@ partial interface Window {
 <section id="clone-modifications-to-dom">
 <h3>DOM+: Cloning</h3>
 
-<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> and <var>auto-upgrade custom elements flag</var> should both be unset.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
 
 </section>
 
@@ -942,7 +918,6 @@ partial interface Document {
 
 dictionary ElementCreationOptions {
     DOMString is;
-    boolean upgrade = false;
 };
 </pre>
 
@@ -957,7 +932,7 @@ The <dfn id="dom-document-createelement"><code>createElement(localName, options)
 
     <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
-    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var>, with the <var>synchronous custom elements flag</var> set, and with the <var>auto-upgrade custom elements flag</var> set if the <code>upgrade</code> member of <var>options</var> is true. Rethrow any exceptions.</li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, null, the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
 
 The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qualifiedName, options)</code></dfn> method, when invoked, must run these steps:
@@ -967,7 +942,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
     <li>Let <var>typeExtension</var> be the value of the <code>is</code> member of <var>options</var>, or null if no such member exists.</li>
 
-    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, with the <var>synchronous custom elements flag</var> set, and with the <var>auto-upgrade custom elements flag</var> set if the <code>upgrade</code> member of <var>options</var> is true. Rethrow any exceptions.</li>
+    <li>Return the result of <a data-lt="create an element">creating an element</a> given the <a href="https://dom.spec.whatwg.org/#context-object">context object</a>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and with the <var>synchronous custom elements flag</var> set. Rethrow any exceptions.</li>
 </ol>
 
 </div>
@@ -1011,7 +986,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
     </li>
 
     <li>
-        <p>Let <var>element</var> be the result of <a lt="create an element">creating an element</a> given <var>document</var>, <var>localName</var>, null, <var>given namespace</var>, and <var>typeExtension</var>. If <var>will execute script</var> is true, set the <var>synchronous custom elements flag</var> and the <var>auto-upgrade custom elements flag</var>; otherwise, leave them unset.</p>
+        <p>Let <var>element</var> be the result of <a lt="create an element">creating an element</a> given <var>document</var>, <var>localName</var>, null, <var>given namespace</var>, and <var>typeExtension</var>. If <var>will execute script</var> is true, set the <var>synchronous custom elements flag</var>; otherwise, leave it unset.</p>
 
         <p class="note">This will cause <a lt="custom element constructor">custom element constructors</a> to run, if <var>will execute script</var> is true. However, even if this causes <a href="https://html.spec.whatwg.org/#dom-document-write">new characters to be inserted into the tokenizer</a>, the parser will not be executed reentrantly, since the <a href="https://html.spec.whatwg.org/#parser-pause-flag">parser pause flag</a> is true. Similarly, <a href="https://html.spec.whatwg.org/#dom-document-open">blowing away the document</a> is not possible, since the <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> is greater than zero.</p>
 
