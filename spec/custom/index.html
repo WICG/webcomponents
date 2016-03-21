@@ -61,11 +61,6 @@
       }]
     }],
     localBiblio:  {
-      'FOUC': {
-        title: 'Flash of unstyled content',
-        href: 'https://en.wikipedia.org/wiki/Flash_of_unstyled_content',
-        publisher: "Wikipedia"
-      },
       'WEBIDL': {
         title: 'Web IDL',
         href: 'https://heycam.github.io/webidl/',
@@ -497,6 +492,18 @@ partial interface Window {
 <p class="note">
     The use of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> instead of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> in the case of <a lt="valid custom element name">valid custom element names</a> is done to ensure that any potential future <a lt="upgrade an element">upgrades</a> only cause a linear transition of the element's prototype chain, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> to a subclass, instead of a lateral one, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> to an unrelated subclass.
 </p>
+
+</section>
+
+<section id="unresolved-element-pseudoclass">
+<h3>HTML+: Pseudo-classes</h2>
+
+<p class="monkeypatch">The following should be added to HTML's <a href="https://html.spec.whatwg.org/#pseudo-classes">pseudo-classes</a> section.</p>
+
+<dl>
+  <dt><dfn data-dfn-type="selector"><code>:defined</code></dfn></dt>
+  <dd>The <a><code>:defined</code></a> pseudo-class must match any element that is <a>defined</a>.</p></dd>
+</dl>
 
 </section>
 
@@ -1022,22 +1029,6 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
 
 </section>
 
-</section>
-
-<section id="unresolved-element-pseudoclass">
-<h2>Additions to CSS</h2>
-
-<p class="monkeypatch">The following should be added to some relevant CSS specification. Or maybe it would belong in HTML? It looks like it's mostly a collaboration so far?</p>
-
-<section>
-<h3>The Defined Element Pseudo-class: <a>':defined'</a></h3>
-
-<p>The <dfn id="defined-pseudo">':defined'</dfn> pseudo-class applies to elements that are <a>defined</a>.</p>
-
-<p class="note">
-The <a>':defined'</a> pseudo-class can be used to mitigate the flash of unstyled content [[FOUC]] issues with <a data-lt="custom element">custom elements</a>.
-</p>
-</section>
 </section>
 
 <section id="semantics">
