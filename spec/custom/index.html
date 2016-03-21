@@ -399,7 +399,7 @@ dictionary ElementRegistrationOptions {
 
     <li>Let <var>observedAttributesIterable</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "observedAttributes"). Rethrow any exceptions.</li>
 
-    <li>If <var>observedAttributesIterable</var> is undefined, let <var>observedAttributes</var> be an empty <code>sequence&lt;DOMString></code>. Otherwise, let <var>observedAttributes</var> be the result of <a href="https://heycam.github.io/webidl/#es-sequence">converting</a> <var>observedAttributesIterable</var> to a <code>sequence&lt;DOMString></code>. Rethrow any exceptions.</code>
+    <li>If <var>observedAttributesIterable</var> is undefined, let <var>observedAttributes</var> be an empty <code>sequence&lt;DOMString></code>. Otherwise, let <var>observedAttributes</var> be the result of <a href="https://heycam.github.io/webidl/#es-sequence">converting</a> <var>observedAttributesIterable</var> to a <code>sequence&lt;DOMString></code>. Rethrow any exceptions.</li>
 
     <li>Let <var>prototype</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "prototype"). Rethrow any exceptions.</li>
 
@@ -422,7 +422,12 @@ dictionary ElementRegistrationOptions {
     <li>Add <var>definition</var> to this <code>CustomElementsRegistry</code>.</li>
 </ol>
 
-<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that might in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such <a href="https://dom.spec.whatwg.org/#concept-element">elements</a> are called <dfn id="dfn-undefined-potentially-custom-element">undefined potentially-custom elements</dfn>. If such a definition is ever registered, the element will be <a lt="upgrade an element">upgraded</a>, becoming a <a>custom element</a>.</p>
+</section>
+
+<section>
+<h3 id="upgrades">Upgrades</h3>
+
+<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that could in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such elements have the potential to be <a lt="upgrade an element">upgraded</a> in certain circumstances.</p>
 
 <p>To <dfn id="dfn-upgrade-a-custom-element">upgrade an element</dfn>, given as input a <a>custom element definition</a> <var>definition</var> and an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
 
