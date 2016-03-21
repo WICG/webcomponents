@@ -481,6 +481,22 @@ dictionary ElementRegistrationOptions {
   <li>Return true.</li>
 </ol>
 
+<div class="example">
+  <p>Upgrades allow custom element definitions to be registered after the element has been initially created, such as by the parser. This allows progressive enhancement of the content in the custom element. For example, in the following HTML document the element definition for <code>img-viewer</code> is loaded asynchronously:</p>
+
+<pre class="highlight">&lt;!DOCTYPE html>
+&lt;title>Image viewer example&lt;/title>
+
+&lt;img-viewer filter="Lord Kelvin">
+  &lt;img src="images/tree.jpg" alt="A beautiful tree towering over an empty savannah">
+&lt;/img-viewer>
+
+&lt;script src="js/elements/img-viewer.js" async>&lt;/script>
+</pre>
+
+  <p>The definition for the <code>img-viewer</code> element here is loaded using a <a href="https://html.spec.whatwg.org/#the-script-element"><code>script</code></a> element marked with the <a href="https://html.spec.whatwg.org/#attr-script-async"><code>async</code></a> attribute, placed after the <code>&lt;img-viewer></code> tag in the markup. While the script is loading, the <code>img-viewer</code> element will be treated as an undefined element, similar to a <a href="https://html.spec.whatwg.org/#the-span-element"><code>span</code></a>. Once the script loads, it will define the <code>img-viewer</code> element, and the existing <code>img-viewer</code> element on the page will be upgraded, applying the custom element's definition (which presumably includes applying an image filter identified by the string "Lord Kelvin").</p>
+</div>
+
 </section>
 </section>
 
