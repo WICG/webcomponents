@@ -569,7 +569,7 @@ partial interface Window {
 <ol>
     <li>Let <var>registry</var> be null.</li>
 
-    <li>If <var>document</var> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, set <var>registry</var> to <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementRegistry</code> object.</li>
+    <li>If <var>document</var> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, set <var>registry</var> to <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</li>
 
     <li>
         <p>If <var>typeExtension</var> is not null:</p>
@@ -719,7 +719,7 @@ partial interface Window {
 
 <ol>
     <li>
-        <p>Let <var>registry</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementRegistry</code> object.</p>
+        <p>Let <var>registry</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</p>
 
         <p class="note">This algorithm can only be called in scenarios where <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>.</p>
     </li>
@@ -907,7 +907,7 @@ partial interface Window {
 </section>
 
 <section id="instantiating-custom-elements">
-<h2>Instantiating custom clements</h2>
+<h2>Instantiating custom elements</h2>
 
 <section id="htmlelement-constructor">
 <h3>HTML+: The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> constructor</h3>
@@ -925,7 +925,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 <ol>
     <li>Let <var>realm</var> be the result of <a href="https://tc39.github.io/ecma262/#sec-getfunctionrealm">GetFunctionRealm</a>(the currently executing <code>HTMLElement</code> function).</li>
 
-    <li>Let <var>registry</var> be <var>realm</var>'s [[\GlobalObject]]'s <code>CustomElementRegistry</code> object.</li>
+    <li>Let <var>registry</var> be <var>realm</var>'s [[\GlobalObject]]'s <code>CustomElementsRegistry</code> object.</li>
 
     <li>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#dfn-element-definition-constructor">constructor</a> equal to NewTarget. If there is no such definition, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> and abort these steps.</li>
 
@@ -1025,7 +1025,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
     <li>Let <var>will execute script</var> be false.</li>
 
     <li>
-        <p>If <var>given namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>document</var> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, and <var>localName</var> is in the <a>list of defined local names</a> for <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementRegistry</code> object:</p>
+        <p>If <var>given namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>document</var> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, and <var>localName</var> is in the <a>list of defined local names</a> for <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object:</p>
 
         <ol>
             <li>Set <var>typeExtension</var> to the value of the "<code>is</code>" attribute in the given token, if such an attribute exists.</li>
