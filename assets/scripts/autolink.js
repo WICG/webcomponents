@@ -22,6 +22,12 @@ function resolveAutolink() {
         if (definitionMap[linkText]) {
             e.setAttribute("href", definitionMap[linkText]);
             e.classList.add("externalDFN");
+        } else if (linkText.endsWith("s")) {
+          var sub = linkText.substring(0, linkText.length - 1);
+          if (definitionMap[sub]) {
+            e.setAttribute("href", definitionMap[sub]);
+            e.classList.add("externalDFN");
+          }
         }
     });
 }

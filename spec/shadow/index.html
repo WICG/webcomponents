@@ -117,7 +117,6 @@
           if <var>A</var>'s <a>root</a> is a <a>shadow-including inclusive ancestor</a> of <var>B</var>, or
           <var>A</var>'s <a>root</a> is a <a>shadow root</a> whose associated <a>mode</a> is "open" and the root's <a>host</a> is an <a>unclosed node</a> of <var>B</var>.
         </p>
-
       </section>
 
       <section>
@@ -894,29 +893,17 @@
               <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
             </dl>
             <ol>
-              <li>Let <var>BASE-TREE</var> be the <a>node tree</a> which <var>BASE</var> <a>participates</a> in</li>
-              <li>Let <var>TARGET-TREE</var> be the <a>node tree</a> which <var>TARGET</var> <a>participates</a> in</li>
-              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>composed tree of node trees</a>:
+              <li>
+                For each <var>ANCESTOR</var> in <var>TARGET</var>'s <a data-lt="shadow-including inclusive ancestor">shadow-including inclusive ancestors</a>,
+                in from-descendants-to-ancestors order:
                 <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
-                </ol>
-              </li>
-              <li>Otherwise:
-                <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
+                  <li>
+                    If <var>ANCESTOR</var>'s <a>root</a> is <var>BASE</var>'s <a>shadow-including inclusive ancestor</a>, return <var>ANCESTOR</var>.
+                  </li>
                 </ol>
               </li>
               <li>
-                For each <a>node</a>, <var>ANCESTOR</var>, in <a>shadow-including inclusive ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
-                <ol>
-                  <li>
-                    If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
-                    <ol>
-                      <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
-                      <li>Stop this algorithm</li>
-                    </ol>
-                  </li>
-                </ol>
+                Return null
               </li>
             </ol>
           </div>
