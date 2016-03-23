@@ -225,8 +225,10 @@
       <section>
         <h3>Flat trees</h3>
 
-        <p>A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> from multiple <a data-lt="node tree">node trees</a> in a <a>composed tree of node trees</a>.
-          The exact algorithm of constructing a flat tree is specified later.</p>
+        <p>
+          A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> that share the same <a>shadow-including root</a>.
+          The exact algorithm of constructing a flat tree is specified later.
+        </p>
 
         <figure>
           <object data="../../assets/images/flat-tree.svg" width="654" height="606"></object>
@@ -447,6 +449,15 @@
       <section>
         <h3>Flattening Algorithm</h3>
 
+        <p>
+          The <a>flat tree</a> constructed from the nodes who share the same <a>shadow-including root</a> <var>ROOT</var>
+          <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:
+        </p>
+        <ul>
+          <li>The <a>flat tree</a>'s <a>root</a> is <var>ROOT</var>.</li>
+          <li>For a given <var>NODE</var> object which already <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <var>NODE</var> as input.
+          </li>
+        </ul>
 
         <p>The <dfn>flat tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child nodes of a node in the <a>flat tree</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -494,13 +505,6 @@
             </li>
           </ol>
         </div>
-
-        <p>For a given <a>composed tree of node trees</a> <var>COMPOSED-TREE</var>, the <a>flat tree</a> constructed from <var>COMPOSED-TREE</var> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:</p>
-        <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>flat tree</a> is the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>COMPOSED-TREE</var>.</li>
-          <li>For a given <a>node</a> which <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <a>node</a> as input.
-          </li>
-        </ul>
       </section>
 
       <section class="informative">
