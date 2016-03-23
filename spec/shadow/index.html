@@ -1133,6 +1133,20 @@
       </section>
 
       <section>
+        <h3>Focus</h3>
+        <p>A <a>shadow host</a> can delegate focus to its <a>shadow root</a> by assigning a boolean <a href="#widl-ShadowRootInit-delegatesFocus">delegatesFocus</a> flag to be true in <a href="#idl-def-ShadowRootInit">ShadowRootInit</a> dictionary. If omitted, a <a>shadow host</a> does not delegate focus to its shadow root, and the shadow host itself can be focusable.</p>
+        <p>When a shadow host delegates focus, user agent <strong>must</strong> behave as follows.
+          <ol>
+            <li>When the <a>shadow host</a> is being focused by TAB focus navigation: if the direction is forward, the first focusable element in its <a>shadow tree</a> gets focuse. If the direction is backward, the last focusable element in its <a>shadow tree</a> gets focuse. If there is no focusable element in its <a>shadow tree</a>, the <a>shadow host</a> is skipped for the navigation. See the next secition for the formal definition.</li>
+            <li>When the <a>shadow host</a> is being focused by <code>focus()</code> method or <code>autofocus</code> attribute: The first focusable element in its <a>shadow tree</a> gets focus.</li>
+            <li>When non-focusable area in its <a>shadow tree</a> is clicked: The first focusable element in its <a>shadow tree</a> gets focus.</li>
+            <li>When a focusable element in its <a>shadow tree</a> is clicked: The element itself gets focus.</li>
+            <li>When any of its <a>shadow tree</a> has focus, <code>:focus</code> pseudo-class on the shadow host matches.</li>
+          </ol>
+        </p>
+      </section>
+
+      <section>
         <h3>Focus Navigation</h3>
 
         <p>If a <a>node</a> doesn’t <a data-lt="participates">participate</a> in the <a>document flat tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>sequential focus navigation</a>.</p>
@@ -1454,6 +1468,8 @@
         <dl class="idl" title="dictionary ShadowRootInit">
           <dt>required ShadowRootMode mode</dt>
           <dd>Specifies the associated <a>mode</a> of <a>ShadowRoot</a></dd>
+          <dt>boolean delegatesFocus</dt>
+          <dd>Specifies whether shadow host delegates focus to its <a>ShadowRoot</a>. If omitted, the default value is false.</dd>
         </dl>
       </section>
 
