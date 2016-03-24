@@ -508,14 +508,14 @@ dictionary ElementRegistrationOptions {
     <li>If <var>element</var> is currently <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
 </ol>
 
-<p>The steps to <dfn id="dfn-try-upgrade">try to upgrade an element</dfn>, given as input an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, are as follows. They will return true if the element is upgraded, and false otherwise.</p>
+<p>To <dfn id="dfn-try-upgrade">try to upgrade an element</dfn>, given as input an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
 
 <ol>
-  <li>If <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, return false.</li>
+  <li>If <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, abort this algorithm.</li>
 
   <li>Let <var>document</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>.</li>
 
-  <li>If <var>document</var> does not have a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, return false.</li>
+  <li>If <var>document</var> does not have a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, abort this algorithm.</li>
 
   <li>Let <var>registry</var> be <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</li>
 
@@ -527,15 +527,13 @@ dictionary ElementRegistrationOptions {
     <ol>
       <li>Let <var>is</var> be the value of that attribute.</li>
 
-      <li>Set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, and <a href="#dfn-element-definition-name">name</a> equal to <var>is</var>. If no such entry exists, return false.</li>
+      <li>Set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, and <a href="#dfn-element-definition-name">name</a> equal to <var>is</var>. If no such entry exists, abort this algorithm.</li>
     </ol>
   </li>
 
-  <li>Otherwise, set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> and <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>. If there is no such entry, return false.</li>
+  <li>Otherwise, set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> and <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>. If there is no such entry, abort this algorithm.</li>
 
   <li><a>Enqueue a custom element upgrade</a> given <var>element</var> and <var>definition</var>.</li>
-
-  <li>Return true.</li>
 </ol>
 
 </section>
@@ -893,11 +891,13 @@ partial interface Window {
               <p>If <var>inclusiveDescendant</var> was previously not <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is, then:</p>
 
               <ol>
-                <li>Let <var>shouldEnqueueConnected</var> be true if <var>inclusiveDescendant</var> is <a>custom</a>, and false otherwise.</li>
+                <li>If <var>inclusiveDescendant</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
 
-                <li><a lt="try to upgrade an element">Try to upgrade</a> <var>inclusiveDescendant</var>. If the operation returns true, set <var>shouldEnqueueConnected</var> to true.</li>
+                <li>
+                  <p>Otherwise, <a lt="try to upgrade an element">try to upgrade</a> <var>inclusiveDescendant</var>.</p>
 
-                <li>If <var>shouldEnqueueConnected</var> is true, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
+                  <p class="note">If this successfully upgrades <var>inclusiveDescendant</var>, its <code>connectedCallback</code> will be enqueued automatically during the <a>upgrade an element</a> algorithm.</p>
+                </li>
               </ol>
             </li>
         </ol>
