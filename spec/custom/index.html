@@ -240,6 +240,61 @@ console.log(plasticButton2.getAttribute("is")); // will output "plastic-button"<
 
 <p>Notably, all the of the ways in which <a href="https://html.spec.whatwg.org/#the-button-element"><code>button</code></a> is special apply to such "plastic buttons" as well: their focus behavior, ability to participate in <a href="https://html.spec.whatwg.org/#form-submission-2">form submission</a>, the <a href="https://html.spec.whatwg.org/#attr-fe-disabled"><code>disabled</code></a> attribute, and so on.</p>
 </section>
+
+<section class="informative">
+<h4 id="custom-elements-upgrades-examples">Upgrading elements after their creation</h4>
+
+<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a>, and then later become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. We call this process "upgrading" the element, from a normal element into a custom element.</p>
+
+<p><a href="#upgrades">Upgrades</a> enable scenarios where it may be preferable for <a lt="custom element definition">custom element definitions</a> to be registered after relevant elements has been initially created, such as by the parser. They allow progressive enhancement of the content in the custom element. For example, in the following HTML document the element definition for <code>img-viewer</code> is loaded asynchronously:</p>
+
+<pre class="highlight">&lt;!DOCTYPE html>
+&lt;title>Image viewer example&lt;/title>
+
+&lt;img-viewer filter="Kelvin">
+  &lt;img src="images/tree.jpg" alt="A beautiful tree towering over an empty savannah">
+&lt;/img-viewer>
+
+&lt;script src="js/elements/img-viewer.js" async>&lt;/script>
+</pre>
+
+<p>The definition for the <code>img-viewer</code> element here is loaded using a <a href="https://html.spec.whatwg.org/#the-script-element"><code>script</code></a> element marked with the <a href="https://html.spec.whatwg.org/#attr-script-async"><code>async</code></a> attribute, placed after the <code>&lt;img-viewer></code> tag in the markup. While the script is loading, the <code>img-viewer</code> element will be treated as an undefined element, similar to a <a href="https://html.spec.whatwg.org/#the-span-element"><code>span</code></a>. Once the script loads, it will define the <code>img-viewer</code> element, and the existing <code>img-viewer</code> element on the page will be upgraded, applying the custom element's definition (which presumably includes applying an image filter identified by the string "Kelvin", enhancing the image's visual appearance).</p>
+
+<hr>
+
+<p>Note that <a href="#upgrades">upgrades</a> only apply to elements in the document tree. (Formally, elements <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>.) An element that is not inserted into a document will stay un-upgraded. An example illustrates this point:</p>
+
+<pre class="highlight">
+&lt;!DOCTYPE html>
+&lt;title>Upgrade edge-cases example&lt;/title>
+
+&lt;example-element>&lt;/example-element>
+
+&lt;script>
+  "use strict";
+
+  const inDocument = document.querySelector("example-element");
+  const outOfDocument = document.createElement("example-element");
+
+  // Before the element definition, both are HTMLElement:
+  console.assert(inDocument instanceof HTMLElement);
+  console.assert(outOfDocument instanceof HTMLElement);
+
+  class ExampleElement extends HTMLElement {}
+  customElements.define("example-element", ExampleElement);
+
+  // After element definition, the in-document element was upgraded:
+  console.assert(inDocument instanceof ExampleElement);
+  console.assert(!(outOfDocument instanceof ExampleElement));
+
+  document.body.appendChild(outOfDocument);
+
+  // Now that we've moved the element into the document, it too was upgraded:
+  console.assert(outOfDocument instanceof ExampleElement);
+&lt;/script>
+</pre>
+
+</section>
 </section>
 
 <section>
@@ -427,8 +482,6 @@ dictionary ElementRegistrationOptions {
 <section>
 <h3 id="upgrades">Upgrades</h3>
 
-<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that could in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such elements have the potential to be upgraded in certain circumstances.</p>
-
 <p>To <dfn id="dfn-upgrade-a-custom-element">upgrade an element</dfn>, given as input a <a>custom element definition</a> <var>definition</var> and an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
 
 <ol>
@@ -484,22 +537,6 @@ dictionary ElementRegistrationOptions {
 
   <li>Return true.</li>
 </ol>
-
-<div class="example">
-  <p>Upgrades allow custom element definitions to be registered after the element has been initially created, such as by the parser. This allows progressive enhancement of the content in the custom element. For example, in the following HTML document the element definition for <code>img-viewer</code> is loaded asynchronously:</p>
-
-<pre class="highlight">&lt;!DOCTYPE html>
-&lt;title>Image viewer example&lt;/title>
-
-&lt;img-viewer filter="Lord Kelvin">
-  &lt;img src="images/tree.jpg" alt="A beautiful tree towering over an empty savannah">
-&lt;/img-viewer>
-
-&lt;script src="js/elements/img-viewer.js" async>&lt;/script>
-</pre>
-
-  <p>The definition for the <code>img-viewer</code> element here is loaded using a <a href="https://html.spec.whatwg.org/#the-script-element"><code>script</code></a> element marked with the <a href="https://html.spec.whatwg.org/#attr-script-async"><code>async</code></a> attribute, placed after the <code>&lt;img-viewer></code> tag in the markup. While the script is loading, the <code>img-viewer</code> element will be treated as an undefined element, similar to a <a href="https://html.spec.whatwg.org/#the-span-element"><code>span</code></a>. Once the script loads, it will define the <code>img-viewer</code> element, and the existing <code>img-viewer</code> element on the page will be upgraded, applying the custom element's definition (which presumably includes applying an image filter identified by the string "Lord Kelvin").</p>
-</div>
 
 </section>
 </section>
