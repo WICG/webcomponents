@@ -250,7 +250,7 @@ console.log(plasticButton2.getAttribute("is")); // will output "plastic-button"<
 <ul>
     <li>A parameter-less call to <code>super()</code> must be the first statement in the constructor body, to establish the correct prototype chain and <code>this</code> value before any further code is run.</li>
     <li>A <code>return</code> statement must not appear anywhere inside the constructor body, unless it is a simple early-return (<code>return</code> or <code>return this</code>).</li>
-    <li>The element's attributes and children must not be inspected, as in the non-<a lt="upgrade an element">upgrade</a> case none will be present, and relying on upgrades makes the element less usable.</li>
+    <li>The element's attributes and children must not be inspected, as in the non-<a href="#upgrade">upgrade</a> case none will be present, and relying on upgrades makes the element less usable.</li>
     <li>The element must not gain any attributes or children, as this violates the expectations of consumers who use the <a href="https://dom.spec.whatwg.org/#dom-document-createelement"><code>createElement</code></a> or <a href="https://dom.spec.whatwg.org/#dom-document-createelementns"><code>createElementNS</code></a> methods.</li>
     <li>In general, work should be deferred to <code>connectedCallback</code> as much as possible—especially work involving fetching resources or rendering. However, note that <code>connectedCallback</code> can be called more than once, so any initialization work that is truly one-time will need a guard to prevent it from running twice.</li>
     <li>In general, the constructor should be used to set up initial state and default values, and to set up <a href="https://dom.spec.whatwg.org/#concept-event-listener">event listeners</a>.</li>
@@ -427,7 +427,7 @@ dictionary ElementRegistrationOptions {
 <section>
 <h3 id="upgrades">Upgrades</h3>
 
-<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that could in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such elements have the potential to be <a lt="upgrade an element">upgraded</a> in certain circumstances.</p>
+<p>Because <a>element definition</a> can occur at any time, a non-custom element could be <a lt="create an element">created</a> that could in the future become a <a>custom element</a> after an appropriate <a data-lt="custom element definition">definition</a> is registered. Such elements have the potential to be upgraded in certain circumstances.</p>
 
 <p>To <dfn id="dfn-upgrade-a-custom-element">upgrade an element</dfn>, given as input a <a>custom element definition</a> <var>definition</var> and an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
 
@@ -534,7 +534,7 @@ partial interface Window {
 </ol>
 
 <p class="note">
-    The use of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> instead of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> in the case of <a lt="valid custom element name">valid custom element names</a> is done to ensure that any potential future <a lt="upgrade an element">upgrades</a> only cause a linear transition of the element's prototype chain, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> to a subclass, instead of a lateral one, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> to an unrelated subclass.
+    The use of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> instead of <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> in the case of <a lt="valid custom element name">valid custom element names</a> is done to ensure that any potential future <a href="#upgrades">upgrades</a> only cause a linear transition of the element's prototype chain, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> to a subclass, instead of a lateral one, from <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a> to an unrelated subclass.
 </p>
 
 </section>
@@ -559,7 +559,7 @@ partial interface Window {
 <p><a href="https://dom.spec.whatwg.org/#concept-element">Elements</a> have an associated <dfn id="dfn-element-monkeypatch-namespace">namespace</dfn>, <dfn id="dfn-element-monkeypatch-namespace-prefix">namespace prefix</dfn>, <dfn id="dfn-element-monkeypatch-local-name">local name</dfn>, <dfn id="dfn-element-defined">defined flag</dfn>, and <dfn id="dfn-element-custom">custom flag</dfn>. When an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> is <a lt="create an element">created</a>, all of these values are initialized. An element whose <a>defined flag</a> is set is said to be <dfn id="dfn-defined-element">defined</dfn>. An element whose <a>custom flag</a> is set is said to be <dfn id="dfn-element-custom">custom</dfn>.</p>
 
 <p class="note">
-    As detailed elsewhere in this specification, all elements that are not <a>custom</a> are already <a>defined</a> upon their <a lt="create an element">creation</a>. <a>Custom</a> elements become defined once their constructor has been called, either synchronously or during the <a lt="upgrade an element">upgrade</a> process.
+    As detailed elsewhere in this specification, all elements that are not <a>custom</a> are already <a>defined</a> upon their <a lt="create an element">creation</a>. <a>Custom</a> elements become defined once their constructor has been called, either synchronously or during the <a href="#upgrades">upgrade</a> process.
 </p>
 
 <p class="monkeypatch">Additionally, after the talk about qualified names but before the discussion of attributes, the following algorithm should be inserted:</p>
@@ -711,7 +711,7 @@ partial interface Window {
 <p><a data-lt="custom element">Custom elements</a> have an associated <dfn id="dfn-callback-queue">custom element action queue</dfn>, initially empty. Each item in the <a>custom element action queue</a> is of one of two types:</p>
 
 <ul>
-    <li>An <dfn>upgrade action</dfn>, which will <a href="#dfn-upgrade-a-custom-element">upgrade</a> the custom element and contains a <a>custom element definition</a>; or</li>
+    <li>An <dfn>upgrade action</dfn>, which will <a href="#upgrades">upgrade</a> the custom element and contains a <a>custom element definition</a>; or</li>
     <li>A <dfn>callback action</dfn>, which will call a lifecycle callback, and contains a <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> as well as a list of arguments.</li>
 </ul>
 
@@ -958,7 +958,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
     <li>
         <p>Return <var>instance</var>.</p>
 
-        <p class="note">This step is normally reached when <a href="#dfn-upgrade-a-custom-element">upgrading</a> a custom element; the existing element is returned, so that the <code>super()</code> call inside the <a>custom element constructor</a> assigns that existing element to <code>this</code>.</p>
+        <p class="note">This step is normally reached when <a href="#upgrades">upgrading</a> a custom element; the existing element is returned, so that the <code>super()</code> call inside the <a>custom element constructor</a> assigns that existing element to <code>this</code>.</p>
     </li>
 </ol>
 
