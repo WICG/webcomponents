@@ -19,8 +19,7 @@
           specStatus: "ED",
           shortName: "shadow-dom",
           useExperimentalStyles: true,
-          editors: [{ name: "Dimitri Glazkov", url: "mailto:dglazkov@chromium.org", company: "Google, Inc.", w3cid: 40456 },
-                    { name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc.", w3cid: 49814 }],
+          editors: [{ name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc.", w3cid: 49814 }],
           wg: "Web Platform Working Group",
           wgURI: "http://www.w3.org/WebPlatform/WG/",
           wgPublicList: "public-webapps",
@@ -85,60 +84,54 @@
       <section>
         <h3>Shadow trees</h3>
 
-        <p>A <dfn>document tree</dfn> is a <a>node tree</a> [[!DOM]] whose <a>root</a> <a>node</a> is a <a>document</a>.</p>
-
-        <p>Any element can <dfn data-lt="hosts">host</dfn> zero or one associated <a data-lt="node tree">node trees</a>, called a <dfn>shadow tree</dfn>.</p>
-
-        <p>A <dfn>shadow host</dfn> is an element that <a>hosts</a> one <a data-lt="node tree">shadow tree</a>.</p>
-
-        <p>A shadow tree has an associated flag, called an <dfn>encapsulation mode</dfn>, which is either <dfn>open</dfn> or <dfn>closed</dfn>.</p>
-
-        <p>A <dfn>shadow root</dfn> is the <a>root</a> <a>node</a> of a shadow tree.</p>
-
-        <p>
-          A node <var>A</var> is called a <dfn>composed child</dfn> of a node <var>B</var>,
-          if either <var>A</var> is a child of <var>B</var> or A is the <a>root</a> node of the <a>shadow tree</a> that B <a>hosts</a>.
+        <p class="note">
+          Shadow DOM specification is being upstreamed to DOM Standard [[!WHATWG-DOM]]. Most of the concepts about shadow trees are now being defined in DOM Standard.
         </p>
 
         <p>
-          A node <var>A</var> is called a <dfn>composed descendant</dfn> of a node <var>B</var>,
-          if either <var>A</var> is a <a>composed child</a> of <var>B</var>
-          or <var>A</var> is a <a>composed child</a> of a node <var>C</var> that is a <a>composed descendant</a> of <var>B</var>.
+          An element <var>A</var> is a <dfn>shadow host</dfn> if <var>A</var> is a <a>host</a> that is associated with a <a>shadow root</a> <var>B</var>.
+          In this case, <var>A</var> <dfn>hosts</dfn> a <a>shadow tree</a> whose <a>root</a> is <var>B</var>.
         </p>
 
         <p>
-          An <dfn>inclusive composed descendant</dfn> is a node or one of its <a data-lt="composed descendant">composed descendants</a>.
+          A node <var>A</var> is called a <dfn>shadow-including child</dfn> of a node <var>B</var>,
+          if <var>A</var> is a child of <var>B</var>, or <var>A</var> is a <a>shadow root</a> and <var>B</var> is the <a>host</a> of <var>A</var>.
         </p>
 
         <p>
-          A node <var>A</var> is called a <dfn>composed parent</dfn> of a node <var>B</var>
-          if and only if <var>B</var> is a <a>composed child</a> of <var>A</var>.
+          A node <var>A</var> is called a <dfn>shadow-including parent</dfn> of a node <var>B</var>,
+          if <var>B</var> is a <a>shadow-including child</a> of <var>A</var>.
         </p>
 
         <p>
-          A node <var>A</var> is called a <dfn>composed ancestor</dfn> of a node <var>B</var>
-          if and only if <var>B</var> is a <a>composed descendant</a> of <var>A</var>.
+          A node <var>A</var> is called a <dfn>shadow-including ancestor</dfn> of a node <var>B</var>
+          if <var>B</var> is a <a>shadow-including descendant</a> of <var>A</var>.
         </p>
 
         <p>
-          An <dfn>inclusive composed ancestor</dfn> is a node or one of its <a data-lt="composed ancestor">composed ancestors</a>.
+          An <dfn>shadow-including inclusive ancestor</dfn> is a node or one of its <a data-lt="shadow-including ancestor">shadow-including ancestors</a>.
         </p>
 
         <p>
-          When a node is an <a>inclusive composed descendant</a> of the <a>root element of a <code>Document</code> object</a>, it is <dfn>in a composed document</dfn>.
+          A node <var>A</var> is an <dfn>unclosed node</dfn> of a node <var>B</var>,
+          if <var>A</var>'s <a>root</a> is a <a>shadow-including inclusive ancestor</a> of <var>B</var>, or
+          <var>A</var>'s <a>root</a> is a <a>shadow root</a> whose associated <a>mode</a> is "open" and the root's <a>host</a> is an <a>unclosed node</a> of <var>B</var>.
+        </p>
+
+        <p>
+          <a><code>Window</code></a> object <a data-lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a data-lt="node">nodes</a> in the <a>document tree</a>.
         </p>
 
       </section>
 
-      <section>
+      <section class="informative">
         <h3>Composed trees</h3>
 
-        <p>A <dfn>composed tree of node trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
-
         <p class="note">
-          The purpose of introducing a composed tree of node trees here is to define algorithms easily in the following sections.
-          This is a kind of a notation techchique to make the this specification simpler.
+          The specification no longer uses the concept of a <a>composed tree of node trees</a> in normative sections.
         </p>
+
+        <p>A <dfn>composed tree of node trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
 
         <p>Just like a <a>node tree</a> is defined as <a data-lt="tree">a set of relationships</a> between <a data-lt="node">nodes</a>,
           a <a>composed tree of node trees</a> is similarly defined as a set of relationships between node trees:</p>
@@ -161,25 +154,8 @@
         </ul>
 
         <p>
-          A <a>node tree</a> <var>A</var> is called an <dfn>unclosed tree</dfn> of a <a>node tree</a> <var>B</var> if and only if one, at least, of the following conditions is satisfied:
-        </p>
-
-        <ul>
-          <li><var>A</var> is an <a>inclusive ancestor tree</a> of <var>B</var>.</li>
-          <li>The <a>encapsulation mode</a> of <var>A</var> is <a>open</a> and <var>A</var> is a <a>child tree</a> of <var>B</var>.</li>
-          <li><var>A</var> is an <a>unclosed tree</a> of a <a>node tree</a> <var>C</var> that is an <a>unclosed tree</a> of <var>B</var>.</li>
-        </ul>
-
-        <p>
-          A node <var>A</var> is called an <dfn>unclosed node</dfn> of a node <var>B</var> if and only if the <a>node tree</a> that <var>A</var> <a>participates</a> in
-          is an <a>unclosed tree</a> of the <a>node tree</a> that <var>B</var> <a>participates</a> in.
-        </p>
-
-        <p>
           A <dfn>composed document</dfn> is a <a>composed tree of node trees</a> whose <a>root tree</a> is a <a>document tree</a>.
         </p>
-
-        <p><a><code>Window</code></a> object <a data-lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a data-lt="node">nodes</a> in the <a>document tree</a>.</p>
 
         <section class="informative">
           <h3>Example composed tree of node trees</h3>
@@ -251,8 +227,10 @@
       <section>
         <h3>Flat trees</h3>
 
-        <p>A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> from multiple <a data-lt="node tree">node trees</a> in a <a>composed tree of node trees</a>.
-          The exact algorithm of constructing a flat tree is specified later.</p>
+        <p>
+          A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> that share the same <a>shadow-including root</a>.
+          The exact algorithm of constructing a flat tree is specified later.
+        </p>
 
         <figure>
           <object data="../../assets/images/flat-tree.svg" width="654" height="606"></object>
@@ -473,6 +451,15 @@
       <section>
         <h3>Flattening Algorithm</h3>
 
+        <p>
+          The <a>flat tree</a> constructed from the nodes who share the same <a>shadow-including root</a> <var>ROOT</var>
+          <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:
+        </p>
+        <ul>
+          <li>The <a>flat tree</a>'s <a>root</a> is <var>ROOT</var>.</li>
+          <li>For a given <var>NODE</var> object which already <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <var>NODE</var> as input.
+          </li>
+        </ul>
 
         <p>The <dfn>flat tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child nodes of a node in the <a>flat tree</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -520,13 +507,6 @@
             </li>
           </ol>
         </div>
-
-        <p>For a given <a>composed tree of node trees</a> <var>COMPOSED-TREE</var>, the <a>flat tree</a> constructed from <var>COMPOSED-TREE</var> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:</p>
-        <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>flat tree</a> is the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>COMPOSED-TREE</var>.</li>
-          <li>For a given <a>node</a> which <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <a>node</a> as input.
-          </li>
-        </ul>
       </section>
 
       <section class="informative">
@@ -792,7 +772,7 @@
                 <li>
                   Otherwise:
                   <ol>
-                    <li>Let <var>PARENT</var> be the <a>composed parent</a> of <var>NODE</var></li>
+                    <li>Let <var>PARENT</var> be the <a>shadow-including parent</a> of <var>NODE</var></li>
                   </ol>
                 </li>
               </li>
@@ -919,29 +899,17 @@
               <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
             </dl>
             <ol>
-              <li>Let <var>BASE-TREE</var> be the <a>node tree</a> which <var>BASE</var> <a>participates</a> in</li>
-              <li>Let <var>TARGET-TREE</var> be the <a>node tree</a> which <var>TARGET</var> <a>participates</a> in</li>
-              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>composed tree of node trees</a>:
+              <li>
+                For each <var>ANCESTOR</var> in <var>TARGET</var>'s <a data-lt="shadow-including inclusive ancestor">shadow-including inclusive ancestors</a>,
+                in from-descendants-to-ancestors order:
                 <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
-                </ol>
-              </li>
-              <li>Otherwise:
-                <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
+                  <li>
+                    If <var>ANCESTOR</var>'s <a>root</a> is <var>BASE</var>'s <a>shadow-including inclusive ancestor</a>, return <var>ANCESTOR</var>.
+                  </li>
                 </ol>
               </li>
               <li>
-                For each <a>node</a>, <var>ANCETOR</var>, in an <a>inclusive composed ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
-                <ol>
-                  <li>
-                    If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
-                    <ol>
-                      <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
-                      <li>Stop this algorithm</li>
-                    </ol>
-                  </li>
-                </ol>
+                Return null
               </li>
             </ol>
           </div>
@@ -1360,8 +1328,8 @@
         <p class="note">
           According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a <a>shadow tree</a>, instead of a document tree,
           because their definitions require the elements to be <a>in a document</a> as a necessary condition for them to work.
-          In other words, they shouldn't work if they participate in a <a>shadow tree</a>, even when they are <a>in a composed document</a>.
-          We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a composed document</a>.
+          In other words, they shouldn't work if they participate in a <a>shadow tree</a>, even when they are <a>in a shadow-including document</a>.
+          We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a shadow-including document</a>.
           See W3C <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26365">Bug 26365</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27406">Bug 27406</a> for the details.
           The following is the tentative summary of the discussions in the W3C bugs. We, however, haven't covered all HTML Elements and their behaviors here yet.
           For HTML Elements which are not explicitly stated here, they should be considered as <a>active in a shadow tree</a>.
@@ -1377,7 +1345,7 @@
             </p>
             <p>
               A subset of <a>HTML elements</a> which <strong>must</strong> behave as if they were in the <a>document tree</a>, even when they participate in a <a>shadow tree</a>,
-              as long as they are <a>in a composed document</a>.
+              as long as they are <a>in a shadow-including document</a>.
             </p>
             <p>
               The following HTML elements <strong>must</strong> be classified to this category:
@@ -1560,7 +1528,7 @@
               <li>If the <a>context object</a> already hosts the shadow tree, throws <code>InvalidStateError</code> exception.</li>
               <li>
                 Create a new instance of the <a><code>ShadowRoot</code></a> object.
-                The <code>shadowRootInitDict</code> argument allows for setting the <a>encapsulation mode</a>.
+                The <code>shadowRootInitDict</code> argument allows for setting the <a>mode</a>.
               </li>
               <li>Let the <a>context object</a> host the <a><code>ShadowRoot</code></a> object.</li>
               <li>Return <a><code>ShadowRoot</code></a> object.</li>
@@ -1573,7 +1541,8 @@
               Represents the <a>assigned slot</a> of the <a>context object</a>.
             </p>
             <p>
-              On getting, the attribute <strong>must</strong> return the <a>assigned slot</a> of the <a>context object</a>, if there is, and the assigned slot participates in an <a>open</a> shadow tree.
+              On getting, the attribute <strong>must</strong> return the <a>assigned slot</a> of the <a>context object</a>,
+              if there is, and the assigned slot's <a>root</a>'s<a> mode</a> is "open".
               Otherwise <strong>must</strong> return <code>null</code>.
             </p>
           </dd>
@@ -1588,7 +1557,7 @@
           <dt>readonly attribute ShadowRoot? shadowRoot</dt>
           <dd>
             <p>Represents the <a>shadow root</a> that <a>context object</a> <a>hosts</a>.</p>
-            <p>On getting, the attribute <strong>must</strong> return the <a>shadow root</a> that <a>context object</a> <a>hosts</a> if there is and it is <a>open</a>. Otherwise <strong>must</strong> return <code>null</code>.</p>
+            <p>On getting, the attribute <strong>must</strong> return the <a>shadow root</a> that <a>context object</a> <a>hosts</a> if there is and its <a>mode</a> is "open". Otherwise <strong>must</strong> return <code>null</code>.</p>
           </dd>
         </dl>
       </section>
@@ -1597,7 +1566,7 @@
         <h3><code>ShadowRootInit</code> dictionary</h3>
         <dl class="idl" title="dictionary ShadowRootInit">
           <dt>required ShadowRootMode mode</dt>
-          <dd>Specifies the <a>encapsulation mode</a> of <a>ShadowRoot</a></dd>
+          <dd>Specifies the associated <a>mode</a> of <a>ShadowRoot</a></dd>
         </dl>
       </section>
 
@@ -1605,9 +1574,9 @@
         <h3><code>ShadowRootMode</code> enum</h3>
         <dl class="idl" title="enum ShadowRootMode">
           <dt>open</dt>
-          <dd>Specifies <a>open</a> <a>encapsulation mode</a></dd>
+          <dd>Specifies "open" <a>mode</a></dd>
           <dt>closed</dt>
-          <dd>Specifies <a>closed</a> <a>encapsulation mode</a></dd>
+          <dd>Specifies "closed" <a>mode</a></dd>
         </dl>
       </section>
 
