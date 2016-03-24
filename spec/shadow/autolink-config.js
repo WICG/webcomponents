@@ -47,6 +47,7 @@ var autolinkConfig = {
         'shadow tree': '#concept-shadow-tree',
         'shadow-including descendant': '#concept-shadow-including-descendant',
         'shadow-including root': '#concept-shadow-including-root',
+        'shadow-including tree order': '#shadow-including-tree-order',
         'static': '#concept-collection-static',
         'stop propagation flag': '#stop-propagation-flag',
         'target': '#dom-event-target',

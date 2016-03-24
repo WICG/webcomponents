@@ -1119,13 +1119,13 @@
       <section>
         <h3>Sequential Focus Navigation</h3>
 
-        <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a composed document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
+        <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a shadow-including document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
 
         <p><dfn>focus navigation scope owner</dfn> is a node that owns a <a>focus navigation scope</a>. A document, a <a>shadow root</a>, or a <a>slot element</a> can be a <a>focus navigation scope owner</a>.</p>
 
-        <p><dfn>document sequential focus navigation order</dfn> is an order of all of the <a data-lt="focusable area">focusable areas</a> <a>in a composed document</a>, reachable by <a>sequential focus navigation</a>.</p>
+        <p><dfn>document sequential focus navigation order</dfn> is an order of all of the <a data-lt="focusable area">focusable areas</a> <a>in a shadow-including document</a>, reachable by <a>sequential focus navigation</a>.</p>
 
-        <p>When a composed document is given, the <a>document sequential focus navigation order</a> is determined by the following steps:</p>
+        <p>When a shadow-including document is given, the <a>document sequential focus navigation order</a> is determined by the following steps:</p>
 
         <p>Step 1.</p>
         <div class="algorithm">
@@ -1166,7 +1166,7 @@
                 <li>Append <var>SCOPE</var> to <var>SCOPE-MAP[OWNER]</var>.</li>
               </ol>
             </li>
-            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>:
+            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>, in <a>shadow-including tree order</a>:
               <ol>
                 <li>For each <var>ELEMENT</var> in <var>TREE</var>:
                   <ol>
