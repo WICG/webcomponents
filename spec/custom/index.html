@@ -582,7 +582,7 @@ partial interface Window {
             <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>.</li>
 
             <li>
-                <p>If there is an the entry in <var>registry</var> with <a href="#dfn-element-definition-name">name</a> <var>typeExtension</var>, let <var>definition</var> be that entry, and perform the following subsubsteps:</p>
+                <p>If <var>registry</var> is non-null, and there is an entry in <var>registry</var> with <a href="#dfn-element-definition-name">name</a> <var>typeExtension</var>, let <var>definition</var> be that entry, and perform the following subsubsteps:</p>
 
                 <ol>
                     <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
@@ -682,7 +682,7 @@ partial interface Window {
 <section id="clone-modifications-to-dom">
 <h3>DOM+: Cloning</h3>
 
-<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset. The attribute copying step should also be modified to omit the <code>is</code> attribute, since that is taken care of by <a>create an element</a>.</p>
 
 </section>
 
@@ -1055,7 +1055,7 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
     </li>
 
     <li>
-        <p><a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">Append</a> each attribute in the given token to <var>element</var>.</p>
+        <p><a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">Append</a> each attribute in the given token to <var>element</var>, omitting the <code>is</code> attribute if <var>typeExtension</var> is non-null. (In that case, <a lt="create an element">creating</a> <var>element</var> will have already appended the <code>is</code> attribute.)</p>
 
         <p class="note">This can <a>enqueue a custom element callback action</a> for the <code>attributeChangedCallback</code>, which might run immediately (in the next step).</p>
     </li>
