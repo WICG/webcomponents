@@ -382,11 +382,13 @@ console.log(plasticButton2.getAttribute("is")); // will output "plastic-button"<
     <li>a <dfn id="dfn-element-definition-constructor" for="custom element definition">constructor</dfn>, which is a <a>custom element constructor</a>;</li>
     <li>a <dfn id="dfn-element-definition-prototype" for="custom element definition">prototype</dfn>, which is a JavaScript object;</li>
     <li>a list of <dfn id="dfn-element-definition-observed-attributes">observed attributes</dfn>, which is a <code>sequence&lt;DOMString></code>; </li>
-    <li>a collection of <dfn id="dfn-element-definition-lifecycle-callbacks" dfn-for="custom element definition">lifecycle callbacks</dfn>, which is a <a>collection of lifecycle callbacks</a>; and </li>
+    <li>a collection of <dfn id="dfn-element-definition-lifecycle-callbacks" dfn-for="custom element definition">lifecycle callbacks</dfn>, which is a map (described below); </li>
     <li>a <dfn id="dfn-element-definition-construction-stack" for="custom element definition">construction stack</dfn>, which is a list (initially empty).</li>
 </ul>
 
 <p>Each <a>custom element definition</a>'s <a href="#dfn-element-definition-construction-stack">construction stack</a> is manipulated by the <a>upgrade an element</a> algorithm and the <a href="#dom-htmlelement-constructor"><code>HTMLElement</code> constructor</a>. Each entry in the list will be either an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> or an <dfn id="dfn-already-constructed-marker"><i>already constructed</i></dfn> marker.</p>
+
+<p>Each <a>custom element definition</a>'s <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> is a map, whose three keys are the strings "<code>connectedCallback</code>", "<code>disconnectedCallback</code>", and "<code>attributeChangedCallback</code>". The corresponding values are either a JavaScript function object, or undefined. By default the value of each entry is undefined.</p>
 
 </section>
 
@@ -472,7 +474,7 @@ dictionary ElementRegistrationOptions {
 
     <li>If <var>attributeChangedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>attributeChangedCallback</var>) is false, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
-    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>connectedCallback</var>, <var>disconnectedCallback</var>, and <var>attributeChangedCallback</var> (stored with their corresponding name).</li>
+    <li>Let <var>definition</var> be a new <a>custom element definition</a> with <a href="#dfn-element-definition-name">name</a> <var>name</var>, <a href="#dfn-element-definition-local-name">local name</a> <var>localName</var>, <a href="#dfn-element-definition-constructor">constructor</a> <var>constructor</var>, <a href="#dfn-element-definition-prototype">prototype</a> <var>prototype</var>, <a href="#dfn-element-definition-observed-attributes">observed attributes</a> <var>observedAttributes</var>, and <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> <var>connectedCallback</var>, <var>disconnectedCallback</var>, and <var>attributeChangedCallback</var> (stored by their corresponding name).</li>
 
     <li>Add <var>definition</var> to this <code>CustomElementsRegistry</code>.</li>
 </ol>
@@ -503,9 +505,9 @@ dictionary ElementRegistrationOptions {
 
     <li>Set <var>element</var>'s <a>defined flag</a> and <a>custom flag</a>.</li>
 
-    <li>For each <var>attribute</var> in <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-attribute">attribute list</a>, in order, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>For each <var>attribute</var> in <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-attribute">attribute list</a>, in order, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 
-    <li>If <var>element</var> is currently <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
+    <li>If <var>element</var> is currently <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
 </ol>
 
 <p>To <dfn id="dfn-try-upgrade">try to upgrade an element</dfn>, given as input an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
@@ -533,7 +535,7 @@ dictionary ElementRegistrationOptions {
 
   <li>Otherwise, set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> and <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>. If there is no such entry, abort this algorithm.</li>
 
-  <li><a>Enqueue a custom element upgrade</a> given <var>element</var> and <var>definition</var>.</li>
+  <li><a>Enqueue a custom element upgrade reaction</a> given <var>element</var> and <var>definition</var>.</li>
 </ol>
 
 </section>
@@ -630,7 +632,7 @@ partial interface Window {
 
                     <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
 
-                    <li><a>Enqueue a custom element upgrade</a> given <var>result</var> and <var>definition</var>.</li>
+                    <li><a>Enqueue a custom element upgrade reaction</a> given <var>result</var> and <var>definition</var>.</li>
 
                     <li>Return <var>result</var>.</li>
                 </ol>
@@ -694,7 +696,7 @@ partial interface Window {
                 <ol>
                     <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set <var>document</var>.</li>
 
-                    <li><a>Enqueue a custom element upgrade</a> given <var>result</var> and <var>definition</var>.</li>
+                    <li><a>Enqueue a custom element upgrade reaction</a> given <var>result</var> and <var>definition</var>.</li>
 
                     <li>Return <var>result</var>.</li>
                 </ol>
@@ -730,31 +732,36 @@ partial interface Window {
 <section id="custom-element-lifecycle">
 <h2>Custom element lifecycle</h2>
 
-<p>A <a>custom element</a> can go through these changes during its lifetime:</p>
-<ul>
-    <li><a>Custom element</a> is created before its <a data-lt="custom element definition">definition</a> is registered</li>
-    <li><a data-lt="custom element definition">Definition</a> of a <a>custom element</a> is registered</li>
-    <li><a>Custom element</a> instance is created after its <a data-lt="custom element definition">definition</a> was registered</li>
-    <li><a>Custom element</a> is <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#insert-an-element-into-a-document">inserted into active document</a></li>
-    <li><a>Custom element</a> is <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#remove-an-element-from-a-document">removed from active document</a></li>
-    <li><a>Custom element</a>'s <a href="https://dom.spec.whatwg.org/#concept-attribute">attribute</a> is created, removed, or modified.</li>
-</ul>
-
-<p>Various callbacks can be invoked when a <a>custom element</a> goes through some of these changes. These callbacks are stored internally as a <dfn id="dfn-lifecycle-callbacks">collection of lifecycle callbacks</dfn>. They can be looked up by name, which is one of <code>connectedCallback</code>, <code>disconnectedCallback</code>, or <code>attributeChangedCallback</code>.</p>
-
 <section id="enqueuing-and-invoking-callbacks">
-<h3>Enqueuing and invoking callbacks</h3>
+<h3>Custom element reactions</h3>
 
-<p>To facilitate invoking callbacks, each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-processing-stack">processing stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a>element queue</a> is a <a>custom element</a>.</p>
-
-<p><a data-lt="custom element">Custom elements</a> have an associated <dfn id="dfn-callback-queue">custom element action queue</dfn>, initially empty. Each item in the <a>custom element action queue</a> is of one of two types:</p>
+<p>A <a>custom element</a> possesses the ability to respond to certain occurrences by running author code:</p>
 
 <ul>
-    <li>An <dfn>upgrade action</dfn>, which will <a href="#upgrades">upgrade</a> the custom element and contains a <a>custom element definition</a>; or</li>
-    <li>A <dfn>callback action</dfn>, which will call a lifecycle callback, and contains a <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> as well as a list of arguments.</li>
+  <li>When <a href="#upgrades">upgraded</a>, its constructor is run.</li>
+  <li>When it becomes <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, its <code>connectedCallback</code> is run.</li>
+  <li>When it becomes no longer <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, its <code>disconnectedCallback</code> is run.</li>
+  <li>When any of its <a href="https://dom.spec.whatwg.org/#concept-element-attribute">attributes</a> are <a href="https://dom.spec.whatwg.org/#concept-element-attributes-change">changed</a>, <a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">appended</a>, <a href="https://dom.spec.whatwg.org/#concept-element-attributes-remove">removed</a>, or <a href="https://dom.spec.whatwg.org/#concept-element-attributes-replace">replaced</a>, its <code>attributeChangedCallback</code> is run.</li>
 </ul>
 
-<p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a custom element callback action</dfn>, given a <a>custom element</a> <var>element</var>, a callback name <var>callbackName</var>, and a list of arguments <var>args</var>, run the following steps:</p>
+<p>We call these reactions collectively <dfn id="dfn-custom-element-reaction">custom element reactions</dfn>.</p>
+
+<p>The way in which <a>custom element reactions</a> are invoked is done with special care, to avoid running author code during the middle of delicate operations. Effectively, they are delayed until "just before returning to user script". This means that for most purposes they appear to execute synchronously, but in the case of complicated composite operations (like <a href="https://dom.spec.whatwg.org/#concept-node-clone">cloning</a>, or <a href="https://dom.spec.whatwg.org/#concept-range">range</a> manipulation), they will instead be delayed until after all the relevant user agent processing steps have completed, and then run together as a batch.</p>
+
+<p>Additionally, the precise ordering of these reactions is managed via a somewhat-complicated stack-of-queues system, described below. The intention behind this system is to guarantee that <a>custom element reactions</a> always are invoked in the same order as their triggering actions, at least within the local context of a single <a>custom element</a>. (Because <a lt="custom element reactions">custom element reaction</a> code can perform its own mutations, it is not possible to give a global ordering guarantee across multiple elements.)</p>
+
+<hr>
+
+<p>Each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-custom-element-reactions-stack">custom element reactions stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a>element queue</a> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a>. (The elements are not necessarily <a>custom</a> yet, since this queue is used for <a href="#upgrades">upgrades</a> as well.)</p>
+
+<p>All <a href="https://dom.spec.whatwg.org/#concept-element">elements</a> have an associated <dfn id="dfn-callback-queue">custom element reaction queue</dfn>, initially empty. Each item in the <a>custom element reaction queue</a> is of one of two types:</p>
+
+<ul>
+    <li>An <dfn>upgrade reaction</dfn>, which will <a href="#upgrades">upgrade</a> the custom element and contains a <a>custom element definition</a>; or</li>
+    <li>A <dfn>callback reaction</dfn>, which will call a lifecycle callback, and contains a <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> as well as a list of arguments.</li>
+</ul>
+
+<p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a custom element callback reaction</dfn>, given a <a>custom element</a> <var>element</var>, a callback name <var>callbackName</var>, and a list of arguments <var>args</var>, run the following steps:</p>
 
 <ol>
     <li>
@@ -764,14 +771,12 @@ partial interface Window {
     </li>
 
     <li>
-        Let <var>definition</var> be the the entry in <var>registry</var> with entry name equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>.
+        Let <var>definition</var> be the the entry in <var>registry</var> with <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>.
 
         <p class="note">This algorithm can only be called when such a definition exists.</p>
     </li>
 
-    <li>Let <var>callbacks</var> be <var>definition</var>'s <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a>.</li>
-
-    <li>Let <var>callback</var> be callback in <var>callbacks</var> named <var>callbackName</var>.</li>
+    <li>Let <var>callback</var> be the value of the entry in <var>definition</var>'s <a href="#dfn-element-definition-lifecycle-callbacks">lifecycle callbacks</a> with key <var>callbackName</var>.</li>
 
     <li>If <var>callback</var> is undefined, abort these steps.</li>
 
@@ -784,27 +789,27 @@ partial interface Window {
         </ol>
     </li>
 
-    <li>Add a <a>callback action</a> to <var>element</var>'s <a>custom element action queue</a>, with <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> <var>callback</var> and arguments <var>args</var>.</li>
+    <li>Add a new <a>callback reaction</a> to <var>element</var>'s <a>custom element reaction queue</a>, with <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> <var>callback</var> and arguments <var>args</var>.</li>
 
     <li>If <var>element</var>'s <a>element is being created</a> flag is false, add <var>element</var> to the <a>current element queue</a>.</li>
 </ol>
 
-<p>To <dfn id="dfn-enqueue-upgrade">enqueue a custom element upgrade</dfn>, given an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var> and <a>custom element definition</a> <var>definition</var>, run the following steps:</p>
+<p>To <dfn id="dfn-enqueue-upgrade">enqueue a custom element upgrade reaction</dfn>, given an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var> and <a>custom element definition</a> <var>definition</var>, run the following steps:</p>
 
 <ol>
-    <li>Add an <a>upgrade action</a> to <var>element</var>'s <a>custom element action queue</a>, with <a>custom element definition</a> <var>definition</var>.</li>
+    <li>Add a new <a>upgrade reaction</a> to <var>element</var>'s <a>custom element reaction queue</a>, with <a>custom element definition</a> <var>definition</var>.</li>
 
     <li>If <var>element</var>'s <a>element is being created</a> flag is false, add <var>element</var> to the <a>current element queue</a>.</li>
 </ol>
 
-<p>To <dfn id="dfn-invoke-custom-element-actions">invoke custom element actions</dfn> in an <a>element queue</a> <var>queue</var>, run the following steps:</p>
+<p>To <dfn id="dfn-invoke-custom-element-actions">invoke custom element reactions</dfn> in an <a>element queue</a> <var>queue</var>, run the following steps:</p>
 
 <ol>
     <li>
         <p>For each <a>custom element</a> <var>element</var> in <var>queue</var>:</p>
 
         <ol>
-            <li>Let <var>actions</var> be <var>element</var>'s <a>custom element action queue</a>.</li>
+            <li>Let <var>actions</var> be <var>element</var>'s <a>custom element reaction queue</a>.</li>
             <li>
                 <p>Repeat until <var>actions</var> is empty:</p>
 
@@ -813,10 +818,10 @@ partial interface Window {
                         <p>Remove the first element of <var>actions</var>, letting <var>action</var> be the result. Switch on <var>action</var>'s type:</p>
 
                         <dl class="switch">
-                            <dt><a>upgrade action</a></dt>
+                            <dt><a>upgrade reaction</a></dt>
                             <dd><a href="#dfn-upgrade-a-custom-element">Upgrade</a> <var>element</var> using <var>action</var>'s <a>custom element definition</a>.</dd>
 
-                            <dt><a>callback action</a></dt>
+                            <dt><a>callback reaction</a></dt>
                             <dd><a href="https://heycam.github.io/webidl/#es-invoking-callback-functions">Invoke</a> <var>action</var>'s <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> with <var>action</var>'s arguments, and with <var>element</var> as the <a href="https://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a>.</dd>
                         </dl>
 
@@ -830,8 +835,8 @@ partial interface Window {
 
 <p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions MUST occur:</p>
 <ul>
-    <li>When transitioning from script to the user agent code, push a new <a>element queue</a> to the <a>processing stack</a></li>
-    <li>When transitioning back from the user agent code to script, pop the <a>element queue</a> from the <a>processing stack</a> and <a>invoke custom element actions</a> in that queue.</li>
+    <li>When transitioning from script to the user agent code, push a new <a>element queue</a> to the <a>custom element reactions stack</a></li>
+    <li>When transitioning back from the user agent code to script, pop the <a>element queue</a> from the <a>custom element reactions stack</a> and <a>invoke custom element reactions</a> in that queue.</li>
 </ul>
 
 <div class="note">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a custom element action, the user agent could choose not to wrap it as a performance optimization.</div>
@@ -865,12 +870,12 @@ partial interface Window {
     <li>Let <var>PROCESSING</var> be the <a data-lt="process base element queue">processing base element queue</a> flag</li>
     <li>If <var>PROCESSING</var> is <strong>true</strong>, <strong>stop</strong>.</li>
     <li>Set <var>PROCESSING</var> to <strong>true</strong>.</li>
-    <li><a>Invoke custom element actions</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a></li>
+    <li><a>Invoke custom element reactions</a> in <var>ENVIRONMENT</var>'s <a>base element queue</a></li>
     <li>Set <var>PROCESSING</var> to <strong>false</strong>.</li>
 </ol>
 </div>
 
-<p>In the <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a>element queue</a> at the top of the <a>processing stack</a> or the <a>base element queue</a> if the <a>processing stack</a> is empty.</p>
+<p>In the <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a>element queue</a> at the top of the <a>custom element reactions stack</a> or the <a>base element queue</a> if the <a>custom element reactions stack</a> is empty.</p>
 
 </section>
 <section id="types-of-callbacks">
@@ -891,7 +896,7 @@ partial interface Window {
               <p>If <var>inclusiveDescendant</var> was previously not <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is, then:</p>
 
               <ol>
-                <li>If <var>inclusiveDescendant</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
+                <li>If <var>inclusiveDescendant</var> is <a>custom</a>, <a>enqueue a custom element callback reaction</a> with <var>inclusiveDescendant</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
 
                 <li>
                   <p>Otherwise, <a lt="try to upgrade an element">try to upgrade</a> <var>inclusiveDescendant</var>.</p>
@@ -913,7 +918,7 @@ partial interface Window {
         <ol>
             <li>Run the <a href="https://dom.spec.whatwg.org/#concept-node-remove-ext">removing steps</a> with <var>inclusiveDescendant</var> and <var>parent</var>.</li>
 
-            <li>If <var>inclusiveDescendant</var> is <a>custom</a>, and was previously <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is not, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty argument list.</li>
+            <li>If <var>inclusiveDescendant</var> is <a>custom</a>, and was previously <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is not, <a>enqueue a custom element callback reaction</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty argument list.</li>
         </ol>
     </li>
 </ol>
@@ -921,25 +926,25 @@ partial interface Window {
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-change">change an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>value</var>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>value</var>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">append an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-remove">remove an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, null, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, null, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 <p>Modify the <a href="https://dom.spec.whatwg.org/#concept-element-attributes-replace">replace an attribute</a> algorithm as follows. Add an additional step after step 1:</p>
 
 <ol start="2">
-    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>newAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+    <li>If <var>element</var> is <a>custom</a>, <a>enqueue a custom element callback reaction</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, <var>newAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>oldAttr</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
 </ol>
 
 </section>
@@ -1098,14 +1103,14 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
     <li>
         <p><a href="https://dom.spec.whatwg.org/#concept-element-attributes-append">Append</a> each attribute in the given token to <var>element</var>, omitting the <code>is</code> attribute if <var>typeExtension</var> is non-null. (In that case, <a lt="create an element">creating</a> <var>element</var> will have already appended the <code>is</code> attribute.)</p>
 
-        <p class="note">This can <a>enqueue a custom element callback action</a> for the <code>attributeChangedCallback</code>, which might run immediately (in the next step).</p>
+        <p class="note">This can <a>enqueue a custom element callback reaction</a> for the <code>attributeChangedCallback</code>, which might run immediately (in the next step).</p>
     </li>
 
     <li>
         <p>If <var>will execute script</var> is true:</p>
 
         <ol>
-            <li><a>Invoke custom element actions</a> (for which queue!?! just for <var>element</var> maybe!?)</li>
+            <li><a>Invoke custom element reactions</a> (for which queue!?! just for <var>element</var> maybe!?)</li>
 
             <li>Decrement the <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> by one.</li>
 
