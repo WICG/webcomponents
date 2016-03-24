@@ -449,6 +449,10 @@ dictionary ElementRegistrationOptions {
     </li>
 
     <li>Set <var>element</var>'s <a>defined flag</a> and <a>custom flag</a>.</li>
+
+    <li>For each <var>attribute</var> in <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-attribute">attribute list</a>, in order, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>attributeChangedCallback</code>", and an argument list containing <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, null, <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, and <var>attribute</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>.</li>
+
+    <li>If <var>element</var> is currently <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, <a>enqueue a custom element callback action</a> with <var>element</var>, callback name "<code>connectedCallback</code>", and an empty argument list.</li>
 </ol>
 
 <p>The steps to <dfn id="dfn-try-upgrade">try to upgrade an element</dfn>, given as input an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, are as follows. They will return true if the element is upgraded, and false otherwise.</p>
@@ -849,7 +853,7 @@ partial interface Window {
             <li>Run the <a href="https://dom.spec.whatwg.org/#concept-node-insert-ext">insertion steps</a> with <var>inclusiveDescendant</var> and <var>parent</var>.</li>
 
             <li>
-              <p>If <var>inclusiveDescendant</var> was previously not <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is, then:</p>
+              <p>If <var>inclusiveDescendant</var> was previously not <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is, then:</p>
 
               <ol>
                 <li>Let <var>shouldEnqueueConnected</var> be true if <var>inclusiveDescendant</var> is <a>custom</a>, and false otherwise.</li>
@@ -872,7 +876,7 @@ partial interface Window {
         <ol>
             <li>Run the <a href="https://dom.spec.whatwg.org/#concept-node-remove-ext">removing steps</a> with <var>inclusiveDescendant</var> and <var>parent</var>.</li>
 
-            <li>If <var>inclusiveDescendant</var> is <a>custom</a>, and was previously <a href="http://w3c.github.io/webcomponents/spec/shadow/#dfn-in-a-composed-document">in a composed document</a>, but now is not, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty argument list.</li>
+            <li>If <var>inclusiveDescendant</var> is <a>custom</a>, and was previously <a href="https://dom.spec.whatwg.org/#in-a-shadow-including-document">in a shadow-including document</a>, but now is not, <a>enqueue a custom element callback action</a> with <var>inclusiveDescendant</var>, callback name "<code>disconnectedCallback</code>", and an empty argument list.</li>
         </ol>
     </li>
 </ol>
