@@ -791,7 +791,7 @@ partial interface Window {
 
     <li>Add a new <a>callback reaction</a> to <var>element</var>'s <a>custom element reaction queue</a>, with <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> <var>callback</var> and arguments <var>args</var>.</li>
 
-    <li>If <var>element</var>'s <a>element is being created</a> flag is false, add <var>element</var> to the <a>current element queue</a>.</li>
+    <li>Add <var>element</var> to the <a>current element queue</a>.</li>
 </ol>
 
 <p>To <dfn id="dfn-enqueue-upgrade">enqueue a custom element upgrade reaction</dfn>, given an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var> and <a>custom element definition</a> <var>definition</var>, run the following steps:</p>
@@ -799,7 +799,7 @@ partial interface Window {
 <ol>
     <li>Add a new <a>upgrade reaction</a> to <var>element</var>'s <a>custom element reaction queue</a>, with <a>custom element definition</a> <var>definition</var>.</li>
 
-    <li>If <var>element</var>'s <a>element is being created</a> flag is false, add <var>element</var> to the <a>current element queue</a>.</li>
+    <li>Add <var>element</var> to the <a>current element queue</a>.</li>
 </ol>
 
 <p>To <dfn id="dfn-invoke-custom-element-actions">invoke custom element reactions</dfn> in an <a>element queue</a> <var>queue</var>, run the following steps:</p>
@@ -844,12 +844,6 @@ partial interface Window {
 </ul>
 
 <div class="note">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a custom element action, the user agent could choose not to wrap it as a performance optimization.</div>
-
-<hr>
-
-<p class="warning">This concept, and the few references to it that remain, are currently a bit broken. It needs to be either fixed or removed. See <a href="https://github.com/w3c/webcomponents/issues/458">#458</a>.</p>
-
-<p><a data-lt="custom element">Custom elements</a> have an associated <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag, initially false.</p>
 
 </section>
 <section id="types-of-callbacks">
