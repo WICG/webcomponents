@@ -764,11 +764,11 @@ partial interface Window {
 <p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a custom element callback reaction</dfn>, given a <a>custom element</a> <var>element</var>, a callback name <var>callbackName</var>, and a list of arguments <var>args</var>, run the following steps:</p>
 
 <ol>
-    <li>
-        <p>Let <var>registry</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</p>
+    <li>Let <var>document</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>.</li>
 
-        <p class="note">This algorithm can only be called in scenarios where <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>.</p>
-    </li>
+    <li>If <var>document</var> does not have a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, abort these steps.</li>
+
+    <li>Let <var>registry</var> be <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</li>
 
     <li>
         Let <var>definition</var> be the the entry in <var>registry</var> with <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>.
