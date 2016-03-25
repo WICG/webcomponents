@@ -1057,6 +1057,8 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
             <li>Set the <a href="https://html.spec.whatwg.org/#parser-pause-flag">parser pause flag</a> to true.</li>
 
             <li>If the <a href="https://tc39.github.io/ecma262/#execution-context-stack">JavaScript execution context stack</a> is empty, <a href="https://html.spec.whatwg.org/#perform-a-microtask-checkpoint">perform a microtask checkpoint</a>.</li>
+
+            <li>Push a new <a>element queue</a> onto the <a>custom element reactions stack</a>.</li>
         </ol>
     </li>
 
@@ -1078,7 +1080,9 @@ The <dfn id="dom-document-createelementns"><code>createElementNS(namespace, qual
         <p>If <var>will execute script</var> is true:</p>
 
         <ol>
-            <li><a>Invoke custom element reactions</a> (for which queue!?! just for <var>element</var> maybe!?)</li>
+            <li>Let <var>queue</var> be the result of popping the <a>current element queue</a> from the <a>custom element reactions stack</a>. (This will be the same <a>element queue</a> as was pushed above.)</li>
+
+            <li><a>Invoke custom element reactions</a> in <var>queue</var>.</li>
 
             <li>Decrement the <a href="https://html.spec.whatwg.org/#script-nesting-level">script nesting level</a> by one.</li>
 
