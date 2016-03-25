@@ -752,7 +752,7 @@ partial interface Window {
 
 <hr>
 
-<p>Each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-custom-element-reactions-stack">custom element reactions stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well. Each item in the <a>element queue</a> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a>. (The elements are not necessarily <a>custom</a> yet, since this queue is used for <a href="#upgrades">upgrades</a> as well.)</p>
+<p>Each <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn id="dfn-custom-element-reactions-stack">custom element reactions stack</dfn>, which is initially empty. Each item in the stack is an <dfn id="dfn-element-queue">element queue</dfn>, which is initially empty as well; the <a>element queue</a> at the top of the stack is called the <dfn id="dfn-current-element-queue">current element queue</dfn>. Each item in an <a>element queue</a> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a>. (The elements are not necessarily <a>custom</a> yet, since this queue is used for <a href="#upgrades">upgrades</a> as well.)</p>
 
 <p>All <a href="https://dom.spec.whatwg.org/#concept-element">elements</a> have an associated <dfn id="dfn-callback-queue">custom element reaction queue</dfn>, initially empty. Each item in the <a>custom element reaction queue</a> is of one of two types:</p>
 
@@ -833,6 +833,10 @@ partial interface Window {
     </li>
 </ol>
 
+<hr>
+
+<p class="warning">The following needs to be formalized more; see <a href="https://github.com/w3c/webcomponents/issues/186">#186</a>.</p>
+
 <p>Any time a script calls a method, reads or sets a property that is implemented by the user agent, the following actions MUST occur:</p>
 <ul>
     <li>When transitioning from script to the user agent code, push a new <a>element queue</a> to the <a>custom element reactions stack</a></li>
@@ -841,10 +845,11 @@ partial interface Window {
 
 <div class="note">As described, these actions wrap every user agent-implemented method or property accessor. The intended effect is that any lifecycle callbacks, enqueued as a result of running these methods or accessors are invoked prior to returning control back to script. If a method or accessor is known to never enqueue a custom element action, the user agent could choose not to wrap it as a performance optimization.</div>
 
-<!-- TODO: this is leftover and is not currently referenced outside this section. Make sure that we don't need it before deleting it, by checking old spec revisions. -->
-<p><a data-lt="custom element">Custom elements</a> have an associated <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag, initially false.</p>
+<hr>
 
-<p>In the <a href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> to which the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context">scripts' browsing context</a> belongs, the <dfn id="dfn-current-element-queue">current element queue</dfn> is the <a>element queue</a> at the top of the <a>custom element reactions stack</a>.</p>
+<p class="warning">This concept, and the few references to it that remain, are currently a bit broken. It needs to be either fixed or removed. See <a href="https://github.com/w3c/webcomponents/issues/458">#458</a>.</p>
+
+<p><a data-lt="custom element">Custom elements</a> have an associated <dfn id="dfn-element-is-being-created-flag">element is being created</dfn> flag, initially false.</p>
 
 </section>
 <section id="types-of-callbacks">
