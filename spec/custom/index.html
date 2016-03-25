@@ -761,6 +761,12 @@ partial interface Window {
     <li>A <dfn>callback reaction</dfn>, which will call a lifecycle callback, and contains a <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> as well as a list of arguments.</li>
 </ul>
 
+<p>This is all summarized in the following schematic diagram:</p>
+
+<p style="text-align: center;">
+    <img src="custom-element-reactions.svg" style="width: 80%; max-width: 560px;" alt="A custom elements reaction stack consists of a stack of element queues. Zooming in on a particular queue, we see that it contains a number of elements (in our example, &lt;x-a&gt;, then &lt;x-b&gt;, then &lt;x-c&gt;). Any particular element in the queue then has a custom element reaction queue. Zooming in on the custom element reaction queue, we see that it contains a variety of queued-up reactions (in our example, upgrade, then attribute changed, then another attribute changed, then connected).">
+</p>
+
 <p>To <dfn id="dfn-enqueue-lifecycle-callback">enqueue a custom element callback reaction</dfn>, given a <a>custom element</a> <var>element</var>, a callback name <var>callbackName</var>, and a list of arguments <var>args</var>, run the following steps:</p>
 
 <ol>
