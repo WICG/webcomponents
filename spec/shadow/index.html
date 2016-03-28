@@ -1117,21 +1117,150 @@
       </section>
 
       <section>
-        <h3>Focus Navigation</h3>
+        <h3>Sequential Focus Navigation</h3>
 
-        <p>If a <a>node</a> doesn’t <a data-lt="participates">participate</a> in the <a>document flat tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>sequential focus navigation</a>.</p>
+        <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a shadow-including document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
 
-        <p>The <a>sequential focus navigation order</a> for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for the <a>parent tree</a> <var>B</var> as follows:</p>
-        <ol>
-          <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
-          <li>
-            The <a>sequential focus navigation order</a> for A <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for <var>B</var>:
-            <ol>
-              <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
-              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the <a>tabindex</a> value 0 for determining its position.</li>
-            </ol>
-          </li>
-        </ol>
+        <p><dfn>focus navigation scope owner</dfn> is a node that owns a <a>focus navigation scope</a>. A document, a <a>shadow root</a>, or a <a>slot element</a> can be a <a>focus navigation scope owner</a>.</p>
+
+        <p><dfn>document sequential focus navigation order</dfn> is an order of all of the <a data-lt="focusable area">focusable areas</a> <a>in a shadow-including document</a>, reachable by <a>sequential focus navigation</a>.</p>
+
+        <p>When a shadow-including document is given, the <a>document sequential focus navigation order</a> is determined by the following steps:</p>
+
+        <p>Step 1.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>DOCUMENT</var>, a composed document</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes</dd>
+          </dl>
+          <ol>
+            <li>Let <var>OWNERS</var> be an empty set.</li>
+            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>:
+              <ol>
+                <li>For each node <var>NODE</var> in <var>TREE</var>, in tree order:
+                  <ol>
+                    <li>If <var>NODE</var> is a document, a <a>shadow root</a>, or a <a>slot element</a>, append it to <var>OWNERS</var>.</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 2.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>DOCUMENT</var>, a composed document</dd>
+            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes from Step 1</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>SCOPE</var>s, a set of <a data-lt="focus navigation scope">focus navigation scopes</a> each of which is an ordered list of elements</dd>
+            <dd><var>SCOPE-MAP</var>, a map from each <a>focus navigation scope owner</a> to its corresponding <a>focus navigation scope</a>
+          </dl>
+          <ol>
+            <li>For each owner <var>OWNER</var> in <var>OWNERS</var>:
+              <ol>
+                <li>Let <var>SCOPE</var> be empty list.</li>
+                <li>Append <var>SCOPE</var> to <var>SCOPE-MAP[OWNER]</var>.</li>
+              </ol>
+            </li>
+            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>, in <a>shadow-including tree order</a>:
+              <ol>
+                <li>For each <var>ELEMENT</var> in <var>TREE</var>:
+                  <ol>
+                    <li>Let <var>CURRENT</var> be <var>ELEMENT</var>.</li>
+                    <li>Repeat the following steps until the algorithm stops.</li>
+                    <li>If <var>CURRENT</var> is a child of a <a>shadow host</a>:
+                      <ol>
+                        <li>If <var>CURRENT</var> is assigned to any <a>slot</a> <var>SLOT</var>, append <var>ELEMENT</var> to <var>SCOPE-MAP[SLOT]</var>.</li>
+                        <li>Otherwise do not append <var>ELEMENT</var> to any scope.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                    </li>
+                    <li>If <var>CURRENT</var> is a <a>slot element</a> and not equal to <var>ELEMENT</var>:
+                      <ol>
+                        <li>If <var>CURRENT</var> has any <a>assigned nodes</a>, do not append <var>ELEMENT</var> to any scope.</li>
+                        <li>Otherwise append <var>ELEMENT</var> to <var>SCOPE-MAP[CURRENT]</var>.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                    </li>
+                    <li>If <var>CURRENT</var> is a child of a root node (a <a>shadow root</a> or document) <var>ROOT</var>:
+                      <ol>
+                        <li>Append <var>ELEMENT</var> to <var>SCOPE-MAP[ROOT]</var>.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                      <li>Otherwise:
+                        <ol>
+                          <li>Set <var>CURRENT</var> to the parent element of <var>CURRENT</var>.</li>
+                        </ol>
+                      </li>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 3.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>SCOPE</var>, a <a>focus navigation scope</a></dd>
+            <dt>OUTPUT</dt>
+            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements which should be visited.</dd>
+          </dl>
+          <ol>
+            <li>For each scope SCOPE:
+              <ol>
+                <li>Let <var>NAVIGATION-ORDER</var> be an empty list.</li>
+                <li>For each element <var>ELEMENT</var> in a <a>focus navigation scope</a> <var>SCOPE</var>,
+                  <ol>
+                    <li>if <var>ELEMENT</var> is focusable, a <a>shadow host</a>, or a <a>slot element</a>, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                <li>Reorder <var>NAVIGATION-ORDER</var> according to the <a>tabindex</a> value attached to each node. In this step, an element whose <a>tabindex</a> value is negative <strong>must</strong> not be appended to <var>NAVIGATION-ORDER</var>.</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 4.</p>
+        <p>Apply the following <dfn>focus navigation order merging algorithm</dfn> with document’s focus navigation order as input. The result is the <a>document sequential focus navigation order</a>.</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>MERGED-NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
+          </dl>
+          <ol>
+            <li>Let <var>MERGED-NAVIGATION-ORDER</var> be an empty list.</li>
+            <li>For each element <var>ELEMENT</var> in <var>NAVIGATION-ORDER</var>:
+              <ol>
+                <li>If <var>ELEMENT</var> is a shadow host:
+                  <ol>
+                    <li>Unless its shadow root’s delegatesFocus flag is set, append<var> ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by its <a>shadow root</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>If <var>ELEMENT</var> is a slot element:
+                  <ol>
+                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by the <a>slot element</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>Otherwise:
+                  <ol>
+                    <li>Append <var>ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>Return <var>MERGED-NAVIGATION-ORDER</var>.</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
 
         <p>For <a>directional focus navigation</a> [[!CSS3-UI]], it is up to the user agent to integrate the <a data-lt="shadow tree">shadow trees</a> into the document's <a>directional focus navigation</a>.
       </section>
