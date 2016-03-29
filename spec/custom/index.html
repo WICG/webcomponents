@@ -1058,7 +1058,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 <section id="clone-modifications-to-dom">
 <h3>DOM+: Cloning</h3>
 
-<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present). The <var>synchronous custom elements flag</var> should be unset. The attribute copying step should also be modified to omit the <code>is</code> attribute, since that is taken care of by <a>create an element</a>.</p>
+<p class="monkeypatch">The <a href="https://dom.spec.whatwg.org/#concept-node-clone">clone a node</a> algorithm will need to be modified as follows. A new case, separate from the main switch, will be needed to generate <var>copy</var> for <code>Element</code>s. It should use <a>create an element</a>, given <var>document</var>, <var>node</var>'s local name, <var>node</var>'s namespace prefix, <var>node</var>'s namespace, and the value of <var>node</var>'s <code>is</code> attribute (if present and if the element's namespace is the HTML namespace). The <var>synchronous custom elements flag</var> should be unset. The attribute copying step should also be modified to omit the <code>is</code> attribute (if it was passed to create an element), since that is taken care of by <a>create an element</a>.</p>
 
 </section>
 
