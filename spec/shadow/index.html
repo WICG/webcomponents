@@ -112,17 +112,26 @@
           An <dfn>shadow-including inclusive ancestor</dfn> is a node or one of its <a data-lt="shadow-including ancestor">shadow-including ancestors</a>.
         </p>
 
+        <p>
+          A node <var>A</var> is an <dfn>unclosed node</dfn> of a node <var>B</var>,
+          if <var>A</var>'s <a>root</a> is a <a>shadow-including inclusive ancestor</a> of <var>B</var>, or
+          <var>A</var>'s <a>root</a> is a <a>shadow root</a> whose associated <a>mode</a> is "open" and the root's <a>host</a> is an <a>unclosed node</a> of <var>B</var>.
+        </p>
+
+        <p>
+          <a><code>Window</code></a> object <a data-lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a data-lt="node">nodes</a> in the <a>document tree</a>.
+        </p>
+
       </section>
 
-      <section>
+      <section class="informative">
         <h3>Composed trees</h3>
 
-        <p>A <dfn>composed tree of node trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
-
         <p class="note">
-          The purpose of introducing a composed tree of node trees here is to define algorithms easily in the following sections.
-          This is a kind of a notation techchique to make the this specification simpler.
+          The specification no longer uses the concept of a <a>composed tree of node trees</a> in normative sections.
         </p>
+
+        <p>A <dfn>composed tree of node trees</dfn> is a <a>tree</a> of <a data-lt="node tree">node trees</a>.</p>
 
         <p>Just like a <a>node tree</a> is defined as <a data-lt="tree">a set of relationships</a> between <a data-lt="node">nodes</a>,
           a <a>composed tree of node trees</a> is similarly defined as a set of relationships between node trees:</p>
@@ -145,25 +154,8 @@
         </ul>
 
         <p>
-          A <a>node tree</a> <var>A</var> is called an <dfn>unclosed tree</dfn> of a <a>node tree</a> <var>B</var> if and only if one, at least, of the following conditions is satisfied:
-        </p>
-
-        <ul>
-          <li><var>A</var> is an <a>inclusive ancestor tree</a> of <var>B</var>.</li>
-          <li><var>A</var> is a <a>child tree</a> of <var>B</var> and <var>A</var>'s <a>root</a>'s <a>mode</a> is "open".</li>
-          <li><var>A</var> is an <a>unclosed tree</a> of a <a>node tree</a> <var>C</var> that is an <a>unclosed tree</a> of <var>B</var>.</li>
-        </ul>
-
-        <p>
-          A node <var>A</var> is called an <dfn>unclosed node</dfn> of a node <var>B</var> if and only if the <a>node tree</a> that <var>A</var> <a>participates</a> in
-          is an <a>unclosed tree</a> of the <a>node tree</a> that <var>B</var> <a>participates</a> in.
-        </p>
-
-        <p>
           A <dfn>composed document</dfn> is a <a>composed tree of node trees</a> whose <a>root tree</a> is a <a>document tree</a>.
         </p>
-
-        <p><a><code>Window</code></a> object <a data-lt="named access on the window object">named properties</a> [[!HTML]] <strong>must</strong> access the <a data-lt="node">nodes</a> in the <a>document tree</a>.</p>
 
         <section class="informative">
           <h3>Example composed tree of node trees</h3>
@@ -235,8 +227,10 @@
       <section>
         <h3>Flat trees</h3>
 
-        <p>A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> from multiple <a data-lt="node tree">node trees</a> in a <a>composed tree of node trees</a>.
-          The exact algorithm of constructing a flat tree is specified later.</p>
+        <p>
+          A <dfn>flat tree</dfn> is a <a>node tree</a> which is constructed out of <a data-lt="node">nodes</a> that share the same <a>shadow-including root</a>.
+          The exact algorithm of constructing a flat tree is specified later.
+        </p>
 
         <figure>
           <object data="../../assets/images/flat-tree.svg" width="654" height="606"></object>
@@ -457,6 +451,15 @@
       <section>
         <h3>Flattening Algorithm</h3>
 
+        <p>
+          The <a>flat tree</a> constructed from the nodes who share the same <a>shadow-including root</a> <var>ROOT</var>
+          <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:
+        </p>
+        <ul>
+          <li>The <a>flat tree</a>'s <a>root</a> is <var>ROOT</var>.</li>
+          <li>For a given <var>NODE</var> object which already <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <var>NODE</var> as input.
+          </li>
+        </ul>
 
         <p>The <dfn>flat tree children calculation algorithm</dfn> <strong>must</strong> be used to determine the child nodes of a node in the <a>flat tree</a> and <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:</p>
 
@@ -504,13 +507,6 @@
             </li>
           </ol>
         </div>
-
-        <p>For a given <a>composed tree of node trees</a> <var>COMPOSED-TREE</var>, the <a>flat tree</a> constructed from <var>COMPOSED-TREE</var> <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to the following tree:</p>
-        <ul>
-          <li>The <a>root</a> <a>node</a> of the <a>flat tree</a> is the <a>root</a> <a>node</a> of the <a>root tree</a> of <var>COMPOSED-TREE</var>.</li>
-          <li>For a given <a>node</a> which <a>participates</a> in the <a>flat tree</a>, the child <a data-lt="node">nodes</a> of the <a>node</a> is the result of the <a>flat tree children calculation algorithm</a> with the <a>node</a> as input.
-          </li>
-        </ul>
       </section>
 
       <section class="informative">
@@ -903,29 +899,17 @@
               <dd><var>RELATIVE-TARGET</var>, a <a>relative target</a>, the result of adjusting <var>TARGET</var> for <var>BASE</var></dd>
             </dl>
             <ol>
-              <li>Let <var>BASE-TREE</var> be the <a>node tree</a> which <var>BASE</var> <a>participates</a> in</li>
-              <li>Let <var>TARGET-TREE</var> be the <a>node tree</a> which <var>TARGET</var> <a>participates</a> in</li>
-              <li>If <var>BASE-TREE</var> and <var>TARGET-TREE</var> participate in the same <a>composed tree of node trees</a>:
+              <li>
+                For each <var>ANCESTOR</var> in <var>TARGET</var>'s <a data-lt="shadow-including inclusive ancestor">shadow-including inclusive ancestors</a>,
+                in from-descendants-to-ancestors order:
                 <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the lowest common <a>inclusive ancestor tree</a> of <var>BASE-TREE</var> and <var>TARGET-TREE</var></li>
-                </ol>
-              </li>
-              <li>Otherwise:
-                <ol>
-                  <li>Let <var>COMMON-ANCESTOR-TREE</var> be the <a>root tree</a> of <var>TARGET-TREE</var></li>
+                  <li>
+                    If <var>ANCESTOR</var>'s <a>root</a> is <var>BASE</var>'s <a>shadow-including inclusive ancestor</a>, return <var>ANCESTOR</var>.
+                  </li>
                 </ol>
               </li>
               <li>
-                For each <a>node</a>, <var>ANCESTOR</var>, in <a>shadow-including inclusive ancestor</a> nodes of <var>TARGET</var>, from descendants to ancestors:
-                <ol>
-                  <li>
-                    If <var>ANCESTOR</var> participates in <var>COMMON-ANCESTOR-TREE</var>:
-                    <ol>
-                      <li>Let <var>RELATIVE-TARGET</var> be <var>ANCESTOR</var></li>
-                      <li>Stop this algorithm</li>
-                    </ol>
-                  </li>
-                </ol>
+                Return null
               </li>
             </ol>
           </div>
@@ -1147,21 +1131,150 @@
       </section>
 
       <section>
-        <h3>Focus Navigation</h3>
+        <h3>Sequential Focus Navigation</h3>
 
-        <p>If a <a>node</a> doesn’t <a data-lt="participates">participate</a> in the <a>document flat tree</a>, the <a>node</a> <strong>must</strong> be skipped from the <a>sequential focus navigation</a>.</p>
+        <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a shadow-including document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
 
-        <p>The <a>sequential focus navigation order</a> for a given <a>shadow tree</a> <var>A</var> <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for the <a>parent tree</a> <var>B</var> as follows:</p>
-        <ol>
-          <li>Let <var>HOST</var> be the <a>shadow host</a> which <a>hosts</a> A</li>
-          <li>
-            The <a>sequential focus navigation order</a> for A <strong>must</strong> be inserted into the <a>sequential focus navigation order</a> for <var>B</var>:
-            <ol>
-              <li>immediately after <var>HOST</var>, if <var>HOST</var> is <a>focusable</a>; or</li>
-              <li>in place of the <var>HOST</var> as if <var>HOST</var> were assigned the <a>tabindex</a> value 0 for determining its position.</li>
-            </ol>
-          </li>
-        </ol>
+        <p><dfn>focus navigation scope owner</dfn> is a node that owns a <a>focus navigation scope</a>. A document, a <a>shadow root</a>, or a <a>slot element</a> can be a <a>focus navigation scope owner</a>.</p>
+
+        <p><dfn>document sequential focus navigation order</dfn> is an order of all of the <a data-lt="focusable area">focusable areas</a> <a>in a shadow-including document</a>, reachable by <a>sequential focus navigation</a>.</p>
+
+        <p>When a shadow-including document is given, the <a>document sequential focus navigation order</a> is determined by the following steps:</p>
+
+        <p>Step 1.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>DOCUMENT</var>, a composed document</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes</dd>
+          </dl>
+          <ol>
+            <li>Let <var>OWNERS</var> be an empty set.</li>
+            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>:
+              <ol>
+                <li>For each node <var>NODE</var> in <var>TREE</var>, in tree order:
+                  <ol>
+                    <li>If <var>NODE</var> is a document, a <a>shadow root</a>, or a <a>slot element</a>, append it to <var>OWNERS</var>.</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 2.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>DOCUMENT</var>, a composed document</dd>
+            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes from Step 1</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>SCOPE</var>s, a set of <a data-lt="focus navigation scope">focus navigation scopes</a> each of which is an ordered list of elements</dd>
+            <dd><var>SCOPE-MAP</var>, a map from each <a>focus navigation scope owner</a> to its corresponding <a>focus navigation scope</a>
+          </dl>
+          <ol>
+            <li>For each owner <var>OWNER</var> in <var>OWNERS</var>:
+              <ol>
+                <li>Let <var>SCOPE</var> be empty list.</li>
+                <li>Append <var>SCOPE</var> to <var>SCOPE-MAP[OWNER]</var>.</li>
+              </ol>
+            </li>
+            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>, in <a>shadow-including tree order</a>:
+              <ol>
+                <li>For each <var>ELEMENT</var> in <var>TREE</var>:
+                  <ol>
+                    <li>Let <var>CURRENT</var> be <var>ELEMENT</var>.</li>
+                    <li>Repeat the following steps until the algorithm stops.</li>
+                    <li>If <var>CURRENT</var> is a child of a <a>shadow host</a>:
+                      <ol>
+                        <li>If <var>CURRENT</var> is assigned to any <a>slot</a> <var>SLOT</var>, append <var>ELEMENT</var> to <var>SCOPE-MAP[SLOT]</var>.</li>
+                        <li>Otherwise do not append <var>ELEMENT</var> to any scope.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                    </li>
+                    <li>If <var>CURRENT</var> is a <a>slot element</a> and not equal to <var>ELEMENT</var>:
+                      <ol>
+                        <li>If <var>CURRENT</var> has any <a>assigned nodes</a>, do not append <var>ELEMENT</var> to any scope.</li>
+                        <li>Otherwise append <var>ELEMENT</var> to <var>SCOPE-MAP[CURRENT]</var>.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                    </li>
+                    <li>If <var>CURRENT</var> is a child of a root node (a <a>shadow root</a> or document) <var>ROOT</var>:
+                      <ol>
+                        <li>Append <var>ELEMENT</var> to <var>SCOPE-MAP[ROOT]</var>.</li>
+                        <li>Stop this algorithm.</li>
+                      </ol>
+                      <li>Otherwise:
+                        <ol>
+                          <li>Set <var>CURRENT</var> to the parent element of <var>CURRENT</var>.</li>
+                        </ol>
+                      </li>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 3.</p>
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>SCOPE</var>, a <a>focus navigation scope</a></dd>
+            <dt>OUTPUT</dt>
+            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements which should be visited.</dd>
+          </dl>
+          <ol>
+            <li>For each scope SCOPE:
+              <ol>
+                <li>Let <var>NAVIGATION-ORDER</var> be an empty list.</li>
+                <li>For each element <var>ELEMENT</var> in a <a>focus navigation scope</a> <var>SCOPE</var>,
+                  <ol>
+                    <li>if <var>ELEMENT</var> is focusable, a <a>shadow host</a>, or a <a>slot element</a>, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                <li>Reorder <var>NAVIGATION-ORDER</var> according to the <a>tabindex</a> value attached to each node. In this step, an element whose <a>tabindex</a> value is negative <strong>must</strong> not be appended to <var>NAVIGATION-ORDER</var>.</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <p>Step 4.</p>
+        <p>Apply the following <dfn>focus navigation order merging algorithm</dfn> with document’s focus navigation order as input. The result is the <a>document sequential focus navigation order</a>.</p>
+
+        <div class="algorithm">
+          <dl>
+            <dt>INPUT</dt>
+            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
+            <dt>OUTPUT</dt>
+            <dd><var>MERGED-NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
+          </dl>
+          <ol>
+            <li>Let <var>MERGED-NAVIGATION-ORDER</var> be an empty list.</li>
+            <li>For each element <var>ELEMENT</var> in <var>NAVIGATION-ORDER</var>:
+              <ol>
+                <li>If <var>ELEMENT</var> is a shadow host:
+                  <ol>
+                    <li>Unless its shadow root’s delegatesFocus flag is set, append<var> ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by its <a>shadow root</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>If <var>ELEMENT</var> is a slot element:
+                  <ol>
+                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by the <a>slot element</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>Otherwise:
+                  <ol>
+                    <li>Append <var>ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                  </ol>
+                </li>
+                <li>Return <var>MERGED-NAVIGATION-ORDER</var>.</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
 
         <p>For <a>directional focus navigation</a> [[!CSS3-UI]], it is up to the user agent to integrate the <a data-lt="shadow tree">shadow trees</a> into the document's <a>directional focus navigation</a>.
       </section>
