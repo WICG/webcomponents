@@ -957,7 +957,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 <p>To <dfn id="dfn-create-element">create an element</dfn>, given a <var>document</var>, <var>localName</var>, <var>prefix</var>, <var>namespace</var>, <var>typeExtension</var>, and an optional <var>synchronous custom elements flag</var>, run the following steps:</p>
 
 <ol>
-    <li>Let <var>registry</var> be null.</li>
+    <li>Let <var>registry</var> and <var>result</var> be null.</li>
 
     <li>If <var>document</var> has a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, set <var>registry</var> to <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</li>
 
@@ -977,25 +977,15 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
                 <ol>
                     <li>If <var>definition</var>'s <a href="#dfn-element-definition-local-name">local name</a> is not <var>localName</var>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</li>
 
-                    <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
-
-                    <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
+                    <li>Set <var>result</var> to a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
 
                     <li><a>Enqueue a custom element upgrade reaction</a> given <var>result</var> and <var>definition</var>.</li>
-
-                    <li>Return <var>result</var>.</li>
                 </ol>
             </li>
 
-            <li>
-                <p>Otherwise:</p>
+            <li>Otherwise, set <var>result</var> to a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
 
-                <ol>
-                    <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
-
-                    <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
-                </ol>
-            </li>
+            <li><a href="https://dom.spec.whatwg.org/#concept-element-attributes-set-value">Set an attribute value</a> for <var>result</var> using "<code>is</code>" and <var>type</var>.</li>
         </ol>
     </li>
 
@@ -1009,7 +999,7 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
                 <ol>
                     <li>Let <var>C</var> be <var>definition</var>'s <a href="#dfn-element-definition-constructor">constructor</a>.</li>
 
-                    <li>Let <var>result</var> be <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(<var>C</var>). Rethrow any exceptions.</li>
+                    <li>Set <var>result</var> to <a href="https://tc39.github.io/ecma262/#sec-construct">Construct</a>(<var>C</var>). Rethrow any exceptions.</li>
 
                     <li>
                         <p>If <var>result</var> does not implement the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>TypeError</code> exception.</p>
@@ -1034,8 +1024,6 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
                     <li>Set <var>result</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> to <var>prefix</var>.</li>
 
                     <li>Set <var>result</var>'s <a>defined flag</a> and <a>custom flag</a>.</li>
-
-                    <li>Return <var>result</var>.</li>
                 </ol>
             </li>
 
@@ -1043,11 +1031,9 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
                 <p>Otherwise:</p>
 
                 <ol>
-                    <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set <var>document</var>.</li>
+                    <li>Set <var>result</var> to a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements the <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> unset, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set <var>document</var>.</li>
 
                     <li><a>Enqueue a custom element upgrade reaction</a> given <var>result</var> and <var>definition</var>.</li>
-
-                    <li>Return <var>result</var>.</li>
                 </ol>
             </li>
         </ol>
@@ -1059,13 +1045,13 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
         <ol>
             <li>Let <var>interface</var> be the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>localName</var> and <var>namespace</var>.</li>
 
-            <li>Let <var>result</var> be a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> set, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
+            <li>Set <var>result</var> to a new <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that implements <var>interface</var>, with no attributes, <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> set to <var>namespace</var>, <a href="https://dom.spec.whatwg.org/#concept-element-namespace-prefix">namespace prefix</a> set to <var>prefix</var>, <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> set to <var>localName</var>, <a>defined flag</a> set, <a>custom flag</a> unset, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</li>
 
             <li>If <var>registry</var> is not null, <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and <var>localName</var> is a <a>valid custom element name</a>, unset <var>result</var>'s <a>defined flag</a>.</li>
-
-            <li>Return <var>result</var>.</li>
         </ol>
     </li>
+
+    <li>Return <var>result</var>.</li>
 </ol>
 </section>
 
