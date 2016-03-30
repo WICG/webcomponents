@@ -717,20 +717,20 @@ dictionary ElementRegistrationOptions {
         <p>For each <a>custom element</a> <var>element</var> in <var>queue</var>:</p>
 
         <ol>
-            <li>Let <var>actions</var> be <var>element</var>'s <a>custom element reaction queue</a>.</li>
+            <li>Let <var>reactions</var> be <var>element</var>'s <a>custom element reaction queue</a>.</li>
             <li>
-                <p>Repeat until <var>actions</var> is empty:</p>
+                <p>Repeat until <var>reactions</var> is empty:</p>
 
                 <ol>
                     <li>
-                        <p>Remove the first element of <var>actions</var>, letting <var>action</var> be the result. Switch on <var>action</var>'s type:</p>
+                        <p>Remove the first element of <var>reactions</var>, and let <var>reaction</var> be that element. Switch on <var>reaction</var>'s type:</p>
 
                         <dl class="switch">
                             <dt><a>upgrade reaction</a></dt>
-                            <dd><a href="#dfn-upgrade-a-custom-element">Upgrade</a> <var>element</var> using <var>action</var>'s <a>custom element definition</a>.</dd>
+                            <dd><a href="#dfn-upgrade-a-custom-element">Upgrade</a> <var>element</var> using <var>reaction</var>'s <a>custom element definition</a>.</dd>
 
                             <dt><a>callback reaction</a></dt>
-                            <dd><a href="https://heycam.github.io/webidl/#es-invoking-callback-functions">Invoke</a> <var>action</var>'s <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> with <var>action</var>'s arguments, and with <var>element</var> as the <a href="https://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a>.</dd>
+                            <dd><a href="https://heycam.github.io/webidl/#es-invoking-callback-functions">Invoke</a> <var>reaction</var>'s <a href="https://heycam.github.io/webidl/#idl-callback-function">callback function</a> with <var>reaction</var>'s arguments, and with <var>element</var> as the <a href="https://heycam.github.io/webidl/#dfn-callback-this-value">callback this value</a>.</dd>
                         </dl>
 
                         <p>If this throws any exception, <a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">report the exception</a>.</p>
