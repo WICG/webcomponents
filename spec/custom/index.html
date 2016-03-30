@@ -123,7 +123,7 @@ var {
 
 <p>Custom elements provide a way for authors to build their own fully-featured DOM elements. Although authors could always use non-standard tag names in their documents, with application-specific behavior added after the fact by scripting or similar, such elements have historically been non-conforming and not very functional. By <a lt="element definition">defining</a> a custom element, authors can inform the parser how to properly construct an element and how elements of that class should react to changes.</p>
 
-<p>Custom elements are part of a larger effort to "rationalize the platform," by explaining existing platform features (like the elements of HTML) in terms of lower-level author-exposed extensibility points (like custom element registration). Although today there are many limitations on the capabilities of custom elements—both functionally and semantically—that prevent them from fully explaining the behaviors of HTML's existing elements, we hope to shrink this gap over time.</p>
+<p>Custom elements are part of a larger effort to "rationalize the platform," by explaining existing platform features (like the elements of HTML) in terms of lower-level author-exposed extensibility points (like custom element definition). Although today there are many limitations on the capabilities of custom elements—both functionally and semantically—that prevent them from fully explaining the behaviors of HTML's existing elements, we hope to shrink this gap over time.</p>
 
 <section>
 <h4 id="custom-elements-custom-tag-example">Creating a custom tag</h4>
@@ -194,7 +194,7 @@ document.body.appendChild(flagIcon)</pre>
 <section class="informative">
 <h4 id="custom-elements-type-extension-example">Creating a type extension</h4>
 
-<p><a lt="type extension">Type extensions</a> are a distinct kind of <a>custom element</a>, which are registered slightly differently and used very differently. They exist to allow reuse of behaviors from the existing elements of HTML, by extending those elements with new custom functionality. This is important since many of the existing behaviors of HTML elements can unfortunately not be duplicated by using purely <a lt="custom tag">custom tags</a>. Instead, <a lt="type extension">type extensions</a> allow the installation of custom construction behavior, lifecycle hooks, and prototype chain onto onto existing elements, essentially "mixing in" these capabilities on top of the already-existing element.</p>
+<p><a lt="type extension">Type extensions</a> are a distinct kind of <a>custom element</a>, which are defined slightly differently and used very differently. They exist to allow reuse of behaviors from the existing elements of HTML, by extending those elements with new custom functionality. This is important since many of the existing behaviors of HTML elements can unfortunately not be duplicated by using purely <a lt="custom tag">custom tags</a>. Instead, <a lt="type extension">type extensions</a> allow the installation of custom construction behavior, lifecycle hooks, and prototype chain onto onto existing elements, essentially "mixing in" these capabilities on top of the already-existing element.</p>
 
 <p><a lt="type extension">Type extensions</a> require a distinct syntax from <a lt="custom tag">custom tags</a> because user agents and other software key off an <a href="https://dom.spec.whatwg.org/#concept-element">element</a>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> in order to identify the element's basic nature. That is, the concept of <a lt="type extension">type extensions</a> building on top of existing behavior depends crucially on the extended elements retaining their original <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>.</p>
 
@@ -211,7 +211,7 @@ class PlasticButton extends HTMLButtonElement {
   }
 }</pre>
 
-<p>When registering our custom element, we have to also specify the <code>extends</code> option:</p>
+<p>When defining our custom element, we have to also specify the <code>extends</code> option:</p>
 
 <pre class="highlight">
 customElements.define("plastic-button", PlasticButton, { extends: "button" });</pre>
@@ -243,7 +243,7 @@ console.log(plasticButton2.getAttribute("is")); // will output "plastic-button"<
 <section class="informative" id="custom-element-semantics">
 <h4>Drawbacks of custom tags</h4>
 
-<p>As specified below, and alluded to above, simply defining and using an element called <code>taco-button</code> does not mean that such elements represent buttons. That is, tools such as Web browsers, search engines, or accessibility technology will not automatically treat the resulting element as a button just based on its registered name.</p>
+<p>As specified below, and alluded to above, simply defining and using an element called <code>taco-button</code> does not mean that such elements represent buttons. That is, tools such as Web browsers, search engines, or accessibility technology will not automatically treat the resulting element as a button just based on its defined name.</p>
 
 <p>To convey the desired button semantics to a variety of users, while still using a <a>custom tag</a>, a number of techniques would need to be employed:</p>
 
@@ -412,11 +412,11 @@ class TacoButton extends HTMLElement {
 
 <p>A <dfn id="dfn-custom-element">custom element</dfn> is an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> that is <a>custom</a>. Informally, this means that its constructor and prototype are defined by the author, instead of by the user agent. This author-supplied constructor function is called the <dfn id="dfn-custom-element-constructor">custom element constructor</dfn>.</p>
 
-<p>Two distinct types of <a lt="custom element">custom elements</a> can be registered:</p>
+<p>Two distinct types of <a lt="custom element">custom elements</a> can be defined:</p>
 
 <ol>
-    <li>A <dfn id="dfn-custom-tag">custom tag</dfn>, which is registered with no <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to their <a href="#dfn-element-definition-name">registered name</a>.</li>
-    <li>A <dfn id="dfn-type-extension">type extension</dfn>, which is registered with an <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to the value passed in their <code>extends</code> option, and their <a href="#dfn-element-definition-name">registered name</a> is used as the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a>.</li>
+    <li>A <dfn id="dfn-custom-tag">custom tag</dfn>, which is defined with no <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to their <a href="#dfn-element-definition-name">defined name</a>.</li>
+    <li>A <dfn id="dfn-type-extension">type extension</dfn>, which is defined with an <code>extends</code> option. These types of custom elements have <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a> equal to the value passed in their <code>extends</code> option, and their <a href="#dfn-element-definition-name">defined name</a> is used as the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a>.</li>
 </ol>
 
 <p>After a <a>custom element</a> is <a lt="create an element">created</a>, changing the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> does not change the element's behavior.</p>
