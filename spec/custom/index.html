@@ -421,6 +421,32 @@ class TacoButton extends HTMLElement {
 
 <p>After a <a>custom element</a> is <a lt="create an element">created</a>, changing the value of the <code>is</code> <a href="https://dom.spec.whatwg.org/#concept-named-attribute">attribute</a> does not change the element's behavior.</p>
 
+<p><a lt="custom tag">Custom tags</a> have the following element definition:</p>
+
+
+<dl class="element">
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-categories">Categories</a>:</dt>
+    <dd><a href="https://html.spec.whatwg.org/#flow-content-2">Flow content</a>.</dd>
+    <dd><a href="https://html.spec.whatwg.org/#phrasing-content-2">Phrasing content</a>.</dd>
+    <dd><a href="https://html.spec.whatwg.org/#palpable-content-2">Palpable content</a>.</dd>
+
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-contexts">Contexts in which custom elements can be used</a>:</dt>
+    <dd>Where <a href="https://html.spec.whatwg.org/#phrasing-content-2">phrasing content</a> is expected.</dd>
+
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-content-model">Content model</a>:</dt>
+    <dd><a href="https://html.spec.whatwg.org/#transparent">Transparent</a>.</dd>
+
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-tag-omission">Tag omission in text/html</a>:</dt>
+    <dd>Neither tag is omissible.</dd>
+
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-attributes">Content attributes</a>:</dt>
+    <dd><a href="https://html.spec.whatwg.org/#global-attributes">Global attributes</a>
+    <dd>Any attributes relevant to the element's functioning, as defined by the author</dd>
+
+    <dt><a href="https://html.spec.whatwg.org/#concept-element-dom">DOM interface</a>:</dt>
+    <dd>Supplied by the author (inherits from <a href="https://html.spec.whatwg.org/#htmlelement"><code>HTMLElement</code></a>).</dd>
+</dl>
+
 <p>A <a>custom tag</a> does not have any special meaning: it <a href="https://html.spec.whatwg.org/#represents">represents</a> its children. A <a>type extension</a> inherits the semantics of the element that it extends.</p>
 
 <p>A <dfn id="valid-custom-element-name">valid custom element name</dfn> is a sequence of characters <var>name</var> that meets all of the following requirements:</p>
@@ -944,6 +970,22 @@ The <dfn id="dom-htmlelement-constructor"><code>HTMLElement</code> constructor</
 <p class="monkeypatch">It turns out there's not actually a spec for the XML parser. Awesome! (Not actually awesome.) The HTML Standard has a nice vague paragraph about "This <a href="https://html.spec.whatwg.org/#document"><code>Document</code></a> must then be populated with DOM nodes that represent the tree structure of the input passed..." which should get something like the following inserted (probably by inserting it after the first sentence, then splitting the mutation events/observers prose into a new paragraph).</p>
 
 <p>When creating DOM nodes representing elements, the <a href="https://html.spec.whatwg.org/#create-an-element-for-the-token">create an element for a token</a> algorithm or some equivalent that operates on appropriate XML datastructures must be used, to ensure the proper <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interfaces</a> are created and that <a lt="custom element">custom elements</a> are set up correctly.</p>
+
+</section>
+
+<section>
+<h3>HTML+: Content Model Updates</h3>
+
+<p class="monkeypatch">HTML has several sections that need to be updated when introducing a new element, or in this case class of elements. Those are:</p>
+
+<ul class="monkeypatch">
+    <li><a href="https://html.spec.whatwg.org/#content-categories">The categories venn diagram</a>'s interactive list should include custom elements in phrasing and flow content.</li>
+    <li><a href="https://html.spec.whatwg.org/#flow-content-2">Flow content</a> should include custom elements</li>
+    <li><a href="https://html.spec.whatwg.org/#phrasing-content-2">Phrasing content</a> should include custom elements</li>
+    <li><a href="https://html.spec.whatwg.org/#palpable-content-2">Palpable content</a> should include custom elements</li>
+    <li><a href="https://html.spec.whatwg.org/#elements-3">The elements index</a> should include a row at the bottom for custom elements</li>
+    <li><a href="https://html.spec.whatwg.org/#element-content-categories">The element content categories index</a> should include custom elements in the flow content, phrasing content, and palpable content sections.</li>
+</ul>
 
 </section>
 
