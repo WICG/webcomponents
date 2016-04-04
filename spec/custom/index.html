@@ -645,29 +645,13 @@ dictionary ElementRegistrationOptions {
 <p>To <dfn id="dfn-try-upgrade">try to upgrade an element</dfn>, given as input an <a href="https://dom.spec.whatwg.org/#concept-element">element</a> <var>element</var>, run the following steps:</p>
 
 <ol>
-  <li>If <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a> is not the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, abort this algorithm.</li>
+    <li>Let <var>document</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>.</li>
 
-  <li>Let <var>document</var> be <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a>.</li>
+    <li>Let <var>is</var> be the value of the <a href="https://dom.spec.whatwg.org/#concept-attribute">attribute</a> in <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-attribute">attribute list</a> whose <a href="https://dom.spec.whatwg.org/#concept-attribute-qualified-name">qualified name</a> is "<code>is</code>", if any such attribute exists, or null otherwise.</li>
 
-  <li>If <var>document</var> does not have a <a href="https://html.spec.whatwg.org/#concept-document-bc">browsing context</a>, abort this algorithm.</li>
+    <li>Let <var>definition</var> be the result of <a lt="look up a custom element definition">looking up a custom element definition</a> given <var>document</var>, <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-namespace">namespace</a>, <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, and <var>is</var>.</li>
 
-  <li>Let <var>registry</var> be <var>document</var>'s <a href="https://html.spec.whatwg.org/#concept-document-window">associated <code>Window</code></a>'s <code>CustomElementsRegistry</code> object.</li>
-
-  <li>Let <var>definition</var> be null.</li>
-
-  <li>
-    <p>If <var>element</var> has an <a href="https://dom.spec.whatwg.org/#concept-attribute">attribute</a> whose <a href="https://dom.spec.whatwg.org/#concept-attribute-qualified-name">qualified name</a> is "<code>is</code>", then:</p>
-
-    <ol>
-      <li>Let <var>is</var> be the value of that attribute.</li>
-
-      <li>Set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>, and <a href="#dfn-element-definition-name">name</a> equal to <var>is</var>. If no such entry exists, abort this algorithm.</li>
-    </ol>
-  </li>
-
-  <li>Otherwise, set <var>definition</var> to the entry in registry with <a href="#dfn-element-definition-local-name">local name</a> and <a href="#dfn-element-definition-name">name</a> equal to <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-local-name">local name</a>. If there is no such entry, abort this algorithm.</li>
-
-  <li><a>Enqueue a custom element upgrade reaction</a> given <var>element</var> and <var>definition</var>.</li>
+    <li>If <var>definition</var> is not null, <a>enqueue a custom element upgrade reaction</a> given <var>element</var> and <var>definition</var>.</li>
 </ol>
 
 </section>
