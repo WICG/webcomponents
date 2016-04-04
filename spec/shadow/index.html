@@ -1676,20 +1676,63 @@
                 <dt>Input</dt>
                 <dd><var>EVENT</var>, a <a>context object</a></dd>
                 <dt>Output</dt>
-                <dd><var>PATH</var>, an array of nodes</dd>
+                <dd><var>FILTERED-PATH</var>, an array of event targets</dd>
               </dl>
 
               <ol>
-                <li>If <var>EVENT</var> hasn't been dispatched or <var>EVENT</var> is no longer dispatched, return a new empty array.</li>
+                <li>
+                  If <var>EVENT</var> has not been dispatched or <var>EVENT</var> is no longer dispatched, let <var>FILTERED-PATH</var> be an empty array.
+                </li>
                 <li>
                   Otherwise:
                   <ol>
-                    <li>Let <var>PATH</var> be the event path of <var>EVENT</var>.</li>
-                    <li>Let PATH contain only a node which is an <a>unclosed node</a> of the <a>current target</a> of <var>EVENT</var>.</li>
+                    <li>Let <var>PATH</var> be the <var>Event</var>'s event path.</li>
+                    <li>Let <var>FILTERED-PATH</var> be the empty ordered list.</li>
+                    <li>Let <var>CURRENT-TARGET-NODE</var> be the result of <a>find the node</a> algorithm with <var>EVENT</var>'s current target and <var>PATH</var>.</li>
+                    <li>
+                      For each <var>TARGET</var> in <var>PATH</var>:
+                      <ol>
+                        <li>
+                          Let <var>TARGET-NODE</var> be the result of <a>find the Node</a> algorithm with <var>TARGET</var> and <var>PATH</var>.
+                        </li>
+                        <li>
+                          If both <var>CURRENT-TARGET-NODE</var> and <var>TARGET-NODE</var> exist,
+                          <ol>
+                            <li>
+                              If <var>TARGET-NODE</var> is an <a>unclosed node</a> of the <var>CURRENT-TARGET-NODE</var>, append <var>TARGET</var> to <var>FILTERED-PATH</var>.
+                              Otherwise, do nothing
+                            </li>
+                          </ol>
+                        </li>
+                        <li>
+                          Otherwise:
+                          <ol>
+                            <li>append <var>TARGET</var> to <var>FILTERED-PATH</var>.</li>
+                          </ol>
+                        </li>
+                      </ol>
+                    </li>
                   </ol>
                 </li>
               </ol>
             </div>
+
+            <p>
+              The <dfn>find the node</dfn> algorithm given a <var>EVENT-TARGET</var> and <var>PATH</var> are as follows:
+            </p>
+            <ol>
+              <li>
+                For each <var>ITEM</var> in the sub list of <var>PATH</var>, from <var>EVENT-TARGET</var>, inclusive, to the last item of <var>PATH</var>:
+                <ol>
+                  <li>
+                    If <var>ITEM</var> is a Node, return <var>ITEM</var>.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                Return null.
+              </li>
+            </ol>
           </dd>
           <dt>readonly attribute boolean scoped</dt>
           <dd>
