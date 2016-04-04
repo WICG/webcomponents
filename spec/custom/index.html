@@ -511,7 +511,7 @@ dictionary ElementRegistrationOptions {
         <dd>Defines a new <a>custom element</a>, mapping the given name to the given constructor as a <a>custom tag</a>.</dd>
 
         <dt><var>window</var> . <code>customElements</code> . <a href="#dom-customelementsregistry-define"><code>define</code></a>(<var>name</var>, <var>constructor</var>, { extends: <var>baseTagName</var> })</dt>
-        <dd>Defines a new <a>custom element</a>, mapping the given name to the given constructor as a <a>type extension</a> for the supplied base tag.</dd>
+        <dd>Defines a new <a>custom element</a>, mapping the given name to the given constructor as a <a>type extension</a> for the supplied base tag. A <code>NotSupportedError</code> will be thrown upon trying to extend a <a>custom element</a> or an unknown element.</dd>
     </dl>
 </div>
 
@@ -538,7 +538,7 @@ dictionary ElementRegistrationOptions {
         <p>If <var>extends</var> is not null:</p>
 
         <ol>
-            <li>If there is no <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>extends</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
+            <li>If <var>extends</var> is a <a>valid custom element name</a>, or if the <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for <var>extends</var> and the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a> is <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement"><code>HTMLUnknownElement</code></a>, <a href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code>NotSupportedError</code> and abort these steps.</li>
 
             <li>Set <var>localName</var> to <var>extends</var>.</li>
         </ol>
