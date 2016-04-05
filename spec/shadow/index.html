@@ -1280,10 +1280,15 @@
             <dd><var>ROOT</var>, either a <a>document</a> or a <a>shadow root</a></dd>
             <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
             <dt>Output</dt>
-            <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var>.</dd>
+            <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var></dd>
           </dl>
           <ol>
             <li>Let <var>ADJUSTED</var> be the result of the <a>retargeting algorithm</a> with <var>ROOT</var> and <var>ELEMENT</var> as input</li>
+            <li>If ROOT is not the root node of <var>ADJUSTED</var>:
+              <ol>
+                <li>Let <var>ADJUSTED</var>be null</li>
+              </ol>
+            </li>
           </ol>
         </div>
       </section>
