@@ -1268,24 +1268,11 @@
       <section>
         <h3>Active Element</h3>
 
-        <p>To maintain encapsulation, the value of the <a data-lt="Document object">Document</a> object's focus API property <a>activeElement</a> <strong>must</strong> be adjusted. To prevent loss of information when adjusting this value, each <a>shadow root</a> <strong>must</strong> also have an <code>activeElement</code> property to store the value of the focused <a>element</a> in the <a>shadow tree</a>.</p>
-
         <p>
-          The <dfn>active element adjustment algorithm</dfn> <strong>must</strong> be used to determine the value of <a>activeElement</a> property, and it <strong>must</strong> be <a data-lt="processing equivalence">equivalent</a> to processing the following steps:
+          <a>DocumentOrShadowRoot</a> object's <a>activeElement</a> <strong>must</strong> be the result of
+          the <a>retargeting algorithm</a> with the <a>context object</a> and the focused element as input,
+          if the result and the <a>context object</a> are in the same tree. Otherwise, null.
         </p>
-
-        <div class="algorithm">
-          <dl>
-            <dt>Input</dt>
-            <dd><var>ROOT</var>, either a <a>document</a> or a <a>shadow root</a></dd>
-            <dd><var>ELEMENT</var>, the focused <a>element</a></dd>
-            <dt>Output</dt>
-            <dd><var>ADJUSTED</var>, an adjusted <a>activeElement</a> property of <var>ROOT</var>.</dd>
-          </dl>
-          <ol>
-            <li>Let <var>ADJUSTED</var> be the result of the <a>retargeting algorithm</a> with <var>ROOT</var> and <var>ELEMENT</var> as input</li>
-          </ol>
-        </div>
       </section>
 
       <section>
