@@ -547,38 +547,6 @@ in an <a>import map</a>, &hellip;</p>
 </section>
 </section>
 
-<section id="custom-elements">
-<h2>Custom Element Processing</h2>
-
-<p>This specification redefines <dfn id="dfn-custom-element-order">custom element order</dfn> to be the sum of [[!CUSTOM-ELEMENTS]]'s <a href="https://w3c.github.io/webcomponents/spec/custom/index.html#dfn-custom-element-order">custom element order</a> and <a>import tree order</a>, in which the <a>import tree order</a> is scaled so that its lowest value is always larger than the highest possible value of [[!CUSTOM-ELEMENTS]]'s <a href="https://w3c.github.io/webcomponents/spec/custom/index.html#dfn-custom-element-order">custom element order</a>.</p>
-
-<p>The <dfn id="dfn-import-tree-order">import tree order</dfn> of a given <a href="https://w3c.github.io/webcomponents/spec/custom/index.html#dfn-custom-element">custom element</a> of an <a href="#dfn-import-link-tree">import link tree</a> is determined by <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> in an <a href="#dfn-import-link-tree">import link tree</a> that was flattened by replacing every <a href="#dfn-import">import</a> <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element"><code>link</code></a> with the content of its <a href="#dfn-imported-document">imported document</a>.</p>
-
-<p>The <dfn id="dfn-highest-stable-order">highest stable order</dfn> is the value that is immediately preceding the <a href="https://w3c.github.io/webcomponents/spec/custom/index.html#dfn-custom-element-order">custom element order</a> of an <a data-lt="custom element">element</a> in the first encountered <a href="#dfn-import">import</a>, in <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a>, that has not yet <a href="https://html.spec.whatwg.org/multipage/syntax.html#completely-loaded">completely loaded</a>. If there is no such <a href="https://w3c.github.io/webcomponents/spec/custom/index.html#dfn-custom-element">element</a>, the <a>highest stable order</a> is the highest custom element order in the flattened <a href="#dfn-import-link-tree">import link tree</a>. When processing the base element queue, user agents should only invoke callbacks up to the <a>highest stable order</a>, inclusively.</p>
-
-
-<div class="note">
-<p>Because imports load asynchronously, we need to divide a sorted element queue into the part where things have settled down (all imports have loaded), and the part where the loading is still happening, and thus the actual sorting order is not yet determined. For example, suppose you have the following document structure:</p>
-
-<div id='document-structure'>
-<p>index.html:</p>
-<pre class='highlight'>
-&lt;link rel="import" href="import.html">
-...
-&lt;me-second>&lt;/me-second>
-...
-</pre>
-
-<p>import.html:</p>
-<pre class='highlight'>&lt;me-first>&lt;/me-first></pre>
-</div>
-
-<p>The order of custom elements in the flattened import link tree is <code>me-first</code> (1), <code>me-second</code> (2). However, it's very likely that the parser will find out about <code>me-second</code> sooner than <code>me-first</code>, since the latter requires loading the <code>import.html</code>. While the network stack is doing its job, the highest stable order stays at the beginning position. When <code>import.html</code> is ready, the order jumps all the way to <code>me-second</code> (2).</p>
-
-</div>
-
-</section>
-
 <section class="appendix">
 <h2>Acknowledgments</h2>
 
