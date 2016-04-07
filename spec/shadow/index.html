@@ -277,13 +277,15 @@
 
         <p>
           The <a>slot element</a> represents an <em>instruction element</em>, called <dfn>slot</dfn>.
-          When constructing a <a>flat tree</a>, a <a>slot</a> does not participate in the flat tree. Instead, the <a>slot</a> cherry-picks its contents from other places in the composed tree of node trees.
-          The exact algorithm of constructing a <a>flat tree</a> is specified later.
         </p>
 
-        <p class="note">
-          A slot usually cherry-picks its contents from the shadow host.
+        <p>
+          User agents <strong>must</strong> have the following rule in their user agent style sheets:
         </p>
+
+        <pre class="example highlight">
+        slot { display: contents; }
+        </pre>
 
         <p>
           A node can be <dfn>assigned</dfn> to a slot, called an <dfn>assigned slot</dfn>. The exact algorithm of determining the <a>assigned slot</a> for a node is specified later.
@@ -293,13 +295,19 @@
           A node is called <dfn>slot assignable</dfn> if it is either <code>Text</code> or <code>Element</code>.
         </p>
 
-        <p>A <dfn>distribution</dfn> is the mechanism that determines which <a data-lt="node">nodes</a> appear at each <a>slot</a>. The exact algorithm of a <a>distribution</a> is specified later.</p>
+        <p>
+          A <dfn>distribution</dfn> is the mechanism that determines which <a data-lt="node">nodes</a> appear as child nodes of a <a>slot</a> in a flat tree.
+          The exact algorithm of a <a>distribution</a> is specified later.
+        </p>
 
         <figure>
           <object data="../../assets/images/distribution.svg" width="663" height="598"></object>
-          <figcaption>A distribution</figcaption>
+          <figcaption>A distribution.</figcaption>
         </figure>
 
+        <p class="issue">
+          The figure should be updated so that the flat tree should includes a slot.
+        </p>
 
         <p>
           A <dfn>slot name</dfn> is the name of a <a>slot</a>.
@@ -472,36 +480,40 @@
           </dl>
 
           <ol>
-            <li>Let <var>CHILDREN</var> be an empty ordered list of nodes</li>
             <li>
-              If <var>NODE</var> is a <a>shadow host</a>:
-              <ol>
-                <li>Let <var>CHILD-POOL</var> be the child nodes of the <a>shadow root</a> which <var>NODE</var> <a>hosts</a></li>
-              </ol>
-            </li>
-            <li>
-              Otherwise:
-              <ol>
-                <li>Let <var>CHILD-POOL</var> be the child nodes of <var>NODE</var></li>
-              </ol>
-            </li>
-            <li>
-              For each <a>node</a>, <var>CHILD</var>, in <var>CHILD-POOL</var>:
+              If <var>NODE</var> is a <a>slot</a>:
               <ol>
                 <li>
-                  If <var>CHILD</var> is a <a>slot</a>:
+                  If the <a>assigned nodes</a> of <var>SLOT</var> is empty:
                   <ol>
-                    <li>If <var>CHILD</var> is not assigned to any <a>slot</a>:
-                      <ol>
-                        <li>Append all nodes of the <a>distributed nodes</a> of <var>CHILD</var> to <var>CHILDREN</var></li>
-                      </ol>
+                    <li>
+                      Let <var>CHILDREN</var> be the <a>slot assignable</a> child nodes of <var>SLOT</var>.
                     </li>
                   </ol>
                 </li>
-                <li>Otherwise:
+                <li>
+                  Otherwise:
                   <ol>
-                    <li>Append <var>CHILD</var> to <var>CHILDREN</var> if <var>CHILD</var> is <a>slot assignable</a></li>
+                    <li>
+                      Let <var>CHILDREN</var> be the <a>assigned nodes</a> of <var>SLOT</var>.
+                    </li>
                   </ol>
+                </li>
+              </ol>
+            </li>
+            <li>
+              Otherwise, if <var>NODE</var> is a <a>shadow host</a>:
+              <ol>
+                <li>
+                  Let <var>CHILDREN</var> be the <a>slot assignable</a> child nodes of <a>shadow root</a> which <var>NODE</var> <a>hosts</a>.
+                </li>
+              </ol>
+            </li>
+            <li>
+              Otherwise,
+              <ol>
+                <li>
+                  Let <var>CHILDREN</var> be the <a>slot assignable</a> child nodes of <var>NODE</var>.
                 </li>
               </ol>
             </li>
@@ -511,6 +523,10 @@
 
       <section class="informative">
         <h3>Flattening Example</h3>
+
+        <p class="issue">
+          This non-normative section should be updated so that a flat tree should includes slots.
+        </p>
 
         <p>
           Suppose that we have the following composed tree of node trees:
@@ -794,6 +810,10 @@
 
         <section class="informative">
           <h3>Event Paths Example</h3>
+
+          <p class="issue">
+            This non-normative section should be updated so that a flat tree would include slots.
+          </p>
 
           <p>
             Let's re-use the same composed tree of node trees used in the flattening example section. Suppose that an event is dispatched on node <code>I</code>. The event path will be:
