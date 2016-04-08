@@ -1137,6 +1137,20 @@
       </section>
 
       <section>
+        <h3>Focus</h3>
+      <p>A <a>shadow host</a> can delegate focus to its <a>shadow root</a> by assigning a boolean <a href="#widl-ShadowRootInit-delegatesFocus">delegatesFocus</a> flag to be true in <a href="#idl-def-ShadowRootInit">ShadowRootInit</a> dictionary. If omitted, a <a>shadow host</a> does not delegate focus to its shadow root, and the shadow host itself can be focusable.</p>
+        <p>When a shadow host <var>HOST</var> <dfn>delegates focus</dfn>, user agent <strong>must</strong> behave as follows.
+          <ol>
+            <li>In <a>sequential focus navigation</a>, <var>HOST</var> itself will be skipped. See the next secition for the formal definition.</li>
+            <li>When <var>HOST</var> is focused by <code>focus()</code> method or <code>autofocus</code> attribute: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
+            <li>When mouse is clicked on a node in <var>HOST</var>'s <a>shadow tree</a> and the node is not a <a>focusable area</a>: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
+            <li>When any element in <var>HOST</var>'s <a>shadow tree</a> has focus, <code>:focus</code> pseudo-class applies to <var>HOST</var> in addition to the focused element itself.</li>
+	    <li>If <code>:focus</code> pseudo-class applies to <var>HOST</var>, and <var>HOST</var> is in a <a>shadow root</a> of another <a>shadow host</a> <var>HOST2</var> which also <a>delegates focus</a>, <code>:focus</code> pseudo-class applies to <var>HOST2</var> as well.</li>
+          </ol>
+        </p>
+      </section>
+
+      <section>
         <h3>Sequential Focus Navigation</h3>
 
         <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a shadow-including document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
@@ -1604,6 +1618,8 @@
         <dl class="idl" title="dictionary ShadowRootInit">
           <dt>required ShadowRootMode mode</dt>
           <dd>Specifies the associated <a>mode</a> of <a>ShadowRoot</a></dd>
+          <dt>boolean delegatesFocus = false</dt>
+          <dd>Specifies whether shadow host <a>delegates focus</a> to its <a>ShadowRoot</a>. If omitted, the default value is false.</dd>
         </dl>
       </section>
 
