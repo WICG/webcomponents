@@ -1,0 +1,19 @@
+language: node_js
+sudo: false
+branches:
+  only:
+  - gh-pages
+env:
+  global:
+  - URL=""
+  - DECISION="https://lists.w3.org/Archives/Public/public-webapps/2014JulSep/0627.html"
+  - secure: "IOj5spID70zoohkd8SpllAaZUtquHV2gnlhSxpBJWfKhuB17KaUAMB4gD7RBn/jn4jv1iHUg6h27gVn5YSOTzaLcFDZpRcbrdj5Jeq9syBYZzGsyno3vkjxB8wsbFuKOpJjRBRyANlqeyONxpy4q7/PGQzm3Xb9WARr/Tp8BU4c="
+  - secure: "DJQLaedMUu+DxMZiQ0YXJilXvio9SwXJt3Jq32nIwn9dVZuPb7g4Rv71AdgB71jJBU7T+AhXGJTen0hTBMDMkYevfP0ZQue8gV4DYMJH/Np5qGTq3nqfVcP33gZyGzbU3fbcA3K7qIVFvXDKXzDpZ/wB2XwHijx/6N+UrajR9yA="
+  - secure: "YGJ8zZNLJVpklZBTxJvW+/6L6yX8WePuOET/RgOx4R4uH6pV/wwfkcExB491z0uAB3ZlJbTiPwAfS/WgvfzwmXqkP51+Apm6Jt7esyEMumOUgY+vqq3p4nulc7qWcgo6mdy/KUOg95WvjMaN7FBcD9sQEklyOYk8X40opdGsqyY="
+script:
+- echo "ok"
+after_success:
+- SPECS=`git diff-tree --no-commit-id --name-only -r ${TRAVIS_COMMIT} | grep '^spec' | cut -d'/' -f 2 | sort | uniq | xargs`
+- test "${SPECS#*custom}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/custom/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_CUSTOM"
+- test "${SPECS#*shadow}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/shadow/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_SHADOW"
+- test "${SPECS#*imports}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/imports/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_IMPORTS"
