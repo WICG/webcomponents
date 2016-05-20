@@ -124,7 +124,7 @@ div.algorithm {
 
 <body>
   <section id="abstract">
-    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/999e9d8b63026b441f1fdf06d8885fd1335bed4e">999e9d8b63026b441f1fdf06d8885fd1335bed4e</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/58b19e4aa89ab0c6ef998daa455dcbb189423cf8">58b19e4aa89ab0c6ef998daa455dcbb189423cf8</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
+    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/c019f667c2e1bb4dcbc734e0eb2d43763574c24f">c019f667c2e1bb4dcbc734e0eb2d43763574c24f</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/1bb85a48e07d1000e00bd792d61247b9a5e2e4ae">1bb85a48e07d1000e00bd792d61247b9a5e2e4ae</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
   </section>
 
   <section id="sotd">
@@ -821,7 +821,7 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>Let <var>upgrade candidates</var> be all elements in <var>document</var> whose namespace is the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a> and whose local name is <var>localName</var>, in tree order. Additionally, if <var>extends</var> is non-null, only include elements that have an attribute named <code><a href="#attr-is">is</a></code> whose value is <var>name</var>.</p>
+          <p>Let <var>upgrade candidates</var> be all elements that are <a href="https://dom.spec.whatwg.org/#concept-shadow-including-descendant">shadow-including descendants</a> of <var>document</var>, whose namespace is the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a> and whose local name is <var>localName</var>, in <a href="https://dom.spec.whatwg.org/#concept-shadow-including-tree-order">shadow-including tree order</a>. Additionally, if <var>extends</var> is non-null, only include elements that have an attribute named <code><a href="#attr-is">is</a></code> whose value is <var>name</var>.</p>
         </li>
 
         <li>
@@ -942,7 +942,7 @@ fetch(articleURL)
         </li>
 
         <li>
-          <p>Set <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-custom-element-state">custom element state</a> to "<code>customized</code>".</p>
+          <p>Set <var>element</var>'s <a href="https://dom.spec.whatwg.org/#concept-element-custom-element-state">custom element state</a> to "<code>custom</code>".</p>
         </li>
 
         <li>
@@ -1428,6 +1428,10 @@ partial interface Window {
 
         <li>
           <a href="https://html.spec.whatwg.org/multipage/indices.html#element-content-categories">The element content categories index</a> must include <a href="#autonomous-custom-element">autonomous custom elements</a> in the flow content, phrasing content, and palpable content sections
+        </li>
+
+        <li>
+          <a href="https://html.spec.whatwg.org/multipage/syntax.html#syntax-tag-omission">Tag omission</a> must note that <a href="https://html.spec.whatwg.org/multipage/semantics.html#the-p-element"><code>p</code></a> element end tags cannot be omitted if the element's parent is an <a href="#autonomous-custom-element">autonomous custom element</a>
         </li>
       </ul>
     </section>
@@ -1983,7 +1987,7 @@ partial interface Window {
       <p>The &lt;flag-icon&gt; example was inspired by <a itemprop="work" href="https://customelements.io/stevenrskelton/flag-icon/">a custom element</a> by <a itemprop="https://creativecommons.org/ns#attributionURL" href="http://stevenskelton.ca/">Steven Skelton</a>. (<a itemprop="license" href="https://opensource.org/licenses/MIT">MIT</a>)</p>
     </div>
 
-    <p>The editor would also like to thank Alex Komoroske, Andres Rios, Anne van Kesteren, Boris Zbarsky, Daniel Buchner, Edward O'Connor, Erik Arvidsson, Elliott Sprehn, Hayato Ito, Jan Miksovsky, Jonas Sicking, Olli Pettay, Rafael Weinstein, Ryosuke Niwa, Scott Miles, Simon Pieters, Steve Orvell, Tab Atkins, Tim Perry, and William Chen for their comments and contributions to this specification.</p>
+    <p>The editor would also like to thank Alex Komoroske, Andres Rios, Anne van Kesteren, Boris Zbarsky, Daniel Buchner, Edward O'Connor, Erik Arvidsson, Elliott Sprehn, Hayato Ito, Jan Miksovsky, Jonas Sicking, Koji Ishii, Olli Pettay, Rafael Weinstein, Ryosuke Niwa, Scott Miles, Simon Pieters, Steve Orvell, Tab Atkins, Tim Perry, and William Chen for their comments and contributions to this specification.</p>
   </section>
 </body>
 </html>
