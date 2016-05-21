@@ -14,6 +14,6 @@ script:
 - echo "ok"
 after_success:
 - SPECS=`git diff-tree --no-commit-id --name-only -r ${TRAVIS_COMMIT} | grep '^spec' | cut -d'/' -f 2 | sort | uniq | xargs`
-- test $TRAVIS_PULL_REQUEST = false && "${SPECS#*custom}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/custom/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_CUSTOM"
-- test $TRAVIS_PULL_REQUEST = false && "${SPECS#*shadow}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/shadow/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_SHADOW"
-- test $TRAVIS_PULL_REQUEST = false && "${SPECS#*imports}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/imports/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_IMPORTS"
+- test $TRAVIS_PULL_REQUEST = false && test "${SPECS#*custom}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/custom/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_CUSTOM"
+- test $TRAVIS_PULL_REQUEST = false && test "${SPECS#*shadow}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/shadow/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_SHADOW"
+- test $TRAVIS_PULL_REQUEST = false && test "${SPECS#*imports}" != "$SPECS" && curl "https://labs.w3.org/echidna/api/request" --data "url=http://w3c.github.io/webcomponents/spec/imports/W3CTRMANIFEST" --data "decision=$DECISION" --data "token=$TOKEN_IMPORTS"
