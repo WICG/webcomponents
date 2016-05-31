@@ -725,15 +725,6 @@
         </section>
 
         <section>
-          <h3>relatedTargetScoped flag</h3>
-
-          <p>
-            A trusted event's <a><code>relatedTargetScoped flag</code></a> <strong>must</strong> be initialized to true
-            if the event has a <code>relatedTarget</code> property [[!DOM-Level-3-Events]] whose value is non-null.
-          </p>
-        </section>
-
-        <section>
           <h3>get the parent</h3>
 
           <p>
@@ -762,7 +753,7 @@
                 Otherwise, if all of the following conditions are satisfied, let <var>PARENT</var> be null:
                 <ol>
                   <li>
-                    <var>EVENT</var>'s <a>relatedTargetScoped flag</a> is true
+                    <var>TARGET</var>'s <a>root</a> is a <a>shadow root</a>
                   </li>
                   <li>
                     <var>EVENT</var> has a <code>relatedTarget</code> property whose value is non-null
@@ -798,13 +789,6 @@
           <p>
             The definitions of <a>retargeting algorithm</a> is specified later.
           </p>
-
-          <div class="note">
-            <p>
-              The motivation of the <a>relatedTargetScoped flag</a> is to avoid the appearance of spurious events, such as <code>mouseover</code> or <code>mouseout</code> events, firing at the node in ancestor trees
-              in cases where both <code>relatedTarget</code> and <code>target</code> are part of the same <a>shadow tree</a>,
-            </p>
-          </div>
 
         </section>
 
@@ -1708,11 +1692,6 @@
           <dd>
             <p>Specifies the <a>scoped flag</a> of <code>Event</code></p>
           </dd>
-          <dt>boolean relatedTargetScoped = false</dt>
-          <dd>
-            <p>Specifies the <a>relatedTargetScoped flag</a> of <code>Event</code></p>
-          </dd>
-        </dl>
       </section>
 
       <section>
@@ -1791,12 +1770,6 @@
           <dd>
             <p>
               Returns the <dfn>scoped flag</dfn>.
-            </p>
-          </dd>
-          <dt>readonly attribute boolean relatedTargetScoped</dt>
-          <dd>
-            <p>
-              Returns the <dfn>relatedTargetScoped flag</dfn>.
             </p>
           </dd>
         </dl>
