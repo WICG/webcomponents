@@ -124,7 +124,7 @@ div.algorithm {
 
 <body>
   <section id="abstract">
-    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/f139279fb116bbde5d5ee3d257d21778cd774144">f139279fb116bbde5d5ee3d257d21778cd774144</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/579ef079ded65daa981cac974648621790839072">579ef079ded65daa981cac974648621790839072</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
+    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/6e17d01489060988451fc6607089ef4e2d00bbfa">6e17d01489060988451fc6607089ef4e2d00bbfa</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/182e89f5355cbf90d263f7fffef812e7012dd945">182e89f5355cbf90d263f7fffef812e7012dd945</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
   </section>
 
   <section id="sotd">
@@ -640,7 +640,7 @@ class TacoButton extends HTMLElement {
         <dt>A <dfn id="concept-custom-element-definition-construction-stack">construction stack</dfn></dt>
 
         <dd>
-          A list, initially empty, that is manipulated by the <a href="#concept-upgrade-an-element">upgrade an element</a> algorithm and the <a href="#dom-htmlelement"><code>HTMLElement</code> constructor</a>. Each entry in the list will be either an element or an <dfn id="concept-already-constructed-marker"><i>already constructed</i> marker</dfn>.
+          A list, initially empty, that is manipulated by the <a href="#concept-upgrade-an-element">upgrade an element</a> algorithm and the <a href="#html-element-constructors">HTML element constructors</a>. Each entry in the list will be either an element or an <dfn id="concept-already-constructed-marker"><i>already constructed</i> marker</dfn>.
         </dd>
       </dl>
 
@@ -733,6 +733,18 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
+          <p>If <var>constructor</var> is an <a href="https://heycam.github.io/webidl/#dfn-interface-object">interface object</a> whose corresponding interface either is <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> or has <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> in its set of <a href="https://heycam.github.io/webidl/#dfn-inherited-interfaces">inherited interfaces</a>, throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
+
+          <div class="note">
+            <p>This prevents passing, for example, <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> as <var>constructor</var>, and thus enabling the creation of <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> instances with a local name that is not <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#the-button-element">button</a></code>.</p>
+
+            <p>Author-defined <a href="#custom-element-constructor">custom element constructors</a>, created for example via <code>class extends HTMLElement {}</code> or <code>class extends HTMLButtonElement {}</code>, will pass this step without throwing a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code>, since they are not <a href="https://heycam.github.io/webidl/#dfn-interface-object">interface objects</a>.</p>
+
+            <p><a href="https://heycam.github.io/webidl/#dfn-interface-object">Interface objects</a> that do not inherit from <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> (for example <code class="no-backref"><a href="embedded-content.html#texttrack">TextTrack</a></code>), or classes defined in the JavaScript specification (such as <code>Set</code>), will pass this step without throwing a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code>. However, they will later cause <a href="#concept-create-element">create an element</a> to fail.</p>
+          </div>
+        </li>
+
+        <li>
           <p>If <var>name</var> is not a <a href="#valid-custom-element-name">valid custom element name</a>, then throw a <a href="https://heycam.github.io/webidl/#syntaxerror">"<code>SyntaxError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
         </li>
 
@@ -795,14 +807,6 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
 
           <ol>
             <li>
-              <p>Let <var>observedAttributesIterable</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "observedAttributes"). Rethrow any exceptions.</p>
-            </li>
-
-            <li>
-              <p>If <var>observedAttributesIterable</var> is undefined, then let <var>observedAttributes</var> be an empty <code>sequence&lt;DOMString&gt;</code>. Otherwise, let <var>observedAttributes</var> be the result of <a href="https://heycam.github.io/webidl/#es-type-mapping">converting</a> <var>observedAttributesIterable</var> to a <code>sequence&lt;DOMString&gt;</code>. Rethrow any exceptions.</p>
-            </li>
-
-            <li>
               <p>Let <var>prototype</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "prototype"). Rethrow any exceptions.</p>
             </li>
 
@@ -831,7 +835,25 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
             </li>
 
             <li>
-              <p>If <var>attributeChangedCallback</var> is not undefined, and <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>attributeChangedCallback</var>) is false, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> exception.</p>
+              <p>Let <var>observedAttributes</var> be an empty <code>sequence&lt;DOMString&gt;</code>.</p>
+            </li>
+
+            <li>
+              <p>If <var>attributeChangedCallback</var> is not undefined, then:</p>
+
+              <ol>
+                <li>
+                  <p>If <a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a>(<var>attributeChangedCallback</var>) is false, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> exception.</p>
+                </li>
+
+                <li>
+                  <p>Let <var>observedAttributesIterable</var> be <a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a>(<var>constructor</var>, "observedAttributes"). Rethrow any exceptions.</p>
+                </li>
+
+                <li>
+                  <p>If <var>observedAttributesIterable</var> is not undefined, then set <var>observedAttributes</var> to the result of <a href="https://heycam.github.io/webidl/#es-type-mapping">converting</a> <var>observedAttributesIterable</var> to a <code>sequence&lt;DOMString&gt;</code>. Rethrow any exceptions.</p>
+                </li>
+              </ol>
             </li>
           </ol>
 
@@ -1020,9 +1042,9 @@ customElements.define("x-foo", class extends HTMLElement {
           <p>Remove the last entry from the end of <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a>.</p>
 
           <div class="note">
-            <p>Assuming <var>C</var> calls <code>super()</code> (as it will if it is <a href="#custom-element-conformance">conformant</a>), and that the call succeeds, this will be the <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a> that replaced the <var>element</var> we pushed at the beginning of this algorithm. (The <a href="#dom-htmlelement"><code>HTMLElement</code> constructor</a> carries out this replacement.)</p>
+            <p>Assuming <var>C</var> calls <code>super()</code> (as it will if it is <a href="#custom-element-conformance">conformant</a>), and that the call succeeds, this will be the <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a> that replaced the <var>element</var> we pushed at the beginning of this algorithm. (The <a href="#html-element-constructors">HTML element constructor</a> carries out this replacement.)</p>
 
-            <p>If <var>C</var> does not call <code>super()</code> (i.e. it is not <a href="#custom-element-conformance">conformant</a>), or if any step in the <a href="#dom-htmlelement"><code>HTMLElement</code> constructor</a> throws, then this entry will still be <var>element</var>.</p>
+            <p>If <var>C</var> does not call <code>super()</code> (i.e. it is not <a href="#custom-element-conformance">conformant</a>), or if any step in the <a href="#html-element-constructors">HTML element constructor</a> throws, then this entry will still be <var>element</var>.</p>
           </div>
         </li>
 
@@ -1203,7 +1225,7 @@ customElements.define("x-foo", class extends HTMLElement {
       </ol>
       <hr>
 
-      <p>To ensure <a href="#concept-custom-element-reaction">custom element reactions</a> are triggered appropriately, we introduce the <dfn id="cereactions"><code>[CEReactions]</code></dfn> IDL <span>extended attribute</span>. It indicates that the relevant algorithm is to be supplemented with additional steps in order to appropriately track and invoke <a href="#concept-custom-element-reaction">custom element reactions</a>.</p>
+      <p>To ensure <a href="#concept-custom-element-reaction">custom element reactions</a> are triggered appropriately, we introduce the <dfn id="cereactions"><code>[CEReactions]</code></dfn> IDL <a href="https://heycam.github.io/webidl/#dfn-extended-attribute">extended attribute</a>. It indicates that the relevant algorithm is to be supplemented with additional steps in order to appropriately track and invoke <a href="#concept-custom-element-reaction">custom element reactions</a>.</p>
 
       <p>The <code><a href="#cereactions">[CEReactions]</a></code> extended attribute must take no arguments, and must not appear on anything other than an operation, attribute, setter, or deleter. Additionally, it must not appear on readonly attributes, unless the readonly attribute is also annotated with <code>[PutForwards]</code>.</p>
 
@@ -1232,76 +1254,63 @@ customElements.define("x-foo", class extends HTMLElement {
   </section>
 
   <section>
-    <h2>Miscellaneous patches</h2>
+    <h4 id="html-element-constructors">HTML: HTML element constructors</h4>
 
-    <section id="window-modifications-to-html">
-      <h3>HTML: The <a href="https://html.spec.whatwg.org/#window"><code>Window</code></a> object</h3>
+    <p>To support the <a href="#custom-elements">custom elements</a> feature, all HTML elements have special constructor behavior. This is indicated via the <dfn id="htmlconstructor"><code>[HTMLConstructor]</code></dfn> IDL <a href="https://heycam.github.io/webidl/#dfn-extended-attribute">extended attribute</a>. It indicates that the interface object for the given interface will have a specific behavior when called, as defined in detail below.</p>
 
-      <p>HTML's <code>Window</code> object definition must be extended as follows:</p>
-      <pre class="idl">
-partial interface Window {
-    readonly attribute CustomElementsRegistry customElements;
-};
-</pre>
-    </section>
+    <p>The <code><a href="#htmlconstructor">[HTMLConstructor]</a></code> extended attribute must take no arguments, and must not appear on anything other than an interface. It must appear only once on an interface, and the interface must not be annotated with the <code>[Constructor]</code> or <code>[NoInterfaceObject]</code> extended attributes. (However, the interface may be annotated with <code>[NamedConstructor]</code>; there is no conflict there.) It must not be used on a callback interface.</p>
 
-    <section>
-      <h2>HTML: Elements in the DOM</h2>
+    <p><a href="https://heycam.github.io/webidl/#dfn-interface-object">Interface objects</a> for interfaces annotated with the <code><a href="#htmlconstructor">[HTMLConstructor]</a></code> extended attribute must run the following steps as the function body behavior for both [[\Call]] and [[\Construct]] invocations of the corresponding JavaScript function object. When invoked with [[\Call]], the NewTarget value is undefined, and so the algorithm below will immediately throw. When invoked with [[\Construct]], the [[\Construct]] <var>newTarget</var> parameter provides the NewTarget value.</p>
 
-      <p>The <a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement"><code>HTMLElement</code></a> interface gains following annotation:</p>
-      <pre>
-[<a href="dom-htmlelement">Constructor</a>]
-</pre>
+    <ol>
+      <li>
+        <p>Let <var>registry</var> be the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object.</p>
+      </li>
 
-      <p>An <dfn id="dom-htmlelement"><code>HTMLElement()</code></dfn> constructor is provided. It cannot be invoked directly, but instead works when invoked via a <code>super()</code> call inside a <a href="#custom-element-constructor">custom element constructor</a>. When invoked, the constructor must perform the following steps:</p>
+      <li>
+        <p>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#concept-custom-element-definition-constructor">constructor</a> equal to NewTarget. If there is no such definition, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
 
-      <ol>
-        <li>
-          <p>Let <var>registry</var> be the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object.</p>
-        </li>
+        <p class="note">Since there can be no entry in <var>registry</var> with a <a href="#concept-custom-element-definition-constructor">constructor</a> of undefined, this step also prevents HTML element constructors from being called as functions (since in that case NewTarget will be undefined).</p>
+      </li>
 
-        <li>
-          <p>Let <var>definition</var> be the entry in <var>registry</var> with <a href="#concept-custom-element-definition-constructor">constructor</a> equal to NewTarget. If there is no such definition, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
-        </li>
+      <li>
+        <p>Let <var>prototype</var> be <var>definition</var>'s <a href="#concept-custom-element-definition-prototype">prototype</a>.</p>
+      </li>
 
-        <li>
-          <p>Let <var>prototype</var> be <var>definition</var>'s <a href="#concept-custom-element-definition-prototype">prototype</a>.</p>
-        </li>
+      <li>
+        <p>If <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a> is empty, then:</p>
 
-        <li>
-          <p>If <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a> is empty, then:</p>
+        <ol>
+          <li>
+            <p>Let <var>element</var> be a new element that implements the interface to which this constructor corresponds, with no attributes, namespace set to the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a>, local name set to <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window"><code>Document</code> object</a>.</p>
+          </li>
 
-          <ol>
-            <li>
-              <p>Let <var>element</var> be a new element that implements the <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code> interface, with no attributes, namespace set to the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a>, local name set to <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window"><code>Document</code> object</a>.</p>
-            </li>
+          <li>
+            <p>Perform <var>element</var>.[[\SetPrototypeOf]](<var>prototype</var>). Rethrow any exceptions.</p>
+          </li>
 
-            <li>
-              <p>Perform <var>element</var>.[[\SetPrototypeOf]](<var>prototype</var>). Rethrow any exceptions.</p>
-            </li>
+          <li>
+            <p>Set <var>element</var>'s <a href="#concept-element-custom-element-state">custom element state</a> to "<code>custom</code>".</p>
+          </li>
 
-            <li>
-              <p>Set <var>element</var>'s <a href="#concept-element-custom-element-state">custom element state</a> to "<code>custom</code>".</p>
-            </li>
+          <li>
+            <p>Return <var>element</var>.</p>
+          </li>
+        </ol>
 
-            <li>
-              <p>Return <var>element</var>.</p>
-            </li>
-          </ol>
+        <p class="note">This occurs when author script constructs a new custom element directly, e.g. via <code>new MyCustomElement()</code>.</p>
+      </li>
 
-          <p class="note">This occurs when author script constructs a new custom element directly, e.g. via <code>new MyCustomElement()</code>.</p>
-        </li>
+      <li>
+        <p>Let <var>element</var> be the last entry in <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a>.</p>
+      </li>
 
-        <li>
-          <p>Let <var>element</var> be the last entry in <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a>.</p>
-        </li>
+      <li>
+        <p>If <var>element</var> is an <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a>, then throw an <a href="https://heycam.github.io/webidl/#invalidstateerror">"<code>InvalidStateError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
 
-        <li>
-          <p>If <var>element</var> is an <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a>, then throw an <a href="https://heycam.github.io/webidl/#invalidstateerror">"<code>InvalidStateError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
-
-          <div class="example">
-            <p>This can occur when the author code inside the <a href="#custom-element-constructor">custom element constructor</a> <a href="#custom-element-conformance">non-conformantly</a> creates another instance of the class being constructed, before calling <code>super()</code>:</p>
-            <pre>
+        <div class="example">
+          <p>This can occur when the author code inside the <a href="#custom-element-constructor">custom element constructor</a> <a href="#custom-element-conformance">non-conformantly</a> creates another instance of the class being constructed, before calling <code>super()</code>:</p>
+          <pre>
 let doSillyThing = false;
 
 class DontDoThis extends HTMLElement {
@@ -1317,11 +1326,11 @@ class DontDoThis extends HTMLElement {
   }
 }
 </pre>
-          </div>
+        </div>
 
-          <div class="example">
-            <p>This can also occur when author code inside the <a href="#custom-element-constructor">custom element constructor</a> <a href="#custom-element-conformance">non-conformantly</a> calls <code>super()</code> twice, since per the JavaScript specification, this actually executes the superclass constructor (i.e. this algorithm) twice, before throwing an error:</p>
-            <pre>
+        <div class="example">
+          <p>This can also occur when author code inside the <a href="#custom-element-constructor">custom element constructor</a> <a href="#custom-element-conformance">non-conformantly</a> calls <code>super()</code> twice, since per the JavaScript specification, this actually executes the superclass constructor (i.e. this algorithm) twice, before throwing an error:</p>
+          <pre>
 class DontDoThisEither extends HTMLElement {
   constructor() {
     super();
@@ -1331,58 +1340,57 @@ class DontDoThisEither extends HTMLElement {
   }
 }
 </pre>
-          </div>
-        </li>
+        </div>
+      </li>
 
-        <li>
-          <p>Perform <var>element</var>.[[\SetPrototypeOf]](<var>prototype</var>). Rethrow any exceptions.</p>
-        </li>
+      <li>
+        <p>Perform <var>element</var>.[[\SetPrototypeOf]](<var>prototype</var>). Rethrow any exceptions.</p>
+      </li>
 
-        <li>
-          <p>Replace the last entry in <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a> with an <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a>.</p>
-        </li>
+      <li>
+        <p>Replace the last entry in <var>definition</var>'s <a href="#concept-custom-element-definition-construction-stack">construction stack</a> with an <a href="#concept-already-constructed-marker"><i>already constructed</i> marker</a>.</p>
+      </li>
 
-        <li>
-          <p>Return <var>element</var>.</p>
+      <li>
+        <p>Return <var>element</var>.</p>
 
-          <p class="note">This step is normally reached when <a href="#upgrades">upgrading</a> a custom element; the existing element is returned, so that the <code>super()</code> call inside the <a href="#custom-element-constructor">custom element constructor</a> assigns that existing element to <b>this</b>.</p>
-        </li>
-      </ol>
-      <hr>
+        <p class="note">This step is normally reached when <a href="#upgrades">upgrading</a> a custom element; the existing element is returned, so that the <code>super()</code> call inside the <a href="#custom-element-constructor">custom element constructor</a> assigns that existing element to <b>this</b>.</p>
+      </li>
+    </ol>
+    <hr>
 
-      <p>The <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> for an element with name <var>name</var> in the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a> is determined as follows:</p>
+    <p>In addition to the constructor behavior implied by <code><a href="#htmlconstructor">[HTMLConstructor]</a></code>, some elements also have <a href="https://heycam.github.io/webidl/#dfn-named-constructor">named constructors</a> (which are really factory functions with a modified <code>prototype</code> property).</p>
 
-      <ol>
-        <li>
-          <p>If <var>name</var> is <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#bgsound">bgsound</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#blink">blink</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#isindex">isindex</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#multicol">multicol</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#nextid">nextid</a></code>, or <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#spacer">spacer</a></code>, then return <code><a href="https://html.spec.whatwg.org/multipage/#htmlunknownelement">HTMLUnknownElement</a></code>.</p>
-        </li>
+    <div class="example">
+      <p>Named constructors for HTML elements can also be used in an <code>extends</code> clause when defining a <a href="#custom-element-constructor">custom element constructor</a>:</p>
+      <pre>
+class AutoEmbiggenedImage extends Image {
+  constructor(width, height) {
+    super(width * 10, height * 10);
+  }
+}
 
-        <li>
-          <p>If <var>name</var> is <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#acronym">acronym</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#basefont">basefont</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#big">big</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#center">center</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#nobr">nobr</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#noembed">noembed</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#noframes">noframes</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#plaintext">plaintext</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#rb">rb</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#rtc">rtc</a></code>, <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#strike">strike</a></code>, or <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#tt">tt</a></code>, then return <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>.</p>
-        </li>
+customElements.define("auto-embiggened", AutoEmbiggeningImage, { extends: "img" });
 
-        <li>
-          <p>If <var>name</var> is <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#listing">listing</a></code> or <code><a href="https://html.spec.whatwg.org/multipage/obsolete.html#xmp">xmp</a></code>, then return <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlpreelement">HTMLPreElement</a></code>.</p>
-        </li>
+const image = new AutoEmbiggenedImage(15, 20);
+console.assert(image.width === 150);
+console.assert(image.height === 200);
+</pre>
+    </div>
+  </section>
 
-        <li>
-          <p>Otherwise, if this specification defines an interface appropriate for the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#element-type">element type</a> corresponding to the local name <var>name</var>, then return that interface.</p>
-        </li>
+  <section>
+    <h2>Miscellaneous patches</h2>
 
-        <li>
-          <p>If <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#other-applicable-specifications">other applicable specifications</a> define an appropriate interface for <var>name</var>, then return the interface they define.</p>
-        </li>
+    <section id="window-modifications-to-html">
+      <h3>HTML: The <a href="https://html.spec.whatwg.org/#window"><code>Window</code></a> object</h3>
 
-        <li>
-          <p>If <var>name</var> is a <a href="#valid-custom-element-name">valid custom element name</a>, then return <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>.</p>
-        </li>
-
-        <li>
-          <p>Return <code><a href="https://html.spec.whatwg.org/multipage/#htmlunknownelement">HTMLUnknownElement</a></code>.</p>
-        </li>
-      </ol>
-
-      <p class="note">The use of <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code> instead of <code><a href="https://html.spec.whatwg.org/multipage/#htmlunknownelement">HTMLUnknownElement</a></code> in the case of <a href="#valid-custom-element-name">valid custom element names</a> is done to ensure that any potential future <a href="#upgrades">upgrades</a> only cause a linear transition of the element's prototype chain, from <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code> to a subclass, instead of a lateral one, from <code><a href="https://html.spec.whatwg.org/multipage/#htmlunknownelement">HTMLUnknownElement</a></code> to an unrelated subclass.</p>
+      <p>HTML's <code>Window</code> object definition must be extended as follows:</p>
+      <pre class="idl">
+partial interface Window {
+    readonly attribute CustomElementsRegistry customElements;
+};
+</pre>
     </section>
 
     <section>
@@ -1547,6 +1555,8 @@ class DontDoThisEither extends HTMLElement {
       <h2>HTML: Wide-ranging patches</h2>
 
       <p>All IDL attributes in HTML which could potentially cause DOM mutations have been updated to be annotated with the <code><a href="#cereactions">[CEReactions]</a></code> extended attribute.</p>
+
+      <p>All HTML interfaces representing a HTML element have been updated to be annotated with the <code><a href="#htmlconstructor">[HTMLConstructor]</a></code> extended attribute.</p>
 
       <p>All places in HTML that create elements have been updated to use the new <a href="#concept-create-element">create an element</a> algorithm.</p>
     </section>
