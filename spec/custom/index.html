@@ -124,7 +124,7 @@ div.algorithm {
 
 <body>
   <section id="abstract">
-    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/feb77d09793a2ed8d49a6949dbca73eabb60ae79">feb77d09793a2ed8d49a6949dbca73eabb60ae79</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/674e9343c811b178b5d1821e469682df0aa616f9">674e9343c811b178b5d1821e469682df0aa616f9</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
+    <p>This specification describes the method for enabling the author to define and use new types of DOM elements in a document. It is a copy of the relevant parts of [[!HTML]] up through commit <a href="https://github.com/whatwg/html/commit/81ee034f316f4366aeb315d16ea21521c83ab427">81ee034f316f4366aeb315d16ea21521c83ab427</a> and [[!WHATWG-DOM]] through commit <a href="https://github.com/whatwg/dom/commit/cb85ac4c35baa1345f2b71e2dd3d57b098ddf2d1">cb85ac4c35baa1345f2b71e2dd3d57b098ddf2d1</a>. Section titles are prefixed with "HTML:" or "DOM:" to indicate which spec they copy from.</p>
   </section>
 
   <section id="sotd">
@@ -441,6 +441,10 @@ class TacoButton extends HTMLElement {
         </li>
 
         <li>
+          <p>The constructor must not use the <code><a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-write">document.write()</a></code> or <code><a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open">document.open()</a></code> methods.</p>
+        </li>
+
+        <li>
           <p>The element's attributes and children must not be inspected, as in the non-<a href="#upgrades">upgrade</a> case none will be present, and relying on upgrades makes the element less usable.</p>
         </li>
 
@@ -656,7 +660,7 @@ class TacoButton extends HTMLElement {
         </li>
 
         <li>
-          <p>Let <var>registry</var> be <var>document</var>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc">browsing context</a>'s <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code>'s <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object.</p>
+          <p>Let <var>registry</var> be <var>document</var>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc">browsing context</a>'s <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code>'s <code><a href="#customelementregistry">CustomElementRegistry</a></code> object.</p>
         </li>
 
         <li>
@@ -674,18 +678,18 @@ class TacoButton extends HTMLElement {
     </section>
 
     <section>
-      <h4 id="custom-elements-api">The CustomElementsRegistry interface</h4>
+      <h4 id="custom-elements-api">The CustomElementRegistry interface</h4>
 
-      <p>Each <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object is associated with a unique instance of a <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object, allocated when the <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object is created.</p>
+      <p>Each <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object is associated with a unique instance of a <code><a href="#customelementregistry">CustomElementRegistry</a></code> object, allocated when the <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object is created.</p>
 
       <p class="note">Custom element registries are associated with <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> objects, instead of <code><a href="https://html.spec.whatwg.org/multipage/dom.html#document">Document</a></code> objects, since each <a href="#custom-element-constructor">custom element constructor</a> inherits from the <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> interface, and there is exactly one <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> interface per <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object.</p>
 
-      <p>The <dfn id="dom-window-customelements"><code>customElements</code></dfn> attribute of the <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> interface must return the <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object for that <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object.</p>
+      <p>The <dfn id="dom-window-customelements"><code>customElements</code></dfn> attribute of the <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> interface must return the <code><a href="#customelementregistry">CustomElementRegistry</a></code> object for that <code><a href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object.</p>
       <pre class="idl">
-interface <dfn id="customelementsregistry">CustomElementsRegistry</dfn> {
-  [<a href="#cereactions">CEReactions</a>] void <a href="#dom-customelementsregistry-define">define</a>(DOMString name, Function constructor, optional ElementDefinitionOptions options);
-  any <a href="#dom-customelementsregistry-get">get</a>(DOMString name);
-  Promise&lt;void&gt; <a href="#dom-customelementsregistry-whendefined">whenDefined</a>(DOMString name);
+interface <dfn id="customelementregistry">CustomElementRegistry</dfn> {
+  [<a href="#cereactions">CEReactions</a>] void <a href="#dom-customelementregistry-define">define</a>(DOMString name, Function constructor, optional ElementDefinitionOptions options);
+  any <a href="#dom-customelementregistry-get">get</a>(DOMString name);
+  Promise&lt;void&gt; <a href="#dom-customelementregistry-whendefined">whenDefined</a>(DOMString name);
 };
 
 dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
@@ -693,39 +697,39 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
 };
 </pre>
 
-      <p>Every <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> has a set of <a href="#custom-element-definition">custom element definitions</a>, initially empty. In general, algorithms in this specification look up elements in the registry by any of <a href="#concept-custom-element-definition-name">name</a>, <a href="#concept-custom-element-definition-local-name">local name</a>, or <a href="#concept-custom-element-definition-constructor">constructor</a>.</p>
+      <p>Every <code><a href="#customelementregistry">CustomElementRegistry</a></code> has a set of <a href="#custom-element-definition">custom element definitions</a>, initially empty. In general, algorithms in this specification look up elements in the registry by any of <a href="#concept-custom-element-definition-name">name</a>, <a href="#concept-custom-element-definition-local-name">local name</a>, or <a href="#concept-custom-element-definition-constructor">constructor</a>.</p>
 
-      <p>Every <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> also has a <dfn id="set-of-being-defined-names">set of being-defined names</dfn> and a <dfn id="set-of-being-defined-constructors">set of being-defined constructors</dfn>, containing <a href="#valid-custom-element-name">valid custom element names</a> and JavaScript function objects, respectively. These are used to ensure that when script executes during <a href="#element-definition">element definition</a>, which can reentrantly cause <a href="#element-definition">element definition</a> again, the script cannot define another element using the same name or constructor.</p>
+      <p>Every <code><a href="#customelementregistry">CustomElementRegistry</a></code> also has an <dfn id="element-definition-is-running">element definition is running</dfn> flag which is used to prevent reentrant invocations of <a href="#element-definition">element definition</a>. It is initially unset.</p>
 
-      <p>Every <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> also has a <dfn id="when-defined-promise-map">when-defined promise map</dfn>, mapping <a href="#valid-custom-element-name">valid custom element names</a> to promises. It is used to implement the <code><a href="#dom-customelementsregistry-whendefined">whenDefined()</a></code> method.</p>
+      <p>Every <code><a href="#customelementregistry">CustomElementRegistry</a></code> also has a <dfn id="when-defined-promise-map">when-defined promise map</dfn>, mapping <a href="#valid-custom-element-name">valid custom element names</a> to promises. It is used to implement the <code><a href="#dom-customelementregistry-whendefined">whenDefined()</a></code> method.</p>
 
       <dl class="domintro note">
-        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementsregistry-define">define</a></code>(<var>name</var>, <var>constructor</var>)</dt>
+        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementregistry-define">define</a></code>(<var>name</var>, <var>constructor</var>)</dt>
 
         <dd>
           Defines a new <a href="#custom-element">custom element</a>, mapping the given name to the given constructor as an <a href="#autonomous-custom-element">autonomous custom element</a>.
         </dd>
 
-        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementsregistry-define">define</a></code>(<var>name</var>, <var>constructor</var>, { extends: <var>baseLocalName</var> })</dt>
+        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementregistry-define">define</a></code>(<var>name</var>, <var>constructor</var>, { extends: <var>baseLocalName</var> })</dt>
 
         <dd>
           Defines a new <a href="#custom-element">custom element</a>, mapping the given name to the given constructor as a <a href="#customized-built-in-element">customized built-in element</a> for the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#element-type">element type</a> identified by the supplied <var>baseLocalName</var>. A <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> will be thrown upon trying to extend a <a href="#custom-element">custom element</a> or an unknown element.
         </dd>
 
-        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementsregistry-get">get</a></code>(<var>name</var>)</dt>
+        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementregistry-get">get</a></code>(<var>name</var>)</dt>
 
         <dd>
           Retrieves the <a href="#custom-element-constructor">custom element constructor</a> defined for the given <a href="#concept-custom-element-definition-name">name</a>. Returns undefined if there is no <a href="#custom-element-definition">custom element definition</a> with the given <a href="#concept-custom-element-definition-name">name</a>.
         </dd>
 
-        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementsregistry-whendefined">whenDefined</a></code>(<var>name</var>)</dt>
+        <dt><var>window</var> . <code><a href="#dom-window-customelements">customElements</a></code> . <code><a href="#dom-customelementregistry-whendefined">whenDefined</a></code>(<var>name</var>)</dt>
 
         <dd>
           Returns a promise that will be fulfilled when a <a href="#custom-element">custom element</a> becomes defined with the given name. (If such a <a href="#custom-element">custom element</a> is already defined, the returned promise will be immediately fulfilled.) Returns a promise rejected with a <a href="https://heycam.github.io/webidl/#syntaxerror">"<code>SyntaxError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> if not given a <a href="#valid-custom-element-name">valid custom element name</a>.
         </dd>
       </dl>
 
-      <p><dfn id="element-definition">Element definition</dfn> is a process of adding a <a href="#custom-element-definition">custom element definition</a> to the <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>. This is accomplished by the <code><a href="#dom-customelementsregistry-define">define()</a></code> method. When invoked, the <dfn id="dom-customelementsregistry-define"><code>define(<var>name</var>, <var>constructor</var>, <var>options</var>)</code></dfn> method must run these steps:</p>
+      <p><dfn id="element-definition">Element definition</dfn> is a process of adding a <a href="#custom-element-definition">custom element definition</a> to the <code><a href="#customelementregistry">CustomElementRegistry</a></code>. This is accomplished by the <code><a href="#dom-customelementregistry-define">define()</a></code> method. When invoked, the <dfn id="dom-customelementregistry-define"><code>define(<var>name</var>, <var>constructor</var>, <var>options</var>)</code></dfn> method must run these steps:</p>
 
       <ol>
         <li>
@@ -733,35 +737,15 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>If <var>constructor</var> is either an <a href="https://heycam.github.io/webidl/#dfn-interface-object">interface object</a> or <a href="https://heycam.github.io/webidl/#dfn-named-constructor">named constructor</a>, whose corresponding interface either is <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> or has <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> in its set of <a href="https://heycam.github.io/webidl/#dfn-inherited-interfaces">inherited interfaces</a>, throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
-
-          <div class="note">
-            <p>This prevents passing, for example, <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> as <var>constructor</var>, and thus enabling the creation of <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> instances with a local name that is not <code class="no-backref"><a href="https://html.spec.whatwg.org/multipage/forms.html#the-button-element">button</a></code>.</p>
-
-            <p>Author-defined <a href="#custom-element-constructor">custom element constructors</a>, created for example via <code>class extends HTMLElement {}</code> or <code>class extends HTMLButtonElement {}</code>, will pass this step without throwing a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code>, since they are not <a href="https://heycam.github.io/webidl/#dfn-interface-object">interface objects</a>.</p>
-
-            <p><a href="https://heycam.github.io/webidl/#dfn-interface-object">Interface objects</a> that do not inherit from <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code> (for example <code class="no-backref"><a href="embedded-content.html#texttrack">TextTrack</a></code>), or classes defined in the JavaScript specification (such as <code>Set</code>), will pass this step without throwing a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code>. However, they will later cause <a href="#concept-create-element">create an element</a> to fail.</p>
-          </div>
-        </li>
-
-        <li>
           <p>If <var>name</var> is not a <a href="#valid-custom-element-name">valid custom element name</a>, then throw a <a href="https://heycam.github.io/webidl/#syntaxerror">"<code>SyntaxError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
         </li>
 
         <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
         </li>
 
         <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-names">set of being-defined names</a> contains <var>name</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
-        </li>
-
-        <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-constructor">constructor</a> <var>constructor</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
-        </li>
-
-        <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-constructors">set of being-defined constructors</a> contains <var>constructor</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-constructor">constructor</a> <var>constructor</var>, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
         </li>
 
         <li>
@@ -791,11 +775,11 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>Add <var>name</var> to this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-names">set of being-defined names</a>.</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#element-definition-is-running">element definition is running</a> flag is set, then throw a <a href="https://heycam.github.io/webidl/#notsupportederror">"<code>NotSupportedError</code>"</a> <code><a href="https://heycam.github.io/webidl/#dfn-DOMException">DOMException</a></code> and abort these steps.</p>
         </li>
 
         <li>
-          <p>Add <var>constructor</var> to this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-constructors">set of being-defined constructors</a>.</p>
+          <p>Set this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#element-definition-is-running">element definition is running</a> flag.</p>
         </li>
 
         <li>
@@ -815,7 +799,7 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
             </li>
 
             <li>
-              <p>For each of the four keys <var>callbackName</var> in <var>lifecycleCallbacks</var>:</p>
+              <p>For each of the four keys <var>callbackName</var> in <var>lifecycleCallbacks</var>, in the order listed in the previous step:</p>
 
               <ol>
                 <li>
@@ -847,19 +831,15 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
             </li>
           </ol>
 
-          <p>Then, perform the following substeps, regardless of whether the above steps threw an exception or not:</p>
+          <p>Then, perform the following substep, regardless of whether the above steps threw an exception or not:</p>
 
           <ol>
             <li>
-              <p>Remove <var>name</var> from this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-names">set of being-defined names</a>.</p>
-            </li>
-
-            <li>
-              <p>Remove <var>constructor</var> from this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#set-of-being-defined-constructors">set of being-defined constructors</a>.</p>
+              <p>Unset this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#element-definition-is-running">element definition is running</a> flag.</p>
             </li>
           </ol>
 
-          <p>Finally, if the first set of steps threw an exception, then rethrow that exception, and terminate this algorithm. Otherwise, continue onward.</p>
+          <p>Finally, if the first set of substeps threw an exception, then rethrow that exception, and terminate this algorithm. Otherwise, continue onward.</p>
         </li>
 
         <li>
@@ -867,11 +847,11 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>Add <var>definition</var> to this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>.</p>
+          <p>Add <var>definition</var> to this <code><a href="#customelementregistry">CustomElementRegistry</a></code>.</p>
         </li>
 
         <li>
-          <p>Let <var>document</var> be this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global">relevant global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window">associated <code>Document</code></a>.</p>
+          <p>Let <var>document</var> be this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global">relevant global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window">associated <code>Document</code></a>.</p>
         </li>
 
         <li>
@@ -883,7 +863,7 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a> contains an entry with key <var>name</var>:</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a> contains an entry with key <var>name</var>:</p>
 
           <ol>
             <li>
@@ -895,17 +875,17 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
             </li>
 
             <li>
-              <p>Delete the entry with key <var>name</var> from this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a>.</p>
+              <p>Delete the entry with key <var>name</var> from this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a>.</p>
             </li>
           </ol>
         </li>
       </ol>
 
-      <p>When invoked, the <dfn id="dom-customelementsregistry-get"><code>get(<var>name</var>)</code></dfn> method must run these steps:</p>
+      <p>When invoked, the <dfn id="dom-customelementregistry-get"><code>get(<var>name</var>)</code></dfn> method must run these steps:</p>
 
       <ol>
         <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then return that entry's <a href="#concept-custom-element-definition-constructor">constructor</a>.</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then return that entry's <a href="#concept-custom-element-definition-constructor">constructor</a>.</p>
         </li>
 
         <li>
@@ -913,7 +893,7 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
       </ol>
 
-      <p>When invoked, the <dfn id="dom-customelementsregistry-whendefined"><code>whenDefined(<var>name</var>)</code></dfn> method must run these steps:</p>
+      <p>When invoked, the <dfn id="dom-customelementregistry-whendefined"><code>whenDefined(<var>name</var>)</code></dfn> method must run these steps:</p>
 
       <ol>
         <li>
@@ -921,11 +901,11 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
         </li>
 
         <li>
-          <p>If this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then return a new promise resolved with undefined and abort these steps.</p>
+          <p>If this <code><a href="#customelementregistry">CustomElementRegistry</a></code> contains an entry with <a href="#concept-custom-element-definition-name">name</a> <var>name</var>, then return a new promise resolved with undefined and abort these steps.</p>
         </li>
 
         <li>
-          <p>Let <var>map</var> be this <code><a href="#customelementsregistry">CustomElementsRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a>.</p>
+          <p>Let <var>map</var> be this <code><a href="#customelementregistry">CustomElementRegistry</a></code>'s <a href="#when-defined-promise-map">when-defined promise map</a>.</p>
         </li>
 
         <li>
@@ -942,7 +922,7 @@ dictionary <dfn id="elementdefinitionoptions">ElementDefinitionOptions</dfn> {
       </ol>
 
       <div class="example">
-        <p>The <code><a href="#dom-customelementsregistry-whendefined">whenDefined()</a></code> method can be used to avoid performing an action until all appropriate <a href="#custom-element">custom elements</a> are <a href="#concept-element-defined">defined</a>. In this example, we combine it with the <code><a href="#selector-defined">:defined</a></code> pseudo-class to hide a dynamically-loaded article's contents until we're sure that all of the <a href="#autonomous-custom-element">autonomous custom elements</a> it uses are defined.</p>
+        <p>The <code><a href="#dom-customelementregistry-whendefined">whenDefined()</a></code> method can be used to avoid performing an action until all appropriate <a href="#custom-element">custom elements</a> are <a href="#concept-element-defined">defined</a>. In this example, we combine it with the <code><a href="#selector-defined">:defined</a></code> pseudo-class to hide a dynamically-loaded article's contents until we're sure that all of the <a href="#autonomous-custom-element">autonomous custom elements</a> it uses are defined.</p>
         <pre>
 articleContainer.hidden = true;
 
@@ -1302,7 +1282,7 @@ customElements.define("x-foo", class extends HTMLElement {
 
         <ul>
           <li>
-            <p><code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code>'s <code>innerText</code> and <code>outerText</code> IDL attributes</p>
+            <p><code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlelement">HTMLElement</a></code>'s <code>outerText</code> IDL attribute</p>
           </li>
 
           <li>
@@ -1332,7 +1312,22 @@ customElements.define("x-foo", class extends HTMLElement {
 
     <ol>
       <li>
-        <p>Let <var>registry</var> be the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <code><a href="#customelementsregistry">CustomElementsRegistry</a></code> object.</p>
+        <p>Let <var>registry</var> be the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <code><a href="#customelementregistry">CustomElementRegistry</a></code> object.</p>
+      </li>
+
+      <li>
+        <p>If NewTarget is equal to the <a href="https://tc39.github.io/ecma262/#active-function-object">active function object</a>, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
+
+        <div class="example no-backref">
+          <p>This can occur when a custom element is defined using an <a href="https://dom.spec.whatwg.org/#concept-element-interface">element interface</a> as its constructor:</p>
+          <pre>
+customElements.define("bad-1", HTMLButtonElement);
+new HTMLButtonElement();          // (1)
+document.createElement("bad-1");  // (2)
+</pre>
+
+          <p>In this case, during the execution of <code><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> (either explicitly, as in (1), or implicitly, as in (2)), both the <a href="https://tc39.github.io/ecma262/#active-function-object">active function object</a> and NewTarget are <code><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code>. If this check was not present, it would be possible to create an instance of <code><a href="https://html.spec.whatwg.org/multipage/forms.html#htmlbuttonelement">HTMLButtonElement</a></code> whose local name was <code>bad-1</code>.</p>
+        </div>
       </li>
 
       <li>
@@ -1346,15 +1341,15 @@ customElements.define("x-foo", class extends HTMLElement {
 
         <ol>
           <li>
-            <p>If the currently-executing constructor is not <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
+            <p>If the <a href="https://tc39.github.io/ecma262/#active-function-object">active function object</a> is not <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>, then throw a <code><a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror">TypeError</a></code> and abort these steps.</p>
 
             <div class="example no-backref">
               <p>This can occur when a custom element is defined to not extend any local names, but inherits from a non-<code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code> class:</p>
               <pre>
-customElements.define("bad-1", class Bad1 extends HTMLParagraphElement {});
+customElements.define("bad-2", class Bad2 extends HTMLParagraphElement {});
 </pre>
 
-              <p>In this case, during the (implicit) <code>super()</code> call that occurs when constructing an instance of <code>Bad1</code>, the currently-executing constructor is <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlparagraphelement">HTMLParagraphElement</a></code>, not <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>.</p>
+              <p>In this case, during the (implicit) <code>super()</code> call that occurs when constructing an instance of <code>Bad2</code>, the <a href="https://tc39.github.io/ecma262/#active-function-object">active function object</a> is <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#htmlparagraphelement">HTMLParagraphElement</a></code>, not <code><a href="https://html.spec.whatwg.org/multipage/#htmlelement">HTMLElement</a></code>.</p>
             </div>
           </li>
         </ol>
@@ -1374,10 +1369,10 @@ customElements.define("bad-1", class Bad1 extends HTMLParagraphElement {});
             <div class="example no-backref">
               <p>This can occur when a custom element is defined to extend a given local name but inherits from the wrong class:</p>
               <pre>
-customElements.define("bad-2", class Bad2 extends HTMLQuoteElement {}, { extends: "p" });
+customElements.define("bad-3", class Bad3 extends HTMLQuoteElement {}, { extends: "p" });
 </pre>
 
-              <p>In this case, during the (implicit) <code>super()</code> call that occurs when constructing an instance of <code>Bad2</code>, <var>valid local names</var> is the list containing <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-q-element">q</a></code> and <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-blockquote-element">blockquote</a></code>, but <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a> is <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-p-element">p</a></code>, which is not in that list.</p>
+              <p>In this case, during the (implicit) <code>super()</code> call that occurs when constructing an instance of <code>Bad3</code>, <var>valid local names</var> is the list containing <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-q-element">q</a></code> and <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-blockquote-element">blockquote</a></code>, but <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a> is <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-p-element">p</a></code>, which is not in that list.</p>
             </div>
           </li>
         </ol>
@@ -1392,7 +1387,7 @@ customElements.define("bad-2", class Bad2 extends HTMLQuoteElement {}, { extends
 
         <ol>
           <li>
-            <p>Let <var>element</var> be a new element that implements the interface to which this constructor corresponds, with no attributes, namespace set to the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a>, local name set to <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window">associated <code>Document</code></a>.</p>
+            <p>Let <var>element</var> be a new element that implements the interface to which the <a href="https://tc39.github.io/ecma262/#active-function-object">active function object</a> corresponds, with no attributes, namespace set to the <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#html-namespace-2">HTML namespace</a>, local name set to <var>definition</var>'s <a href="#concept-custom-element-definition-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">current global object</a>'s <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window">associated <code>Document</code></a>.</p>
           </li>
 
           <li>
@@ -1401,6 +1396,10 @@ customElements.define("bad-2", class Bad2 extends HTMLQuoteElement {}, { extends
 
           <li>
             <p>Set <var>element</var>'s <a href="#concept-element-custom-element-state">custom element state</a> to "<code>custom</code>".</p>
+          </li>
+
+          <li>
+            <p>Set <var>element</var>'s <a href="#concept-element-custom-element-definition">custom element definition</a> to <var>definition</var>.</p>
           </li>
 
           <li>
@@ -1546,11 +1545,7 @@ partial interface Window {
 
           <ol>
             <li>
-              <p>Increment the parser's <a href="https://html.spec.whatwg.org/multipage/#script-nesting-level">script nesting level</a>.</p>
-            </li>
-
-            <li>
-              <p>Set the <a href="https://html.spec.whatwg.org/multipage/#parser-pause-flag">parser pause flag</a> to true.</p>
+              <p>Increment <var>document</var>'s <a href="https://html.spec.whatwg.org/multipage/webappapis.html#throw-on-dynamic-markup-insertion-counter">throw-on-dynamic-markup-insertion counter</a>.</p>
             </li>
 
             <li>
@@ -1566,7 +1561,7 @@ partial interface Window {
         <li>
           <p>Let <var>element</var> be the result of <a href="#concept-create-element">creating an element</a> given <var>document</var>, <var>localName</var>, <var>given namespace</var>, null, and <var>is</var>. If <var>will execute script</var> is true, set the <var>synchronous custom elements flag</var>; otherwise, leave it unset.</p>
 
-          <p class="note">This will cause <a href="#custom-element-constructor">custom element constructors</a> to run, if <var>will execute script</var> is true. However, even if this causes <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-write">new characters to be inserted into the tokenizer</a>, the parser will not be executed reentrantly, since the <a href="https://html.spec.whatwg.org/multipage/#parser-pause-flag">parser pause flag</a> is true. Similarly, <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open">blowing away the document</a> is not possible, since the <a href="https://html.spec.whatwg.org/multipage/#script-nesting-level">script nesting level</a> is greater than zero.</p>
+          <p class="note">This will cause <a href="#custom-element-constructor">custom element constructors</a> to run, if <var>will execute script</var> is true. However, since we incremented the <a href="https://html.spec.whatwg.org/multipage/webappapis.html#throw-on-dynamic-markup-insertion-counter">throw-on-dynamic-markup-insertion counter</a>, this cannot cause <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-write">new characters to be inserted into the tokenizer</a>, or <a href="https://html.spec.whatwg.org/multipage/webappapis.html#dom-document-open">the document to be blown away</a>.</p>
 
           <p>If this step throws an exception, then <a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">report the exception</a>, and let <var>element</var> be instead a new element that implements <code><a href="https://html.spec.whatwg.org/multipage/dom.html#htmlunknownelement">HTMLUnknownElement</a></code>, with no attributes, namespace set to <var>given namespace</var>, namespace prefix set to null, <a href="#concept-element-custom-element-state">custom element state</a> set to "<code>failed</code>", <a href="#concept-element-custom-element-definition">custom element definition</a> set to null, and <a href="https://dom.spec.whatwg.org/#concept-node-document">node document</a> set to <var>document</var>.</p>
         </li>
@@ -1592,11 +1587,7 @@ partial interface Window {
             </li>
 
             <li>
-              <p>Decrement the <a href="https://html.spec.whatwg.org/multipage/#script-nesting-level">script nesting level</a> by one.</p>
-            </li>
-
-            <li>
-              <p>If the parser's <a href="https://html.spec.whatwg.org/multipage/#script-nesting-level">script nesting level</a> is zero, then set the <a href="https://html.spec.whatwg.org/multipage/#parser-pause-flag">parser pause flag</a> to false.</p>
+              <p>Decrement <var>document</var>'s <a href="https://html.spec.whatwg.org/multipage/webappapis.html#throw-on-dynamic-markup-insertion-counter">throw-on-dynamic-markup-insertion counter</a>.</p>
             </li>
           </ol>
         </li>
@@ -1844,7 +1835,7 @@ partial interface Window {
             </li>
 
             <li>
-              <p>If <var>document</var> has a <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-bc">browsing context</a>, and <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and either <var>localName</var> is a <a href="#valid-custom-element-name">valid custom element name</a> or <var>is</var> is is non-null, set <var>result</var>’s <a href="#concept-element-custom-element-state">custom element state</a> to "<code>undefined</code>".</p>
+              <p>If <var>namespace</var> is the <a href="https://dom.spec.whatwg.org/#html-namespace">HTML namespace</a>, and either <var>localName</var> is a <a href="#valid-custom-element-name">valid custom element name</a> or <var>is</var> is non-null, then set <var>result</var>’s <a href="#concept-element-custom-element-state">custom element state</a> to "<code>undefined</code>".</p>
             </li>
           </ol>
         </li>
@@ -1965,11 +1956,7 @@ partial interface Window {
 
               <ol>
                 <li>
-                  <p>Let <var>copyAttribute</var> be a new <a href="https://dom.spec.whatwg.org/#concept-attribute">attribute</a>.</p>
-                </li>
-
-                <li>
-                  <p>Set <var>copyAttribute</var>’s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace-prefix">namespace prefix</a>, <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, to those of <var>attribute</var>.</p>
+                  <p>Let <var>copyAttribute</var> be a <a href="#concept-node-clone">clone</a> of <var>attribute</var>.</p>
                 </li>
 
                 <li>
@@ -1994,6 +1981,12 @@ partial interface Window {
 
             <dd>
               <p>Set <var>copy</var>’s <a href="https://dom.spec.whatwg.org/#concept-doctype-name">name</a>, <a href="https://dom.spec.whatwg.org/#concept-doctype-publicid">public ID</a>, and <a href="https://dom.spec.whatwg.org/#concept-doctype-systemid">system ID</a>, to those of <var>node</var>.</p>
+            </dd>
+
+            <dt><code><a href="https://dom.spec.whatwg.org/#attr">Attr</a></code></dt>
+
+            <dd>
+              <p>Set <var>copy</var>’s <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace">namespace</a>, <a href="https://dom.spec.whatwg.org/#concept-attribute-namespace-prefix">namespace prefix</a>, <a href="https://dom.spec.whatwg.org/#concept-attribute-local-name">local name</a>, and <a href="https://dom.spec.whatwg.org/#concept-attribute-value">value</a>, to those of <var>node</var>.</p>
             </dd>
 
             <dt><code><a href="https://dom.spec.whatwg.org/#text">Text</a></code></dt>
