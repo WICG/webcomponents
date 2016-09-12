@@ -2,6 +2,21 @@
 
 Once the [`<script type="module">`](https://github.com/whatwg/html/pull/443) support ships in the browsers, the native [ES](https://tc39.github.io/ecma262/) Modules support will come to the Web Platform. Now seems like a good time to consider what this means for [HTML Imports](http://w3c.github.io/webcomponents/spec/imports/). Here are a couple of thoughts and rough ideas.
 
+## Use Cases
+
+*Package a component.* Web components comprise HTML, script, styles, images and other resources. They can be developed independently and composed in the DOM with custom elements and shadow DOM. For this reason it makes sense to keep the markup, styles, etc. of a component together. Web components should be convenient to pull in. Web components may depend on other components. Because they may also depend on script libraries the method of loading should be harmonized with ES modules. ES modules alone are not sufficient ES modules are not a good vehicle for markup and styles which can be parsed, etc. while streaming from the network.
+
+Components should be efficient to load, however efficient loading is not unique to components. So we consider the idea of keeping a component's related resources together a different problem to Web Packaging, HTTP/2, etc.
+
+## Requirements
+
+* Efficient to load and instantiate. It should be possible to asynchronously process HTML and preload dependent resources. It is OK to assume HTTP/2.
+* Mixed resources: HTML, CSS, script inline. Also resources out-of-line.
+* HTML markup in the module does not appear in the main document; CSS does not apply in the main document. This is analogous to template. Script should run and have access to the DOM of the module, though, because that's the way to set up web components.
+* Integrated with ES module loading: ES modules can depend on HTML modules and vice versa.
+* Run script. Script can get access to the components' HTML and CSS.
+* Run custom elements. For example, a declarative syntax could be built out of custom elements so you'd want those elements to "run".
+
 ## Naive Integration
 
 As currently designed, HTML Imports appear to *Just Work* with ES Modules.
