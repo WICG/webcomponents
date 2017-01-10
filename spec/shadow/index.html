@@ -1003,37 +1003,53 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
       </section>
 
       <section>
-        <h3>The <code>ShadowRoot</code> interface</h3>
 
-        <p>The <code>ShadowRoot</code> interface represents the <a>shadow root</a>.</p>
+   <h3 class="heading settled" data-level="3.8" id="interface-shadowroot"><span class="secno"></span><span class="content">Interface <code class="idl"><a data-link-type="idl" href="#shadowroot">ShadowRoot</a></code></span></h3>
 
-        <dl class="idl" title="interface ShadowRoot : DocumentFragment">
+   <p class="warning">
+     This section is a copy of <a href="https://dom.spec.whatwg.org/#interface-shadowroot">Interface ShadowRoot</a> section in [[WHATWG-DOM]]. This section is expected to be synced with that periodically.
+     </p>
 
-          <dt>readonly attribute Element host</dt>
-          <dd>
-            <p>Represents the <a>shadow host</a> which <a>hosts</a> the <a>context object</a>.</p>
-            <p>On getting, the attribute <strong>must</strong> return the <a>shadow host</a> which <a>hosts</a> the <a>context object</a>.</p>
-          </dd>
+<pre class="idl highlight def">[<a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=<span class="n">Window</span>]
+<span class="kt">interface</span> <dfn class="nv idl-code" data-dfn-type="interface" data-export="" id="shadowroot">ShadowRoot<a class="self-link" href="#shadowroot"></a></dfn> : <a class="n" data-link-type="idl-name" href="#documentfragment">DocumentFragment</a> {
+  <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n" data-link-type="idl-name" href="#enumdef-shadowrootmode">ShadowRootMode</a> <a class="nv idl-code" data-link-type="attribute" data-readonly="" data-type="ShadowRootMode" href="#dom-shadowroot-mode">mode</a>;
+  <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n" data-link-type="idl-name" href="#element">Element</a> <a class="nv idl-code" data-link-type="attribute" data-readonly="" data-type="Element" href="#dom-shadowroot-host">host</a>;
+};
 
-          <dt>[TreatNullAs=EmptyString] attribute DOMString innerHTML</dt>
-          <dd>
-            This is similarly defined in Element's innerHTML with the following exceptions:
-            <ul>
-              <li>
-                The <a>fragment serializing algorithm</a> <strong>must</strong> be invoked with the <a>shadow host</a> as input.
-              </li>
-              <li>
-                The <a>fragment parsing algorithm</a> <strong>must</strong> use the <a>shadow host</a> as the context element.
-              </li>
-            </ul>
-
-            <p class="note">
-              Because <code>DocumentFragment</code> does not always have a <a>host</a>, <code>innerHTML</code> can not be defined in <code>DocumentFragment</code>.
-            </p>
-          </dd>
-        </dl>
-
-        <p>The <a><code>nodeType</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <a><code>DOCUMENT_FRAGMENT_NODE</code></a>. Accordingly, the <a><code>nodeName</code></a> attribute of a <a><code>ShadowRoot</code></a> instance <strong>must</strong> return <code>"#document-fragment"</code>.</p>
+<span class="kt">enum</span> <dfn class="nv idl-code" data-dfn-type="enum" data-export="" id="enumdef-shadowrootmode">ShadowRootMode<a class="self-link" href="#enumdef-shadowrootmode"></a></dfn> { <dfn class="s idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;open&quot;|open" id="dom-shadowrootmode-open">"open"<a class="self-link" href="#dom-shadowrootmode-open"></a></dfn>, <dfn class="s idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;closed&quot;|closed" id="dom-shadowrootmode-closed">"closed"<a class="self-link" href="#dom-shadowrootmode-closed"></a></dfn> };
+</pre>
+   <p><code class="idl"><a data-link-type="idl" href="#shadowroot">ShadowRoot</a></code> <a data-link-type="dfn" href="#concept-node">nodes</a> are simply known as <dfn data-dfn-type="dfn" data-export="" data-lt="shadow root" id="concept-shadow-root">shadow roots<a class="self-link" href="#concept-shadow-root"></a></dfn>. </p>
+   <p><a data-link-type="dfn" href="#concept-shadow-root">Shadow roots</a> have an associated <dfn data-dfn-for="ShadowRoot" data-dfn-type="dfn" data-noexport="" id="shadowroot-mode">mode<a class="self-link" href="#shadowroot-mode"></a></dfn> ("<code>open</code>"
+or "<code>closed</code>").</p>
+   <p><a data-link-type="dfn" href="#concept-shadow-root">Shadow roots</a>’s associated <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is never null.</p>
+   <p>A <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#get-the-parent">get the parent</a> algorithm, given an <var>event</var>, returns
+null if <var>event</var>’s <a data-link-type="dfn" href="#composed-flag">composed flag</a> is unset and <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> is the <a data-link-type="dfn" href="#concept-tree-root">root</a> of <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>’s first tuple’s <b>item</b>, and <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> otherwise. </p>
+   <p>The <dfn class="idl-code" data-dfn-for="ShadowRoot" data-dfn-type="attribute" data-export="" id="dom-shadowroot-mode"><code>mode</code><a class="self-link" href="#dom-shadowroot-mode"></a></dfn> attribute’s getter must return the <a data-link-type="dfn" href="#context-object">context object</a>’s <a data-link-type="dfn" href="#shadowroot-mode">mode</a>.</p>
+   <p>The <dfn class="idl-code" data-dfn-for="ShadowRoot" data-dfn-type="attribute" data-export="" id="dom-shadowroot-host"><code>host</code><a class="self-link" href="#dom-shadowroot-host"></a></dfn> attribute’s getter must return the <a data-link-type="dfn" href="#context-object">context object</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>. </p>
+   <hr>
+   <p>In <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-tree-order">shadow-including tree order<a class="self-link" href="#concept-shadow-including-tree-order"></a></dfn>, is <a data-link-type="dfn" href="#shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal</a> of a <a data-link-type="dfn" href="#concept-node-tree">node tree</a>. <dfn data-dfn-type="dfn" data-noexport="" id="shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal<a class="self-link" href="#shadow-including-preorder-depth-first-traversal"></a></dfn> of a <a data-link-type="dfn" href="#concept-node-tree">node tree</a> <var>tree</var> is preorder, depth-first traversal of <var>tree</var>, with for each <a data-link-type="dfn" href="#element-shadow-host">shadow host</a> encountered in <var>tree</var>, <a data-link-type="dfn" href="#shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal</a> of that <a data-link-type="dfn" href="#concept-element">element</a>’s <a data-link-type="dfn" href="#concept-element-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#concept-node-tree">node tree</a> just after it is encountered. </p>
+   <p>The <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-root">shadow-including root<a class="self-link" href="#concept-shadow-including-root"></a></dfn> of an object is its <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>’s <a data-link-type="dfn" href="#concept-shadow-including-root">shadow-including root</a>, if the
+object’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>, and its <a data-link-type="dfn" href="#concept-tree-root">root</a> otherwise.</p>
+   <p>An object <var>A</var> is a <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-descendant">shadow-including descendant<a class="self-link" href="#concept-shadow-including-descendant"></a></dfn> of an object <var>B</var>, if <var>A</var> is a <a data-link-type="dfn" href="#concept-tree-descendant">descendant</a> of <var>B</var>, or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> and <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-descendant">shadow-including inclusive descendant</a> of <var>B</var>. </p>
+   <p>A <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-inclusive-descendant">shadow-including inclusive descendant<a class="self-link" href="#concept-shadow-including-inclusive-descendant"></a></dfn> is an object or one of its <a data-link-type="dfn" href="#concept-shadow-including-descendant">shadow-including descendants</a>. </p>
+   <p>An object <var>A</var> is a <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-ancestor">shadow-including ancestor<a class="self-link" href="#concept-shadow-including-ancestor"></a></dfn> of an object <var>B</var>, if and only if <var>B</var> is a <a data-link-type="dfn" href="#concept-shadow-including-descendant">shadow-including descendant</a> of <var>A</var>. </p>
+   <p>A <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor<a class="self-link" href="#concept-shadow-including-inclusive-ancestor"></a></dfn> is an object or one of its <a data-link-type="dfn" href="#concept-shadow-including-ancestor">shadow-including ancestors</a>. </p>
+   <p>A <a data-link-type="dfn" href="#concept-node">node</a> <var>A</var> is <dfn data-dfn-type="dfn" data-export="" id="concept-closed-shadow-hidden">closed-shadow-hidden<a class="self-link" href="#concept-closed-shadow-hidden"></a></dfn> from a <a data-link-type="dfn" href="#concept-node">node</a> <var>B</var> if all of the following conditions are true: </p>
+   <ul>
+    <li>
+     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>. </p>
+    <li>
+     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is not a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>B</var>. </p>
+    <li>
+     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> whose <a data-link-type="dfn" href="#shadowroot-mode">mode</a> is "<code>closed</code>" or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is <a data-link-type="dfn" href="#concept-closed-shadow-hidden">closed-shadow-hidden</a> from <var>B</var>. </p>
+   </ul>
+   <p>To <dfn data-dfn-type="dfn" data-export="" data-lt="retarget|retargeting" id="retarget">retarget<a class="self-link" href="#retarget"></a></dfn> an object <var>A</var> against an object <var>B</var>, repeat these steps until they return an object:</p>
+   <ol>
+    <li>
+     <p>If <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is not a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>, or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>B</var>, then return <var>A</var>. </p>
+    <li>
+     <p>Set <var>A</var> to <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>. </p>
+   </ol>
       </section>
 
       <section>
@@ -1114,16 +1130,6 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
           <dd>Specifies the associated <a>mode</a> of <a>ShadowRoot</a></dd>
           <dt>boolean delegatesFocus = false</dt>
           <dd>Specifies whether shadow host <a>delegates focus</a> to its <a>ShadowRoot</a>. If omitted, the default value is false.</dd>
-        </dl>
-      </section>
-
-      <section>
-        <h3><code>ShadowRootMode</code> enum</h3>
-        <dl class="idl" title="enum ShadowRootMode">
-          <dt>open</dt>
-          <dd>Specifies "open" <a>mode</a></dd>
-          <dt>closed</dt>
-          <dd>Specifies "closed" <a>mode</a></dd>
         </dl>
       </section>
 
