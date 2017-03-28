@@ -17,7 +17,7 @@ Components should be efficient to load, however efficient loading is not unique 
 * Run script. Script can get access to the components' HTML and CSS.
 * Run custom elements. For example, a declarative syntax could be built out of custom elements so you'd want those elements to "run".
 
-## Naive Integration
+## Native Integration
 
 As currently designed, HTML Imports appear to *Just Work* with ES Modules.
 
