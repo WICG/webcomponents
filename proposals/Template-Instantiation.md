@@ -53,7 +53,7 @@ Use case (2) is addressed as follows:
 
 ```
 // Template content is '`<section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section>'`
-shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "[rniwa@webkit.org](mailto:rniwa@webkit.org)"}));
+shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "mailto:rniwa@webkit.org"}));
 ```
 
 When `createInstance` is called with a JavaScript object, we automatically substitute every mustache syntax with the corresponding value of the property in the object. The resultant DOM would look as though we parsed the following HTML:
@@ -65,16 +65,16 @@ When `createInstance` is called with a JavaScript object, we automatically subst
 For use case (3), `TemplateInstance`'s `update` method can be used as follows:
 
 ```
-let content = template.createInstance({name: "Ryosuke Niwa", email: "[rniwa@webkit.org](mailto:rniwa@webkit.org)"});
+let content = template.createInstance({name: "Ryosuke Niwa", email: "rniwa@webkit.org"});
 shadowRoot.appendChild(content);
 ...
-content.update({email: "[rniwa@apple.com](mailto:rniwa@apple.com)"});
+content.update({name: "Ryosuke Niwa", email: "rniwa@apple.com"});
 ```
 
 That would update the DOM tree of the template instance to look like:
 
 ```
-<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@apple.com”>rniwa@`apple.com`</a></section>
+<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@apple.com”>rniwa@apple.com</a></section>
 ```
 
 Note that `TemplateInstance` keeps track of nodes via template parts defined in the next section so that even if they are removed from `TemplateInstance` per `appendChild` in the second line, they keep semantically functioning as a part of the template instance, making the subsequent `update` call possible.
