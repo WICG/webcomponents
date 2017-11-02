@@ -29,7 +29,7 @@ To address all these use cases, we propose the following API.
 
 ### **3.1. Basics**
 
-To address use cases (1), (2), and (3), we propose `createInstance` method to `[HTMLTemplateElement](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element)`. This new method clones the content tree of a HTML template element as an instance of TemplateInstance, which is a subclass of [`DocumentFragment`](https://dom.spec.whatwg.org/#interface-documentfragment). This new subclass has `update` method, which can re-substitute mustache syntaxes (we can pick some there syntax if anyone strongly feels about) in the cloned template instance.
+To address use cases (1), (2), and (3), we propose adding a `createInstance` method to the [`HTMLTemplateElement`](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element) interface. This new method clones the content tree of an HTML template element as an instance of `TemplateInstance`, which is a subclass of [`DocumentFragment`](https://dom.spec.whatwg.org/#interface-documentfragment). This new subclass has `update` method, which can re-substitute mustache syntaxes (we can pick some other syntax if anyone strongly feels about) in the cloned template instance.
 
 ```
 [NoInterfaceObject]
@@ -56,52 +56,51 @@ Use case (2) is addressed as follows:
 shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "[rniwa@webkit.org](mailto:rniwa@webkit.org)"}));
 ```
 
-When createInstance is called with a JavaScript object, we automatically substitute every mustache syntax with the corresponding value of the property in the object. The resultant DOM would look as though we parsed the following HTML:
+When `createInstance` is called with a JavaScript object, we automatically substitute every mustache syntax with the corresponding value of the property in the object. The resultant DOM would look as though we parsed the following HTML:
 
 ```
-`<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@webkit.org”>rniwa@webkit.org</a></section>`
+<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@webkit.org”>rniwa@webkit.org</a></section>
 ```
-
 
 For use case (3), `TemplateInstance`'s `update` method can be used as follows:
 
 ```
- let content = template.createInstance({name: "Ryosuke Niwa", email: "[rniwa@webkit.org](mailto:rniwa@webkit.org)"});
+let content = template.createInstance({name: "Ryosuke Niwa", email: "[rniwa@webkit.org](mailto:rniwa@webkit.org)"});
 shadowRoot.appendChild(content);
- ...
+...
 content.update({email: "[rniwa@apple.com](mailto:rniwa@apple.com)"});
 ```
 
-This would update the DOM tree of the template instance to look like:
+That would update the DOM tree of the template instance to look like:
 
 ```
-`<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@apple.com”>rniwa@`apple.com`</a></section>`
+<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@apple.com”>rniwa@`apple.com`</a></section>
 ```
 
-Note that `TemplateInstance` keeps track of nodes via template parts defined in the next section so that even if they are removed from `TemplateInstance` per `appendChild` in the second line, semantically, they keep functioning as a part of the template instance, making the subsequent `update` call possible.
+Note that `TemplateInstance` keeps track of nodes via template parts defined in the next section so that even if they are removed from `TemplateInstance` per `appendChild` in the second line, they keep semantically functioning as a part of the template instance, making the subsequent `update` call possible.
 
-Because multiple mustache syntaxes within a template work together to absorb various values of the state object, we don't support adding new mustache syntax or removing/adding updatable-parts to an existing instance.
+Because multiple mustache syntaxes within a template work together to absorb various values of the state object, we don't support adding new mustache syntax or removing/adding updatable parts to an existing instance.
 
 ### 3.2. Template Parts and Custom Template Process Callback
 
-In order to support use cases (4) and (5), let’s say we have the following template element:
+In order to support use cases (4) and (5), let’s say we have the following `template` element:
 
 ```
 <template id="foo"><div class="foo {{ f(y) }}">{{ x }} world</div></template>
 ```
 
-For use case (4), we need some mechanism for author scripts to look at the original expression such as `f(y)` and *evaluate* it to some value as they see fit. A simple string substitution is possible but cumbersome in the case of calling `update` with a new JavaScript object, or when a library or a framework wants to inject a non-text nodes.
+For use case (4), we need some mechanism for author scripts to look at the original expression — such as `f(y)` — and *evaluate* it to some value as they see fit. A simple string substitution is possible but cumbersome in the case of calling `update` with a new JavaScript object, or when a library or a framework wants to inject non-text nodes.
 
-For example, suppose a library wanted to provide an ability to auto-linkify an URL, with an icon indicating that the URL is an external website if the URL is not in the same domain. In order to do this, one has to generate DOM tree equivalent to parsing `<a href="https://webkit.org">WebKit</a>` for the same domain but something like `<a href="https://webkit.org">WebKit</a> <img src="external-url.png>"` for an external domain. In this scenario, the library has to keep track of where these nodes are inserted themselves, and replace them as needed upon calls to `TemplateInstance`'s `update` method.
+For example, suppose a library wanted to provide an ability to auto-linkify a URL, with an icon indicating that the URL is an external website if the URL is not in the same domain. In order to do that, one has to generate a DOM tree equivalent to parsing `<a href="https://webkit.org">WebKit</a>` for the same domain but something like `<a href="https://webkit.org">WebKit</a> <img src="external-url.png">` for an external domain. In that scenario, the library has to keep track of where these nodes are inserted themselves, and replace them as needed upon calls to `TemplateInstance`'s `update` method.
 
-Conceptually we need two objects, say FY and X, that represent `{{ f(y) }}` and `{{ x }}` which libraries and frameworks can use to read the original expression in each mustache, and use it to update the DOM. We call these objects **template parts**. Template parts should allow the inspection of content of `{{~}}` like so:
+Conceptually we need two objects, say *FY* and *X*, that represent `{{ f(y) }}` and `{{ x }}` which libraries and frameworks can use to read the original expression in each mustache, and use it to update the DOM. We call these objects **template parts**. Template parts should allow the inspection of content of `{{~}}` like so:
 
 ```
 FY.expression; // Returns "f(y)"
 X.expression; // Returns "x".
 ```
 
-Template parts should allow the assignment of a new value after libraries and frameworks evlauted `f(y)` (here, assume `f(y)` evaluates to “bar” and `x` evaluates to “hello”:
+Template parts should allow the assignment of a new value after libraries and frameworks evaluated `f(y)` (here, assume `f(y)` evaluates to “bar” and `x` evaluates to “hello”:
 
 ```
 FY.value = 'bar'; // Equivalent to div.setAttribute('foo bar').
@@ -124,12 +123,18 @@ X.replaceHTML('<b>hello</b>');
 For use case (5), we need to be able to inspect the attribute name of a template part as in:
 
 ```
-`FY.attributeName; // Returns "class"`
+FY.attributeName; // Returns "class"
 ```
 
-The simplest approach to exposing these template parts is to expose on `TemplateInstance`. However, template parts are typically used by authors of a new template syntax/feature (e.g. people who maintain libraries and frameworks), and not by the users of those syntax/features (e.g. people who use those libraries and frameworks). To put it another way, in both use cases (4) and (5), creating an instance of a template shouldn't involve manually processing template parts. Furthermore, there should be a declarative mechanism to specify how template parts of a given template should be processed since the semantics of template syntax doesn't typically change from one instance to another. In fact, since the same template syntax extensions (e.g. Handleber template) tend to be used multiple times in the same document or in a given shadow tree of a component, it would be ideal if there was a mechanism to declare a **template type** once, and use it multiple times in a given document or a shadow tree. We don't want the template to directly specify a JS function because that would require polluting the global scope, and having an explicit template type registration opens a way to scope template types register per shadow tree in the future. So we propose an addition of template type registry to document (and possibly shadow root).
+The simplest approach to exposing these template parts is to expose them on `TemplateInstance`. However, template parts are typically used by authors of a new template syntax/feature (e.g., people who maintain libraries and frameworks), and not by the users of those syntax/features (e.g., people who use those libraries and frameworks).
 
-Each template type is associated with a **template process callback** (`TemplateProcessCallback`). A template process callback is invoked inside each call to `createInstance` of `HTMLTemplate`, and takes there arguments: the newly created template instance, a sequence of template parts, and the state object passed into `createInstance`. Each template part represents an occurrence of a mustache syntax in the template. When a mustache syntax appears as a text node, `NodeTemplatePart` is instantiated. If it appears within an attribute, `AttributeTemplatePart` is instantiated. Each template instance is associated with a template process callback used to create the instance. All subsequent calls to `update` invokes the same template process callback. Each template type is optionally associated with an **template create callback** (`TemplateProcessCallback`), which gets invoked when a template instance is initially constructed.
+To put it another way, in both use cases (4) and (5), creating an instance of a template shouldn't involve manually processing template parts. Furthermore, there should be a declarative mechanism to specify how template parts of a given template should be processed — since the semantics of template syntax don't typically change from one instance to another.
+
+In fact, since the same template syntax extensions (e.g., Handleber template) tend to be used multiple times in the same document or in a given shadow tree of a component, it would be ideal if there were a mechanism to declare a **template type** once, and use it multiple times in a given document or a shadow tree. We don't want the template to directly specify a JS function because that would require polluting the global scope, and having an explicit template type registration opens a way in the future to scope template types registered per shadow tree. So we propose an addition of template type registry to document (and possibly shadow root).
+
+Each template type is associated with a **template process callback** (`TemplateProcessCallback`). A template process callback is invoked inside each call to `createInstance` of `HTMLTemplate`, and takes there arguments: the newly created template instance, a sequence of template parts, and the state object passed into `createInstance`.
+
+Each template part represents an occurrence of a mustache syntax in the template. When a mustache syntax appears as a text node, `NodeTemplatePart` is instantiated. If it appears within an attribute, `AttributeTemplatePart` is instantiated. Each template instance is associated with a template process callback used to create the instance. All subsequent calls to `update` invoke the same template process callback. Each template type is optionally associated with an **template create callback** (`TemplateProcessCallback`), which gets invoked when a template instance is initially constructed.
 
 Consider, for example, the following template:
 
@@ -139,7 +144,7 @@ Consider, for example, the following template:
 </template>
 ```
 
-This template creates template parts: `NodeTemplatePart` for `{{name}}`, `AttributeTemplatePart` for `{{email}}` in the href attribute of the anchor element, and `NodeTemplatePart` for `{{email}}` for the occurrence inside the anchor element. In order to use this template, a template library or the page author would have had to define `my-template-type` template type. e.g.
+That template creates template parts: `NodeTemplatePart` for `{{name}}`, `AttributeTemplatePart` for `{{email}}` in the `href` attribute of the anchor element, and `NodeTemplatePart` for `{{email}}` for the occurrence inside the anchor element. In order to use this template, a template library or the page author would have had to define a `my-template-type` template type; e.g.:
 
 ```
 document.defineTemplateType('my-template-type', {
@@ -150,7 +155,7 @@ document.defineTemplateType('my-template-type', {
 });
 ```
 
-This template process callback, for illustration purposes, is a simplified version of the **default template process callback**, which is used when type content attribute is omitted on a template element. It goes through each template part (i.e. each occurrence of `{{ X }}`) and replaces it with the state object's value looked up by the template part's expression (e.g. `X` for `{{ X }}`). Once defined, this template process callback is invoked whenever `createInstance` method is invoked on a template element of the type `my-template-type`. e.g.
+This template process callback, for illustration purposes, is a simplified version of the **default template process callback**, which is used when the `type` content attribute is omitted on a `template` element. It goes through each template part (i.e., each occurrence of `{{ X }}`) and replaces it with the state object's value looked up by the template part's expression (e.g. `X` for `{{ X }}`). Once defined, this template process callback is invoked whenever the `createInstance` method is invoked on a `template` element of the type `my-template-type`; e.g.:
 
 ```
 rniwa = {name: "R. Niwa", email: "rniwa@webkit.org"};
@@ -164,13 +169,15 @@ document.body.innerHTML = '`<section><h1>R. Niwa</h1>Email:'
     + ' <a href="mailto:rniwa@webkit.org">rniwa@webkit.org</a></section>';`
 ```
 
-Each template instance is associated with the template process callback used to create the instance, and all subsequent calls to `update`  goes through the same callback with the same instance object, parts, but with a different state object.
+Each template instance is associated with the template process callback used to create the instance, and all subsequent calls to `update`  go through the same callback with the same instance object and parts, but with a different state object.
 
-It's possible for a single attribute to contain multiple `AttributeTemplatePart` interleaved with other strings: e.g. `<div class="{{foo}} bar {{baz}}">`. In those cases, the values of all `AttributeTemplatePart` are concatenated with interleaving strings in the order they appear. For example, if the current value of `AttributeTemplatePart` for `{{foo}}` was “hello” and the setter of the value attribute on `AttributeTemplatePart` `{{baz}}` was called with the string “world”, the class attribute of the div is set to “hello bar world”.
+It's possible for a single attribute to contain multiple `AttributeTemplatePart`s interleaved with other strings; e.g., `<div class="{{foo}} bar {{baz}}">`. In those cases, the values of all `AttributeTemplatePart` are concatenated with interleaving strings in the order they appear. For example, if the current value of `AttributeTemplatePart` for `{{foo}}` were “hello” and the setter of the value attribute on `AttributeTemplatePart` `{{baz}}` were called with the string “world”, the `class` attribute of the `div` is set to “hello bar world”.
 
-Note that template parts are more like range's [boundary points](https://dom.spec.whatwg.org/#concept-range-bp) than [nodes](https://dom.spec.whatwg.org/#concept-node) and don't appear in the DOM tree in the cloned template content. Think of these properties as sort of Position / RangeBoundaryPoint. They're there to remember where this part belongs. When DOM tree is mutated, they continue to function as long as the parent node & next or previous siblings at where template part was instantiated are still there. We allow inserting & removing preceding siblings and succeeding siblings in some cases. See the section 4 for more details.
+Note that template parts are more like a range's [boundary points](https://dom.spec.whatwg.org/#concept-range-bp) than [nodes](https://dom.spec.whatwg.org/#concept-node) and don't appear in the DOM tree in the cloned template content. Think of these properties as sort of Position / RangeBoundaryPoint. They're there to remember where this part belongs. When a DOM tree is mutated, they continue to function as long as the parent node and next or previous siblings at where the template part was instantiated are still there.
 
-Let's suppose we wanted to create a template type which remembers the state object being passed when it was created, and automatically updates the instance whenever property values are changed at some check points (e.g. at the next `requestAnimationFrame`). We can implement this using template create callback as follows:
+We allow inserting and removing preceding siblings and succeeding siblings in some cases. See the section 4 for more details.
+
+Let's suppose we wanted to create a template type which remembers the state object being passed when it was created, and automatically updates the instance whenever property values are changed at some checkpoints (e.g., at the next `requestAnimationFrame`). We can implement this using a template create callback as follows:
 
 ```
 document.defineTemplateType('self-updating-template', {
@@ -184,7 +191,7 @@ document.defineTemplateType('self-updating-template', {
 });
 ```
 
-Here, `onCheckPoint` is an imaginary helper function which invokes the specified callback at some check points (e.g. whenever rAF occurs; if we had [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), we could have been able to use that to automatically update whenever property values of `state` object had changed). In this example, the template process callback is invoked with the same `state` object used to create the instance whenever `update` is called on `TemplateInstance`. Users of this template no longer has to call `update` call on `TemplateInstance` manually since it gets automatically updated whenever check points occurs.
+Here, `onCheckPoint` is an imaginary helper function which invokes the specified callback at some checkpoints (e.g., whenever rAF occurs; if we had [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), we could have been able to use that to automatically update whenever property values of `state` object had changed). In this example, the template process callback is invoked with the same `state` object used to create the instance whenever `update` is called on `TemplateInstance`. Users of this template no longer have to call `update` on `TemplateInstance` manually, since it gets automatically updated whenever checkpoints occur.
 
 Since each template instance is associated with a specific template type and thereby a specific process callback, there is no asynchronous definition. Each template type must be defined at the time a template of the type is instantiated. Otherwise, the fallback to the default template type and the default template process callback is used.
 
@@ -229,13 +236,13 @@ interface NodeTemplatePart : TemplatePart {
 };
 ```
 
-`TemplatePart` is the base class of template parts. `expression` returns the string inside `{{ ~ }}` after stripping the leading and trailing whitespace. `value` getter returns the string value set by template process callback on getting, and `value` setter updates the attribute value for `AttributeTemplatePart`. For `NodeTemplatePart`, `value` getter returns the concatenation of `textContent` of the nodes inserted into the part, and `value` setter replaces the nodes of the part by a single text with the new value.
+`TemplatePart` is the base class of template parts. `expression` returns the string inside `{{ ~ }}` after stripping the leading and trailing whitespace. The `value` getter returns the string value set by the template process callback on getting, and the `value` setter updates the attribute value for `AttributeTemplatePart`. For `NodeTemplatePart`, the `value` getter returns the concatenation of the `textContent` of the nodes inserted into the part, and the `value` setter replaces the nodes of the part by a single text node with the new value.
 
-`AttributeTemplatePart` has IDL attributes for its associated element and attribute. In order to support use case (6), removing or adding an attribute based on JavaScript property, the setter of `booleanValue` attribute of `AttributeTemplatePart` calls `part.element.setAttribute(part.name, "")` when the value is strict equal to `true` and calls `part.element.removeAttribute(part.name)` when it's to `false` if the template part is solely controlled by a single template part. See section 4 for more details.
+`AttributeTemplatePart` has IDL attributes for its associated element and attribute. In order to support use case (6), removing or adding an attribute based on a JavaScript property, the setter of a `booleanValue` attribute of `AttributeTemplatePart` calls `part.element.setAttribute(part.name, "")` when the value is strictly equal to `true` and calls `part.element.removeAttribute(part.name)` when it's `false`, if the template part is solely controlled by a single template part. See section 4 for more details.
 
-`NodeTemplatePart` has `parentNode` attribute to return the node under which `{{ ~ }}` appeared, `previousSibling` and `nextSibling` for siblings around it. When a single text node contains multiple `{{ ~ }}`, these nodes `previousSibling` and `nextSibling` may refer to nodes in the preceding or the succeeding part. In addition to setting a string value, `NodeTemplatePart` provides a way to insert DOM nodes directly with `replace` and `replaceHTML` methods.
+`NodeTemplatePart` has a `parentNode` attribute to return the node under which `{{ ~ }}` appeared, and `previousSibling` and `nextSibling` for siblings around it. When a single text node contains multiple `{{ ~ }}`, these nodes’ `previousSibling` and `nextSibling` may refer to nodes in the preceding or the succeeding part. In addition to setting a string value, `NodeTemplatePart` provides a way to insert DOM nodes directly with `replace` and `replaceHTML` methods.
 
-In the default template process callback, the fallback or default value of a template part, use case (7), is specified by `||` syntax as done idiomatically in JavaScript. e.g. `<div class="{{ foo || bar || 'X' }} baz" empty="{{ nullable || '' }}"></div>`. We also propose to support *path syntax* in the default process callback as in: `<div bar={{ attrs.foo }}>`.
+In the default template process callback, the fallback or default value of a template part, use case (7), is specified by `||` syntax as done idiomatically in JavaScript; e.g., `<div class="{{ foo || bar || 'X' }} baz" empty="{{ nullable || '' }}"></div>`. We also propose to support *path syntax* in the default process callback as in: `<div bar={{ attrs.foo }}>`.
 
 Note that with this approach, we have an option to address the need to [declaratively instantiate a shadow tree](https://github.com/whatwg/dom/issues/510) by adding a new callback which gets called for each appearance of a template element as follows if we so desired:
 
@@ -252,9 +259,9 @@ document.defineTemplateType("shadow-root", {
 </script>
 ```
 
-Note that we don't intend to natively support bidirectional bindings or even automatic updates of DOM tree when the corresponding JavaScript is mutated. With approaches taken in libraries like React, it's not necessary desirable or useful to monitor mutations on a JavaScript object because some community of JS developers are embracing functional programming approach with immutable objects.
+Note that we don't intend to natively support bidirectional bindings or even automatic updates of a DOM tree when the corresponding JavaScript is mutated. With approaches taken in libraries like React, it's not necessarily desirable or useful to monitor mutations on a JavaScript object, because some communities of JS developers are embracing functional programming approach with immutable objects.
 
-In addition, in order to build a two-way bindings, we would have to monitor JS properties, and other DOM events manually on each element. For example, input element's value attribute never changes when the user types in text. Instead, we would have to monitor the dirty value of the input element, and reflect that change back at the time change & input event fires. We didn't want to codify all these edge cases for each HTML element at least in the initial version of this API. We're open to adding such capabilities in the future versions of the default template process callback; probably as a new UA-defined template type.
+In addition, in order to build a two-way binding, we would have to monitor JS properties and other DOM events manually on each element. For example, the `input` element's `value` attribute never changes when the user types in text. Instead, we would have to monitor the dirty value of the input element, and reflect that change back at the time of the change, when the `input` event fires. We didn't want to codify all these edge cases for each HTML element, at least in the initial version of this API. We're open to adding such capabilities in  future versions of the default template process callback — probably as a new UA-defined template type.
 
 ### 3.3. Conditionals and Loops using Nested Templates
 
