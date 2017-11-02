@@ -52,8 +52,8 @@ Concretely, use case (1) is addressed by the component instancing a template as 
 Use case (2) is addressed as follows:
 
 ```
-// Template content is '`<section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section>'`
-shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "mailto:rniwa@webkit.org"}));
+// Template content is `'<section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section>'`
+shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "rniwa@webkit.org"}));
 ```
 
 When `createInstance` is called with a JavaScript object, we automatically substitute every mustache syntax with the corresponding value of the property in the object. The resultant DOM would look as though we parsed the following HTML:
@@ -103,7 +103,7 @@ X.expression; // Returns "x".
 Template parts should allow the assignment of a new value after libraries and frameworks evaluated `f(y)` (here, assume `f(y)` evaluates to “bar” and `x` evaluates to “hello”:
 
 ```
-FY.value = 'bar'; // Equivalent to div.setAttribute('foo bar').
+FY.value = 'bar'; // Equivalent to div.setAttribute('class', 'foo bar').
 X.value = 'hello'; // Equivalent to div.textContent = 'hello world’.
 ```
 
@@ -139,8 +139,8 @@ Each template part represents an occurrence of a mustache syntax in the template
 Consider, for example, the following template:
 
 ```
-`<template type="my-template-type" id="contactTemplate">
-    <section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section>`
+<template type="my-template-type" id="contactTemplate">
+    <section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section>
 </template>
 ```
 
@@ -165,8 +165,8 @@ document.body.appendChild(contactTemplate.createInstance(rniwa);
 The above code produces the same DOM as the following code under `document.body`:
 
 ```
-document.body.innerHTML = '`<section><h1>R. Niwa</h1>Email:'
-    + ' <a href="mailto:rniwa@webkit.org">rniwa@webkit.org</a></section>';`
+document.body.innerHTML = '<section><h1>R. Niwa</h1>Email:'
+    + ' <a href="mailto:rniwa@webkit.org">rniwa@webkit.org</a></section>';
 ```
 
 Each template instance is associated with the template process callback used to create the instance, and all subsequent calls to `update`  go through the same callback with the same instance object and parts, but with a different state object.
@@ -184,7 +184,7 @@ document.defineTemplateType('self-updating-template', {
     createCallback: function (instance, parts, state) {
         onCheckPoint(() => instance.update(state));
     },
-    processCallback: function (instance, parts, state) {            
+    processCallback: function (instance, parts, state) {
         for (const part of parts)
             part.value = state[part.expression];
     },
@@ -389,7 +389,7 @@ An **inner template part** has an associated [template element](https://html.spe
 
 ### 4.3 Creating Template Parts
 
-The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when invoked, must run the following steps: 
+The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when invoked, must run the following steps:
 
 1. Let *clonedTree* be the result of [cloning](https://dom.spec.whatwg.org/#concept-node-clone) with [the ](https://dom.spec.whatwg.org/#concept-node-clone)[template contents](https://html.spec.whatwg.org/multipage/scripting.html#template-contents) and the *clone children flag* set.
 2. Let *instance* be an instance of `TemplateInstance`.
@@ -446,7 +446,7 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 
 > Note: We run the concepts to _apply attribute template part list_ and _apply node template part list_ immediately to strip away the mustache syntax in the original template as well as whitespaces before & after it to keep the initial template state consistent with the one after running these concepts in a template process callback. Actual implementations can run these algorithm as it clones the tree, and avoid unnecessary churn of text nodes and strings as an optimization.
 
-When there is exactly one `{{~}}` inside a template, we keep 
+When there is exactly one `{{~}}` inside a template, we keep
 
 
 To **parse a template string** with a DOMString *template*, run these steps:
