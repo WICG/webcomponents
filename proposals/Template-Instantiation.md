@@ -130,7 +130,7 @@ The simplest approach to exposing these template parts is to expose them on `Tem
 
 To put it another way, in both use cases (4) and (5), creating an instance of a template shouldn't involve manually processing template parts. Furthermore, there should be a declarative mechanism to specify how template parts of a given template should be processed — since the semantics of template syntax don't typically change from one instance to another.
 
-In fact, since the same template syntax extensions (e.g., Handleber template) tend to be used multiple times in the same document or in a given shadow tree of a component, it would be ideal if there were a mechanism to declare a **template type** once, and use it multiple times in a given document or a shadow tree. We don't want the template to directly specify a JS function because that would require polluting the global scope, and having an explicit template type registration opens a way in the future to scope template types registered per shadow tree. So we propose an addition of template type registry to document (and possibly shadow root).
+In fact, since the same template syntax extensions (e.g., Handlebars template) tend to be used multiple times in the same document or in a given shadow tree of a component, it would be ideal if there were a mechanism to declare a **template type** once, and use it multiple times in a given document or a shadow tree. We don't want the template to directly specify a JS function because that would require polluting the global scope, and having an explicit template type registration opens a way in the future to scope template types registered per shadow tree. So we propose an addition of template type registry to document (and possibly shadow root).
 
 Each template type is associated with a **template process callback** (`TemplateProcessCallback`). A template process callback is invoked inside each call to `createInstance` of `HTMLTemplate`, and takes there arguments: the newly created template instance, a sequence of template parts, and the state object passed into `createInstance`.
 
@@ -265,7 +265,7 @@ In addition, in order to build a two-way binding, we would have to monitor JS pr
 
 ### 3.3. Conditionals and Loops using Nested Templates
 
-With API proposed thus far, conditional statements for use case (8) can be implemented by libraries and frameworks since they can inspect the value of expression on a template part. e.g. to support handlebar style conditionals, a template process callback could detect `{{if x}}` and ignore the rest of the template all the way up (as well as nested if's) until the next `{{/if}}` when x is `false`.
+With API proposed thus far, conditional statements for use case (8) can be implemented by libraries and frameworks since they can inspect the value of expression on a template part. e.g. to support Handlebars style conditionals, a template process callback could detect `{{if x}}` and ignore the rest of the template all the way up (as well as nested if's) until the next `{{/if}}` when x is `false`.
 
 However, this approach won't work for use case (9). To see why, suppose we had the following template:
 
