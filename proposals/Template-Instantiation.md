@@ -265,7 +265,7 @@ In addition, in order to build a two-way binding, we would have to monitor JS pr
 
 ### 3.3. Conditionals and Loops using Nested Templates
 
-With API proposed thus far, conditional statements for use case (8) can be implemented by libraries and frameworks since they can inspect the value of expression on a template part. e.g. to support handlebar style conditionals, a template process callback could detect `{{if x}}` and ignore the rest of the template all the way up (as well as nested if's) until the next `{{/if}}` when x is `false`.
+With the API proposed thus far, conditional statements for use case (8) can be implemented by libraries and frameworks, since they can inspect the value of expression on a template part; e.g., to support handlebar style conditionals, a template process callback could detect `{{if x}}` and ignore the rest of the template all the way up (as well as nested *if*'s) until the next `{{/if}}` when x is `false`.
 
 However, this approach won't work for use case (9). To see why, suppose we had the following template:
 
@@ -279,7 +279,7 @@ However, this approach won't work for use case (9). To see why, suppose we had t
 </template>
 ```
 
-We can detect `{{foreach items}}` the same way we detect `{{if x}}`, but we there is exactly one template part object for `{{class}}`, `{{value}}`, and `{{label}}`, not per an element in items, and the browser engine doesn't have a way of ignoring out how many parts are needed unless we standardized the exact semantics foreach:
+We can detect `{{foreach items}}` the same way we detect `{{if x}}`, but there is exactly one template part object for `{{class}}`, `{{value}}`, and `{{label}}`, not per an element in `items`, and the browser engine doesn't have a way of figuring out how many parts are needed unless we standardized the exact semantics of `foreach`:
 
 ```
 document.defineTemplateType('with-for-each', { processCallback: (instance, parts, state) => {
@@ -298,9 +298,9 @@ document.defineTemplateType('with-for-each', { processCallback: (instance, parts
 list.createInstance({items: [{class: 'baz', value: 'baz', label: 'hello world'}]});
 ```
 
-In fact, when `update` method of `TemplateInstance` is subsequently called, we might need to create more template parts and remove some since the number of elements in the array for looping (“items” in this case) can change from one update to another.
+In fact, when the `update` method of `TemplateInstance` is subsequently called, we might need to create more template parts and remove some, since the number of elements in the array for looping (“items” in this case) can change from one update to another.
 
-As suggested by others in the past discussions, we propose to use nested templates for these cases:
+As suggested by others in past discussions,fo these cases  we propose to use nested templates:
 
 ```
 <template type="with-for-each" id="list">
@@ -312,7 +312,7 @@ As suggested by others in the past discussions, we propose to use nested templat
 </template>
 ```
 
-In this approach, each inner template appear as its own template part, and the template process callback which supports foreach **directive** would instantiate the inner template as many times as needed as follows:
+In that approach, each inner template appears as its own template part, and the template process callback which supports the `foreach` **directive** would instantiate the inner template as many times as needed, as follows:
 
 ```
 document.defineTemplateType("with-for-each", { processCallback: function (instance, parts, state) {
@@ -327,9 +327,9 @@ document.defineTemplateType("with-for-each", { processCallback: function (instan
 }});
 ```
 
-However, replacing the inner template elements in its instance becomes problematic when `update` method is subsequently called. This would mean that the template process callback must keep track of the location at which this substitution had occurred as well as the original inner template.
+However, replacing the inner template elements in its instance becomes problematic when the `update` method is subsequently called. This would mean the template process callback must keep track of the location at which this substitution had occurred, as well as the original inner template.
 
-To make this process more streamlined, we propose treating inner template elements as parts, and introduce  `InnerTemplatePart` interface as follows:
+To make this process more streamlined, we propose treating inner template elements as parts, and introduce the `InnerTemplatePart` interface as follows:
 
 ```
  InnerTemplatePart : NodeTemplatePart {
@@ -338,7 +338,7 @@ To make this process more streamlined, we propose treating inner template elemen
 };
 ```
 
-With this interface, the template process callback that implements foreach and other kinds of looping constructs could simply call `replace` with newly constructed elements as follows:
+With this interface, the template process callback that implements a *foreach* and other kinds of looping constructs could simply be called `replace` with newly constructed elements, as follows:
 
 ```
 document.defineTemplateType("with-for-each", {
@@ -356,36 +356,33 @@ document.defineTemplateType("with-for-each", {
 });
 ```
 
-> Note: a well defined template library should implement array-diff'ing algorithm to reduce the node construction & destruction churn. We could built such a diff'ing algorithm into the default template process callback as well.
+> Note: a well-defined template library should implement an array-diff'ing algorithm to reduce the node construction-and-destruction churn. We could build such a diff'ing algorithm into the default template process callback as well.
 
+There is an alternative approach for (9), which is to make `TemplatePart` constructible from the template process callbacks themselves. However, that approach involves the template process callback cloning template parts along with other nodes, or letting author scripts manually specify to which element each template part belongs. This quickly becomes an entangled mess because now we could have multiple template parts that refer to a single DOM location or an attribute, and we have to start dealing with multiple template parts trying to override one another even though there is no good use case for such a behavior.
 
-There is an alternative approach for (9), which is to make TemplatePart constructible from template process callback themselves. However, this approach involves the template process callback cloning template parts along with other nodes, or let author scripts manually specify to which element each template part belongs. This quickly becomes an entangled mess because now we could have multiple template parts that refer to a single DOM location or an attribute, and we have to start dealing with multiple template parts trying to override one another even though there is no good use case for such a behavior.
-
-We like the idea of supporting very basic control flow such as `if` and `foreach` in the default template process callback but we don't think it's a show stopper if the default template process callback didn't support them in the initial cut.
-
+We like the idea of supporting very a basic control flow such as `if` and `foreach` in the default template process callback, but we don't think it'd be a show stopper if the default template process callback didn't support them in the initial cut.
 
 > Note: We're open to changing the name of `InnerTemplatePart`. Other names we've considered are: `TemplateTemplatePart`, `TemplateElementTemplatePart`, and `NestedTemplatePart`.
 
 ## 4. Definitions and Algorithm for Template Parts
 
-This section defines partial specifications for template parts and how they're instantiated. It's meant to read like a real W3C/WHATWG specifications. All text is normative unless otherwise specified. Due to the limitation of markdown syntax, each concept “to X” defined within this specification is explicitly referred to as “the concept to X”.
+This section defines partial specifications for template parts and how they're instantiated. It's meant to read like a real W3C/WHATWG specification. All text is normative unless otherwise indicated. Due to the limitations of markdown syntax, each concept *“to X”* defined within this specification is explicitly referred to as *“the concept to X”*.
 
-Each template element has an associated `TemplateProcessCallback` either the one specified by `type` content attribute or of the default template process callback if the content attribute is not specified.
+Each template element has an associated `TemplateProcessCallback` — either the one specified by the `type` content attribute, or, if the content attribute is not specified, of the default template process callback.
 
 ### 4.1. Attribute value setter
 
-When an [attribute](https://dom.spec.whatwg.org/#concept-attribute) is fully controlled by a single _attribute template part_, the attribute is said to be **fully templatized**. When an [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value) consists of a concatenation of strings and _attribute template parts_, it is said to be **partially templatized**. Similarly, when contents of a [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) is fully controlled by a single _node template part_, it is said to be _fully templatized_ and _partially tempatized_ otherwise.
+When an [attribute](https://dom.spec.whatwg.org/#concept-attribute) is fully controlled by a single _attribute template part_, the attribute is said to be **fully templatized**. When an [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value) consists of a concatenation of strings and _attribute template parts_, it is said to be **partially templatized**. Similarly, when the contents of a [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) are fully controlled by a single _node template part_, it is said to be fully templatized, and otherwise, partially tempatized.
 
-An **attribute value setter** is an object used to aggregate values of _attribute template parts_ and strings in a given attribute. It has an associated [element](https://dom.spec.whatwg.org/#concept-element), an associated [attribute](https://dom.spec.whatwg.org/#concept-attribute), an associated **attribute template part list**, which is a list of strings and _attribute template parts_. When the _attribute template part list_ of an attribute consists of exactly one attribute template part, it is _fully templatized_. Each _attribute template part_ has an associated _attribute value setter_ and a value string.
+An **attribute value setter** is an object used to aggregate values of _attribute template parts_ and strings in a given attribute. It has an associated [element](https://dom.spec.whatwg.org/#concept-element), an associated [attribute](https://dom.spec.whatwg.org/#concept-attribute), and an associated **attribute template part list**, which is a list of strings and _attribute template parts_. When the _attribute template part list_ of an attribute consists of exactly one attribute template part, it is fully templatized. Each _attribute template part_ has an associated _attribute value setter_ and a value string.
 
 ### 4.2. Node Value Setter
 
-A **node value setter** is an object used to aggravate values of _node template parts_ and strings in a given [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node). it has an associated [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node), a [previous sibling](https://dom.spec.whatwg.org/#concept-tree-previous-sibling), a [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling), a boolean **fully templatized** flag, a **previous replacement nodes**, which is a list of node most recently inserted into the Dom tree, and an associated **node template part list**, which is a list of [nodes](https://dom.spec.whatwg.org/#concept-node) and _node template parts_. When the _fully templatized flag_ is set, _node template part list_ is said to be _fully templatized_. Otherwise, it is said to be _partially templatized_.  A _node value setter_ can also be in a **detached state** in which case the _node setter value_ would fail to apply its _node template part list_ to the _template instance_. Each _node template part_ has an associated _node value setter_ and a list of Node's called **replacement node list**, which is a list of nodes currently being placed or controlled by the _node template part_ in the template instance.
+A **node value setter** is an object used to aggregate values of _node template parts_ and strings in a given [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node). It has an associated [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node), a [previous sibling](https://dom.spec.whatwg.org/#concept-tree-previous-sibling), a [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling), a boolean **fully templatized** flag, a **previous replacement nodes**, which is a list of node most recently inserted into the Dom tree, and an associated **node template part list**, which is a list of [nodes](https://dom.spec.whatwg.org/#concept-node) and _node template parts_. When the _fully templatized_ flag is set, _node template part list_ is said to be _fully templatized_. Otherwise, it is said to be _partially templatized_.  A _node value setter_ can also be in a **detached state** in which case the _node setter value_ would fail to apply its _node template part list_ to the _template instance_. Each _node template part_ has an associated _node value setter_ and a list of Nodes called a  **replacement node list**, which is a list of nodes currently being placed or controlled by the _node template part_ in the template instance.
 
-An **inner template part** has an associated [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element) in addition to a _replacement node list_ and an _node value setter_.
+An **inner template part** has an associated [`template` element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element) in addition to a _replacement node list_ and an _node value setter_.
 
-
-> Note: _attribute value setter_ and _node value setter_ are specifications phantoms that do not need to exist in actual implementations.
+> Note: _attribute value setter_ and _node value setter_ are specification phantoms that do not need to exist in actual implementations.
 
 ### 4.3 Creating Template Parts
 
@@ -395,45 +392,45 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 2. Let *instance* be an instance of `TemplateInstance`.
 3. [Append](https://dom.spec.whatwg.org/#concept-node-append) *clonedTree* to *instance*.
 4. Let *parts* be an empty list.
-5. For every [descendent](https://dom.spec.whatwg.org/#concept-tree-descendant) node c*urrentNode* of *instance* in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), run these steps:
-    1. If c*urr**entNode* is a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element):
-        1. Run the concept to _adjust single node case_ with *currentNode***.**
-        2. Let *nodeValueSetter* be a new instance of the _node value setter_ with *currentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, fully templatized set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
-        3. Let *innerPart* be a new instance of `InnerTemplatePart` associated with *currentNode*, an empty _replacement node list_, and *nodeValueSetter*.
-        4. Append *innerPart* to the end of *parts.*
-        5. [Remove](https://dom.spec.whatwg.org/#concept-node-remove) *currentNode* from the *currentNode*'s [parent](https://dom.spec.whatwg.org/#concept-tree-parent).
-        6. Run the concept to _apply node template part list_ with *nodeValueSetter*.
+5. For every [descendant](https://dom.spec.whatwg.org/#concept-tree-descendant) node *currentNode* of *instance* in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), run these steps:
+    1. If *currentNode* is a [`template` element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element):
+      1. Run the concept to _adjust single node case_ with *currentNode*.
+      2. Let *nodeValueSetter* be a new instance of the _node value setter_ with *currentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, _fully templatized_ flag set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
+      3. Let *innerPart* be a new instance of `InnerTemplatePart` associated with *currentNode*, an empty _replacement node list_, and *nodeValueSetter*.
+      4. Append *innerPart* to the end of *parts*.
+      5. [Remove](https://dom.spec.whatwg.org/#concept-node-remove) *currentNode* from the *currentNode*'s [parent](https://dom.spec.whatwg.org/#concept-tree-parent).
+      6. Run the concept to _apply node template part list_ with *nodeValueSetter*.
     2. Otherwise, if *currentNode* is an [element](https://dom.spec.whatwg.org/#concept-element), for every [attribute](https://dom.spec.whatwg.org/#concept-attribute) in the [attribute list](https://dom.spec.whatwg.org/#concept-element-attribute) of *currentNode*:
-        1. Let *value* be the [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value) after [stripping leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
-        2. Let *tokens* to be the result of running the concept to _parse a template string_ on *value*.
-        3. If *tokens* contains exactly one string, abort the rest of steps and go to the next node.
-        4. Let *attributeValueSetter* be a new instance of the _attribute value setter_ with *currentNode*, the current attribute, and an empty _attribute template part list_.
-        5. For every *token* in *tokens*:
-            1. If the type of *token* is “string”,
-                1. Append the string to end of the _attribute template part list_*.*
-            2. Otherwise (if *token* is of the type “pair”),
-                1. Let *attributePart* be a new instance of `AttributeTemplatePart` with *attributeValueSetter* and null string.
-                2. Append *attributePart* to the end of the _attribute template part list_.
-                3. Append *attributePart* to the end of *parts*.
+      1. Let *value* be the [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value) after [stripping leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
+      2. Let *tokens* be the result of running the concept to _parse a template string_ on *value*.
+      3. If *tokens* contains exactly one string, abort the rest of these steps and go to the next node.
+      4. Let *attributeValueSetter* be a new instance of the _attribute value setter_ with *currentNode*, the current attribute, and an empty _attribute template part list_.
+      5. For every *token* in *tokens*:
+        1. If the type of *token* is “string”,
+          1. Append the string to end of the _attribute template part list_.
+        2. Otherwise (if *token* is of the type “pair”),
+          1. Let *attributePart* be a new instance of `AttributeTemplatePart` with *attributeValueSetter* and null string.
+          2. Append *attributePart* to the end of the _attribute template part list_.
+          3. Append *attributePart* to the end of *parts*.
         6. Run the concept to _apply attribute template part list_ with *nodeValueSetter*.
-    3. If *currentNode* is a [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node):
-        1. Let *value* be *currentNode*'s [data](https://dom.spec.whatwg.org/#concept-cd-data) after [stripping leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
-        2. Let *tokens* to be the result of running the concept to _parse a template string_ on *value*.
-        3. If *tokens* contains exactly one string, abort the rest of steps and go to the next node.
-        4. Run the concept to _adjust single node case_ with *currentNode***.**
-        5. Let *nodeValueSetter* be a new instance of the _node value setter_ with the [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node) of c*urrentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, fully templatized flag set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
+    3. If *currentNode* is a [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node):
+      1. Let *value* be *currentNode*'s [data](https://dom.spec.whatwg.org/#concept-cd-data) after [stripping leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
+      2. Let *tokens* to be the result of running the concept to _parse a template string_ on *value*.
+      3. If *tokens* contains exactly one string, abort the rest of steps and go to the next node.
+      4. Run the concept to _adjust single node case_ with *currentNode***.**
+      5. Let *nodeValueSetter* be a new instance of _node value setter_ with the [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node) of *currentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, _fully templatized_ flag set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
         6. For every *token* in *tokens*:
-            1. If the type of *token* is “string”,
-                1. Let *text* be a new [Text](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) with the string of the pair as the [data](https://dom.spec.whatwg.org/#concept-cd-data).
-                2. Append *text* to end of _node template part list_ of *nodeValueSetter*.
-            2. Otherwise (if *token* is of the type “part”),
-                1. Let *nodePart* be a new instance of `NodeTemplatePart` with *nodeValueSetter* and an empty _replacement node list_.
-                2. Append *nodePart* to end of _node template part list_ of *nodeValueSetter*.
-                3. Append *nodePart* to the end of *parts*.
+          1. If the type of *token* is “string”,
+            1. Let *text* be a new [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) with the string of the pair as the [data](https://dom.spec.whatwg.org/#concept-cd-data).
+            2. Append *text* to end of _node template part list_ of *nodeValueSetter*.
+          2. Otherwise (if *token* is of the type “part”),
+            1. Let *nodePart* be a new instance of `NodeTemplatePart` with *nodeValueSetter* and an empty _replacement node list_.
+            2. Append *nodePart* to end of _node template part list_ of *nodeValueSetter*.
+            3. Append *nodePart* to the end of *parts*.
         7. [Remove](https://dom.spec.whatwg.org/#concept-node-remove) *currentNode* from the *currentNode*'s [parent](https://dom.spec.whatwg.org/#concept-tree-parent).
         8. Run the concept to _apply node template part list_ with *nodeValueSetter*.
-6. Let *partArray* be be ! [ArrayCreate](https://tc39.github.io/ecma262/#sec-arraycreate)(0).
-7. Let *partsLength* be the result of performing [ArrayAccumulation](https://tc39.github.io/ecma262/#sec-runtime-semantics-arrayaccumulation) for Parts with arguments *partsArray* and 0.
+6. Let *partArray* be ! [ArrayCreate](https://tc39.github.io/ecma262/#sec-arraycreate)(0).
+7. Let *partsLength* be the result of performing [ArrayAccumulation](https://tc39.github.io/ecma262/#sec-runtime-semantics-arrayaccumulation) for *parts* with arguments *partsArray* and 0.
 8. If the previous step resulted in [abrupt completion](https://tc39.github.io/ecma262/#sec-completion-record-specification-type), return null.
 9. If there is a _template create callback_ associated with the context object:
     1. Let *createCallback* be `TemplateProcessCallback` associated with the context object.
@@ -444,10 +441,9 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 12. If the previous step resulted in [abrupt completion](https://tc39.github.io/ecma262/#sec-completion-record-specification-type), return null.
 13. Return *instance*.
 
-> Note: We run the concepts to _apply attribute template part list_ and _apply node template part list_ immediately to strip away the mustache syntax in the original template as well as whitespaces before & after it to keep the initial template state consistent with the one after running these concepts in a template process callback. Actual implementations can run these algorithm as it clones the tree, and avoid unnecessary churn of text nodes and strings as an optimization.
+> Note: We run the concepts to _apply attribute template part list_ and _apply node template part list_ immediately to strip away the mustache syntax in the original template as well as whitespace before and after it, to keep the initial template state consistent with the one after running these concepts in a template process callback. Actual implementations can run these algorithm as it clones the tree, and avoid unnecessary churn of text nodes and strings as an optimization.
 
 When there is exactly one `{{~}}` inside a template, we keep 
-
 
 To **parse a template string** with a DOMString *template*, run these steps:
 
@@ -458,46 +454,44 @@ To **parse a template string** with a DOMString *template*, run these steps:
 5. Let *tokens* be a list of pairs consisting of a type which takes a value of “string” or “part” and a [string](https://infra.spec.whatwg.org/#string).
 6. While *position* is not past the end of input:
     1. If *state* is “initial” and the code point is U+007B LEFT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
-        1. Let *state* be “beginCurly”
-        2. Let *candidateEndingPosition* be *position*.
-        3. Go to step 6.e.
+      1. Let *state* be “beginCurly”
+      2. Let *candidateEndingPosition* be *position*.
+      3. Go to step 6.e.
     2. If *state* is “*beginCurly*”,
-        1.  If the code point is U+007B LEFT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
-            1. Let *state* be “part”.
-            2. Append the pair of the type “string” and the code points starting at *beginningPosition* and ending immediately before *candidateEndingPosition* to the end of *tokens.*
-            3. Let *beginningPosition* be the next code point in *template.*
-        2. Otherwise,
-            1. Let *state* be “initial”.
+      1. If the code point is U+007B LEFT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
+        1. Let *state* be “part”.
+        2. Append the pair of the type “string” and the code points starting at *beginningPosition* and ending immediately before *candidateEndingPosition* to the end of *tokens.*
+        3. Let *beginningPosition* be the next code point in *template.*
+      2. Otherwise,
+        1. Let *state* be “initial”.
         3. Got to step 6.e.
     3. If *state* is “part” and the code point is U+007D RIGHT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
-        1. Let state be “endCurly”.
-        2. Let *candidateEndingPosition* be *position*.
-        3. Go to step 6.e.
+      1. Let state be “endCurly”.
+      2. Let *candidateEndingPosition* be *position*.
+      3. Go to step 6.e.
     4. If state is “endCurly” and the code point is U+007D RIGHT CURLY BRACKET,
-        1. If the code point is U+007D RIGHT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
-            1. Let *state* be “initial”.
-            2. Let *expression* be the code points starting at *beginningPosition* and ending immediately before *candidateEndingPosition*.
-            3. [Strip leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace) from expression.
-            4. Append the pair of type “pair” and *expression* to the end of *tokens.*
-        2. Otherwise,
-            1. Let *state* be “part”.
-        3. Go to step 6.e.
+      1. If the code point is U+007D RIGHT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
+        1. Let *state* be “initial”.
+        2. Let *expression* be the code points starting at *beginningPosition* and ending immediately before *candidateEndingPosition*.
+        3. [Strip leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace) from expression.
+        4. Append the pair of type “pair” and *expression* to the end of *tokens.*
+      2. Otherwise,
+        1. Let *state* be “part”.
+      3. Go to step 6.e.
     5. Let *lastCodePoint* be the current code point if *lastCodePoint* is not U+005C REVERSE SOLIDUS. Otherwise let *lastCodePoint* be U+0000 NULL.
     6. Advance *position* to the next [code point](https://infra.spec.whatwg.org/#code-point) in *template*.
 7. Return *tokens*.
 
-> Note: This algorithm supports escaping `{` with `\` and `\` with `\`. We're open to using alternate syntax like `${~}` and `{~}` in place of the mustache syntax `{{~}}`, and or not supporting these escaping characters.
-
+> Note: This algorithm supports escaping `{` with `\` and `\` with `\`. We're open to using alternate syntax like `${~}` and `{~}` in place of the mustache syntax `{{~}}`, or not supporting these escaping characters.
 
 To **adjust single node case** with *node*, run these steps:
 
-1. Let *parent* be the  [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node) of *node.*
+1. Let *parent* be the [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node) of *node.*
 2. If *parent* is an instance of `TemplateInstance` and *node* does not have any [sibling](https://dom.spec.whatwg.org/#concept-tree-sibling):
-    1. Let *emptyText* be a new `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node) with its [data](https://dom.spec.whatwg.org/#concept-cd-data) set to an empty string and [node document](https://dom.spec.whatwg.org/#concept-node-document) set to *currentNode*'s associated [node document](https://dom.spec.whatwg.org/#concept-node-document).
+    1. Let *emptyText* be a new [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) with its [data](https://dom.spec.whatwg.org/#concept-cd-data) set to the empty string and [node document](https://dom.spec.whatwg.org/#concept-node-document) set to *currentNode*'s associated [node document](https://dom.spec.whatwg.org/#concept-node-document).
     2. [Insert](https://dom.spec.whatwg.org/#concept-node-insert) *emptyText* into *parent* before *node*.
 
-> Note: This algorithm is needed when there is exactly one template element surrounded by text nodes or a single `{{~}}` inside a template. In those cases, we need some node to anchor _node value setter_ other than text node / template element itself.
-
+> Note: This algorithm is needed when there is exactly one `template` element surrounded by text nodes or a single `{{~}}` inside a template. In those cases, we need some node to anchor _node value setter_ other than text node / template element itself.
 
 To **determine full templatizability** of a node *node*, run these steps:
 
@@ -506,12 +500,12 @@ To **determine full templatizability** of a node *node*, run these steps:
 3. Let *child* be the [first child](https://dom.spec.whatwg.org/#concept-tree-first-child) of *parent*.
 4. While *child* is not null:
     1. If *child* is not *node:*
-        1. If *child* is not `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node), return false.
-        2. If *child*'s [data](https://dom.spec.whatwg.org/#concept-cd-data) contains anything but [ASCII whitespace](https://infra.spec.whatwg.org/#split-on-ascii-whitespace), return false.
+      1. If *child* is not [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node), return false.
+      2. If *child*'s [data](https://dom.spec.whatwg.org/#concept-cd-data) contains anything but [ASCII whitespace](https://infra.spec.whatwg.org/#split-on-ascii-whitespace), return false.
     2. Let *child* be the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *child*.
 5. Return true.
 
-> Note: This algorithm returns true when *node* is the sole child of its parent ignoring text nodes that only contain whitespace at the beginning and the end of the parent node.
+> Note: This algorithm returns true when *node* is the sole child of its parent, ignoring text nodes that only contain whitespace at the beginning and the end of the parent node.
 
 ### 4.4. `TemplatePart` Interface
 
@@ -519,13 +513,13 @@ The abstract superclass `TemplatePart` defines two IDL attributes: `expression`,
 
 The  `expression` readonly attribute must, on getting, return the string inside the mustache syntax with [leading and trailing ASCII whitespace stripped](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
 
-The definition of `value` IDL attribute depends on the concrete subclass of `TemplatePart.`
+The definition of the `value` IDL attribute depends on the concrete subclass of `TemplatePart.`
 
 The stringifier of `TemplatePart` is an alias to the `value` attribute's getter.
 
 ### 4.5 `AttributeTemplatePart` Interface
 
-`AttributeTemplatePart` interface has four IDL attributes: `element`, `attributeName`, `attributeNamespace`, and `booleanValue` in addition the ones inherited from `TemplatePart`.
+The `AttributeTemplatePart` interface has four IDL attributes: `element`, `attributeName`, `attributeNamespace`, and `booleanValue` — in addition the ones inherited from `TemplatePart`.
 
 The `element` readonly IDL attribute, on getting, must return the associated [element](https://dom.spec.whatwg.org/#concept-attribute-element) of the _attribute value setter_ associated with the context object.
 
@@ -533,9 +527,9 @@ The `attributeName` readonly IDL attribute, on getting, must return the [qualifi
 
 The `attributeNamespace` readonly IDL attribute, on getting, must return the [namespace](https://dom.spec.whatwg.org/#concept-attribute-namespace) of the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of the  _attribute value setter_ associated with the context object.
 
-The `value` IDL attribute of `TemplatePart` when involved on an _attribute template part_, on getting, must return the value string of the _attribute template part_ if the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of the _attribute value setter_ associated with the context object if the attribute is _partially templatized_. Otherwise, if the [attribute](https://dom.spec.whatwg.org/#concept-attribute) is _fully templatized_, it must return its [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value). On setting, it must set the value string of the _attribute template part_ to the new value, and _apply attribute template part list_ with the _attribute template part_ associated with the context object.
+The `value` IDL attribute of `TemplatePart`, when invoked on an _attribute template part_, on getting, must return the value string of the _attribute template part_ if the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of the _attribute value setter_ associated with the context object is _partially templatized_. Otherwise, if the [attribute](https://dom.spec.whatwg.org/#concept-attribute) is fully templatized, it must return its [attribute value](https://dom.spec.whatwg.org/#concept-attribute-value). On setting, it must set the value string of the _attribute template part_ to the new value, and _apply attribute template part list_ with the _attribute template part_ associated with the context object.
 
-The `booleanValue` IDL attribute, on getting, must return `true` if the associated [element](https://dom.spec.whatwg.org/#concept-attribute-element) of the _attribute value setter_ associated with the context object has the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of the _attribute value setter_ and return `false` otherwise. On setting, if the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) is _fully templatized_, it must set the string value to an empty string “”, and _apply attribute template part list_ with the _attribute template part_ associated with the context object. Otherwise, if the [attribute](https://dom.spec.whatwg.org/#concept-attribute) is _partially templatized_, it must throw a “[`NotSupportedError`](https://heycam.github.io/webidl/#notsupportederror)” [`DOMException`](https://heycam.github.io/webidl/#idl-DOMException).
+The `booleanValue` IDL attribute, on getting, must return `true` if the associated [element](https://dom.spec.whatwg.org/#concept-attribute-element) of the _attribute value setter_ associated with the context object has the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of the _attribute value setter_, and return `false` otherwise. On setting, if the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) is fully templatized, it must set the string value to an empty string “”, and _apply attribute template part list_ with the _attribute template part_ associated with the context object. Otherwise, if the [attribute](https://dom.spec.whatwg.org/#concept-attribute) is _partially templatized_, it must throw a “[`NotSupportedError`](https://heycam.github.io/webidl/#notsupportederror)” [`DOMException`](https://heycam.github.io/webidl/#idl-DOMException).
 
 To **update** the associated [attribute](https://dom.spec.whatwg.org/#concept-attribute) of an _attribute value setter_ *attributeValueSetter* to an *attribute*, run these steps:
 
@@ -545,60 +539,57 @@ To **update** the associated [attribute](https://dom.spec.whatwg.org/#concept-at
 
 > Note: In the current proposal, updating `attributeName` or `attributeNamespace` would result in updating the attribute twice when changing both. We could instead make these IDL attributes readonly, and add a method which updates the associated attribute instead.
 
-
 To **apply attribute template part list** with an _attribute value setter_ *attributeValueSetter*, run these steps:
 
 1. Let *partList* be the *_attribute template part list_* of *attributeValueSetter*.
 2. If *partList* contains exactly one _attribute template part_ (this is the fully templatized case):
     1. Let *fullTemplate* be the _attribute template part_ in *tokenList*.
     2. If the value string of *fullTemplate* is null, [remove an attribute](https://dom.spec.whatwg.org/#concept-element-attributes-remove-by-namespace) with the namespace of the associated attribute of *attributeValueSetter*, the [local name](https://dom.spec.whatwg.org/#concept-attribute-local-name) of the associated attribute of *attributeValueSetter*, and the associated element of *attributeValueSetter.*
-    3. Otherwise (if the value string of *fullTemplate* is not null*)*, invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and the value string of *attributeValueSetter* on the associated element of *attributeValueSetter.*
+    3. Otherwise (if the value string of *fullTemplate* is not null), invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and the value string of *attributeValueSetter* on the associated element of *attributeValueSetter.*
 3. Otherwise:
     1. Let *newValue* be an empty string.
     2. For each *part* in *partList*:
-        1. If *part* is a “string”, append the string to the end of *newValue*.
-        2. Otherwise (*part* is an _attribute template part_), append the value string of *part* to the end of *newValue*.
-    3. Invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and *newValue* on the associated element of *attributeValueSetter.*
+      1. If *part* is a “string”, append the string to the end of *newValue*.
+      2. Otherwise (*part* is an _attribute template part_), append the value string of *part* to the end of *newValue*.
+    3. Invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and *newValue* on the associated element of *attributeValueSetter*.
 
-> Note: Only fully templatized attribute can be removed in the current proposal. An attribute template part never fails to update unlike a node template part which can fail to apply changes in some cases.
+> Note: Only fully templatized attributes can be removed in the current proposal. An attribute template part never fails to update unlike a node template part which can fail to apply changes in some cases.
 
 ### 4.6 `NodeTemplatePart` Interface
 
-`NodeTemplatePart` interface has four additional attributes: `parentNode`, `previousSibling`, `nextSibling`, `replacementNodes`, and two methods: `replace` and `replaceHTML` in addition to the ones inherited from `TemplatePart`.
+The `NodeTemplatePart` interface has four additional attributes: `parentNode`, `previousSibling`, `nextSibling`, and `replacementNodes`; and two methods: `replace` and `replaceHTML` — in addition to the ones inherited from `TemplatePart`.
 
-The `parentNode` is a readonly IDL attribute, which on getting must return the parent node of the _node value setter_ associated with the context object.
+The `parentNode` readonly IDL attribute, on getting, must return the parent node of the _node value setter_ associated with the context object.
 
-The `previousSibling` is a readonly IDL attribute on getting must run these steps:
+The `previousSibling` readonly IDL attribute, on getting, must run these steps:
 
 1. Let *nodeValueSetter* be the _node value setter_ associated with the context object.
 2. Let *partList* be _node template part list_ of *nodeValueSetter*.
 3. If the context object is the first item in *partList*, return the previous sibling of *nodeValueSetter* and abort these steps.
 4. Let *previousPart* be an item in *partList* immediately before the context context.
 5. While *previousPart* is not null:
-    1. If *previousPart* is a `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node), return *previousPart* and abort these steps.
+    1. If *previousPart* is a [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node), return *previousPart* and abort these steps.
     2. Otherwise (*previousPart* is another _node template part_):
-        1. If the _replacement nodes_ of *previousPart* is not empty, return the last node in the _replacement nodes_ and abort these steps.
+      1. If the _replacement nodes_ of *previousPart* is not empty, return the last node in _replacement nodes_ and abort these steps.
     3. Let *previousPart* be the item immediately before *previousPart* in *partList*.
 6. Return null.
 
-
-The `nextSibling` is a readonly IDL attribute on getting must run these steps:
+The `nextSibling` readonly IDL attribute, on getting, must run these steps:
 
 1. Let *nodeValueSetter* be the _node value setter_ associated with the context object.
 2. Let *partList* be _node template part list_ of *nodeValueSetter*.
 3. If the context object is the last item in *partList*, return the next sibling of *nodeValueSetter* and abort these steps.
 4. Let *nextPart* be an item in *partList* immediately after the context context.
 5. While *nextPart* is not null:
-    1. If *nextPart* is a `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node), return *nextPart* and abort these steps.
+    1. If *nextPart* is a [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node), return *nextPart* and abort these steps.
     2. Otherwise (*nextPart* is another _node template part_):
-        1. If the _replacement nodes_ of *nextPart* is not empty, return the first node in the _replacement nodes_ and abort these steps.
+      1. If the _replacement nodes_ of *nextPart* is not empty, return the first node in _replacement nodes_ and abort these steps.
     3. Let *nextPart* be the item immediately after *nextPart* in *partList*.
 6. Return null.
 
+The `replacementNodes` readonly IDL attribute, on getting, must return the _replacement nodes_ of the context object.
 
-The `replacementNodes` is a readonly IDL attribute, which on getting must return the _replacement nodes_ of the context object.
-
-The `value` IDL attribute of `TemplatePart` when involved on a _node template part_, on getting, must run these steps:
+The `value` IDL attribute of `TemplatePart` when invoked on a _node template part_, on getting, must run these steps:
 
 1. Let *value* be an empty string.
 2. For every *node* in the _replacement nodes_ of the context object:
@@ -607,26 +598,26 @@ The `value` IDL attribute of `TemplatePart` when involved on a _node template pa
 
 On setting, it must run these steps:
 
-1. If the _replacement nodes_ consists of exactly one `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node):
-    1. Let *text* be the `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node) in _replacement nodes._
+1. If the _replacement nodes_ consists of exactly one [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node):
+    1. Let *text* be the [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) in _replacement nodes_.
     2. [Replace data](https://dom.spec.whatwg.org/#concept-cd-replace) with *text*, offset 0, count text's [length](https://dom.spec.whatwg.org/#concept-node-length), and data new value.
 2. Otherwise:
     1. Let *text* be a new `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node) with its [data](https://dom.spec.whatwg.org/#concept-cd-data) set to new value and [node document](https://dom.spec.whatwg.org/#concept-node-document) set to *parentNode*'s associated [node document](https://dom.spec.whatwg.org/#concept-node-document).
-    2. Remove all nodes from the _replacement nodes_, and insert *text*.
+    2. Remove all nodes from _replacement nodes_, and insert *text*.
 3. Run the concept to _apply node template part list_ with the _node value setter_ associated with the context object.
 
-The `replace(nodes)` method, when involved, must run these steps:
+The `replace(nodes)` method, when invoked, must run these steps:
 
-1. Replace each string in *nodes* with a new `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node) whose [data](https://dom.spec.whatwg.org/#concept-cd-data) is the string and [node document](https://dom.spec.whatwg.org/#concept-node-document) is document.
-2. If any node in *nodes* is a `[Document](https://dom.spec.whatwg.org/#document)`, `[DocumentType](https://dom.spec.whatwg.org/#documenttype)`, or `[DocumentFragment](https://dom.spec.whatwg.org/#documentfragment)` [node](https://dom.spec.whatwg.org/#concept-node), then [throw](https://heycam.github.io/webidl/#dfn-throw) an "`[InvalidNodeTypeError](https://heycam.github.io/webidl/#invalidnodetypeerror)`" `[DOMException](https://heycam.github.io/webidl/#idl-DOMException)`.
-3. Remove all nodes from the _replacement nodes_, and insert *nodes*.
+1. Replace each string in *nodes* with a new [`Text`](https://dom.spec.whatwg.org/#text) [node](https://dom.spec.whatwg.org/#concept-node) whose [data](https://dom.spec.whatwg.org/#concept-cd-data) is the string and [node document](https://dom.spec.whatwg.org/#concept-node-document) is document.
+2. If any node in *nodes* is a [`Document`](https://dom.spec.whatwg.org/#document), [`DocumentType`](https://dom.spec.whatwg.org/#documenttype), or [`DocumentFragment`](https://dom.spec.whatwg.org/#documentfragment) [node](https://dom.spec.whatwg.org/#concept-node), then [throw](https://heycam.github.io/webidl/#dfn-throw) an "[`InvalidNodeTypeError`](https://heycam.github.io/webidl/#invalidnodetypeerror)" [`DOMException`](https://heycam.github.io/webidl/#idl-DOMException).
+3. Remove all nodes from _replacement nodes_, and insert *nodes*.
 4. Run the concept to _apply node template part_ list with the node value setter associated with the context object.
 
-The `replaceHTML(html)` method, when involved, must run these steps:
+The `replaceHTML(html)` method, when invoked, must run these steps:
 
 1. Let *fragment* be the result of invoking the [fragment parsing algorithm](https://w3c.github.io/DOM-Parsing/#dfn-fragment-parsing-algorithm) with *html* as markup, and the parent node of the _node value setter_ associated with the context object as the context element.
 2. Let nodes be *nodes* be [children](https://dom.spec.whatwg.org/#concept-tree-child) of *fragment*.
-3. Remove all nodes from the _replacement nodes_, and insert *nodes*.
+3. Remove all nodes from _replacement nodes_, and insert *nodes*.
 4. Run the concept to _apply node template part list_ with the node value setter associated with the context object.
 
 ```
@@ -647,20 +638,20 @@ To **apply node template part list** with *nodeValueSetter***,** run these steps
 2. Let *nodes* be an empty [node](https://dom.spec.whatwg.org/#concept-node) list.
 3. For every *part* in *partList*:
     1. If *part* is a `[Text](https://dom.spec.whatwg.org/#text)` [node](https://dom.spec.whatwg.org/#concept-node), append *text* to *nodes*.
-    2. Otherwise (*part* is a _node template part_), add every node in the _replacement nodes_ of *part* to *nodes*.
+    2. Otherwise (*part* is a _node template part_), add every node in _replacement nodes_ of *part* to *nodes*.
 4. Let *referenceNode* be null.
-5. If *nodeValueSetter*'s fully templatized flag is set:
+5. If *nodeValueSetter*'s _fully templatized_ flag is set:
     1. [Remove](https://dom.spec.whatwg.org/#concept-node-remove) all *parent*’s [children](https://dom.spec.whatwg.org/#concept-tree-child), in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), with the *suppress observers flag* unset.
-6. Otherwise (*nodeValueSetter*'s _fully templatized flag_ is not set):
+6. Otherwise (*nodeValueSetter*'s _fully templatized_ flag is not set):
     1. If the [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [nodes](https://dom.spec.whatwg.org/#concept-node) of the previous sibling and the next sibling associated with *nodeValueSetter* is different from the parent node associated with *nodeValueSetter*:
-        1. If [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [nodes](https://dom.spec.whatwg.org/#concept-node) of the previous sibling associated with *nodeValueSetter* and the last node in the _previous replacement nodes_ are same as the parent node associated with *nodeValueSetter*, set the next sibling of *nodeValueSetter* to the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of the last node in the _previous replacement nodes_.
-        2. If [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [nodes](https://dom.spec.whatwg.org/#concept-node) of the next sibling associated with *nodeValueSetter* and the first node in the _previous replacement nodes_ are same as the parent node associated with *nodeValueSetter*, set the previous sibling of *nodeValueSetter* to the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-previous-sibling) of the first node in the _previous replacement nodes_.
-        3. Otherwise (if the above two conditions fail), abort these steps and return. The _node value setter_ is in a _detached state_.
+      1. If [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [nodes](https://dom.spec.whatwg.org/#concept-node) of the previous sibling associated with *nodeValueSetter* and the last node in the _previous replacement nodes_ are same as the parent node associated with *nodeValueSetter*, set the next sibling of *nodeValueSetter* to the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of the last node in _previous replacement nodes_.
+      2. If [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [nodes](https://dom.spec.whatwg.org/#concept-node) of the next sibling associated with *nodeValueSetter* and the first node in the _previous replacement nodes_ are same as the parent node associated with *nodeValueSetter*, set the previous sibling of *nodeValueSetter* to the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-previous-sibling) of the first node in the _previous replacement nodes_.
+      3. Otherwise (if the above two conditions fail), abort these steps and return. The _node value setter_ is in a _detached state_.
     2. If the previous sibling associated with *nodeValueSetter* is a [preceding](https://dom.spec.whatwg.org/#concept-tree-preceding) node of the next sibling associated with *nodeValueSetter* in the parent node of *nodeValueSetter*, abort these steps and return. The _node value setter_ is in a _detached state_.
     3. Let *nodesToRemove* be an empty node list.
     4. Let *child* be the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of the previous sibling of *nodeValueSetter.*
     5. While *child* is not the next sibling of *nodeValueSetter* (this could be null):
-        1. Add *child* to *nodesToRemove*.
+      1. Add *child* to *nodesToRemove*.
     6. Remove every node in *nodesToRemove* from the parent node of *nodeValueSetter*.
     7. Let *referenceNode* be the next sibling of *nodeValueSetter*.
 7. Let the _previous replacement nodes_ of *nodeSetter* be *nodes*.
@@ -668,6 +659,6 @@ To **apply node template part list** with *nodeValueSetter***,** run these steps
     1. [Pre-insert](https://dom.spec.whatwg.org/#concept-node-pre-insert) *node* before *referenceNode*.
     2. Let *referenceNode* be *node*.
 
-> Note: This algorithm was devised to respond well to direct mutations made on a template instance as much as possible without having to add additional steps to [remove](https://dom.spec.whatwg.org/#concept-node-remove) a node like [ranges](https://dom.spec.whatwg.org/#concept-range). It allows insertion anywhere inside the parent node as well as removal of any node inserted by the _node value setter_ if the _node value sette_r is _fully templatized_. When the _node value setter_ is _partially templatized_, we only support inserting or removing nodes on one side as well as insertion or removal of nodes inserted by the _node value setter_ as long as it's the node next to the mutated side. If both the node before and the node after the insertion point were removed from the parent node, or if nodes were inserted before or after the insertion point and the node in the _previous replacement node_ on the same side is no longer in the parent, a _partially templatized_ _node value setter_ fails to apply its changes into the template instance. The _node value setter_ can recover from this state if these nodes are re-inserted back into the parent node.
+> Note: This algorithm was devised to respond well to direct mutations made on a template instance as much as possible without having to add additional steps to [remove](https://dom.spec.whatwg.org/#concept-node-remove) a node like [ranges](https://dom.spec.whatwg.org/#concept-range). It allows insertion anywhere inside the parent node as well as removal of any node inserted by the _node value setter_ if the _node value setter_ is fully templatized. When the _node value setter_ is partially templatized, we only support inserting or removing nodes on one side as well as insertion or removal of nodes inserted by the _node value setter_ as long as it's the node next to the mutated side. If both the node before and the node after the insertion point were removed from the parent node, or if nodes were inserted before or after the insertion point and the node in the _previous replacement node_ on the same side is no longer in the parent, a _partially templatized_ _node value setter_ fails to apply its changes into the template instance. The _node value setter_ can recover from this state if these nodes are re-inserted back into the parent node.
 
-> Note: There is an alternative approach to use this algorithm once inside `createElement`, and have each node template part update itself independently. The benefit of that approach is that updating one node template part wouldn't re-insert nodes from other node template part. The drawback is that it would make the replacements less robust.
+> Note: There is an alternative approach to use this algorithm once inside `createElement`, and have each node template part update itself independently. The benefit of that approach is that updating one node template part wouldn't re-insert nodes from other node template parts. The drawback is that it would make the replacements less robust.
