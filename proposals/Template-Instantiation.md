@@ -380,7 +380,7 @@ An **inner template part** has an associated [template element](https://html.spe
 
 > Note: _attribute value setter_ and _node value setter_ are specifications phantoms that do not need to exist in actual implementations.
 
-### A.3 Creating Template Parts
+### 4.3 Creating Template Parts
 
 The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when invoked, must run the following steps: 
 
