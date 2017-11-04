@@ -21,7 +21,7 @@ Here are some of the use cases this API should address:
 6. A search-field component should be able to show a checked checkbox when the user has already chosen to ignore case (capitalization) in the settings; e.g., when the `ignoreCase` property is `true`, it should generate `<input type="checkbox" checked>` and when the `ignoreCase` property is `false`, it should just generate `<input type="checkbox">` .
 7. A search-field component should be able to show the fallback “Keywords” label when there is no custom placeholder specified.
 8. A contact-card component shouldn’t show a label for an email address if the underlying JS object doesn’t have an email address specified; e.g., when the `email` property is missing from the input JavaScript object, show `<section><h1>Ryosuke Niwa</h1></section>` instead of `<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:"></a></section>.`
-9. A contact list component should be able to use a single template to instantiate an array of contact—card components without having to instantiate each contact-card component separately.
+9. A contact list component should be able to use a single template to instantiate an array of contact-card components without having to instantiate each contact-card component separately.
 
 ## **3. Proposal**
 
