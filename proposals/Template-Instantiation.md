@@ -159,7 +159,7 @@ This template process callback, for illustration purposes, is a simplified versi
 
 ```
 rniwa = {name: "R. Niwa", email: "rniwa@webkit.org"};
-document.body.appendChild(contactTemplate.createInstance(rniwa);
+document.body.appendChild(contactTemplate.createInstance(rniwa));
 ```
 
 The above code produces the same DOM as the following code under `document.body`:
