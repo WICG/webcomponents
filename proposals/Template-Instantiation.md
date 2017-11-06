@@ -132,7 +132,7 @@ To put it another way, in both use cases (4) and (5), creating an instance of a 
 
 In fact, since the same template syntax extensions (e.g., Handlebars template) tend to be used multiple times in the same document or in a given shadow tree of a component, it would be ideal if there were a mechanism to declare a **template type** once, and use it multiple times in a given document or a shadow tree. We don't want the template to directly specify a JS function because that would require polluting the global scope, and having an explicit template type registration opens a way in the future to scope template types registered per shadow tree. So we propose an addition of template type registry to document (and possibly shadow root).
 
-Each template type is associated with a **template process callback** (`TemplateProcessCallback`). A template process callback is invoked inside each call to `createInstance` of `HTMLTemplate`, and takes there arguments: the newly created template instance, a sequence of template parts, and the state object passed into `createInstance`.
+Each template type is associated with a **template process callback** (`TemplateProcessCallback`). A template process callback is invoked inside each call to `createInstance` of `HTMLTemplate`, and takes three arguments: the newly created template instance, a sequence of template parts, and the state object passed into `createInstance`.
 
 Each template part represents an occurrence of a mustache syntax in the template. When a mustache syntax appears as a text node, `NodeTemplatePart` is instantiated. If it appears within an attribute, `AttributeTemplatePart` is instantiated. Each template instance is associated with a template process callback used to create the instance. All subsequent calls to `update` invoke the same template process callback. Each template type is optionally associated with an **template create callback** (`TemplateProcessCallback`), which gets invoked when a template instance is initially constructed.
 
@@ -395,8 +395,8 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 2. Let *instance* be an instance of `TemplateInstance`.
 3. [Append](https://dom.spec.whatwg.org/#concept-node-append) *clonedTree* to *instance*.
 4. Let *parts* be an empty list.
-5. For every [descendent](https://dom.spec.whatwg.org/#concept-tree-descendant) node c*urrentNode* of *instance* in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), run these steps:
-    1. If c*urr**entNode* is a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element):
+5. For every [descendent](https://dom.spec.whatwg.org/#concept-tree-descendant) node *currentNode* of *instance* in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), run these steps:
+    1. If *currentNode* is a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element):
         1. Run the concept to _adjust single node case_ with *currentNode***.**
         2. Let *nodeValueSetter* be a new instance of the _node value setter_ with *currentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, fully templatized set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
         3. Let *innerPart* be a new instance of `InnerTemplatePart` associated with *currentNode*, an empty _replacement node list_, and *nodeValueSetter*.
@@ -433,7 +433,7 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
         7. [Remove](https://dom.spec.whatwg.org/#concept-node-remove) *currentNode* from the *currentNode*'s [parent](https://dom.spec.whatwg.org/#concept-tree-parent).
         8. Run the concept to _apply node template part list_ with *nodeValueSetter*.
 6. Let *partArray* be be ! [ArrayCreate](https://tc39.github.io/ecma262/#sec-arraycreate)(0).
-7. Let *partsLength* be the result of performing [ArrayAccumulation](https://tc39.github.io/ecma262/#sec-runtime-semantics-arrayaccumulation) for Parts with arguments *partsArray* and 0.
+7. Let *partsLength* be the result of performing [ArrayAccumulation](https://tc39.github.io/ecma262/#sec-runtime-semantics-arrayaccumulation) for *parts* with arguments *partsArray* and 0.
 8. If the previous step resulted in [abrupt completion](https://tc39.github.io/ecma262/#sec-completion-record-specification-type), return null.
 9. If there is a _template create callback_ associated with the context object:
     1. Let *createCallback* be `TemplateProcessCallback` associated with the context object.
@@ -446,12 +446,9 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 
 > Note: We run the concepts to _apply attribute template part list_ and _apply node template part list_ immediately to strip away the mustache syntax in the original template as well as whitespaces before & after it to keep the initial template state consistent with the one after running these concepts in a template process callback. Actual implementations can run these algorithm as it clones the tree, and avoid unnecessary churn of text nodes and strings as an optimization.
 
-When there is exactly one `{{~}}` inside a template, we keep
-
-
 To **parse a template string** with a DOMString *template*, run these steps:
 
-1. Let *position* be a [position variable](https://infra.spec.whatwg.org/#string-position-variable) for *template*, initially pointing at the start of* template.*
+1. Let *position* be a [position variable](https://infra.spec.whatwg.org/#string-position-variable) for *template*, initially pointing at the start of *template*.
 2. Let *state* be “initial”.
 3. Let *beginningPosition* be *position*.
 4. Let *lastCodePoint* be U+0000 NULL.
@@ -460,7 +457,7 @@ To **parse a template string** with a DOMString *template*, run these steps:
     1. If *state* is “initial” and the code point is U+007B LEFT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
         1. Let *state* be “beginCurly”
         2. Let *candidateEndingPosition* be *position*.
-        3. Go to step 6.e.
+        3. Go to step 6.iv.
     2. If *state* is “*beginCurly*”,
         1.  If the code point is U+007B LEFT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
             1. Let *state* be “part”.
@@ -468,20 +465,20 @@ To **parse a template string** with a DOMString *template*, run these steps:
             3. Let *beginningPosition* be the next code point in *template.*
         2. Otherwise,
             1. Let *state* be “initial”.
-        3. Got to step 6.e.
+        3. Got to step 6.iv.
     3. If *state* is “part” and the code point is U+007D RIGHT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
         1. Let state be “endCurly”.
         2. Let *candidateEndingPosition* be *position*.
-        3. Go to step 6.e.
+        3. Go to step 6.iv.
     4. If state is “endCurly” and the code point is U+007D RIGHT CURLY BRACKET,
         1. If the code point is U+007D RIGHT CURLY BRACKET and *lastCodePoint* is not U+005C REVERSE SOLIDUS,
             1. Let *state* be “initial”.
             2. Let *expression* be the code points starting at *beginningPosition* and ending immediately before *candidateEndingPosition*.
             3. [Strip leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace) from expression.
-            4. Append the pair of type “pair” and *expression* to the end of *tokens.*
+            4. Append the pair of type “part” and *expression* to the end of *tokens.*
         2. Otherwise,
             1. Let *state* be “part”.
-        3. Go to step 6.e.
+        3. Go to step 6.iv.
     5. Let *lastCodePoint* be the current code point if *lastCodePoint* is not U+005C REVERSE SOLIDUS. Otherwise let *lastCodePoint* be U+0000 NULL.
     6. Advance *position* to the next [code point](https://infra.spec.whatwg.org/#code-point) in *template*.
 7. Return *tokens*.
@@ -663,7 +660,7 @@ To **apply node template part list** with *nodeValueSetter***,** run these steps
         1. Add *child* to *nodesToRemove*.
     6. Remove every node in *nodesToRemove* from the parent node of *nodeValueSetter*.
     7. Let *referenceNode* be the next sibling of *nodeValueSetter*.
-7. Let the _previous replacement nodes_ of *nodeSetter* be *nodes*.
+7. Let the _previous replacement nodes_ of *nodeValueSetter* be *nodes*.
 8. For every *node* in *nodes*:
     1. [Pre-insert](https://dom.spec.whatwg.org/#concept-node-pre-insert) *node* before *referenceNode*.
     2. Let *referenceNode* be *node*.
