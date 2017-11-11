@@ -34,7 +34,7 @@ class MyElement extends HTMLElement { ~ }
 In the case we didn't have any script, we can automatically create a new default custom element class, which is equivalent to having the following JavaScript code, and attach a shadow tree with an instance of template using the proposed template instantiation API. 
 
 ```
-class /* d`efault custom element */ extends HTMLElement` {
+class /* default custom element */ extends HTMLElement {
 `    #shadowRoot; `// This is the syntax for a private variable in ECMAScript 2018+`
     #templateInstance;`
     constructor(...args) {
