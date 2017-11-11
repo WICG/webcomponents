@@ -83,7 +83,7 @@ Because attributeChangedCallback automatically updates the template instance, up
 
 > Note: This example really demonstrates the need to be able to set various ARIA values on the shadow host without wrapping it in a container within a shadow tree.
 
-## 3. Creating a Shadow Tree with Author-Defined Custom Elements Class
+## 3. Creating a Shadow Tree with Author-Defined Custom Element Classes
 
 In the case the author supplies the custom element class (which is probably the majority of cases), we can't simply create a shadow tree in the HTMLElement constructor since the ECMA2018/2019 still doesn't provide a protected variable, and `super` call must return `this`. It would mean that we'd have to either make the shadow tree exposed to all other external scripts (by making it open), or not letting author scripts access the shadow tree. Since it's possible for custom elements to not needing shadow trees (especially in cases where the author supplies a custom element class), it's better to let each custom element class attach its own shadow root instead on demand.
 
