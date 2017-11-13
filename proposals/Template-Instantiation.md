@@ -322,7 +322,7 @@ document.defineTemplateType("with-for-each", { processCallback: function (instan
     for (const template of instance.querySelectorAll("template")) {
         ...
         if (template.directive == "foreach")
-            template.parentNode.replaceChild(template, template.createInstance(state[template.expression]));
+            template.parentNode.replaceChild(template.createInstance(state[template.expression]), template);
     }
 }});
 ```
