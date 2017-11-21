@@ -59,10 +59,7 @@ shadowRoot.appendChild(template.createInstance({name: "Ryosuke Niwa", email: "rn
 When `createInstance` is called with a JavaScript object, we automatically substitute every mustache syntax with the corresponding value of the property in the object. The resultant DOM would look as though we parsed the following HTML:
 
 ``` html
-<section>
-    <h1>Ryosuke Niwa</h1>
-    Email: <a href="mailto:rniwa@webkit.org”>rniwa@webkit.org</a>
-</section>
+<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@webkit.org”>rniwa@webkit.org</a></section>
 ```
 
 For use case (3), `TemplateInstance`'s `update` method can be used as follows:
@@ -77,10 +74,7 @@ content.update({name: "Ryosuke Niwa", email: "rniwa@apple.com"});
 That would update the DOM tree of the template instance to look like:
 
 ``` html
-<section>
-    <h1>Ryosuke Niwa</h1>
-    Email: <a href="mailto:rniwa@apple.com”>rniwa@apple.com</a>
-</section>
+<section><h1>Ryosuke Niwa</h1>Email: <a href="mailto:rniwa@apple.com”>rniwa@apple.com</a></section>
 ```
 
 Note that `TemplateInstance` keeps track of nodes via template parts defined in the next section so that even if they are removed from `TemplateInstance` per `appendChild` in the second line, they keep semantically functioning as a part of the template instance, making the subsequent `update` call possible.
@@ -147,12 +141,7 @@ Each template part represents an occurrence of a mustache syntax in the template
 Consider, for example, the following template:
 
 ``` html
-<template type="my-template-type" id="contactTemplate">
-    <section>
-        <h1>{{name}}</h1>
-        Email: <a href="mailto:{{email}}">{{email}}</a>
-    </section>
-</template>
+<template type="my-template-type" id="contactTemplate"><section><h1>{{name}}</h1>Email: <a href="mailto:{{email}}">{{email}}</a></section></template>
 ```
 
 That template creates template parts: `NodeTemplatePart` for `{{name}}`, `AttributeTemplatePart` for `{{email}}` in the `href` attribute of the anchor element, and `NodeTemplatePart` for `{{email}}` for the occurrence inside the anchor element. In order to use this template, a template library or the page author would have had to define a `my-template-type` template type; e.g.:
@@ -408,7 +397,7 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
 4. Let *parts* be an empty list.
 5. For every [descendent](https://dom.spec.whatwg.org/#concept-tree-descendant) node *currentNode* of *instance* in [tree order](https://dom.spec.whatwg.org/#concept-tree-order), run these steps:
     1. If *currentNode* is a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element):
-        1. Run the concept to _adjust single node case_ with *currentNode.*
+        1. Run the concept to _adjust single node case_ with *currentNode*.
         2. Let *nodeValueSetter* be a new instance of the _node value setter_ with *currentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, the [next sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, fully templatized set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
         3. Let *innerPart* be a new instance of `InnerTemplatePart` associated with *currentNode*, an empty _replacement node list_, and *nodeValueSetter*.
         4. Append *innerPart* to the end of *parts.*
@@ -431,7 +420,7 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
         1. Let *value* be *currentNode*'s [data](https://dom.spec.whatwg.org/#concept-cd-data) after [stripping leading and trailing ASCII whitespace](https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace).
         2. Let *tokens* to be the result of running the concept to _parse a template string_ on *value*.
         3. If *tokens* contains exactly one string, abort the rest of steps and go to the next node.
-        4. Run the concept to _adjust single node case_ with *currentNode***.**
+        4. Run the concept to _adjust single node case_ with *currentNode*.
         5. Let *nodeValueSetter* be a new instance of the _node value setter_ with the [parent](https://dom.spec.whatwg.org/#concept-tree-parent) [node](https://dom.spec.whatwg.org/#concept-node) of c*urrentNode*, the [previous sibling](https://dom.spec.whatwg.org/#concept-tree-next-sibling) of *currentNode*, an empty _previous replacement nodes_, fully templatized flag set to the result of running the concept to _determine full templatizability_ with *currentNode*, and an empty _node template part list_.
         6. For every *token* in *tokens*:
             1. If the type of *token* is “string”,
@@ -560,7 +549,7 @@ To **apply attribute template part list** with an _attribute value setter_ *attr
 2. If *partList* contains exactly one _attribute template part_ (this is the fully templatized case):
     1. Let *fullTemplate* be the _attribute template part_ in *tokenList*.
     2. If the value string of *fullTemplate* is null, [remove an attribute](https://dom.spec.whatwg.org/#concept-element-attributes-remove-by-namespace) with the namespace of the associated attribute of *attributeValueSetter*, the [local name](https://dom.spec.whatwg.org/#concept-attribute-local-name) of the associated attribute of *attributeValueSetter*, and the associated element of *attributeValueSetter.*
-    3. Otherwise (if the value string of *fullTemplate* is not null*)*, invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and the value string of *attributeValueSetter* on the associated element of *attributeValueSetter.*
+    3. Otherwise (if the value string of *fullTemplate* is not null), invoke [setAttributeNS](https://dom.spec.whatwg.org/#dom-element-setattributens) with the namespace of the associated attribute of *attributeValueSetter*, the [qualified name](https://dom.spec.whatwg.org/#concept-attribute-qualified-name) of the associated attribute of *attributeValueSetter*, and the value string of *attributeValueSetter* on the associated element of *attributeValueSetter.*
 3. Otherwise:
     1. Let *newValue* be an empty string.
     2. For each *part* in *partList*:
