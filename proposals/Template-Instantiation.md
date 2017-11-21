@@ -86,9 +86,7 @@ Because multiple mustache syntaxes within a template work together to absorb var
 In order to support use cases (4) and (5), let’s say we have the following `template` element:
 
 ``` html
-<template id="foo">
-    <div class="foo {{ f(y) }}">{{ x }} world</div>
-</template>
+<template id="foo"><div class="foo {{ f(y) }}">{{ x }} world</div></template>
 ```
 
 For use case (4), we need some mechanism for author scripts to look at the original expression — such as `f(y)` — and *evaluate* it to some value as they see fit. A simple string substitution is possible but cumbersome in the case of calling `update` with a new JavaScript object, or when a library or a framework wants to inject non-text nodes.
