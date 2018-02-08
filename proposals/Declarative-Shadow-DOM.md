@@ -148,7 +148,7 @@ Once parsed should create shadow root in parent element - **host**, and append i
         World
     </hello-element>
     ```
-    Should render "Hello World" regardless if custom element definition was loaded before, after or not at all. Also, in all three cases `helloElement.children` consist only of text nodes `"\n\t","\n\tWord\n"`.
+    Should render "Hello World" regardless if custom element definition was loaded before, after or not at all. Also, in all three cases `helloElement.children` consist only of text nodes `"\n\t","\n\tWorld\n"`.
 
 - Another (valid) `<shadowroot mode="open|closed">` inside the node that already has a parsed `<shadowroot>`, should make the same effect as `<shadowroot>` in the element that already has shadow root.
     > Note, non-normative: it is processed without an error but does nothing.- There should be only one `<shadowroot>` child element, other should be treated as `HTMLUnknownElement`
