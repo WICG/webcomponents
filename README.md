@@ -5,7 +5,7 @@ Web Components are a new browser feature that provides a standard component mode
 
 - [Shadow DOM](https://w3c.github.io/webcomponents/spec/shadow/)
     - Most of the parts are now maintained in [DOM Standard](https://dom.spec.whatwg.org/).
-      Some of the parts are still remained in this repository. See [Issue #377](https://github.com/w3c/webcomponents/issues/377) for the progress.
+      Some of the parts are still remained in this repository. See [Issue #661](https://github.com/w3c/webcomponents/issues/661) for the progress.
     - [The current issue tracker](https://github.com/w3c/webcomponents/labels/shadow-dom).
     - [The old issue tracker](https://www.w3.org/Bugs/Public/showdependencytree.cgi?id=14978) on W3C bugzilla, which is no longer used.
 - [Custom Elements](https://w3c.github.io/webcomponents/spec/custom/)
