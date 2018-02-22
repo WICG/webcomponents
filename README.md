@@ -16,12 +16,9 @@ Web Components are a new browser feature that provides a standard component mode
     - [The old issue tracker](https://www.w3.org/Bugs/Public/showdependencytree.cgi?id=14968) on W3C bugzilla, which is no longer used.
 - HTML Templates
     - HTML Templates were upstreamed into the [HTML Standard](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element) and are fully maintained there.
-- [CSS Shadow Parts](https://drafts.csswg.org/css-shadow-parts/)
-    - A v2 Shadow DOM propposal for various pseudo-classes to select elements inside a shadow tree now maintained by the CSS WG.
-    - [Issues against the CSS WG repository](https://github.com/w3c/csswg-drafts/labels/css-shadow-parts).
-- [CSS Scoping](https://drafts.csswg.org/css-scoping/)
-    - Various selectors to select into the "light tree" maintained by the CSS WG.
-    - [Issues against the CSS WG repository](https://github.com/w3c/csswg-drafts/labels/css-scoping-1).
+- CSS changes
+    - The CSS WG works on [CSS Scoping](https://drafts.csswg.org/css-scoping/) and [CSS Shadow Parts](https://drafts.csswg.org/css-shadow-parts/), which help dealing with shadow trees with various selectors. Various other parts of CSS and its object model are also impacted by shadow trees and directly worked on in the various CSS specificaions.
+    - [Issues against the CSS WG repository](https://github.com/w3c/csswg-drafts/labels/topic%3A%20shadow).
 
 Abandoned features:
 
