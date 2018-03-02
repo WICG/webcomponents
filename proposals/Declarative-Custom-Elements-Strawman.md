@@ -35,15 +35,15 @@ In the case we didn't have any script, we can automatically create a new default
 
 ```
 class /* default custom element */ extends HTMLElement {
-`    #shadowRoot; `// This is the syntax for a private variable in ECMAScript 2018+`
-    #templateInstance;`
+    #shadowRoot; // This is the syntax for a private variable in ECMAScript 2018+
+    #templateInstance;
     constructor(...args) {
         super(...args);
         const template = customElements.getTemplate(this);
         if (!template)
             return;
         #shadowRoot = this.attachShadow({mode: template.getAttribute('shadowmode')});
-        #templateInstance = shadowRoot.appendChild(#template.createInstance(#shadowRoot));
+        #templateInstance = #shadowRoot.appendChild(template.createInstance(#shadowRoot));
     }
     attributeChangedCallback(attributeName, oldValue, newValue, namespace) {
         #templateInstance.update(#shadowRoot);
@@ -63,7 +63,7 @@ Note that the shadow root of the custom element is passed to createInstance's st
             <div id="label"><slot></slot></div>
         </div>
         <style>
-            :host { dispaly: inline-block !important; }
+            :host { display: inline-block !important; }
             #progressbar { position: relative; display: block; width: 100%; height: 100%; }
             #bar { background-color: #36f; height: 100%; }
             #label { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; text-align: center; }
@@ -75,7 +75,7 @@ Note that the shadow root of the custom element is passed to createInstance's st
 We could use the following instance to make a bar graph showing 20% progress:
 
 ```
-<percentage-bar percentage="20">Initializing...</my-color>
+<percentage-bar percentage="20">Initializing...</percentage-bar>
 ```
 
 Because attributeChangedCallback automatically updates the template instance, updating the attribute value to, say, 40, would automatically update the bar graph.
