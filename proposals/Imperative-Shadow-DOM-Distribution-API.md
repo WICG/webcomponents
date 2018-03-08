@@ -38,7 +38,7 @@ Basically, `slot.assign(sequence<Node> nodes)` sets the slot's *manually-assigne
 
 # Changes to HTML Standard
 
-## HTMLSltoElement
+## HTMLSlotElement
 
 ``` webidl
 partial interface HTMLSlotElement {
@@ -153,7 +153,7 @@ assert(slot2.assignedNodes() == []);
 
 ```
 
-## Example 1: Imperative slotting API doesn't have any effect in a shadow root with slotting=auto.
+## Example 2: Imperative slotting API doesn't have any effect in a shadow root with slotting=auto.
 
 
 ``` text
@@ -175,6 +175,42 @@ slot1.assign([A, B]);  // This doesn't have any effect because this shadow tree'
 
 assert(slot1.assignedNodes() == [A]);
 assert(slot2.assignedNodes() == [B]);
+
+```
+
+
+## Example 3: Other host's children or any other nodes are simply ignored.
+
+
+``` text
+
+host1
+├──/shadowroot1 (slotting=manual)
+│   └── slot1
+└── A
+
+host2
+├──/shadowroot2 (slotting=manual)
+│   └── slot2
+└── B
+    └── C
+
+```
+
+``` javascript
+
+slot2.assign([A, B, C]);
+assert(slot2.assignedNodes() == [B]);
+
+slot1.assign([A]);
+assert(slot1.assignedNodes() == [A]);
+
+shadowroot2.append(slot1);
+assert(slot1.assignedNodes() == []);
+
+shadowroot1.append(slot1);
+assert(slot1.assignedNodes() == [A]);
+
 ```
 
 # Open Questions
