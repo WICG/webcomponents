@@ -138,8 +138,8 @@ assert(slot2.assignedNodes() == [A, B]);
 
 slot1.assign(A);
 
-assert(slot1.assignedNodes() == [A]);
-assert(slot2.assignedNodes() == [B]);
+assert(slot1.assignedNodes() == [A]);  // slot1 got A.
+assert(slot2.assignedNodes() == [B]);  // slot2 lost A.
 
 slot1.assign([A, A, A, host]);   // We don't throw an exepction here.
 
@@ -184,7 +184,7 @@ assert(slot2.assignedNodes() == [B]);
 ```
 
 
-## Example 3: Inappropriates node are ignored, doesn't appear in slot.assignedNodes()
+## Example 3: Inappropriate nodes are ignored, and doesn't appear in slot.assignedNodes()
 
 
 ``` text
@@ -205,16 +205,16 @@ host2
 ``` javascript
 
 slot2.assign([A, B, C]);
-assert(slot2.assignedNodes() == [B]);
+assert(slot2.assignedNodes() == [B]); // A is excluded here because A is other shadow tree's host's child.
 
 slot1.assign([A]);
 assert(slot1.assignedNodes() == [A]);
 
 shadowroot2.append(slot1);
-assert(slot1.assignedNodes() == []);
+assert(slot1.assignedNodes() == []);  // A is no longer slot1's shadow tree's child.
 
 shadowroot1.append(slot1);
-assert(slot1.assignedNodes() == [A]);
+assert(slot1.assignedNodes() == [A]); // Now A is slot1's shadow tree's child.
 
 ```
 
@@ -236,7 +236,7 @@ const a = document.createElement('div');
 const b = document.createElement('div');
 slot1.assign([a, b]);   // We don't throw an exception
 
-assert(slot1.assignedNodes() == []);
+assert(slot1.assignedNodes() == []);   // Neither A nor B is slot1's shadow tree's host's child
 
 host.append(a);
 assert(slot1.assignedNodes() == [a]);
