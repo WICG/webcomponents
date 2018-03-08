@@ -34,7 +34,11 @@ A slot gets new API, called *assign* (tentative name).
 
 Basically, `slot.assign(sequence<Node> nodes)` sets the slot's *manually-assigned-nodes* to *nodes*. See the later section for details.
 
-*manually-assigned-nodes* is an internal field. It is write-only. Users cannot read the value directly.
+- *manually-assigned-nodes* is an internal field. It is write-only. Users cannot read the value directly.
+
+- *manually-assigned-nodes* are not different than [assigned nodes]. For example, users can pass a node which is not host's children. We don't throw an exception even if such a *invalid* node is passed, however, *invalid* node is never selected as [assigned nodes]; the engine recaluculate [assigned nodes] later, based on *manually-assigned-nodes*. Invalid nodes in *manually-assigned-nodes* are simply ignored. The caculataed [assigned nodes] are only observable.
+
+See also the Example 3 later.
 
 # Changes to HTML Standard
 
