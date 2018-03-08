@@ -99,6 +99,7 @@ Other steps don't need to be updated from the standard's perspective, I think, t
 
 Note: This change implies:
 
+-   *manually-assigned-nodes* should be considered an implementation detail. As long as the external behavior doesn't change, UA doesn't allocate *manually-assigned-nodes* for a slot.
 -   *manually-assigned-nodes* is used only when a slot is in a shadow tree whose *slotting* is *manual*.
 -   *manually-assigned-nodes* is not used when a slot is in a shadow tree whose *slotting* is *auto*.
 
@@ -183,7 +184,7 @@ assert(slot2.assignedNodes() == [B]);
 ```
 
 
-## Example 3: Other host's children or any other nodes are simply ignored.
+## Example 3: Inappropriates node are ignored, doesn't appear in slot.assignedNodes()
 
 
 ``` text
@@ -215,6 +216,33 @@ assert(slot1.assignedNodes() == []);
 shadowroot1.append(slot1);
 assert(slot1.assignedNodes() == [A]);
 
+```
+
+
+## Example 4: A node can be appended to a host after the node is imperatively assigned to a slot
+
+``` text
+
+host
+└──/shadowroot (slotting=manual)
+    └── slot1
+```
+
+``` javascript
+
+assert(slot1.assignedNodes() == []);
+
+const a = document.createElement('div');
+const b = document.createElement('div');
+slot1.assign([a, b]);   // We don't throw an exception
+
+assert(slot1.assignedNodes() == []);
+
+host.append(a);
+assert(slot1.assignedNodes() == [a]);
+
+host.append(b);
+assert(slot1.assignedNodes() == [a, b]);
 ```
 
 # Open Questions
