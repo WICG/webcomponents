@@ -1,5 +1,4 @@
-Web Components
-===============
+# Web Components
 
 Web Components are a new browser feature that provides a standard component model for the Web, consisting of several pieces maintained in different places:
 
@@ -20,7 +19,11 @@ Web Components are a new browser feature that provides a standard component mode
     - The CSS WG works on [CSS Scoping](https://drafts.csswg.org/css-scoping/) and [CSS Shadow Parts](https://drafts.csswg.org/css-shadow-parts/), which help dealing with shadow trees with various selectors. Various other parts of CSS and its object model are also impacted by shadow trees and directly worked on in the various CSS specificaions.
     - [Issues against the CSS WG repository](https://github.com/w3c/csswg-drafts/labels/topic%3A%20shadow).
 
-Abandoned features:
+## Issues
+
+Please file issues in the most specific repository possible, per the above issue pointers. (It's often not this repository.)
+
+## Abandoned features:
 
 - [HTML Imports](https://w3c.github.io/webcomponents/spec/imports/)
     - [The current issue tracker](https://github.com/w3c/webcomponents/labels/html-imports).
