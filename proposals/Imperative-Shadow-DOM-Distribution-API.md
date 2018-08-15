@@ -120,7 +120,9 @@ host
 │   ├── slot1
 │   └── slot2
 ├── A
-└── B
+├── B
+└── C
+
 ```
 
 ``` javascript
@@ -132,14 +134,19 @@ slot2.assign([A]);
 
 assert(slot2.assignedNodes() == [A]);
 
-slot2.assign([B, A]);  // The order doesn't matter.
+slot1.assign([B, A]);  // The order doesn't matter.
 
-assert(slot2.assignedNodes() == [A, B]);
+assert(slot1.assignedNodes() == [A, B]);
+
+slot2.assign([A, B]);  // The first slot in tree-order takes the node.
+
+assert(slot1.assignedNodes() == [A, B]);
+assert(slot2.assignedNodes() == []);
 
 slot1.assign(A);
 
-assert(slot1.assignedNodes() == [A]);  // slot1 got A.
-assert(slot2.assignedNodes() == [B]);  // slot2 lost A.
+assert(slot1.assignedNodes() == [A]);  // slot1 lost B.
+assert(slot2.assignedNodes() == [B]);  // slot2 got B.
 
 slot1.assign([A, A, A, host]);   // We don't throw an exepction here.
 
