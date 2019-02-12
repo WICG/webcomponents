@@ -32,7 +32,16 @@ These spec changes are built on top of the proposed refactoring here: https://gi
     - g\.	If *requiredModule*.[[Status]] is "instantiating", then
       - i\.	Assert: *requiredModule* is a Source Text Module Record.
       - ii\. Set *module*.[[DFSAncestorIndex]] to min(*module*.[[DFSAncestorIndex]], *requiredModule*.[[DFSAncestorIndex]]).
-- HTML Module Record provides a concrete implementation of InitializeEnvironment(), implementing the corresponding abstract method on Cyclic Module Record.  The implementation is just a no-op.  The Source Text Module Record version of this method sets up the lexical environment and resolves imports/exports for the current module, but for HTML modules there is no distinct lexical environment so there is nothing to do.
+- HTML Module Record provides a concrete implementation of InitializeEnvironment(), implementing the corresponding abstract method on Cyclic Module Record.  This function is responsible for creating a mutable binding with the name "*default*" that will be used to set up the HTML Module's document as the module's default export.
+  1. Let _module_ be this HTML Module Record.
+  1. Let _realm_ be _module_.[[Realm]]. 
+  1. Assert: _realm_ is not *undefined*.
+  1. Let _env_ be NewModuleEnvironment(_realm_.[[GlobalEnv]]).
+  1. Set _module_.[[Environment]] to _env_. 1. Let _envRec_ be _env_'s EnvironmentRecord.
+  1. Perform ! _envRec_.CreateMutableBinding("\*default\*", *false*). TODO Should this be CreateImmutableBinding?
+  1. Call _envRec_.InitializeBinding("\*default\*", *undefined*).
+  1. Return NormalCompletion(~empty~).
+
 - HTML Module Record provides a concrete implementation of ExecuteModule(), implementing the corresponding abstract method on Cyclic Module Record.  The implementation is just a no-op.  The Source Text Module Record version of this method initializes the execution context of the module and executes its code, but HTML modules have no code of their own to execute so there is nothing to do.
 - HTML Module Record should implement a modified version of [GetExportedNames](https://tc39.github.io/ecma262/#sec-getexportednames)(*exportStarSet*), as follows:
   - 1\. Let *module* be this HTML Module Record.
@@ -57,8 +66,9 @@ These spec changes are built on top of the proposed refactoring here: https://gi
       - ii\. Return null.
   - 3\. Append the Record { [[Module]]: *module*, [[ExportName]]: *exportName* } to resolveSet.
   - 4\.	If SameValue(*exportName*, "default") is true, then
-    - a\.	Return the HTML Document associated with this HTML Module record.
-    - b\.	NOTE: I assume here that we’re not trying to pass through default exports of the inline scripts.
+    - a\.	Return ResolvedBinding Record { [[Module]]: *module*, [[BindingName]]: *\*default\** }
+    - b\. NOTE 1: *\*default\** was set up to reference the HTML Module's document during instantiation/execution
+    - c\.	NOTE 2: I assume here that we’re not trying to pass through default exports of the inline scripts.
   - 5\.	Let *starResolution* be null.
   - 6\.	For each ScriptEntry record *se* in *module*.[[RequestedModules]], do:
     - a\.	If *se*.[[InlineModuleRecord]] == null, continue to next record.
@@ -105,19 +115,18 @@ These spec changes are built on top of the proposed refactoring here: https://gi
   - 8\.   Set *htmlModule’s* *record* to *result*.
   - 9\.   Return *htmlModule*.
 - Provide an implementation of the abstract operation HostParseHTMLModule(*source*, *realm*, *htmlModule*) as the following.
-  - 1\. Let *record* be a new HTML Module Record that this algorithm will subsequently initialize. 
-  - 2\.	Run the HTML5 parser on *source* to obtain the result *document*.
-  - 3\.	Set *record*.[[HostDefined]] = *htmlModule*.
-  - 4\.	For each HTMLScriptElement *script* in *document*:
-    - a\.	Let *se* be a new ScriptEntry record (see definition in ES6 changes above).
+  - 1\.	Run the HTML5 parser on *source* to obtain the result *document*.
+  - 2\. Let *scriptEntries* be an empty list of ScriptEntry Records (see definition in ES6 changes above).
+  - 3\.	For each HTMLScriptElement *script* in *document*:
+    - a\.	Let *se* be a new ScriptEntry record.
     - b\.	If *script* is inline:
       - i\.	Set *se*[[InlineModuleRecord]] = *script’s* Source Text Module Record
       - ii\.	Set *se*[[ExternalScriptURL]] = null
     - c\.	Else  
       - i\.	Set *se*[[InlineModuleRecord]] = null
       - ii\. Set *se*[[ExternalScriptURL]] = *script’s* src URL
-    - d\.	Append *se* to *record*.[[RequestedModules]]
-  - 5\.	Return *record*.
+    - d\.	Append *se* to *scriptEntries*.
+  - 4\. Return a new HTML Module Record { [[Realm]]: *realm*, [[Environment]]: *undefined*, [[Namespace]]: *undefined*, [[Status]]: `"uninstantiated"`, [[EvaluationError]]: *undefined*, [[HostDefined]]: *document*, [[RequestedModules]]: *scriptEntries*, [[DFSIndex]]: *undefined*, [[DFSAncestorIndex]]: *undefined* }.
 - Change [fetch a single module script](https://html.spec.whatwg.org/#fetch-a-single-module-script) as follows:
   - In step 9, allow `text/html` type through in addition to JavaScript.
   - In step 11, don’t unconditionally [create a module script](https://html.spec.whatwg.org/#fetching-scripts:creating-a-module-script).  Instead, key off the MIME type extracted in step 9, creating an HTML Module instead if we have a `text/html` MIME type.
