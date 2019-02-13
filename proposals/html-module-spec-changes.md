@@ -1,4 +1,4 @@
-This is a list of spec areas that will need to be changed to implement our [HTML Modules proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/html-modules-proposal.md).  Some of the proposed changes are very specific and some are more handwavy depending on how deep I've investigated into that particular area.
+This is a list of spec areas that will need to be changed to implement our [HTML Modules proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/html-modules-proposal.md)
 Questions/corrections/feedback are welcome!  I've left TODOs in several places where we still have open questions; any input regarding these is especially appreciated.
 
 -- [@dandclark](https://github.com/dandclark), with:\
@@ -15,8 +15,8 @@ These spec changes are built on top of the proposed refactoring here: https://gi
     
     | Field Name | Value Type | Meaning |
     | --- | --- | --- |
-    | [[InlineModuleRecord]] | Module Record \| null | The Module Record for the module request.  May be set when the module is created, or initially Null and set later during module Instantiation.  |
-    | [[ExternalScriptURL]] | String \| null | The URL for the module request if the Module Record was not available at module creation time.  Null otherwise. |
+    | [[InlineModuleRecord]] | Module Record \| null | The Module Record for the module request if available at ScriptEntry creation time.  Null otherwise.  |
+    | [[ExternalScriptURL]] | String \| null | The URL for the module request if the Module Record was not available at ScriptEntry creation time.  Null otherwise. |
     2. The [[HostDefined]] field in Abstract Module Record will be set to the HTML Module Script (see HTML5 Spec changes).  This is analogous to script modules where this field holds the JavaScript [module script](https://html.spec.whatwg.org/multipage/webappapis.html#module-script) as defined in the HTML5 spec.
 - HTML Module Record inherits the concrete Instantiate() method from Cyclic Module Record.
 - HTML Module Record defines its own version of [InnerModuleInstantiation](https://tc39.github.io/ecma262/#sec-innermoduleinstantiation).  Cyclic Module Record's definition recursively calls InnerModuleInstantiation on each child module (calling [HostResolveImportedModule](https://tc39.github.io/ecma262/#sec-hostresolveimportedmodule) to resolve module names to Module Records), then calls [ModuleDeclarationEnvironmentSetup](https://tc39.github.io/ecma262/#sec-moduledeclarationenvironmentsetup) to set up the lexical environment and resolve imports/exports for the current module.  HTML Module Record's version will be similar, but will change the definition of step 9 (“For each string required that is an element of module.[[RequestedModules]]...) in order to follow the structure of the newly defined ScriptEntry record as defined above.
@@ -31,17 +31,18 @@ These spec changes are built on top of the proposed refactoring here: https://gi
     - f\.	Assert: *requiredModule*.[[Status]] is "instantiating" if and only if *requiredModule* is in *stack*.
     - g\.	If *requiredModule*.[[Status]] is "instantiating", then
       - i\. Set *module*.[[DFSAncestorIndex]] to min(*module*.[[DFSAncestorIndex]], *requiredModule*.[[DFSAncestorIndex]]).
-- HTML Module Record provides a concrete implementation of InitializeEnvironment(), implementing the corresponding abstract method on Cyclic Module Record.  This function is responsible for creating a mutable binding with the name "*default*" that will be used to set up the HTML Module's document as the module's default export.
+- HTML Module Record provides a concrete implementation of InitializeEnvironment(), implementing the corresponding abstract method on Cyclic Module Record.  This function is responsible for creating a mutable binding with the name "\*default\*" that will be used to set up the HTML Module's document as the module's default export.
   1. Let _module_ be this HTML Module Record.
   1. Let _realm_ be _module_.[[Realm]]. 
   1. Assert: _realm_ is not *undefined*.
   1. Let _env_ be NewModuleEnvironment(_realm_.[[GlobalEnv]]).
   1. Set _module_.[[Environment]] to _env_.
   1. Let _envRec_ be _env_'s EnvironmentRecord.
-  1. Perform ! _envRec_.CreateMutableBinding("\*default\*", *false*). TODO Should this be CreateImmutableBinding?
+  1. Perform ! _envRec_.CreateMutableBinding("\*default\*", *false*).
   1. Call _envRec_.InitializeBinding("\*default\*", *undefined*).
   1. Return NormalCompletion(empty).
 - Declare an implementation-defined abstract operation HostGetDefaultExport(_module_) whose purpose is to return the value of *module*'s default export, or null if there isn't one.
+  - Note: See HTML5 spec changes below for the implementation.
 - HTML Module Record provides a concrete implementation of ExecuteModule(), implementing the corresponding abstract method on Cyclic Module Record.  For HTML modules there is no script to execute.  This method just sets up the HTML Module's default export, obtained from the implementation-defined HostGetDefaultExport.
   1. _module_ be this HTML Module Record.
   1. Let _defaultExport_ be HostGetDefaultExport(_module_).
@@ -115,7 +116,7 @@ These spec changes are built on top of the proposed refactoring here: https://gi
     - b\.	If *url* is failure, then:
       - i\.	Let *error* be a new TypeError exception.
       - ii\.	Set *htmlModuleScript*'s *parse error* to *error*.
-      - iii\.	Return *htmlModuleScript*'s.  Note: This step is essentially validating all of the requested module specifiers. We treat a module with unresolvable module specifiers the same as one that cannot be parsed; in both cases, a syntactic issue makes it impossible to ever contemplate instantiating the module later.
+      - iii\.	Return *htmlModuleScript*.  Note: This step is essentially validating all of the requested module specifiers. We treat a module with unresolvable module specifiers the same as one that cannot be parsed; in both cases, a syntactic issue makes it impossible to ever contemplate instantiating the module later.
   - 8\. Set *htmlModuleScript*'s *record* to *result*.
   - 9\. Return *htmlModuleScript*.
 - Introduce a new algorithm ParseHTMLModule(*source*, *realm*, *htmlModuleScript*) as the following.
@@ -139,7 +140,7 @@ These spec changes are built on top of the proposed refactoring here: https://gi
   1. Return *document*.
 - Change [fetch a single module script](https://html.spec.whatwg.org/#fetch-a-single-module-script) as follows:
   - In step 9, allow `text/html` type through in addition to JavaScript.
-  - In step 11, don’t unconditionally [create a module script](https://html.spec.whatwg.org/#fetching-scripts:creating-a-module-script).  Instead, key off the MIME type extracted in step 9, creating an HTML Module instead if we have a `text/html` MIME type.
+  - In step 11, don’t unconditionally [create a module script](https://html.spec.whatwg.org/#fetching-scripts:creating-a-module-script).  Instead, key off the MIME type extracted in step 9, using the “create an HTML module script” steps instead if we have a `text/html` MIME type.
 - Replace step 5 of [fetch the descendants of a module script](https://html.spec.whatwg.org/#fetch-the-descendants-of-a-module-script) with the following steps:
   - 5\. If *module script* is a JavaScript module script, then:
     - 1\. [For each](https://infra.spec.whatwg.org/#list-iterate) string *requested* of *record*.[[RequestedModules]],
