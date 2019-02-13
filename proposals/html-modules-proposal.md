@@ -42,7 +42,7 @@ Example:
 > ```
 
 **Solution:**
-We propose that all scripts in HTML Modules are automatically module scripts regardless of *type* attribute.  ES6 Modules don't pollute the global scope, as only explicitly exported variables are accessible.
+If when parsing an HTML Module a script without `type="module"` is encountered, this will be considered a parse error that causes creation of the module to fail.  Thus, an HTML Module can contain only module scripts.  ES6 Modules don't pollute the global scope, as only explicitly exported variables are accessible.
 
 #### 2. Parse blocking with inline script
 
@@ -70,7 +70,7 @@ Example:
 
 **Solution:**
 
-This is also addressed by our proposal for [item 1](#1-global-object-pollution): make all scripts in HTML Modules automatically module scripts regardless of type attribute. ES6 Modules have defer semantics and thus don't block the parser.
+This is also addressed by our proposal for [item 1](#1-global-object-pollution): limit HTML Modules to contain `type="module"` scripts only. ES6 Modules have defer semantics and thus don't block the parser.
 
 #### 3. Inability for script modules to access declarative content
 
@@ -130,7 +130,7 @@ Merge the HTML Imports loading system into the existing ES6 Modules system.
 
 The current system for building a dependency graph of HTML Imports as specified in https://www.w3.org/TR/html-imports/ will need to be changed. Instead, each imported HTML Module will have its own module record as introduced in the ES6 spec and will participate in the ES6 Module map and Module dependency graphs. Like a script module today has a [Source Text Module Record](https://tc39.github.io/ecma262/#sec-source-text-module-records), we will introduce a new subclass of the [Abstract Module Record](https://tc39.github.io/ecma262/#sec-abstract-module-records) type (perhaps "HTML Module Record").  Where a Source Text Module Record contains the script for the module ([[ECMAScriptCode]]), an HTML Module record would contain the import document object, along with its own [[RequstedModules]] list, imports/exports, etc.  As module scripts in the HTML Module are encountered during parse time, they will be added to the HTML Module record's [[RequestedModules]] list, ensuring that they are instantiated/executed prior to their HTML Module's instantiation/execution and that they can export content to be exposed through the HTML Module's record, as explained in [item 5](#5-non-intuitive-import-pass-through) below.
 
-This merge is greatly simplified by our proposed solution to [item 1](#1-global-object-pollution): since we treat all scripts in HTML Modules as type="module" and all module scripts have defer semantics, we don't have synchronous script elements causing side-effects during parsing. This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
+This merge is greatly simplified by our proposed solution to [item 1](#1-global-object-pollution): since HTML Modules can only contain module scripts and all module scripts have defer semantics, we don't have synchronous script elements causing side-effects during parsing. This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
 
 #### 5. Non-intuitive import pass through
 
