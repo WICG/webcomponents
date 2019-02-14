@@ -121,6 +121,7 @@ These spec changes are built on top of the proposed refactoring here: https://gi
   - 9\. Return *htmlModuleScript*.
 - Introduce a new algorithm ParseHTMLModule(*source*, *realm*, *htmlModuleScript*) as the following.
   - 1\.	Run the HTML5 parser on *source* to obtain the result *document*.
+    - a\. TODO: This needs to be fleshed out more.  Do we need to run the parser in a special mode to ensure that nothing is fetched and no script runs?  Script execution should already be [disabled because the HTML Module document does not have a browsing context](https://html.spec.whatwg.org/#concept-n-noscript), but the case for fetching is less clear. We also need to specify the special handling for non-module `<script>` elements.
   - 2\. Set *htmlModuleScript*[[document]] to *document*
   - 2\. Let *scriptEntries* be an empty list of ScriptEntry Records (see definition in ES6 changes above).
   - 3\.	For each HTMLScriptElement *script* in *document*:
@@ -138,9 +139,9 @@ These spec changes are built on top of the proposed refactoring here: https://gi
   1. Let *htmlModuleScript* be *module*.[[HostDefined]].
   1. Let *document* be *htmlModuleScript*'s *document*.
   1. Return *document*.
-- Change [fetch a single module script](https://html.spec.whatwg.org/#fetch-a-single-module-script) as follows:
-  - In step 9, allow `text/html` type through in addition to JavaScript.
-  - In step 11, don’t unconditionally [create a module script](https://html.spec.whatwg.org/#fetching-scripts:creating-a-module-script).  Instead, key off the MIME type extracted in step 9, using the “create an HTML module script” steps instead if we have a `text/html` MIME type.
+- [Fetch a single module script](https://html.spec.whatwg.org/#fetch-a-single-module-script) will be changed to support an HTML Module MIME type in addition to JavaScript types.  This will either be `text/html` or a new type introduced for HTML Modules; see discussion [here](https://github.com/w3c/webcomponents/issues/742).  Specifically:
+  - In step 9, allow the HTML Module MIME type type through in addition to JavaScript.
+  - In step 11, don’t unconditionally [create a module script](https://html.spec.whatwg.org/#fetching-scripts:creating-a-module-script).  Instead, key off the MIME type extracted in step 9, using the “create an HTML module script” steps instead if we have an HTML Modules MIME type.
 - Replace step 5 of [fetch the descendants of a module script](https://html.spec.whatwg.org/#fetch-the-descendants-of-a-module-script) with the following steps:
   - 5\. If *module script* is a JavaScript module script, then:
     - 1\. [For each](https://infra.spec.whatwg.org/#list-iterate) string *requested* of *record*.[[RequestedModules]],
