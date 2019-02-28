@@ -6,8 +6,8 @@ Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma26
 
 ## HTML spec changes ([full spec link](https://html.spec.whatwg.org/)):
 
-- Introduce a new subtype of Cyclic Module Record (TODO Add link to Cyclic MR once it's part of the official spec) in addition to the existing [Source Text Module Record](https://tc39.github.io/ecma262/#sourctextmodule-record), named HTML Module Record.
-  1. HTML Module Records reuse the [[RequestedModules]] field of Cyclic Module Record, but instead of a list of strings it is a list of ScriptEntry records.  See definition of ParseHTMLModule below for a specification of how these are populated.
+- Introduce a new subtype of [Cyclic Module Record](https://tc39.github.io/ecma262/#sec-cyclic-module-records) as a counterpart to the existing [Source Text Module Record](https://tc39.github.io/ecma262/#sourctextmodule-record), named HTML Module Record.
+  1. HTML Module Records reuse the [[RequestedModules]] field of [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record), but instead of a list of strings it is a list of ScriptEntry records.  See definition of ParseHTMLModule below for a specification of how these are populated.
   _[TODO: This reuse-name-with-different-type is pretty fishy.  Should [[RequestedModules]] in Cyclic MR be generalized as a list that can hold objects of a type specified in each subclass?  Or should we use an entirely new field in HTML MR?  Or should we generate unique IDs for the inline script elements and place them in the Module Map, so that an HTML Module Record can just use strings in [[RequestedModules]]?]._  
   ScriptEntry is defined as:
     
@@ -15,9 +15,9 @@ Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma26
     | --- | --- | --- |
     | [[InlineModuleRecord]] | Module Record \| null | The Module Record for the module request if available at ScriptEntry creation time (i.e., for inline `<script>` elements).  Null otherwise.  |
     | [[ExternalScriptURL]] | String \| null | The URL for the module request if the Module Record was not available at ScriptEntry creation time (i.e., for external `<script>` elements).  Null otherwise. |
-    2. The [[HostDefined]] field in Abstract Module Record will be set to the HTML Module Script (see definition later in this document).  This is analogous to script modules where this field holds the JavaScript [module script](https://html.spec.whatwg.org/multipage/webappapis.html#module-script).
-- HTML Module Record inherits the concrete Instantiate() method from Cyclic Module Record.
-- HTML Module Record defines its own version of [InnerModuleInstantiation](https://tc39.github.io/ecma262/#sec-innermoduleinstantiation).  Cyclic Module Record's definition recursively calls InnerModuleInstantiation on each child module (calling [HostResolveImportedModule](https://tc39.github.io/ecma262/#sec-hostresolveimportedmodule) to resolve module names to Module Records), then calls [ModuleDeclarationEnvironmentSetup](https://tc39.github.io/ecma262/#sec-moduledeclarationenvironmentsetup) to set up the lexical environment and resolve imports/exports for the current module.  HTML Module Record's version will be similar, but will change the definition of step 9 (“For each string required that is an element of module.[[RequestedModules]]...) in order to follow the structure of the newly defined ScriptEntry record as defined above.
+    2. The [[HostDefined]] field in [Abstract Module Record](https://tc39.github.io/ecma262/#sec-abstract-module-records) will be set to the HTML Module Script (see definition later in this document).  This is analogous to script modules where this field holds the JavaScript [module script](https://html.spec.whatwg.org/multipage/webappapis.html#module-script).
+- HTML Module Record inherits the concrete [Instantiate](https://tc39.github.io/ecma262/#sec-moduledeclarationinstantiation) method from [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record).
+- HTML Module Record defines its own version of [InnerModuleInstantiation](https://tc39.github.io/ecma262/#sec-innermoduleinstantiation).  [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record)'s definition recursively calls InnerModuleInstantiation on each child module (calling [HostResolveImportedModule](https://tc39.github.io/ecma262/#sec-hostresolveimportedmodule) to resolve module names to Module Records), then calls [InitializeEnvironment](https://tc39.github.io/ecma262/#sec-source-text-module-record-initialize-environment) to set up the lexical environment and resolve imports/exports for the current module.  HTML Module Record's version will be similar, but will change the definition of step 9 (“For each string required that is an element of module.[[RequestedModules]]...) in order to follow the structure of the newly defined ScriptEntry record as defined above.
   - 9\. For each ScriptEntry *se* in *module*.[[RequestedModules]])
     - a\.	Let *requiredModule* be null.
     - b\. If *se*.[[InlineModuleRecord]]) != null
@@ -29,7 +29,7 @@ Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma26
     - f\.	Assert: *requiredModule*.[[Status]] is "instantiating" if and only if *requiredModule* is in *stack*.
     - g\.	If *requiredModule*.[[Status]] is "instantiating", then
       - i\. Set *module*.[[DFSAncestorIndex]] to min(*module*.[[DFSAncestorIndex]], *requiredModule*.[[DFSAncestorIndex]]).
-- HTML Module Record provides a concrete implementation of InitializeEnvironment(), implementing the corresponding abstract method on Cyclic Module Record.  This function is responsible for creating a mutable binding with the name "\*default\*" that will be used to set up the HTML Module's document as the module's default export.
+- HTML Module Record provides a concrete implementation of [InitializeEnvironment](https://tc39.github.io/ecma262/#sec-source-text-module-record-initialize-environment), implementing the corresponding abstract method on [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record).  This function is responsible for creating a mutable binding with the name "\*default\*" that will be used to set up the HTML Module's document as the module's default export.
   1. Let _module_ be this HTML Module Record.
   1. Let _realm_ be _module_.[[Realm]]. 
   1. Assert: _realm_ is not *undefined*.
@@ -39,7 +39,7 @@ Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma26
   1. Perform ! _envRec_.[CreateMutableBinding](https://tc39.github.io/ecma262/#sec-declarative-environment-records-createmutablebinding-n-d)("\*default\*", *false*).
   1. Call _envRec_.[InitializeBinding](https://tc39.github.io/ecma262/#sec-declarative-environment-records-initializebinding-n-v)("\*default\*", *undefined*).
   1. Return [NormalCompletion](https://tc39.github.io/ecma262/#sec-normalcompletion)(empty).
-- HTML Module Record provides a concrete implementation of ExecuteModule(), implementing the corresponding abstract method on Cyclic Module Record.  For HTML modules there is no script to execute; this method just sets up the HTML Module's default export.
+- HTML Module Record provides a concrete implementation of [ExecuteModule](https://tc39.github.io/ecma262/#sec-source-text-module-record-execute-module), implementing the corresponding abstract method on [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record).  For HTML modules there is no script to execute; this method just sets up the HTML Module's default export.
   1. _module_ be this HTML Module Record.
   1. Let _htmlModuleScript_ be _module_.[[HostDefined]].
   1. Let _defaultExport_ be *htmlModuleScript*'s *document*.
@@ -85,8 +85,8 @@ Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma26
     - b\. NOTE 1: *\*default\** was set up to reference the HTML Module's document during instantiation/execution
     - c\.	NOTE 2: I assume here that we’re not trying to pass through default exports of the inline scripts.
   - 7\. Return *resolution*.
-- HTML Module Record inherits the concrete Evaluate() method from Cyclic Module Record.
-- HTML Module Record should implement a modified version of Cyclic Module Record's [InnerModuleEvaluation](https://html.spec.whatwg.org/#fetch-the-descendants-of-a-module-script)(*module*, *stack*, *index*).  This method calls InnerModuleEvaluation on each child module, then executes the current module.  The HTML Module version will have the following changes (TODO Make sure these step numbers are still correct after Cyclic Module Record is merged into the official spec):
+- HTML Module Record inherits the concrete [Evaluate](https://tc39.github.io/ecma262/#sec-moduleevaluation) method from [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record).
+- HTML Module Record should implement a modified version of [Cyclic Module Record](https://tc39.github.io/ecma262/#cyclic-module-record)'s [InnerModuleEvaluation](https://tc39.github.io/ecma262/#sec-innermoduleevaluation)(*module*, *stack*, *index*).  This method calls InnerModuleEvaluation on each child module, then executes the current module.  The HTML Module version will have the following changes:
   - Change step 10 and step 10a to be the following, to account for the different structure of HTML Module Record vs Cyclic Module Record.  Steps 10b-10f remain the same:
     - 10\. For each ScriptEntry *se* in *module*.[[RequestedModules]]), do:
       - a\. If (*se*.[[InlineModuleRecord]] != null), let *requiredModule* be *se*.[[InlineModuleRecord]], else let *requiredModule* be HostResolveImportedModule(*module*, *se*.[[ExternalScriptURL]])
