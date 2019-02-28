@@ -2,9 +2,9 @@
 
 This is a list of spec areas that will need to be changed to implement our [HTML Modules proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/html-modules-proposal.md).  Questions/corrections/feedback are welcome!  I've left TODOs in several places where we still have open questions; any input regarding these is especially appreciated.
 
-No changes are proposed to the [ES spec](https://tc39.github.io/ecma262/); HTML Module behavior is defined entirely in HTML5.  Note however that these spec changes are built on top of the proposed ES module refactoring here: https://github.com/tc39/ecma262/pull/1311.  Most notably, HTML Module Record subclasses the Cyclic Module Record introduced in that change.
+Note that no changes are proposed to the [ES spec](https://tc39.github.io/ecma262/); HTML Module behavior is defined entirely in the [HTML spec](https://html.spec.whatwg.org/).
 
-## HTML5 spec changes ([full spec link](https://html.spec.whatwg.org/)):
+## HTML spec changes ([full spec link](https://html.spec.whatwg.org/)):
 
 - Introduce a new subtype of Cyclic Module Record (TODO Add link to Cyclic MR once it's part of the official spec) in addition to the existing [Source Text Module Record](https://tc39.github.io/ecma262/#sourctextmodule-record), named HTML Module Record.
   1. HTML Module Records reuse the [[RequestedModules]] field of Cyclic Module Record, but instead of a list of strings it is a list of ScriptEntry records.  See definition of ParseHTMLModule below for a specification of how these are populated.
@@ -114,7 +114,7 @@ No changes are proposed to the [ES spec](https://tc39.github.io/ecma262/); HTML 
   - 8\. Set *htmlModuleScript*'s *record* to *result*.
   - 9\. Return *htmlModuleScript*.
 - Introduce a new algorithm ParseHTMLModule(*source*, *realm*, *htmlModuleScript*) as the following.
-  - 1\.	Run the HTML5 parser on *source* to obtain the result *document*.
+  - 1\.	Run the HTML parser on *source* to obtain the result *document*.
     - a\. TODO: This needs to be fleshed out more.  Do we need to run the parser in a special mode to ensure that nothing is fetched and no script runs?  Script execution should already be [disabled because the HTML Module document does not have a browsing context](https://html.spec.whatwg.org/#concept-n-noscript), but the case for fetching is less clear. We also need to specify the special handling for non-module `<script>` elements.
   - 2\. Set *htmlModuleScript*[[document]] to *document*
   - 2\. Let *scriptEntries* be an empty list of ScriptEntry Records.
