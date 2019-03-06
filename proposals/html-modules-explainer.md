@@ -124,6 +124,16 @@ This example demonstrates how the above custom element definition can be consume
 
 [main.html](demo/main.html)
 
+## Major open design questions
+
+The following list is **not** comprehensive of all open issues; the intent here is to highlight questions that could have a significant impact on the shape of the final design depending on the way they are decided.
+
+- Should HTML Modules use a new MIME type, or the existing `text/html`? [[1](https://github.com/w3c/webcomponents/issues/742)]
+- How should HTML modules interact with CSP?  In particular, should their inline scripts be allowed to run even without an `unsafe-inline` directive? [[1](https://github.com/w3c/webappsec/issues/544)], [[2](https://discourse.wicg.io/t/proposal-html-modules/3309/2)]
+- Should non-`type="module"` scripts in an HTML module yield an error or be implicitly interpreted as module scripts? [[1](https://github.com/w3c/webcomponents/issues/798)]
+- Should there be a declarative way to consume HTML modules?
+    - [[1](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/9)], [[2](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456319294)], [[3](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456326249)]
+
 ## Additional information
 
 * [Initial post in GitHub WebComponents modules thread](https://github.com/w3c/webcomponents/issues/645#issuecomment-427205519)
