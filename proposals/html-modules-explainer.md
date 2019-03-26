@@ -118,11 +118,11 @@ let theTemplate = importedDoc.querySelector("template");
 
 The following example demonstrates how a custom element definition could be packaged as an HTML Module:
 
-[html5Element.html](demo/html5Element.html)
+[html5Element.html](HTML-Modules-Demo/HTML5-Element.html)
 
 This example demonstrates how the above custom element definition can be consumed:
 
-[main.html](demo/main.html)
+[main.html](HTML-Modules-Demo/Main.html)
 
 ## Major open design questions
 
