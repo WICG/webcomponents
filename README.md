@@ -18,6 +18,11 @@ Web Components are a new browser feature that provides a standard component mode
 - CSS changes
     - The CSS WG works on [CSS Scoping](https://drafts.csswg.org/css-scoping/) and [CSS Shadow Parts](https://drafts.csswg.org/css-shadow-parts/), which help dealing with shadow trees with various selectors. Various other parts of CSS and its object model are also impacted by shadow trees and directly worked on in the various CSS specificaions.
     - [Issues against the CSS WG repository](https://github.com/w3c/csswg-drafts/labels/topic%3A%20shadow).
+- HTML Modules
+    - Successor to the abandoned *[HTML Imports](https://w3c.github.io/webcomponents/spec/imports/)*, allows HTML markup to be requested by a component. Spec work is being incubated upstream in whatwg/html (see [PR](https://github.com/whatwg/html/pull/4505)). For new issues, please file against whatwg/html or here in w3c/webcomponents. See also the [HTML Modules explainer](proposals/html-modules-explainer.md), [initial proposal](proposals/html-modules-proposal.md), and [earlier design ideas](proposals/HTML-Imports-and-ES-Modules.md).
+    - [Issues raised in HTML Standard](https://github.com/whatwg/html/labels/topic%3A%20html%20modules)
+    - [Issues raised in this repository](https://github.com/w3c/webcomponents/labels/modules). Includes related issues for other potential module-types, such as CSS and JSON.
+    - [Old issue tracker](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues?q=is%3Aissue+label%3A%22HTML+Modules%22) includes a few issues filed when the feature was first proposed. Please avoid filing new issues there.
 
 ## Issues
 
@@ -28,5 +33,4 @@ Please file issues in the most specific repository possible, per the above issue
 - [HTML Imports](https://w3c.github.io/webcomponents/spec/imports/)
     - [The current issue tracker](https://github.com/w3c/webcomponents/labels/html-imports).
     - [The old issue tracker](https://www.w3.org/Bugs/Public/showdependencytree.cgi?id=20683) on W3C bugzilla, which is no longer used.
-    - Note: Although it is still a rough idea, *HTML Modules*, rebuilding HTML Imports functionality using the ES Modules, are now being planned.
-      See [HTML Imports and ES Modules](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/HTML-Imports-and-ES-Modules.md) for details.
+    - Note: *HTML Modules* are intended to replace *HTML Imports* (see above).
