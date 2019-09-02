@@ -47,9 +47,9 @@ class LabeledCheckbox extends  HTMLElement {
   set checked(flag) {
     this._checked = !!flag;
     if (this._checked) {
-      this.states.add("checked");
+      this._internals.states.add("checked");
     } else {
-      this.states.remove("checked");
+      this._internals.states.remove("checked");
     }
   }
 
