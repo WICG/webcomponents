@@ -100,7 +100,11 @@ Example:
 </script>
 ```
 
-Additionally, if an inline script element specifies a default export it will be passed through as the default export of the HTML Module (multiple inline scripts specifying a default will result in an instantiation error for the HTML Module).  If no script specifies a default export, the HTML Module's document will be the implicit default export of the module. This will allow declarative content of a module to be consumed without the use of inline script elements in the module to specify exports.
+An important aspect of this design is that `<script>` elements in an HTML module, whether they are inline or not, are distinct nodes in the module graph with their own Source Text Module Records.  It is therefore the case that import/export linking for an HTML module behaves similarly to an analogous module graph consisting solely of JavaScript modules.  This can be useful to keep in mind when reasoning about the behavior of certain corner cases; e.g. see [this example](https://github.com/w3c/webcomponents/issues/831#issuecomment-526384109) involving a module graph that contains duplicate exports.
+
+### Default exports
+
+If an inline script element specifies a default export it will be passed through as the default export of the HTML Module (multiple inline scripts specifying a default will result in an instantiation error for the HTML Module).  If no script specifies a default export, the HTML Module's document will be the implicit default export of the module. This will allow declarative content of a module to be consumed without the use of inline script elements in the module to specify exports.
 
 Example:
 
