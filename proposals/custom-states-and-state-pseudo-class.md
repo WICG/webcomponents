@@ -85,7 +85,7 @@ customElements.define('question-box', QuestionBox);
 </script>
 
 <style>
-  question-box::part(checkbox){ color: red; }
+  question-box::part(checkbox) { color: red; }
   question-box::part(checkbox):state(checked) { color: green; }
 </style>
   
@@ -117,6 +117,6 @@ This is bad because the custom element user might use clashing attribute names, 
 This causes compatibility issues if we ever want to introduce new CSS pseudo-classes in the future that could apply to the element.
     
 
-### Different syntax choices for custom states, e.g. `:--state`
+### Different syntax choices for custom states, e.g. `:--foo`
     
-We are open to other suggestions. However the discussion so far seems to favor `:state()`.
+We are open to other suggestions. However the discussion so far seems to favor `:state(foo)`.
