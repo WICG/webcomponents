@@ -45,7 +45,7 @@ Add a new property `matchFocusBehaviorOf` to `ElementInternals`, which accepts a
 The proposed API above uses a CSS selectors to represent the built-in elements, but we’ve also considered some variants:
 
  - Using “tagname + one attribute name + attribute’s value” combination,
-   e.g. `elementInternals.matchFocusBehaviorOf = {"input", "type," "button"}`
+   e.g. `elementInternals.matchFocusBehaviorOf("input", "type", "button")`
    
  - Using a predefined list of items representing the built-in elements.
    The list would include all html tag names, `a[href]`,
