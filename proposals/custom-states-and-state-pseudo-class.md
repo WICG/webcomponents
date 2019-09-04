@@ -1,4 +1,4 @@
-# `ElementInternals.states` and the `:state()` pseudo class
+# `ElementInternals`'s `states` property and the `:state()` pseudo class
 
 Author: @rakina, @domenic
 
