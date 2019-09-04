@@ -24,7 +24,8 @@ Like built-in elements, custom elements can have various states to be in too, an
 
 ```html	
 <!DOCTYPE html>
-<body>
+
+<!-- Basic usage: -->
 <script>
 class LabeledCheckbox extends  HTMLElement {
   constructor() {
@@ -58,7 +59,19 @@ class LabeledCheckbox extends  HTMLElement {
   }
   
 }
-  
+
+customElements.define('labeled-checkbox', LabeledCheckbox);
+</script>
+
+<style>
+  labeled-checkbox { border: dashed red; }
+  labeled-checkbox:state(checked) { border: solid; }
+</style>
+
+<labeled-checkbox>You need to check this</labeled-checkbox>
+
+<!-- Works even on ::part()s -->
+<script>
 class QuestionBox extends HTMLElement {
   constructor() {
     super();
@@ -68,24 +81,15 @@ class QuestionBox extends HTMLElement {
       <labeled-checkbox part='checkbox'>Yes</labeled-checkbox>`;
   }
 }
-customElements.define('labeled-checkbox', LabeledCheckbox);
 customElements.define('question-box', QuestionBox);
 </script>
 
 <style>
-  question-box::part(checkbox){ color: red;}
+  question-box::part(checkbox){ color: red; }
   question-box::part(checkbox):state(checked) { color: green; }
 </style>
   
 <question-box>Continue?</question-box>
-
-<style>
-  labeled-checkbox { border: dashed red; }
-  labeled-checkbox:state(checked) { border: solid; }
-</style>
-
-<labeled-checkbox>You need to check this</labeled-checkbox>
-</body>
 ```
 ## Proposal 
 
