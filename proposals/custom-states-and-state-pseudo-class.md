@@ -12,7 +12,7 @@ Like built-in elements, custom elements can have various states to be in too, an
 
 -   Give a way for custom element authors to expose varying states of the custom elements to custom element users
 -   Allow styling of custom elements that differ according state
--   Allow styling of custom elements that differ according to state even when they are only accessible via shadow parts. That is, `element::part(x):state(y)` should work if `::part(x)` selects a custom element with state y..
+-   Allow styling of custom elements that differ according to state even when they are only accessible via shadow parts. That is, `element::part(x):state(y)` should work if `::part(x)` selects a custom element with state y.
     
 
 ### Non-goals
@@ -92,7 +92,7 @@ This is bad because the custom element user might use clashing attribute names, 
 
 ### Exposing this on shadow host
     
- Since this is not really related to exposing things from within a shadow tree, it does not make much sense to add states to shadow hosts. [Initial discussions](https://github.com/w3c/webcomponents/issues/738) suggested such an API shape, but that was before we came up with the ElementInternals concept for manipulating state on custom elements.
+ Since this is not really related to exposing things from within a shadow tree, it does not make much sense to add states to shadow hosts. [Initial discussions](https://github.com/w3c/webcomponents/issues/738) suggested such an API shape, but that was before we came up with the `ElementInternals` concept for manipulating state on custom elements.
     
 
 ### Allowing custom states to use the same syntax as built-in ones, e.g. `:foo` instead of `:state(foo)`
@@ -100,6 +100,6 @@ This is bad because the custom element user might use clashing attribute names, 
 This causes compatibility issues if we ever want to introduce new CSS pseudo-classes in the future that could apply to the element.
     
 
-### Different syntax choices for custom states, e.g. :`--state`
+### Different syntax choices for custom states, e.g. `:--state`
     
 We are open to other suggestions. However the discussion so far seems to favor `:state()`.
