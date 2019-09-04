@@ -89,11 +89,11 @@ customElements.define('question-box', QuestionBox);
 ```
 ## Proposal 
 
-```
+```webidl
 partial interface mixin ElementInternals {
   readonly attribute DOMTokenList states;
 }
-``
+```
 
 Add a `states` property to the [ElementInternals](https://html.spec.whatwg.org/multipage/custom-elements.html#elementinternals) interface to contain a list of states for the corresponding custom element, and a new `:state(x)` pseudo-class that can select custom elements that contains `x` in its `elementInternals.states`. An example implementation of a custom element that uses this is shown above.
 
