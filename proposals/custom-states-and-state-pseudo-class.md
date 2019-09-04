@@ -6,7 +6,7 @@ Author: @rakina, @domenic
 
 Built-in elements have certain “states” that can change over time depending on user interaction and other factors, and are exposed to web authors through pseudo classes. For example, some form controls have the “invalid” state, which is exposed through the `:invalid` pseudo class.
 
-Like built-in elements, custom elements can have various states to be in too, and web authors might want to expose these states in a similar fashion as the built-in elements. With the proposed `ElementInternals.state`  property, custom element authors can add and modify custom states for the custom elements, and allow them to be selected with the `:state()` selector.
+Like built-in elements, custom elements can have various states to be in too, and web authors might want to expose these states in a similar fashion as the built-in elements. With the proposed `states` property on `ElementInternals`, custom element authors can add and modify custom states for the custom elements, and allow them to be selected with the `:state()` selector.
 
 ### Goals
 
@@ -35,11 +35,11 @@ class LabeledCheckbox extends  HTMLElement {
 
     this._shadowRoot = this.attachShadow({mode: "open"});
     this._shadowRoot.innerHTML =
-      "<style>\
-        :host::before { content: '[]'; }\
-        :host(:state(checked))::before { content: '[x]' }\
-      </style>\
-      <span><slot>Label</slot></span>";
+      `<style>
+        :host::before { content: '[]'; }
+        :host(:state(checked))::before { content: '[x]' }
+      </style>
+      <span><slot>Label</slot></span>`;
   }
   
   get checked() { return this._checked; }
@@ -64,8 +64,8 @@ class QuestionBox extends HTMLElement {
     super();
     this._shadowRoot = this.attachShadow({mode: "open"});
     this._shadowRoot.innerHTML =
-      "<div><slot>Do you agree?</slot></div>\
-      <labeled-checkbox part='checkbox'>Yes</labeled-checkbox>";
+      `<div><slot>Question</slot></div>
+      <labeled-checkbox part='checkbox'>Yes</labeled-checkbox>`;
   }
 }
 customElements.define('labeled-checkbox', LabeledCheckbox);
@@ -78,11 +78,24 @@ customElements.define('question-box', QuestionBox);
 </style>
   
 <question-box>Continue?</question-box>
+
+<style>
+  labeled-checkbox { border: dashed red; }
+  labeled-checkbox:state(checked) { border: solid; }
+</style>
+
+<labeled-checkbox>You need to check this</labeled-checkbox>
 </body>
 ```
 ## Proposal 
 
-Add a `states` property to the [ElementInternals](https://html.spec.whatwg.org/multipage/custom-elements.html#elementinternals) interface to contain a list of states for the corresponding custom element, and a new `:state(x)` pseudo-class that can select custom elements that contains `x` in its `ElementInternals`' `state`. An example implementation of a custom element that uses this is shown above.
+```
+partial interface mixin ElementInternals {
+  readonly attribute DOMTokenList states;
+}
+``
+
+Add a `states` property to the [ElementInternals](https://html.spec.whatwg.org/multipage/custom-elements.html#elementinternals) interface to contain a list of states for the corresponding custom element, and a new `:state(x)` pseudo-class that can select custom elements that contains `x` in its `elementInternals.states`. An example implementation of a custom element that uses this is shown above.
 
 ## Alternatives considered
 
