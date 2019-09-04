@@ -49,13 +49,13 @@ The proposed API above uses a CSS selectors to represent the built-in elements, 
    
  - Using a predefined list of items representing the built-in elements.
    The list would include all html tag names, `a[href]`,
-   `input[type=X]`, etc.
+   `input[type=X]`, and any other special cases for elements whose focusability changes in interesting ways based on attributes.
    
 -  Using an element instance to follow, e.g. `elementInternals.matchFocusBehaviorOf = buttonElement;`
 
 All of the alternative API shapes below can be considered to replace the currently proposed API.
 
-### Follow focus behavior from an enumerated list of high-level concepts (e.g. `"text entry", "clickable", etc)
+### Follow focus behavior from an enumerated list of high-level concepts (e.g. `"text entry"`, `"clickable"`, etc.)
 
 Instead of following a certain tagname, we would instead follow a certain “high level” concept that covers all the built-in elements, so the enum list would be like like “option”, “button”, “text entry”, etc.
 
@@ -67,4 +67,4 @@ One simple way to allow default focusability is to just add an `ElementInternals
 
 However, this means the custom element can’t exactly emulate the behavior of built-in elements that are skipped/not focusable in certain conditions depending on preferences, etc. For example, if someone wants to make a new awesome-checkbox element, they would probably want to follow the behavior of `<input type="checkbox>` to be consistent---even though that behavior varies across platforms.
 
-Additionally, `tabindex` is not powerful enough to emulate the built-in focus behaviors entirely. The possible behaviors are not focusable (omitted), programmatically-focusable/click-focusable/not sequentially-focusable (-1), and programmatically-focusable/click-focusable/sequentially-focusable (>=0). Such a `tabindex`-based API does not allow combinations such as programmatically-focusable/not click-focusable/not sequentially-focusable, like macOS Safari checkboxes, or programmatically-focusable/not click-focusable/sequentially-focusable, like macOS Safari checkboxes with the `Option` key held down.
+Additionally, `tabindex` is not powerful enough to emulate the built-in focus behaviors entirely. The possible behaviors are not focusable (omitted), programmatically-focusable/click-focusable/not sequentially-focusable (< 0), and programmatically-focusable/click-focusable/sequentially-focusable (>=0). Such a `tabindex`-based API does not allow combinations such as programmatically-focusable/not click-focusable/not sequentially-focusable, like macOS Safari checkboxes, or programmatically-focusable/not click-focusable/sequentially-focusable, like macOS Safari checkboxes with the `Option` key held down.
