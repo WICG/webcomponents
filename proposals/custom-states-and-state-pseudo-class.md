@@ -127,7 +127,7 @@ This feature must not have security and privacy implications.  The feature works
 
 ## Major open issues
 
--   Web components should be able to expose a list of supported states to web components users.
+-   None
 
 ## Discussions
 
