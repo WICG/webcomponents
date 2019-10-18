@@ -120,3 +120,91 @@ This causes compatibility issues if we ever want to introduce new CSS pseudo-cla
 ### Different syntax choices for custom states, e.g. `:--foo`
     
 We are open to other suggestions. However the discussion so far seems to favor `:state(foo)`.
+
+## Security and Privacy Considerations
+
+This feature must not have security and privacy implications.  The feature works within a single document, and nothing is exposed to outside of the document.
+
+## Major open issues
+
+-   None
+
+## Discussions
+
+-   https://github.com/w3c/webcomponents/issues/738
+-   [TPAC 2019](https://www.w3.org/2019/09/17-components-minutes.html#item01)
+
+## Self-Review Questionnare on Security and Privacy
+
+This section is for TAG Review.
+
+### 2.1. What information might this feature expose to Web sites or other parties, and for what purposes is that exposure necessary?
+
+Nothing new is exposed from users.  This feature works within a single document.
+
+The feature exposes some information from web components implementations to web components users.
+
+### 2.2. Is this specification exposing the minimum amount of information necessary to power the feature?
+
+Yes.  This feature exposes only what web components author intend to expose.
+
+### 2.3. How does this specification deal with personal information or personally-identifiable information or information derived thereof?
+
+The feautre doesn't handle any kind of PII directly.
+A web component implementation might handle PII, and might expose it via this feature. However, it's responsibility of web component author.
+
+### 2.4. How does this specification deal with sensitive information?
+
+Ditto.
+
+### 2.5. Does this specification introduce new state for an origin that persists across browsing sessions?
+
+No.
+
+### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
+
+None is exposed with this feature.
+
+### 2.7. Does this specification allow an origin access to sensors on a user’s device
+
+No.
+
+### 2.8. What data does this specification expose to an origin? Please also document what data is identical to data exposed by other features, in the same or different contexts.
+
+None is exposed with this feature.
+
+### 2.9. Does this specification enable new script execution/loading mechanisms?
+
+No.
+
+### 2.10. Does this specification allow an origin to access other devices?
+
+No.
+
+### 2.11. Does this specification allow an origin some measure of control over a user agent’s native UI?
+
+No.
+
+### 2.12. What temporary identifiers might this this specification create or expose to the web?
+
+None.
+
+### 2.13. How does this specification distinguish between behavior in first-party and third-party contexts?
+
+No differences.  This feature should work regardless of first-party or third-party contexts.
+
+### 2.14. How does this specification work in the context of a user agent’s Private Browsing or "incognito" mode?
+
+No differences.  This features should work in such mode, and sites can't detect such mode with this feature.
+
+### 2.15. Does this specification have a "Security Considerations" and "Privacy Considerations" section?
+
+Yes.
+
+### 2.16. Does this specification allow downgrading default security characteristics?
+
+No.
+
+### 2.17. What should this questionnaire have asked?
+
+N/A.
