@@ -200,17 +200,17 @@ This also solves the issue of being unable to efficiently share template HTML be
 
 Note that for 'import' statements, we will need to mime-sniff the URL for the import and use the applicable parser based on mime type. 
 
-Additionally, we propose that the HTML Module's document be the implicit default export of the module.  That is, during the HTML Module's instantiation phase, we run an implicit `export default document` (which can be overridden by inline script if desired).  This would allow usage like the following example, where declarative content of a module can be consumed without the use of inline script elements in the module to specify exports:
- 
+Additionally, we propose that the HTML Module's document be the implicit default export of the module.  That is, during the HTML Module's instantiation phase, we run an implicit `export default document` (which can be overridden by inline script if desired).  This would allow usage like the following example, where declarative content of a module can be consumed without the use of inline script elements in the module to specify exports.
+
 Example:
- 
-**import.html **
+
+**import.html**
 
 > ```html
 > <template id="myCustomElementTemplate"></template>
 > ```
  
-**main.html:**
+**main.html**
 
 > ```js
 > import importedDoc from "import.html"
