@@ -25,7 +25,8 @@ class MyButton extends HTMLElement {
   constructor()  {
     super();
     this._internals =  this.attachInternals();
-    this._internals.matchFocusBehaviorOf =  "input[type='button']";
+    this._internals.focusBehavior =  "infer";
+    this._internals.role = "button"; // AccessibilityRole mixin
   }
 }
 </script>
@@ -36,13 +37,24 @@ class MyButton extends HTMLElement {
 
 ## Proposal
 
-Add a new property `matchFocusBehaviorOf` to `ElementInternals`, which accepts a string containing a tagname and optionally an attribute with a value (so it will accept values like `div`, `a[href]`, `input[type='checkbox']` , but not `.class`, `*`, etc.). The custom element will then be treated as if it has that tagname and attribute in terms of focus.
+Add `focusBehavior` property to `ElementInternals`, which accepts one of three string values; `"none"`, `"focusable"`, and `"infer"`.
+`"none"` indicates the element is not focusable, and `"focusable"` indicates the element's focus behaivor is same as `<div tabindex=non-negative-value>`. `"infer"` indicates the element is focusable, however a user-agent decides click behaivor and TAB behavior with hints from the element.
+
+For example, accessibility role of the element would be a significant hint, the user-agent may decide that the focus behavior of the element with role=button follows the focus behavior of `<button>` element. `<my-button>` in the above example would be [click-focusable](https://html.spec.whatwg.org/C/#click-focusable) with Firefox on Windows, but not click-focusable with Safari on macOS because of their `<button>` behavior.
 
 ## Alternatives considered
 
+### Follow focus behavior of the explicitly-specified element
+
+```
+this.internals.matchFocusBehaviorOf = "input[type='button']";
+```
+
+Add a new property `matchFocusBehaviorOf` to `ElementInternals`, which accepts a string containing a tagname and optionally an attribute with a value (so it will accept values like `div`, `a[href]`, `input[type='checkbox']` , but not `.class`, `*`, etc.). The custom element will then be treated as if it has that tagname and attribute in terms of focus.
+
 ### Using other ways to represent the built-in elements
 
-The proposed API above uses a CSS selectors to represent the built-in elements, but we’ve also considered some variants:
+The previous alternaive uses a CSS selectors to represent the built-in elements, but we’ve also considered some variants:
 
  - Using “tagname + one attribute name + attribute’s value” combination,
    e.g. `elementInternals.matchFocusBehaviorOf("input", "type", "button")`
@@ -52,8 +64,6 @@ The proposed API above uses a CSS selectors to represent the built-in elements, 
    `input[type=X]`, and any other special cases for elements whose focusability changes in interesting ways based on attributes.
    
 -  Using an element instance to follow, e.g. `elementInternals.matchFocusBehaviorOf = buttonElement;`
-
-All of the alternative API shapes below can be considered to replace the currently proposed API.
 
 ### Follow focus behavior from an enumerated list of high-level concepts (e.g. `"text entry"`, `"clickable"`, etc.)
 
