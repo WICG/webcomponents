@@ -28,6 +28,8 @@ document.adoptedStyleSheets = [...document.adoptedStyleSheets, styles];
 
 The default export of the module is the CSSStyleSheet generated from the CSS file.  A CSS module has no named exports.
 
+If a CSS module `import` in a given module graph fails, it prevents the module graph from executing -- the same behavior as for a JavaScript module.
+
 ## Some implementation details
 
 The MIME-type in the HTTP response header is checked to determine how a given module should interpreted.  A MIME-type of `text/css` will be treated as a CSS module.  Each imported CSS Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the module map and module dependency graphs.
@@ -44,6 +46,9 @@ This proposal describes a limited V1 of CSS modules that do not support `@import
 
 1. CSS Modules are leaf modules, and don't allow `@import` references (following the example of [replaceSync](https://wicg.github.io/construct-stylesheets/#dom-cssstylesheet-replacesync) in constructable stylesheets).  This is the V1 implementation described in this document, and this is why step 2 of of CSS module creation as described [here](#some-implementation-details) uses [replaceSync](https://wicg.github.io/construct-stylesheets/#dom-cssstylesheet-replacesync) instead of [replace](https://wicg.github.io/construct-stylesheets/#dom-cssstylesheet-replace); [replaceSync](https://wicg.github.io/construct-stylesheets/#dom-cssstylesheet-replacesync) throws if given input containing `@import` rules.
 1. CSS modules are leaf modules; prior to creating the module record for a CSS module, load the full `@import` tree of its stylesheet and if any fail to resolve, treat it as a parse error for the module.
+    
+    a. An alternative with this approach is that `@import`s that fail to load could just be dropped benignly -- as they are with normal CSS -- instead of causing the entire module graph to fail to load.
+
 1. CSS Modules are non-leaf (cyclic) modules. Process a CSS Module's `@import`ed stylesheets as its requested module children in the module graph, with their own module records. They will Instantiate and Evaluate as distinct modules.
 
 Option 1 seems needlessly restrictive in the long-term.
