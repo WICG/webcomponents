@@ -636,7 +636,7 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
             <li>When <var>HOST</var> is focused by <code>focus()</code> method or <code>autofocus</code> attribute: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
             <li>When mouse is clicked on a node in <var>HOST</var>'s <a>shadow tree</a> and the node is not a <a>focusable area</a>: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
             <li>When any element in <var>HOST</var>'s <a>shadow tree</a> has focus, <code>:focus</code> pseudo-class applies to <var>HOST</var> in addition to the focused element itself.</li>
-	    <li>If <code>:focus</code> pseudo-class applies to <var>HOST</var>, and <var>HOST</var> is in a <a>shadow root</a> of another <a>shadow host</a> <var>HOST2</var> which also <a>delegates focus</a>, <code>:focus</code> pseudo-class applies to <var>HOST2</var> as well.</li>
+            <li>If <code>:focus</code> pseudo-class applies to <var>HOST</var>, and <var>HOST</var> is in a <a>shadow root</a> of another <a>shadow host</a> <var>HOST2</var> which also <a>delegates focus</a>, <code>:focus</code> pseudo-class applies to <var>HOST2</var> as well.</li>
           </ol>
         </p>
       </section>
@@ -743,9 +743,15 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
                 <li>Let <var>NAVIGATION-ORDER</var> be an empty list.</li>
                 <li>For each element <var>ELEMENT</var> in a <a>focus navigation scope</a> <var>SCOPE</var>,
                   <ol>
-                    <li>if <var>ELEMENT</var> is focusable, a <a>shadow host</a>, or a <a>slot element</a>, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
+                    <li>If <var>ELEMENT</var> is a <a>shadow host</a>:
+                      <ol>
+                        <li>If its <a>tabindex</a> value is not negative and its <a>shadow root</a>'s delegatesFocus flag is set, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
+                        <li>Otherwise, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
+                      </ol>
+                    </li>
+                    <li>Otherwise if <var>ELEMENT</var> is focusable, or a <a>slot element</a>, and its <a>tabindex</a> value is not negative, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
                   </ol>
-                <li>Reorder <var>NAVIGATION-ORDER</var> according to the <a>tabindex</a> value attached to each node. In this step, an element whose <a>tabindex</a> value is negative <strong>must</strong> not be appended to <var>NAVIGATION-ORDER</var>.</li>
+                <li>Reorder <var>NAVIGATION-ORDER</var> according to the <a>tabindex</a> value attached to each node. In this step, a shadow host with negative <a>tabindex</a> value must be treated as if its <a>tabindex</a> value were 0.</li>
               </ol>
             </li>
           </ol>
@@ -767,7 +773,7 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
               <ol>
                 <li>If <var>ELEMENT</var> is a shadow host:
                   <ol>
-                    <li>Unless its shadow root’s delegatesFocus flag is set, append<var> ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
+                    <li>If it is focusable, its <a>tabindex</a> value is not negative, and its <a>shadow root</a>’s delegatesFocus flag is not set, append <var>ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
                     <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by its <a>shadow root</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
                   </ol>
                 </li>
