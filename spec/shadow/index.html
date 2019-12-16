@@ -3,58 +3,14 @@
   <head>
     <meta charset='utf-8'/>
     <title>Shadow DOM</title>
-    <script src='./autolink-config.js' class='remove'></script>
-    <script src='../../assets/scripts/autolink.js' class='remove'></script>
-    <link rel="stylesheet" href="respec-complement.css" type="text/css" />
-    <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
-    <script src='//resources.whatwg.org/dfn.js' defer class='remove'></script>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
     <script class='remove'>
-      function resolveBacklink() {
-          // For dfn.js
-          if (window.initDfn) {
-              initDfn();
-          }
-      }
-      var respecConfig = {
+      window.respecConfig = {
           specStatus: "ED",
           shortName: "shadow-dom",
-          useExperimentalStyles: true,
-          editors: [{ name: "Hayato Ito", url: "mailto:hayato@google.com", company: "Google, Inc.", w3cid: 49814 }],
-          wg: "Web Platform Working Group",
-          wgURI: "https://www.w3.org/WebPlatform/WG/",
-          wgPublicList: "public-webapps",
-          wgPatentURI: "https://www.w3.org/2004/01/pp-impl/83482/status",
-          license: "w3c-software-doc",
           edDraftURI: "https://w3c.github.io/webcomponents/spec/shadow/",
-          otherLinks: [
-              {
-                  key: "Revision history",
-                  href: "https://github.com/w3c/webcomponents/commits/gh-pages/spec/shadow/"
-              },
-              {
-                  key: "Bugs filed",
-                  href: "https://github.com/w3c/webcomponents/labels/shadow-dom"
-              },
-              {
-                  key: 'Implementation',
-                  data: [
-                      {
-                          value: 'Can I use Shadow DOM?',
-                          href: 'http://caniuse.com/#feat=shadowdomv1'
-                      },
-                      {
-                          value: 'Test Suite',
-                          href: 'http://w3c-test.org/shadow-dom/'
-                      },
-                      {
-                          value: 'Test Suite repository',
-                          href: 'https://github.com/w3c/web-platform-tests/tree/master/shadow-dom'
-                      }
-                  ]
-              }
-          ],
-          preProcess: [resolveAutolink],
-          postProcess: [resolveBacklink],
+          editors: [{ name: "nobody is currently editing this specification" }],
+          license: "w3c-software-doc",
           localBiblio: {
               "EDITING": {
                   title: "HTML Editing APIs",
@@ -68,748 +24,49 @@
   <body>
     <section id='abstract'>
       <p>
-        This specification describes a method of combining multiple DOM trees into one hierarchy and how these trees interact with each other within a document, thus
-        enabling better composition of the DOM.
+        This specification contains leftover shadow DOM-related definitions which are not yet given a more permanent home in other specifications.
       </p>
 
-      <p class="warning">
-        Shadow DOM specification is being upstreamed to DOM Standard [[WHATWG-DOM]], HTML Standard [[HTML]], CSS Scoping Module Level 1 [[css-scoping-1]],
-        UI Events specification [[uievents]], and other relevant specifications.
-        This specification may not accurately reflect the latest conclusion.
-        See <a href="https://github.com/w3c/webcomponents/issues/377">Issue #377</a> for details.
-      </p>
+      <details class="annoying-warning" open>
+        <summary>Not an active specification</summary>
+
+        Most of the Shadow DOM specification has been upstreamed to <cite>DOM</cite> [[DOM]], <cite>HTML</cite> [[HTML]], <cite>CSS Scoping</cite> [[css-scoping-1]],
+        <cite>UI Events</cite> [[uievents]], and other relevant specifications. What remains here is stuff which has not yet been properly vetted and integrated into the specification ecosystem.
+        As such, the contents here are not fully reliable.
+        See <a href="https://github.com/w3c/webcomponents/issues/661">Issue #377</a> for details.
+      </details>
     </section>
 
     <section id='sotd'>
     </section>
 
-    <section>
-      <h2>Conformance</h2>
-
-      <p>All diagrams, examples, notes, are non-normative, as well as sections explicitly marked as non-normative. Everything else in this specification is normative.</p>
-
-      <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in the normative parts of this document are to be interpreted as described in [[!RFC2119]]. For readability, these words do not appear in all uppercase letters in this specification.</p>
-
-      <p>To help with layering and to avoid circular dependencies between various parts of specification, this document consists of three consecutive narratives:</p>
-      <ol>
-        <li>setting up the stage for the specification,</li>
-        <li>explaining of the conceptual model and algorithms behind it, and</li>
-        <li>expressing this model with DOM interfaces and HTML elements.</li>
-      </ol>
-
-      <p>In a sense, these parts can be viewed as <em>math</em>, which sets up the reasoning environment, <em>physics</em>, which is the theoretical reasoning about the concept, and <em>mechanics</em>, which is the practical application of this reasoning.</p>
-
-      <p>Any point, at which a conforming UA must make decisions about the state or reaction to the state of the conceptual model, is captured as <a href="http://en.wikipedia.org/wiki/Algorithm">algorithm</a>. The algorithms are defined in terms of processing equivalence. The <dfn>processing equivalence</dfn> is a constraint imposed on the algorithm implementors, requiring the output of the both UA-implemented and the specified algorithm to be exactly the same for all inputs.</p>
-    </section>
-
-    <section>
-      <h2>Shadow Tree</h2>
-
-      <p class="warning">
-        This section is a copy of <a href="https://dom.spec.whatwg.org/#shadow-trees">Shadow tree</a> in [[WHATWG-DOM]]. This section is expected to be synced with that periodically.
-      </p>
-
-   <p>A <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-tree">shadow tree<a class="self-link" href="#concept-shadow-tree"></a></dfn> is a <a data-link-type="dfn" href="#concept-node-tree">node tree</a> whose <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>. </p>
-   <p>A <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> is always attached to another <a data-link-type="dfn" href="#concept-node-tree">node tree</a> through its <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>. A <a data-link-type="dfn" href="#concept-shadow-tree">shadow tree</a> is therefore never alone. The <a data-link-type="dfn" href="#concept-node-tree">node tree</a> of a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is sometimes
-referred to as the <dfn data-dfn-type="dfn" data-export="" id="concept-light-tree">light tree<a class="self-link" href="#concept-light-tree"></a></dfn>.</p>
-   <p class="note" role="note">A <a data-link-type="dfn" href="#concept-shadow-tree">shadow tree</a>’s corresponding <a data-link-type="dfn" href="#concept-light-tree">light tree</a> can be a <a data-link-type="dfn" href="#concept-shadow-tree">shadow tree</a> itself.</p>
-   <p id="in-a-shadow-including-document">An <a data-link-type="dfn" href="#concept-element">element</a> is <dfn data-dfn-type="dfn" data-export="" id="connected">connected<a class="self-link" href="#connected"></a></dfn> if its <a data-link-type="dfn" href="#concept-shadow-including-root">shadow-including root</a> is a <a data-link-type="dfn" href="#concept-document">document</a>. </p>
-
-   <section>
-   <h3 class="heading settled" data-level="4.2.2.1" id="shadow-tree-slots"><span class="content">Slots</span></h3>
-   <p>A <a data-link-type="dfn" href="#concept-shadow-tree">shadow tree</a> contains zero or more <a data-link-type="dfn" href="#concept-element">elements</a> that are <dfn data-dfn-type="dfn" data-export="" data-lt="slot" id="concept-slot">slots<a class="self-link" href="#concept-slot"></a></dfn>.</p>
-   <p class="note" role="note">A <a data-link-type="dfn" href="#concept-slot">slot</a> can only be created through HTML’s <code><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#the-slot-element">slot</a></code> element.</p>
-   <p>A <a data-link-type="dfn" href="#concept-slot">slot</a> has an associated <dfn data-dfn-for="slot" data-dfn-type="dfn" data-export="" id="slot-name">name<a class="self-link" href="#slot-name"></a></dfn> (a string). Unless stated
-otherwise it is the empty string.</p>
-   <p>Use these <a data-link-type="dfn" href="#concept-element-attributes-change-ext">attribute change steps</a> to update a <a data-link-type="dfn" href="#concept-slot">slot</a>’s <a data-link-type="dfn" href="#slot-name">name</a>: </p>
-   <ol>
-    <li>
-     <p>If <var>element</var> is a <a data-link-type="dfn" href="#concept-slot">slot</a>, <var>localName</var> is <code>name</code>, and <var>namespace</var> is null, then: </p>
-     <ol>
-      <li>
-       <p>If <var>value</var> is <var>oldValue</var>, then return. </p>
-      <li>
-       <p>If <var>value</var> is null and <var>oldValue</var> is the empty string, then return. </p>
-      <li>
-       <p>If <var>value</var> is the empty string and <var>oldValue</var> is null, then return. </p>
-      <li>
-       <p>If <var>value</var> is null or the empty string, then set <var>element</var>’s <a data-link-type="dfn" href="#slot-name">name</a> to the empty string. </p>
-      <li>
-       <p>Otherwise, set <var>element</var>’s <a data-link-type="dfn" href="#slot-name">name</a> to <var>value</var>. </p>
-      <li>
-       <p>Run <a data-link-type="dfn" href="#assign-slotables-for-a-tree">assign slotables for a tree</a> with <var>element</var>’s <a data-link-type="dfn" href="#concept-tree">tree</a>. </p>
-     </ol>
-   </ol>
-   <p class="note" role="note">The first <a data-link-type="dfn" href="#concept-slot">slot</a> in a <a data-link-type="dfn" href="#concept-shadow-tree">shadow tree</a>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>, whose <a data-link-type="dfn" href="#slot-name">name</a> is the empty string, is sometimes known as the "default slot".</p>
-   <p>A <a data-link-type="dfn" href="#concept-slot">slot</a> has an associated <dfn data-dfn-for="slot" data-dfn-type="dfn" data-export="" id="slot-assigned-nodes">assigned nodes<a class="self-link" href="#slot-assigned-nodes"></a></dfn> (a list of <a data-link-type="dfn" href="#concept-slotable">slotables</a>). Unless stated otherwise it is empty.</p>
-   </section>
-
-   <section>
-   <h3 class="heading settled" data-level="4.2.2.2" id="light-tree-slotables"><span class="content">Slotables</span></h3>
-   <p><code><a data-link-type="idl" href="#element">Element</a></code> and <code><a data-link-type="idl" href="#text">Text</a></code> <a data-link-type="dfn" href="#concept-node">nodes</a> are <dfn data-dfn-type="dfn" data-export="" data-lt="slotable" id="concept-slotable">slotables<a class="self-link" href="#concept-slotable"></a></dfn>.</p>
-   <p class="note" role="note">A <a data-link-type="dfn" href="#concept-slot">slot</a> can be a <a data-link-type="dfn" href="#concept-slotable">slotable</a>. </p>
-   <p>A <a data-link-type="dfn" href="#concept-slotable">slotable</a> has an associated <dfn data-dfn-for="slotable" data-dfn-type="dfn" data-export="" id="slotable-name">name<a class="self-link" href="#slotable-name"></a></dfn> (a string). Unless stated
-otherwise it is the empty string.</p>
-   <p>Use these <a data-link-type="dfn" href="#concept-element-attributes-change-ext">attribute change steps</a> to update a <a data-link-type="dfn" href="#concept-slotable">slotable</a>’s <a data-link-type="dfn" href="#slotable-name">name</a>: </p>
-   <ol>
-    <li>
-     <p>If <var>localName</var> is <code>slot</code> and <var>namespace</var> is null, then: </p>
-     <ol>
-      <li>
-       <p>If <var>value</var> is <var>oldValue</var>, then return. </p>
-      <li>
-       <p>If <var>value</var> is null and <var>oldValue</var> is the empty string, then return. </p>
-      <li>
-       <p>If <var>value</var> is the empty string and <var>oldValue</var> is null, then return. </p>
-      <li>
-       <p>If <var>value</var> is null or the empty string, then set <var>element</var>’s <a data-link-type="dfn" href="#slotable-name">name</a> to the empty string. </p>
-      <li>
-       <p>Otherwise, set <var>element</var>’s <a data-link-type="dfn" href="#slotable-name">name</a> to <var>value</var>. </p>
-      <li>
-       <p>If <var>element</var> is <a data-link-type="dfn" href="#slotable-assigned">assigned</a>, then run <a data-link-type="dfn" href="#assign-slotables">assign slotables</a> for <var>element</var>’s <a data-link-type="dfn" href="#slotable-assigned-slot">assigned slot</a>. </p>
-      <li>
-       <p>Run <a data-link-type="dfn" href="#assign-a-slot">assign a slot</a> for <var>element</var>. </p>
-     </ol>
-   </ol>
-   <p>A <a data-link-type="dfn" href="#concept-slotable">slotable</a> has an associated <dfn data-dfn-for="slotable" data-dfn-type="dfn" data-export="" id="slotable-assigned-slot">assigned slot<a class="self-link" href="#slotable-assigned-slot"></a></dfn> (null or a <a data-link-type="dfn" href="#concept-slot">slot</a>). Unless stated otherwise it is null. A <a data-link-type="dfn" href="#concept-slotable">slotable</a> is <dfn data-dfn-for="slotable" data-dfn-type="dfn" data-export="" id="slotable-assigned">assigned<a class="self-link" href="#slotable-assigned"></a></dfn> if its <a data-link-type="dfn" href="#slotable-assigned-slot">assigned slot</a> is non-null.</p>
-   </section>
-
-   <section>
-   <h3 class="heading settled" data-level="4.2.2.3" id="finding-slots-and-slotables"><span class="content">Finding slots and slotables</span></h3>
-   <p>To <dfn data-dfn-type="dfn" data-export="" data-lt="find a slot|finding a slot" id="find-a-slot">find a slot<a class="self-link" href="#find-a-slot"></a></dfn> for a given <a data-link-type="dfn" href="#concept-slotable">slotable</a> <var>slotable</var> and an optional <i>open flag</i> (unset unless stated otherwise), run these
-steps:</p>
-   <ol>
-    <li>
-     <p>If <var>slotable</var>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a> is null, then return null.</p>
-    <li>
-     <p>Let <var>shadow</var> be <var>slotable</var>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a>’s <a data-link-type="dfn" href="#concept-element-shadow-root">shadow root</a>.</p>
-    <li>
-     <p>If <var>shadow</var> is null, then return null.</p>
-    <li>
-     <p>If the <i>open flag</i> is set and <var>shadow</var>’s <a data-link-type="dfn" href="#shadowroot-mode">mode</a> is <em>not</em> "<code>open</code>", then return null.</p>
-    <li>
-     <p>Return the first <a data-link-type="dfn" href="#concept-slot">slot</a> in <var>shadow</var>’s <a data-link-type="dfn" href="#concept-tree">tree</a> whose <a data-link-type="dfn" href="#slot-name">name</a> is <var>slotable</var>’s <a data-link-type="dfn" href="#slotable-name">name</a>, if any, and null otherwise.</p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-export="" data-lt="find slotables|finding slotables" id="find-slotables">find slotables<a class="self-link" href="#find-slotables"></a></dfn> for a given <a data-link-type="dfn" href="#concept-slot">slot</a> <var>slot</var>, run these steps:</p>
-   <ol>
-    <li>
-     <p>Let <var>result</var> be an empty list.</p>
-    <li>
-     <p>If <var>slot</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is not a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>, then return <var>result</var>.</p>
-    <li>
-     <p>Let <var>host</var> be <var>slot</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>.</p>
-    <li>
-     <p>For each <a data-link-type="dfn" href="#concept-slotable">slotable</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> of <var>host</var>, <var>slotable</var>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>, run these substeps:</p>
-     <ol>
-      <li>
-       <p>Let <var>foundSlot</var> be the result of <a data-link-type="dfn" href="#find-a-slot">finding a slot</a> given <var>slotable</var>.</p>
-      <li>
-       <p>If <var>foundSlot</var> is <var>slot</var>, then append <var>slotable</var> to <var>result</var>.</p>
-     </ol>
-    <li>
-     <p>Return <var>result</var>.</p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-export="" data-lt="find flattened slotables|finding flattened slotables" id="find-flattened-slotables">find flattened slotables<a class="self-link" href="#find-flattened-slotables"></a></dfn> for a given <a data-link-type="dfn" href="#concept-slot">slot</a> <var>slot</var>, run these steps:</p>
-   <ol>
-    <li>
-     <p>Let <var>result</var> be an empty list.</p>
-    <li>
-     <p>Let <var>slotables</var> be the result of <a data-link-type="dfn" href="#find-slotables">finding slotables</a> given <var>slot</var>.</p>
-    <li>
-     <p>If <var>slotables</var> is the empty list, then append each <a data-link-type="dfn" href="#concept-slotable">slotable</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> of <var>slot</var>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>, to <var>slotables</var>.</p>
-    <li>
-     <p>For each <var>node</var> in <var>slotables</var>, run these substeps:</p>
-     <ol>
-      <li>
-       <p>If <var>node</var> is a <a data-link-type="dfn" href="#concept-slot">slot</a>, run these subsubsteps:</p>
-       <ol>
-        <li>
-         <p>Let <var>temporaryResult</var> be the result of <a data-link-type="dfn" href="#find-flattened-slotables">finding flattened slotables</a> given <var>node</var>.</p>
-        <li>
-         <p>Append each <a data-link-type="dfn" href="#concept-slotable">slotable</a> in <var>temporaryResult</var>, in order, to <var>result</var>.</p>
-       </ol>
-      <li>
-       <p>Otherwise, append <var>node</var> to <var>result</var>.</p>
-     </ol>
-    <li>
-     <p>Return <var>result</var>.</p>
-   </ol>
-   </section>
-
-   <section>
-   <h3 class="heading settled" data-level="4.2.2.4" id="assigning-slotables-and-slots"><span class="content">Assigning slotables and slots</span></h3>
-   <p>To <dfn data-dfn-type="dfn" data-noexport="" id="assign-slotables">assign slotables<a class="self-link" href="#assign-slotables"></a></dfn>, for a <a data-link-type="dfn" href="#concept-slot">slot</a> <var>slot</var> with an optional <var>suppress signaling flag</var> (unset unless stated otherwise), run these steps: </p>
-   <ol>
-    <li>
-     <p>Let <var>slotables</var> be the result of <a data-link-type="dfn" href="#find-slotables">finding slotables</a> for <var>slot</var>. </p>
-    <li>
-     <p>If <var>suppress signaling flag</var> is unset, and <var>slotables</var> and <var>slot</var>’s <a data-link-type="dfn" href="#slot-assigned-nodes">assigned nodes</a> are not identical, then run <a data-link-type="dfn" href="#signal-a-slot-change">signal a slot change</a> for <var>slot</var>. </p>
-    <li>
-     <p>Set <var>slot</var>’s <a data-link-type="dfn" href="#slot-assigned-nodes">assigned nodes</a> to <var>slotables</var>. </p>
-    <li>
-     <p>For each <var>slotable</var> in <var>slotables</var>, set <var>slotable</var>’s <a data-link-type="dfn" href="#slotable-assigned-slot">assigned slot</a> to <var>slot</var>. </p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-noexport="" id="assign-slotables-for-a-tree">assign slotables for a tree<a class="self-link" href="#assign-slotables-for-a-tree"></a></dfn>, given a <a data-link-type="dfn" href="#concept-tree">tree</a> <var>tree</var> and an
-optional set of <a data-link-type="dfn" href="#concept-slot">slots</a> <var>noSignalSlots</var> (empty unless stated otherwise), run these
-steps for each <a data-link-type="dfn" href="#concept-slot">slot</a> <var>slot</var> in <var>tree</var>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>: </p>
-   <ol>
-    <li>
-     <p>Let <var>suppress signaling flag</var> be set, if <var>slot</var> is in <var>noSignalSlots</var>, and unset otherwise.</p>
-    <li>
-     <p>Run <a data-link-type="dfn" href="#assign-slotables">assign slotables</a> for <var>slot</var> with <var>suppress signaling flag</var>. </p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-noexport="" id="assign-a-slot">assign a slot<a class="self-link" href="#assign-a-slot"></a></dfn>, given a <a data-link-type="dfn" href="#concept-slotable">slotable</a> <var>slotable</var>, run these
-steps: </p>
-   <ol>
-    <li>
-     <p>Let <var>slot</var> be the result of <a data-link-type="dfn" href="#find-a-slot">finding a slot</a> with <var>slotable</var>. </p>
-    <li>
-     <p>If <var>slot</var> is non-null, then run <a data-link-type="dfn" href="#assign-slotables">assign slotables</a> for <var>slot</var>. </p>
-   </ol>
-   </section>
-
-   <section>
-   <h3 class="heading settled" data-level="4.2.2.5" id="signaling-slot-change"><span class="content">Signaling slot change</span></h3>
-   <p>Each <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a> has a <dfn data-dfn-type="dfn" data-export="" id="signal-slot-list">signal slot list<a class="self-link" href="#signal-slot-list"></a></dfn> (a list of <a data-link-type="dfn" href="#concept-slot">slots</a>). Unless stated otherwise it is empty. <a data-link-type="biblio" href="#biblio-html">[HTML]</a> </p>
-   <p>To <dfn data-dfn-type="dfn" data-noexport="" id="signal-a-slot-change">signal a slot change<a class="self-link" href="#signal-a-slot-change"></a></dfn>, for a <a data-link-type="dfn" href="#concept-slot">slot</a> <var>slot</var>, run these steps: </p>
-   <ol>
-    <li>
-     <p>If <var>slot</var> is not in <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a>' <a data-link-type="dfn" href="#signal-slot-list">signal slot list</a>, append <var>slot</var> to <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#unit-of-related-similar-origin-browsing-contexts">unit of related similar-origin browsing contexts</a>' <a data-link-type="dfn" href="#signal-slot-list">signal slot list</a>. </p>
-    <li>
-     <p><a data-link-type="dfn" href="#queue-a-mutation-observer-compound-microtask">Queue a mutation observer compound microtask</a>. </p>
-   </ol>
-   </section>
-
-   </section>
-
-   <section>
-   <h2 class="heading settled" data-level="4.2.3" id="mutation-algorithms"><span class="content">Mutation algorithms</span></h2>
-
-   <p class="warning">
-     This section is a copy of <a href="https://dom.spec.whatwg.org/#mutation-algorithms">Mutation algorithms</a> in [[WHATWG-DOM]]. This section is expected to be synced with that periodically.
-   </p>
-
-   <p>To <dfn data-dfn-for="Node" data-dfn-type="dfn" data-export="" id="concept-node-ensure-pre-insertion-validity">ensure pre-insertion validity<a class="self-link" href="#concept-node-ensure-pre-insertion-validity"></a></dfn> of a <var>node</var> into a <var>parent</var> before a <var>child</var>, run these steps: </p>
-   <ol>
-    <li>If <var>parent</var> is not a <code><a data-link-type="idl" href="#document">Document</a></code>, <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code>, or <code><a data-link-type="idl" href="#element">Element</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If <var>node</var> is a <a data-link-type="dfn" href="#concept-tree-host-including-inclusive-ancestor">host-including inclusive ancestor</a> of <var>parent</var>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If <var>child</var> is not null and its <a data-link-type="dfn" href="#concept-tree-parent">parent</a> is not <var>parent</var>, then <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#notfounderror">NotFoundError</a></code>.
-    <li>If <var>node</var> is not a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code>, <code><a data-link-type="idl" href="#documenttype">DocumentType</a></code>, <code><a data-link-type="idl" href="#element">Element</a></code>, <code><a data-link-type="idl" href="#text">Text</a></code>, <code><a data-link-type="idl" href="#processinginstruction">ProcessingInstruction</a></code>, or <code><a data-link-type="idl" href="#comment">Comment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If either <var>node</var> is a <code><a data-link-type="idl" href="#text">Text</a></code> <a data-link-type="dfn" href="#concept-node">node</a> and <var>parent</var> is a <a data-link-type="dfn" href="#concept-document">document</a>, or <var>node</var> is a <a data-link-type="dfn" href="#concept-doctype">doctype</a> and <var>parent</var> is
- not a <a data-link-type="dfn" href="#concept-document">document</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>
-      If <var>parent</var> is a <a data-link-type="dfn" href="#concept-document">document</a>, and any of the statements below, switched
-  on <var>node</var>, are true, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-     <dl class="switch">
-      <dt><code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>
-      <dd>
-        If <var>node</var> has more than one <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> or has a <code><a data-link-type="idl" href="#text">Text</a></code> <a data-link-type="dfn" href="#concept-node">node</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>.
-       <p>Otherwise, if <var>node</var> has one <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> and either <var>parent</var> has an <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>, <var>child</var> is a <a data-link-type="dfn" href="#concept-doctype">doctype</a>, or <var>child</var> is not null and
-    a <a data-link-type="dfn" href="#concept-doctype">doctype</a> is <a data-link-type="dfn" href="#concept-tree-following">following</a> <var>child</var>.</p>
-      <dt><a data-link-type="dfn" href="#concept-element">element</a>
-      <dd><var>parent</var> has an <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>, <var>child</var> is a <a data-link-type="dfn" href="#concept-doctype">doctype</a>, or <var>child</var> is not null and a <a data-link-type="dfn" href="#concept-doctype">doctype</a> is <a data-link-type="dfn" href="#concept-tree-following">following</a> <var>child</var>.
-      <dt><a data-link-type="dfn" href="#concept-doctype">doctype</a>
-      <dd><var>parent</var> has a <a data-link-type="dfn" href="#concept-doctype">doctype</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>, <var>child</var> is non-null and an <a data-link-type="dfn" href="#concept-element">element</a> is <a data-link-type="dfn" href="#concept-tree-preceding">preceding</a> <var>child</var>,
-   or <var>child</var> is null and <var>parent</var> has an <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>.
-     </dl>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-pre-insert">pre-insert<a class="self-link" href="#concept-node-pre-insert"></a></dfn> a <var>node</var> into a <var>parent</var> before a <var>child</var>, run these steps: </p>
-   <ol>
-    <li><a data-link-type="dfn" href="#concept-node-ensure-pre-insertion-validity">Ensure pre-insertion validity</a> of <var>node</var> into <var>parent</var> before <var>child</var>.
-    <li>Let <var>reference child</var> be <var>child</var>.
-    <li>If <var>reference child</var> is <var>node</var>, set it
- to <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-next-sibling">next sibling</a>.
-    <li><a data-link-type="dfn" href="#concept-node-adopt">Adopt</a> <var>node</var> into <var>parent</var>’s <a data-link-type="dfn" href="#concept-node-document">node document</a>.
-    <li><a data-link-type="dfn" href="#concept-node-insert">Insert</a> <var>node</var> into <var>parent</var> before <var>reference child</var>.
-    <li>Return <var>node</var>.
-   </ol>
-   <p><a data-link-type="dfn" href="#other-applicable-specifications">Specifications</a> may define <dfn data-dfn-type="dfn" data-export="" id="concept-node-insert-ext">insertion steps<a class="self-link" href="#concept-node-insert-ext"></a></dfn> for all or some <a data-link-type="dfn" href="#concept-node">nodes</a>.
-The algorithm is passed <var>insertedNode</var>, as indicated in the <a data-link-type="dfn" href="#concept-node-insert">insert</a> algorithm below. </p>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-insert">insert<a class="self-link" href="#concept-node-insert"></a></dfn> a <var>node</var> into a <var>parent</var> before a <var>child</var>, with an optional <i>suppress observers flag</i>, run these steps: </p>
-   <ol>
-    <li>Let <var>count</var> be the number of <a data-link-type="dfn" href="#concept-tree-child">children</a> of <var>node</var> if
- it is a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>,
- and one otherwise.
-    <li>
-      If <var>child</var> is non-null, run these substeps:
-     <ol>
-      <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-start-node">start node</a> is <var>parent</var> and <a data-link-type="dfn" href="#concept-range-start-offset">start offset</a> is greater than <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-index">index</a>,
-   increase its <a data-link-type="dfn" href="#concept-range-start-offset">start offset</a> by <var>count</var>.
-      <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-end-node">end node</a> is <var>parent</var> and <a data-link-type="dfn" href="#concept-range-end-offset">end offset</a> is greater than <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-index">index</a>,
-   increase its <a data-link-type="dfn" href="#concept-range-end-offset">end offset</a> by <var>count</var>.
-     </ol>
-    <li>Let <var>nodes</var> be <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-child">children</a> if <var>node</var> is
- a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, and a
- list containing solely <var>node</var> otherwise.
-    <li>If <var>node</var> is a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="#concept-node-remove">remove</a> its <a data-link-type="dfn" href="#concept-tree-child">children</a> with the <i>suppress observers flag</i> set.
-    <li>
-      If <var>node</var> is a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="#queue-a-mutation-record">queue a mutation record</a> of "<code>childList</code>" for <var>node</var> with removedNodes <var>nodes</var>.
-     <p class="note no-backref" role="note">This step intentionally does not pay attention to the <i>suppress observers flag</i>. </p>
-    <li>
-     <p>For each <var>node</var> in <var>nodes</var>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>, run these substeps: </p>
-     <ol>
-      <li>
-       <p>Insert <var>node</var> into <var>parent</var> before <var>child</var> or at the end of <var>parent</var> if <var>child</var> is null. </p>
-      <li>
-       <p>If <var>parent</var> is a <a data-link-type="dfn" href="#element-shadow-host">shadow host</a> and <var>node</var> is a <a data-link-type="dfn" href="#concept-slotable">slotable</a>, then <a data-link-type="dfn" href="#assign-a-slot">assign a slot</a> for <var>node</var>. </p>
-      <li>
-       <p>If <var>parent</var> is a <a data-link-type="dfn" href="#concept-slot">slot</a> whose <a data-link-type="dfn" href="#slot-assigned-nodes">assigned nodes</a> is the empty
-   list, then run <a data-link-type="dfn" href="#signal-a-slot-change">signal a slot change</a> for <var>parent</var>. </p>
-      <li>
-       <p>Run <a data-link-type="dfn" href="#assign-slotables-for-a-tree">assign slotables for a tree</a> with <var>node</var>’s <a data-link-type="dfn" href="#concept-tree">tree</a> and a set
-   containing each <a data-link-type="dfn" href="#concept-tree-inclusive-descendant">inclusive descendant</a> of <var>node</var> that is a <a data-link-type="dfn" href="#concept-slot">slot</a>. </p>
-      <li>
-       <p>For each <a data-link-type="dfn" href="#concept-shadow-including-inclusive-descendant">shadow-including inclusive descendant</a> <var>inclusiveDescendant</var> of <var>node</var>, in <a data-link-type="dfn" href="#concept-shadow-including-tree-order">shadow-including tree order</a>, run these subsubsteps: </p>
-       <ol>
-        <li>
-         <p>Run the <a data-link-type="dfn" href="#concept-node-insert-ext">insertion steps</a> with <var>inclusiveDescendant</var>. </p>
-        <li>
-         <p>If <var>inclusiveDescendant</var> is <a data-link-type="dfn" href="#connected">connected</a>, then: </p>
-         <ol>
-          <li>
-           <p>If <var>inclusiveDescendant</var> is <a data-link-type="dfn" href="#concept-element-custom">custom</a>, then <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#enqueue-a-custom-element-callback-reaction">enqueue a custom element callback reaction</a> with <var>inclusiveDescendant</var>,
-       callback name "<code>connectedCallback</code>", and an empty argument list. </p>
-          <li>
-           <p>Otherwise, <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#concept-try-upgrade">try to upgrade</a> <var>inclusiveDescendant</var>. </p>
-           <p class="note" role="note">If this successfully upgrades <var>inclusiveDescendant</var>, its <code>connectedCallback</code> will be enqueued automatically during the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#concept-upgrade-an-element">upgrade an element</a> algorithm. </p>
-         </ol>
-       </ol>
-     </ol>
-    <li>If <i>suppress observers flag</i> is unset, <a data-link-type="dfn" href="#queue-a-mutation-record">queue a mutation record</a> of "<code>childList</code>" for <var>parent</var> with addedNodes <var>nodes</var>, nextSibling <var>child</var>, and previousSibling <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-previous-sibling">previous sibling</a> or <var>parent</var>’s <a data-link-type="dfn" href="#concept-tree-last-child">last child</a> if <var>child</var> is null.
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-append">append<a class="self-link" href="#concept-node-append"></a></dfn> a <var>node</var> to a <var>parent</var>, <a data-link-type="dfn" href="#concept-node-pre-insert">pre-insert</a> <var>node</var> into <var>parent</var> before null. </p>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-replace">replace<a class="self-link" href="#concept-node-replace"></a></dfn> a <var>child</var> with <var>node</var> within a <var>parent</var>, run these steps: </p>
-   <ol>
-    <li>If <var>parent</var> is not a <code><a data-link-type="idl" href="#document">Document</a></code>, <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code>, or <code><a data-link-type="idl" href="#element">Element</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If <var>node</var> is a <a data-link-type="dfn" href="#concept-tree-host-including-inclusive-ancestor">host-including inclusive ancestor</a> of <var>parent</var>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a> is not <var>parent</var>, then <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#notfounderror">NotFoundError</a></code>.
-    <li>If <var>node</var> is not a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code>, <code><a data-link-type="idl" href="#documenttype">DocumentType</a></code>, <code><a data-link-type="idl" href="#element">Element</a></code>, <code><a data-link-type="idl" href="#text">Text</a></code>, <code><a data-link-type="idl" href="#processinginstruction">ProcessingInstruction</a></code>, or <code><a data-link-type="idl" href="#comment">Comment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>If either <var>node</var> is a <code><a data-link-type="idl" href="#text">Text</a></code> <a data-link-type="dfn" href="#concept-node">node</a> and <var>parent</var> is a <a data-link-type="dfn" href="#concept-document">document</a>, or <var>node</var> is a <a data-link-type="dfn" href="#concept-doctype">doctype</a> and <var>parent</var> is
- not a <a data-link-type="dfn" href="#concept-document">document</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-    <li>
-      If <var>parent</var> is a <a data-link-type="dfn" href="#concept-document">document</a>, and any of the statements below, switched
-  on <var>node</var>, are true, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#hierarchyrequesterror">HierarchyRequestError</a></code>.
-     <dl class="switch">
-      <dt><code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>
-      <dd>
-        If <var>node</var> has more than one <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> or has a <code><a data-link-type="idl" href="#text">Text</a></code> <a data-link-type="dfn" href="#concept-node">node</a> <a data-link-type="dfn" href="#concept-tree-child">child</a>.
-       <p>Otherwise, if <var>node</var> has one <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> and either <var>parent</var> has an <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> that is not <var>child</var> or a <a data-link-type="dfn" href="#concept-doctype">doctype</a> is <a data-link-type="dfn" href="#concept-tree-following">following</a> <var>child</var>.</p>
-      <dt><a data-link-type="dfn" href="#concept-element">element</a>
-      <dd><var>parent</var> has an <a data-link-type="dfn" href="#concept-element">element</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> that is not <var>child</var> or a <a data-link-type="dfn" href="#concept-doctype">doctype</a> is <a data-link-type="dfn" href="#concept-tree-following">following</a> <var>child</var>.
-      <dt><a data-link-type="dfn" href="#concept-doctype">doctype</a>
-      <dd><var>parent</var> has a <a data-link-type="dfn" href="#concept-doctype">doctype</a> <a data-link-type="dfn" href="#concept-tree-child">child</a> that is not <var>child</var>, or an <a data-link-type="dfn" href="#concept-element">element</a> is <a data-link-type="dfn" href="#concept-tree-preceding">preceding</a> <var>child</var>.
-     </dl>
-     <p class="note no-backref" role="note">The above statements differ from the <a data-link-type="dfn" href="#concept-node-pre-insert">pre-insert</a> algorithm. </p>
-    <li>Let <var>reference child</var> be <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-next-sibling">next sibling</a>.
-    <li>If <var>reference child</var> is <var>node</var>, set it
- to <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-next-sibling">next sibling</a>.
-    <li>
-     <p>Let <var>previousSibling</var> be <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-previous-sibling">previous sibling</a>. </p>
-    <li><a data-link-type="dfn" href="#concept-node-adopt">Adopt</a> <var>node</var> into <var>parent</var>’s <a data-link-type="dfn" href="#concept-node-document">node document</a>.
-    <li>Let <var>removedNodes</var> be the empty list.
-    <li>
-     <p>If <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a> is not null, run these substeps: </p>
-     <ol>
-      <li>
-       <p>Set <var>removedNodes</var> to a list solely containing <var>child</var>. </p>
-      <li>
-       <p><a data-link-type="dfn" href="#concept-node-remove">Remove</a> <var>child</var> from its <var>parent</var> with the <i>suppress observers flag</i> set. </p>
-     </ol>
-     <p class="note no-backref" role="note">The above can only be false if <var>child</var> is <var>node</var>. </p>
-    <li>Let <var>nodes</var> be <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-child">children</a> if <var>node</var> is a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, and a list containing solely <var>node</var> otherwise.
-    <li><a data-link-type="dfn" href="#concept-node-insert">Insert</a> <var>node</var> into <var>parent</var> before <var>reference child</var> with
- the <i>suppress observers flag</i> set.
-    <li><a data-link-type="dfn" href="#queue-a-mutation-record">Queue a mutation record</a> of "<code>childList</code>" for target <var>parent</var> with addedNodes <var>nodes</var>, removedNodes <var>removedNodes</var>,
- nextSibling <var>reference child</var>, and previousSibling <var>previousSibling</var>.
-    <li>Return <var>child</var>.
-   </ol>
-   <p>To <dfn data-dfn-for="Node" data-dfn-type="dfn" data-export="" id="concept-node-replace-all">replace all<a class="self-link" href="#concept-node-replace-all"></a></dfn> with a <var>node</var> within a <var>parent</var>, run these steps:</p>
-   <ol>
-    <li>If <var>node</var> is not null, <a data-link-type="dfn" href="#concept-node-adopt">adopt</a> <var>node</var> into <var>parent</var>’s <a data-link-type="dfn" href="#concept-node-document">node document</a>.
-    <li>Let <var>removedNodes</var> be <var>parent</var>’s <a data-link-type="dfn" href="#concept-tree-child">children</a>.
-    <li>Let <var>addedNodes</var> be the empty list if <var>node</var> is
- null, <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-child">children</a> if <var>node</var> is a <code><a data-link-type="idl" href="#documentfragment">DocumentFragment</a></code> <a data-link-type="dfn" href="#concept-node">node</a>, and a list containing <var>node</var> otherwise.
-    <li><a data-link-type="dfn" href="#concept-node-remove">Remove</a> all <var>parent</var>’s <a data-link-type="dfn" href="#concept-tree-child">children</a>, in <a data-link-type="dfn" href="#concept-tree-order">tree order</a>, with the <i>suppress observers flag</i> set.
-    <li>If <var>node</var> is not null, <a data-link-type="dfn" href="#concept-node-insert">insert</a> <var>node</var> into <var>parent</var> before null with the <i>suppress observers flag</i> set.
-    <li><a data-link-type="dfn" href="#queue-a-mutation-record">Queue a mutation record</a> of "<code>childList</code>" for <var>parent</var> with addedNodes <var>addedNodes</var> and
- removedNodes <var>removedNodes</var>.
-   </ol>
-   <p class="note no-backref" role="note">This algorithm does not make any checks with regards to the <a data-link-type="dfn" href="#concept-node-tree">node tree</a> constraints. Specification authors need to use it wisely. </p>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-pre-remove">pre-remove<a class="self-link" href="#concept-node-pre-remove"></a></dfn> a <var>child</var> from a <var>parent</var>, run these steps:</p>
-   <ol>
-    <li>If <var>child</var>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a> is not <var>parent</var>, then <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-throw">throw</a> a <code><a data-link-type="idl" href="https://heycam.github.io/webidl/#notfounderror">NotFoundError</a></code>.
-    <li><a data-link-type="dfn" href="#concept-node-remove">Remove</a> <var>child</var> from <var>parent</var>.
-    <li>Return <var>child</var>.
-   </ol>
-   <p><a data-link-type="dfn" href="#other-applicable-specifications">Specifications</a> may define <dfn data-dfn-type="dfn" data-export="" id="concept-node-remove-ext">removing steps<a class="self-link" href="#concept-node-remove-ext"></a></dfn> for all or some <a data-link-type="dfn" href="#concept-node">nodes</a>. The
-algorithm is passed <var>removedNode</var>, and optionally <var>oldParent</var>, as indicated in the <a data-link-type="dfn" href="#concept-node-remove">remove</a> algorithm below. </p>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-node-remove">remove<a class="self-link" href="#concept-node-remove"></a></dfn> a <var>node</var> from a <var>parent</var>,
-with an optional <i>suppress observers flag</i>, run these steps: </p>
-   <ol>
-    <li>Let <var>index</var> be <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-index">index</a>.
-    <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-start-node">start node</a> is an <a data-link-type="dfn" href="#concept-tree-inclusive-descendant">inclusive descendant</a> of <var>node</var>, set its <a data-link-type="dfn" href="#concept-range-start">start</a> to
- (<var>parent</var>, <var>index</var>).
-    <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-end-node">end node</a> is an <a data-link-type="dfn" href="#concept-tree-inclusive-descendant">inclusive descendant</a> of <var>node</var>, set its <a data-link-type="dfn" href="#concept-range-end">end</a> to
- (<var>parent</var>, <var>index</var>).
-    <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-start-node">start node</a> is <var>parent</var> and <a data-link-type="dfn" href="#concept-range-start-offset">start offset</a> is greater than <var>index</var>, decrease its <a data-link-type="dfn" href="#concept-range-start-offset">start offset</a> by one.
-    <li>For each <a data-link-type="dfn" href="#concept-range">range</a> whose <a data-link-type="dfn" href="#concept-range-end-node">end node</a> is <var>parent</var> and <a data-link-type="dfn" href="#concept-range-end-offset">end offset</a> is greater than <var>index</var>, decrease its <a data-link-type="dfn" href="#concept-range-end-offset">end offset</a> by one.
-    <li>
-     <p>For each <code><a data-link-type="idl" href="#nodeiterator">NodeIterator</a></code> object <var>iterator</var> whose <a data-link-type="dfn" href="#concept-traversal-root">root</a>’s <a data-link-type="dfn" href="#concept-node-document">node document</a> is <var>node</var>’s <a data-link-type="dfn" href="#concept-node-document">node document</a>, run the <a data-link-type="dfn" href="#nodeiterator-pre-removing-steps"><code>NodeIterator</code> pre-removing steps</a> given <var>node</var> and <var>iterator</var>. </p>
-    <li>Let <var>oldPreviousSibling</var> be <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-previous-sibling">previous sibling</a>.
-    <li>Let <var>oldNextSibling</var> be <var>node</var>’s <a data-link-type="dfn" href="#concept-tree-next-sibling">next sibling</a>.
-    <li>Remove <var>node</var> from its <var>parent</var>.
-    <li>
-     <p>If <var>node</var> is <a data-link-type="dfn" href="#slotable-assigned">assigned</a>, then run <a data-link-type="dfn" href="#assign-slotables">assign slotables</a> for <var>node</var>’s <a data-link-type="dfn" href="#slotable-assigned-slot">assigned slot</a>. </p>
-    <li>
-     <p>If <var>parent</var> is a <a data-link-type="dfn" href="#concept-slot">slot</a> whose <a data-link-type="dfn" href="#slot-assigned-nodes">assigned nodes</a> is the empty
- list, then run <a data-link-type="dfn" href="#signal-a-slot-change">signal a slot change</a> for <var>parent</var>. </p>
-    <li>
-     <p>If <var>node</var> has an <a data-link-type="dfn" href="#concept-tree-inclusive-descendant">inclusive descendant</a> that is a <a data-link-type="dfn" href="#concept-slot">slot</a>, then: </p>
-     <ol>
-      <li>
-       <p>Run <a data-link-type="dfn" href="#assign-slotables-for-a-tree">assign slotables for a tree</a> with <var>parent</var>’s <a data-link-type="dfn" href="#concept-tree">tree</a>. </p>
-      <li>
-       <p>Run <a data-link-type="dfn" href="#assign-slotables-for-a-tree">assign slotables for a tree</a> with <var>node</var>’s <a data-link-type="dfn" href="#concept-tree">tree</a> and a set
-   containing each <a data-link-type="dfn" href="#concept-tree-inclusive-descendant">inclusive descendant</a> of <var>node</var> that is a <a data-link-type="dfn" href="#concept-slot">slot</a>. </p>
-     </ol>
-    <li>
-     <p>Run the <a data-link-type="dfn" href="#concept-node-remove-ext">removing steps</a> with <var>node</var> and <var>parent</var>. </p>
-    <li>
-     <p>If <var>node</var> is <a data-link-type="dfn" href="#concept-element-custom">custom</a>, then <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#enqueue-a-custom-element-callback-reaction">enqueue a custom element callback reaction</a> with <var>node</var>, callback name
-  "<code>disconnectedCallback</code>", and an empty argument list. </p>
-     <p class="note" role="note">It is intentional for now that <a data-link-type="dfn" href="#concept-element-custom">custom</a> <a data-link-type="dfn" href="#concept-element">elements</a> do
-  not get <var>parent</var> passed. This might change in the future if there is a need. </p>
-    <li>
-     <p>For each <a data-link-type="dfn" href="#concept-shadow-including-descendant">shadow-including descendant</a> <var>descendant</var> of <var>node</var>, in <a data-link-type="dfn" href="#concept-shadow-including-tree-order">shadow-including tree order</a>, run these substeps: </p>
-     <ol>
-      <li>
-       <p>Run the <a data-link-type="dfn" href="#concept-node-remove-ext">removing steps</a> with <var>descendant</var>. </p>
-      <li>
-       <p>If <var>descendant</var> is <a data-link-type="dfn" href="#concept-element-custom">custom</a>, then <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#enqueue-a-custom-element-callback-reaction">enqueue a custom element callback reaction</a> with <var>descendant</var>, callback name
-   "<code>disconnectedCallback</code>", and an empty argument list. </p>
-     </ol>
-    <li>For each <a data-link-type="dfn" href="#concept-tree-inclusive-ancestor">inclusive ancestor</a> <var>inclusiveAncestor</var> of <var>parent</var>, if <var>inclusiveAncestor</var> has any <a data-link-type="dfn" href="#registered-observer">registered observers</a> whose <b>options</b>' <code><a data-link-type="idl" href="#dom-mutationobserverinit-subtree">subtree</a></code> is true, then for each
- such <a data-link-type="dfn" href="#registered-observer">registered observer</a> <var>registered</var>, append a <a data-link-type="dfn" href="#transient-registered-observer">transient registered observer</a> whose <b>observer</b> and <b>options</b> are identical to those of <var>registered</var> and <b>source</b> which is <var>registered</var> to <var>node</var>’s list of <a data-link-type="dfn" href="#registered-observer">registered observers</a>.
-    <li>If <i>suppress observers flag</i> is unset, <a data-link-type="dfn" href="#queue-a-mutation-record">queue a mutation record</a> of "<code>childList</code>" for <var>parent</var> with removedNodes a list solely containing <var>node</var>,
- nextSibling <var>oldNextSibling</var>, and previousSibling <var>oldPreviousSibling</var>.
-   </ol>
-
-   </section>
-
-    <section>
-      <h2>Events</h2>
-
-   <p class="warning">
-     This section is a copy of <a href="https://dom.spec.whatwg.org/#dispatching-events">Dispatching events</a> section in [[WHATWG-DOM]]. This section is expected to be synced with that periodically.
-   </p>
-
-   <section>
-   <h3 class="heading settled" data-level="3.8" id="dispatching-events"><span class="content">Dispatching events</span></h3>
-   <p>To <dfn data-dfn-type="dfn" data-export="" id="concept-event-dispatch">dispatch<a class="self-link" href="#concept-event-dispatch"></a></dfn> an <var>event</var> to a <var>target</var>, with an optional <var>legacy target override flag</var>, run these steps: </p>
-   <ol>
-    <li>
-     <p>Set <var>event</var>’s <a data-link-type="dfn" href="#dispatch-flag">dispatch flag</a>. </p>
-    <li>
-     <p>Let <var>targetOverride</var> be <var>target</var>, if <var>legacy target override flag</var> is not given, and <var>target</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-document-window">associated <code>Document</code></a> otherwise. <a data-link-type="biblio" href="#biblio-html">[HTML]</a> </p>
-     <p class="note" role="note"><var>legacy target override flag</var> is only used by HTML and only when <var>target</var> is a <code><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/browsers.html#window">Window</a></code> object. </p>
-    <li>Let <var>relatedTarget</var> be the result of <a data-link-type="dfn" href="#retarget">retargeting</a> <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> against <var>target</var> if <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> is
- non-null, and null otherwise.
-    <li>
-     <p>If <var>target</var> is <var>relatedTarget</var> and <var>target</var> is not <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a>, then return true. </p>
-    <li>
-     <p>Append (<var>target</var>, <var>targetOverride</var>, <var>relatedTarget</var>) to <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>. </p>
-    <li>
-     <p>Let <var>isActivationEvent</var> be true, if <var>event</var> is a <code><a data-link-type="idl" href="https://w3c.github.io/uievents/#interface-mouseevent">MouseEvent</a></code> object and <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-type">type</a></code> attribute is "<code>click</code>", and false otherwise. </p>
-    <li>
-     <p>Let <var>activationTarget</var> be <var>target</var>, if <var>isActivationEvent</var> is
- true and <var>target</var> has <a data-link-type="dfn" href="#eventtarget-activation-behavior">activation behavior</a>, and null otherwise. </p>
-    <li>
-     <p>Let <var>parent</var> be the result of invoking <var>target</var>’s <a data-link-type="dfn" href="#get-the-parent">get the parent</a> with <var>event</var>. </p>
-    <li>
-     <p>While <var>parent</var> is non-null:</p>
-     <ol>
-      <li>
-       <p>Let <var>relatedTarget</var> be the result of <a data-link-type="dfn" href="#retarget">retargeting</a> <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> against <var>parent</var> if <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> is
-   non-null, and null otherwise. </p>
-      <li>
-       <p>If <var>target</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>parent</var>, then: </p>
-       <ol>
-        <li>
-         <p>If <var>isActivationEvent</var> is true, <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-bubbles">bubbles</a></code> attribute
-     is true, <var>activationTarget</var> is null, and <var>parent</var> has <a data-link-type="dfn" href="#eventtarget-activation-behavior">activation behavior</a>, then set <var>activationTarget</var> to <var>parent</var>. </p>
-        <li>
-         <p>Append (<var>parent</var>, null, <var>relatedTarget</var>) to <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>. </p>
-       </ol>
-      <li>
-       <p>Otherwise, if <var>parent</var> and <var>relatedTarget</var> are identical, then set <var>parent</var> to null. </p>
-      <li>
-       <p>Otherwise, set <var>target</var> to <var>parent</var> and then: </p>
-       <ol>
-        <li>
-         <p>If <var>isActivationEvent</var> is true, <var>activationTarget</var> is null, and <var>target</var> has <a data-link-type="dfn" href="#eventtarget-activation-behavior">activation behavior</a>, then set <var>activationTarget</var> to <var>target</var>. </p>
-        <li>
-         <p>Append (<var>parent</var>, <var>target</var>, <var>relatedTarget</var>) to <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>. </p>
-       </ol>
-      <li>
-       <p>If <var>parent</var> is non-null, then set <var>parent</var> to the result of invoking <var>parent</var>’s <a data-link-type="dfn" href="#get-the-parent">get the parent</a> with <var>event</var>. </p>
-     </ol>
-    <li>
-     <p>Set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute to <code><a data-link-type="idl" href="#dom-event-capturing_phase">CAPTURING_PHASE</a></code>. </p>
-    <li>
-     <p>If <var>activationTarget</var> is non-null and <var>activationTarget</var> has <a data-link-type="dfn" href="#eventtarget-legacy-pre-activation-behavior">legacy-pre-activation behavior</a>, then run <var>activationTarget</var>’s <a data-link-type="dfn" href="#eventtarget-legacy-pre-activation-behavior">legacy-pre-activation behavior</a>. </p>
-    <li>
-     <p>For each <var>tuple</var> in <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>, in reverse order: </p>
-     <ol>
-      <li>
-       <p>Set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-target">target</a></code> attribute to the <b>target</b> of the last tuple
-   in <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>, that is either <var>tuple</var> or preceding <var>tuple</var>, whose <b>target</b> is non-null. </p>
-      <li>
-       <p>Set <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> to <var>tuple</var>’s <b>relatedTarget</b>. </p>
-      <li>
-       <p>Run the <a data-link-type="dfn" href="#event-retargeting-steps">retargeting steps</a> with <var>event</var>. </p>
-      <li>
-       <p>If <var>tuple</var>’s <b>target</b> is null, then <a data-link-type="dfn" href="#concept-event-listener-invoke">invoke</a> <var>tuple</var>’s <b>item</b> with <var>event</var>. </p>
-     </ol>
-    <li>
-     <p>For each <var>tuple</var> in <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>, in order: </p>
-     <ol>
-      <li>
-       <p>Set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-target">target</a></code> attribute to the <b>target</b> of the last tuple
-   in <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>, that is either <var>tuple</var> or preceding <var>tuple</var>, whose <b>target</b> is non-null. </p>
-      <li>
-       <p>Set <var>event</var>’s <a data-link-type="dfn" href="#event-relatedtarget">relatedTarget</a> to <var>tuple</var>’s <b>relatedTarget</b>. </p>
-      <li>
-       <p>Run the <a data-link-type="dfn" href="#event-retargeting-steps">retargeting steps</a> with <var>event</var>. </p>
-      <li>
-       <p>If <var>tuple</var>’s <b>target</b> is non-null, then set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute to <code><a data-link-type="idl" href="#dom-event-at_target">AT_TARGET</a></code>. </p>
-      <li>
-       <p>Otherwise, set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute to <code><a data-link-type="idl" href="#dom-event-bubbling_phase">BUBBLING_PHASE</a></code>. </p>
-      <li>
-       <p>If either <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute is <code><a data-link-type="idl" href="#dom-event-bubbling_phase">BUBBLING_PHASE</a></code> and <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-bubbles">bubbles</a></code> attribute is true or <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute is <code><a data-link-type="idl" href="#dom-event-at_target">AT_TARGET</a></code>, then <a data-link-type="dfn" href="#concept-event-listener-invoke">invoke</a> <var>tuple</var>’s <b>item</b> with <var>event</var>. </p>
-     </ol>
-    <li>
-     <p>Unset <var>event</var>’s <a data-link-type="dfn" href="#dispatch-flag">dispatch flag</a>, <a data-link-type="dfn" href="#stop-propagation-flag">stop propagation flag</a>, and <a data-link-type="dfn" href="#stop-immediate-propagation-flag">stop immediate propagation flag</a>. </p>
-    <li>
-     <p>Set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-eventphase">eventPhase</a></code> attribute to <code><a data-link-type="idl" href="#dom-event-none">NONE</a></code>. </p>
-    <li>
-     <p>Set <var>event</var>’s <code><a data-link-type="idl" href="#dom-event-currenttarget">currentTarget</a></code> attribute to null. </p>
-    <li>
-     <p>Set <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a> to the empty list. </p>
-    <li>
-     <p>If <var>activationTarget</var> is non-null, then: </p>
-     <ol>
-      <li>
-       <p>If <var>event</var>’s <a data-link-type="dfn" href="#canceled-flag">canceled flag</a> is unset, then run <var>activationTarget</var>’s <a data-link-type="dfn" href="#eventtarget-activation-behavior">activation behavior</a> with <var>event</var>. </p>
-      <li>
-       <p>Otherwise, if <var>activationTarget</var> has <a data-link-type="dfn" href="#eventtarget-legacy-canceled-activation-behavior">legacy-canceled-activation behavior</a>, then run <var>activationTarget</var>’s <a data-link-type="dfn" href="#eventtarget-legacy-canceled-activation-behavior">legacy-canceled-activation behavior</a>. </p>
-     </ol>
-    <li>
-     <p>Return false if <var>event</var>’s <a data-link-type="dfn" href="#canceled-flag">canceled flag</a> is set, and true otherwise. </p>
-   </ol>
-    </section>
-
-    </section>
-
-    <section>
+    <section class='normative'>
       <h2>User Interaction</h2>
 
-      <section class="informative">
+      <section>
         <h3>Ranges and Selections</h3>
 
         <p>
-          <a>Selection</a> [[!EDITING]] is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
+          Selection [[!EDITING]] is not defined. Implementation should do their best to do what's best for them. Here's one possible, admittedly naive way:
         </p>
 
-        <p>Since <a data-lt="node">nodes</a> which are in the different <a data-lt="node tree">node trees</a> never have the same <a>root</a>, there may never exist a valid <a data-lt="range">DOM range</a> that spans multiple <a data-lt="node tree">node trees</a>.</p>
+        <p>Since nodes which are in the different node trees never have the same root, there may never exist a valid DOM range that spans multiple node trees.</p>
 
-        <p>Accordingly, <a data-lt="selection">selections</a> may only exist within one <a>node tree</a>, because they are defined by a single <a>range</a>. The <a>selection</a>, returned by the <a><code>window.getSelection()</code></a> method never returns a <a>selection</a> within a <a>shadow tree</a>.</p>
+        <p>Accordingly, selections may only exist within one node tree, because they are defined by a single range. The selection, returned by the <code>window.getSelection()</code> method never returns a selection within a shadow tree.</p>
 
-        <p>The <code>getSelection()</code> method of the <a>shadow root</a> object returns the current <a>selection</a> in this <a>shadow tree</a>.</p>
+        <p>The <code>getSelection()</code> method of the shadow root object returns the current selection in this shadow tree.</p>
       </section>
 
-      <section>
-        <h3>Focus</h3>
-      <p>A <a>shadow host</a> can delegate focus to its <a>shadow root</a> by assigning a boolean <a href="#widl-ShadowRootInit-delegatesFocus">delegatesFocus</a> flag to be true in <a href="#idl-def-ShadowRootInit">ShadowRootInit</a> dictionary. If omitted, a <a>shadow host</a> does not delegate focus to its shadow root, and the shadow host itself can be focusable.</p>
-        <p>When a shadow host <var>HOST</var> <dfn>delegates focus</dfn>, user agent <strong>must</strong> behave as follows.
-          <ol>
-            <li>In <a>sequential focus navigation</a>, <var>HOST</var> itself will be skipped. See the next section for the formal definition.</li>
-            <li>When <var>HOST</var> is focused by <code>focus()</code> method or <code>autofocus</code> attribute: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
-            <li>When mouse is clicked on a node in <var>HOST</var>'s <a>shadow tree</a> and the node is not a <a>focusable area</a>: The first <a>focusable area</a> in focus navigation order of <var>HOST</var>'s <a>shadow root</a>'s <a>focus navigation scope</a> gets focus. See the next section for the formal definition of the ordering.</li>
-            <li>When any element in <var>HOST</var>'s <a>shadow tree</a> has focus, <code>:focus</code> pseudo-class applies to <var>HOST</var> in addition to the focused element itself.</li>
-	    <li>If <code>:focus</code> pseudo-class applies to <var>HOST</var>, and <var>HOST</var> is in a <a>shadow root</a> of another <a>shadow host</a> <var>HOST2</var> which also <a>delegates focus</a>, <code>:focus</code> pseudo-class applies to <var>HOST2</var> as well.</li>
-          </ol>
-        </p>
-      </section>
-
-      <section>
-        <h3>Sequential Focus Navigation</h3>
-
-        <p><dfn>focus navigation scope</dfn> is a set of elements <a>in a shadow-including document</a>. An element belongs to at most one <a>focus navigation scope</a>.</p>
-
-        <p><dfn>focus navigation scope owner</dfn> is a node that owns a <a>focus navigation scope</a>. A document, a <a>shadow root</a>, or a <a>slot element</a> can be a <a>focus navigation scope owner</a>.</p>
-
-        <p><dfn>document sequential focus navigation order</dfn> is an order of all of the <a data-lt="focusable area">focusable areas</a> <a>in a shadow-including document</a>, reachable by <a>sequential focus navigation</a>.</p>
-
-        <p>When a shadow-including document is given, the <a>document sequential focus navigation order</a> is determined by the following steps:</p>
-
-        <p>Step 1.</p>
-        <div class="algorithm">
-          <dl>
-            <dt>INPUT</dt>
-            <dd><var>DOCUMENT</var>, a composed document</dd>
-            <dt>OUTPUT</dt>
-            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes</dd>
-          </dl>
-          <ol>
-            <li>Let <var>OWNERS</var> be an empty set.</li>
-            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>:
-              <ol>
-                <li>For each node <var>NODE</var> in <var>TREE</var>, in tree order:
-                  <ol>
-                    <li>If <var>NODE</var> is a document, a <a>shadow root</a>, or a <a>slot element</a>, append it to <var>OWNERS</var>.</li>
-                  </ol>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-
-        <p>Step 2.</p>
-        <div class="algorithm">
-          <dl>
-            <dt>INPUT</dt>
-            <dd><var>DOCUMENT</var>, a composed document</dd>
-            <dd><var>OWNERS</var>, a set of <a>focus navigation scope owner</a> nodes from Step 1</dd>
-            <dt>OUTPUT</dt>
-            <dd><var>SCOPE</var>s, a set of <a data-lt="focus navigation scope">focus navigation scopes</a> each of which is an ordered list of elements</dd>
-            <dd><var>SCOPE-MAP</var>, a map from each <a>focus navigation scope owner</a> to its corresponding <a>focus navigation scope</a>
-          </dl>
-          <ol>
-            <li>For each owner <var>OWNER</var> in <var>OWNERS</var>:
-              <ol>
-                <li>Let <var>SCOPE</var> be empty list.</li>
-                <li>Append <var>SCOPE</var> to <var>SCOPE-MAP[OWNER]</var>.</li>
-              </ol>
-            </li>
-            <li>For each node tree <var>TREE</var> in <var>DOCUMENT</var>, in <a>shadow-including tree order</a>:
-              <ol>
-                <li>For each <var>ELEMENT</var> in <var>TREE</var>:
-                  <ol>
-                    <li>Let <var>CURRENT</var> be <var>ELEMENT</var>.</li>
-                    <li>Repeat the following steps until the algorithm stops.</li>
-                    <li>If <var>CURRENT</var> is a child of a <a>shadow host</a>:
-                      <ol>
-                        <li>If <var>CURRENT</var> is assigned to any <a>slot</a> <var>SLOT</var>, append <var>ELEMENT</var> to <var>SCOPE-MAP[SLOT]</var>.</li>
-                        <li>Otherwise do not append <var>ELEMENT</var> to any scope.</li>
-                        <li>Stop this algorithm.</li>
-                      </ol>
-                    </li>
-                    <li>If <var>CURRENT</var> is a <a>slot element</a> and not equal to <var>ELEMENT</var>:
-                      <ol>
-                        <li>If <var>CURRENT</var> has any <a>assigned nodes</a>, do not append <var>ELEMENT</var> to any scope.</li>
-                        <li>Otherwise append <var>ELEMENT</var> to <var>SCOPE-MAP[CURRENT]</var>.</li>
-                        <li>Stop this algorithm.</li>
-                      </ol>
-                    </li>
-                    <li>If <var>CURRENT</var> is a child of a root node (a <a>shadow root</a> or document) <var>ROOT</var>:
-                      <ol>
-                        <li>Append <var>ELEMENT</var> to <var>SCOPE-MAP[ROOT]</var>.</li>
-                        <li>Stop this algorithm.</li>
-                      </ol>
-                    </li>
-                    <li>Otherwise:
-                      <ol>
-                        <li>Set <var>CURRENT</var> to the parent element of <var>CURRENT</var>.</li>
-                      </ol>
-                    </li>
-                  </ol>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-
-        <p>Step 3.</p>
-        <div class="algorithm">
-          <dl>
-            <dt>INPUT</dt>
-            <dd><var>SCOPE</var>, a <a>focus navigation scope</a></dd>
-            <dt>OUTPUT</dt>
-            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements which should be visited.</dd>
-          </dl>
-          <ol>
-            <li>For each scope SCOPE:
-              <ol>
-                <li>Let <var>NAVIGATION-ORDER</var> be an empty list.</li>
-                <li>For each element <var>ELEMENT</var> in a <a>focus navigation scope</a> <var>SCOPE</var>,
-                  <ol>
-                    <li>if <var>ELEMENT</var> is focusable, a <a>shadow host</a>, or a <a>slot element</a>, append <var>ELEMENT</var> to <var>NAVIGATION-ORDER</var>.</li>
-                  </ol>
-                <li>Reorder <var>NAVIGATION-ORDER</var> according to the <a>tabindex</a> value attached to each node. In this step, an element whose <a>tabindex</a> value is negative <strong>must</strong> not be appended to <var>NAVIGATION-ORDER</var>.</li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-
-        <p>Step 4.</p>
-        <p>Apply the following <dfn>focus navigation order merging algorithm</dfn> with document’s focus navigation order as input. The result is the <a>document sequential focus navigation order</a>.</p>
-
-        <div class="algorithm">
-          <dl>
-            <dt>INPUT</dt>
-            <dd><var>NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
-            <dt>OUTPUT</dt>
-            <dd><var>MERGED-NAVIGATION-ORDER</var>, an ordered list of elements.</dd>
-          </dl>
-          <ol>
-            <li>Let <var>MERGED-NAVIGATION-ORDER</var> be an empty list.</li>
-            <li>For each element <var>ELEMENT</var> in <var>NAVIGATION-ORDER</var>:
-              <ol>
-                <li>If <var>ELEMENT</var> is a shadow host:
-                  <ol>
-                    <li>Unless its shadow root’s delegatesFocus flag is set, append<var> ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
-                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by its <a>shadow root</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
-                  </ol>
-                </li>
-                <li>If <var>ELEMENT</var> is a slot element:
-                  <ol>
-                    <li>Apply the <a>focus navigation order merging algorithm</a> with the focus navigation order owned by the <a>slot element</a> as input, then append the result to <var>MERGED-NAVIGATION-ORDER</var>.</li>
-                  </ol>
-                </li>
-                <li>Otherwise:
-                  <ol>
-                    <li>Append <var>ELEMENT</var> to <var>MERGED-NAVIGATION-ORDER</var>.</li>
-                  </ol>
-                </li>
-                <li>Return <var>MERGED-NAVIGATION-ORDER</var>.</li>
-              </ol>
-            </li>
-          </ol>
-        </div>
-
-        <p>For <a>directional focus navigation</a> [[!CSS3-UI]], it is up to the user agent to integrate the <a data-lt="shadow tree">shadow trees</a> into the document's <a>directional focus navigation</a>.
-      </section>
-
-      <section>
-        <h3>Active Element</h3>
-
-        <p>
-          <a>DocumentOrShadowRoot</a> object's <a>activeElement</a> <strong>must</strong> be the result of
-          the <a>retargeting algorithm</a> with the <a>context object</a> and the focused element as input,
-          if the result and the <a>context object</a> are in the same tree. Otherwise, null.
-        </p>
-      </section>
-
-      <section>
+      <section class='normative'>
         <h3>Editing</h3>
 
-        <p>The value of the <a><code>contenteditable</code></a> attribute <strong>must not</strong> propagate from <a>shadow host</a> to its <a data-lt="shadow tree">shadow trees</a>.</p>
+        <p>The value of the <code>contenteditable</code> attribute <strong>must not</strong> propagate from shadow host to its shadow trees.</p>
       </section>
 
       <section>
         <h3>Assistive Technology</h3>
 
-        <p>User agents with assistive technology traverse the <a>flat tree</a>, and thus enable full use of WAI-ARIA [[!WAI-ARIA]] semantics in the <a data-lt="shadow tree">shadow trees</a>.</p>
+        <p>User agents with assistive technology traverse the flat tree, and thus enable full use of WAI-ARIA [[!WAI-ARIA]] semantics in the shadow trees.</p>
 
       </section>
 
@@ -820,7 +77,7 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
           When a text node is a child node of a shadow root, a hit testing <strong>must</strong> target the shadow host if the text node is the result of the hit testing.
         </p>
         <p>
-          User-agent mouse events <strong>must</strong> be targeted to the parent node in the <a>flat tree</a> of a text node if the <a>topmost event target</a> is the text node.
+          User-agent mouse events <strong>must</strong> be targeted to the parent node in the flat tree of a text node if the topmost event target is the text node.
         </p>
         <p class="note">
           This section eventually needs to be part of some general hit testing specification.
@@ -829,19 +86,19 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
 
     </section>
 
-    <section>
+    <section class='normative'>
       <h2>HTML Elements in Shadow Trees</h2>
 
       <section>
         <h3>Inertness of HTML Elements in a shadow tree</h3>
 
-        <p>Comparatively, a <a>shadow tree</a> can be seen as somewhere between <em>just part of a <a>document</a></em> and itself being a <a data-lt="interface DocumentFragment">document fragment</a>. Since it is rendered, a <a>shadow tree</a> aims to retain the traits of a typical <a>tree</a> in a <a>document</a>. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the <a>document tree</a>. Thus, the <a>HTML elements</a> <strong>must</strong> behave as specified [[!HTML]] in the <a data-lt="shadow tree">shadow trees</a>, with a few exceptions.</p>
+        <p>Comparatively, a shadow tree can be seen as somewhere between <em>just part of a document</em> and itself being a document fragment. Since it is rendered, a shadow tree aims to retain the traits of a typical tree in a document. At the same time, it is an encapsulation abstraction, so it has to avoid affecting the document tree. Thus, the HTML elements <strong>must</strong> behave as specified [[!HTML]] in the shadow trees, with a few exceptions.</p>
 
         <p class="note">
-          According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a <a>shadow tree</a>, instead of a document tree,
-          because their definitions require the elements to be <a>in a document</a> as a necessary condition for them to work.
-          In other words, they shouldn't work if they participate in a <a>shadow tree</a>, even when they are <a>in a shadow-including document</a>.
-          We must fill this gap because we expect that most of HTML Elements behave in the same way as <a>in a document</a>, as long as they are <a>in a shadow-including document</a>.
+          According to the [[!HTML]], some HTML Elements would have different behavior if they participate in a shadow tree, instead of a document tree,
+          because their definitions require the elements to be in a document as a necessary condition for them to work.
+          In other words, they shouldn't work if they participate in a shadow tree, even when they are in a shadow-including document.
+          We must fill this gap because we expect that most of HTML Elements behave in the same way as in a document, as long as they are in a shadow-including document.
           See W3C <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=26365">Bug 26365</a> and <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=27406">Bug 27406</a> for the details.
           The following is the tentative summary of the discussions in the W3C bugs. We, however, haven't covered all HTML Elements and their behaviors here yet.
           For HTML Elements which are not explicitly stated here, they should *work* even in a shadow tree.
@@ -857,15 +114,15 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
               <dfn>Inert in a shadow tree</dfn>:
             </p>
             <p>
-              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>, if they participate in a <a>shadow tree</a>.
-              This is consistent how the <a>HTML elements</a> would behave in a <a data-lt="interface DocumentFragment">document fragment</a>.
+              A subset of HTML elements which <strong>must</strong> behave as inert, or not part of the document tree, if they participate in a shadow tree.
+              This is consistent how the HTML elements would behave in a document fragment.
             </p>
             <p>
               The following HTML elements <strong>must</strong> be classified to this category:
             </p>
             <ul>
-              <li><a data-lt="base element"><code>base</code></a></li>
-              <li><a data-lt="link element"><code>link</code></a></li>
+              <li><code>base</code></li>
+              <li><code>link</code></li>
 
               <li><code>meta</code></li>
             </ul>
@@ -879,9 +136,9 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
               <dfn>Inert unless being rendered</dfn>:
             </p>
             <p>
-              A subset of <a>HTML elements</a> which <strong>must</strong> behave as <a>inert</a>, or not part of the <a>document tree</a>,
-              unless they are <a>being rendered</a>.
-              In other words, if they don't participate in a <a>document flat tree</a>, they <strong>must</strong> behave as <a>inert</a>.
+              A subset of HTML elements which <strong>must</strong> behave as inert, or not part of the document tree,
+              unless they are being rendered.
+              In other words, if they don't participate in a document flat tree, they <strong>must</strong> behave as inert.
             </p>
             <p>
               The following HTML elements <strong>must</strong> be classified to this category:
@@ -893,9 +150,9 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
             </ul>
             <p class="note">
               For example, suppose that an <code>object</code> element is a child node of a shadow host, but the <code>object</code> element is not assigned to a slot.
-              In this case, according to the <a>flat tree children calculation algorithm</a>,
-              this element never participate in a <a>document flat tree</a>.
-              Therefore, this element is <a>inert</a> because this element is not <a>being rendered</a>. .
+              In this case, according to the flat tree children calculation algorithm,
+              this element never participate in a document flat tree.
+              Therefore, this element is inert because this element is not being rendered. .
             </p>
           </li>
         </ul>
@@ -904,7 +161,7 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
       <section>
         <h3>Attributes</h3>
 
-        <p>When [[!HTML]] defines the processing algorithms to traverse trees for the following attributes, they <strong>must</strong> use the <a>flat tree</a>.
+        <p>When [[!HTML]] defines the processing algorithms to traverse trees for the following attributes, they <strong>must</strong> use the flat tree.
         <ul>
           <li><code>dir</code></li>
           <li><code>draggable</code></li>
@@ -915,15 +172,7 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
           <li><code>title</code></li>
         </ul>
 
-        <div class="note">
-          <p>
-            This list does not include attributes that are defined elsewhere in this specification. Such attributes include:
-          </p>
-          <ul>
-            <li><code>tabindex</code> is defined in <a href="#focus-navigation">Focus Navigation</a>.</li>
-            <li><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</li>
-          </ul>
-        </div>
+        <p class="note"><code>role</code> and <code>ARIA</code> are defined in <a href="#assistive-technology">Assistive Technology</a>.</p>
       </section>
 
       <section>
@@ -935,30 +184,25 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
         </p>
 
         <p>
-          <code>Document.currentScript</code> <strong>must</strong> return null if the <code>script</code> element is in a <a>shadow tree</a>.
-          See <a href="https://github.com/w3c/webcomponents/issues/477">Issue #477</a>.
-        </p>
-
-        <p>
-          Style elements inside a <a>shadow tree</a> <strong>must</strong> not be able to set the preferred style sheet set for the <a>document tree</a>.
-          Style elements inside a <a>shadow tree</a> should still be applied if it has a <code>title</code> attribute not matching the preferred style sheet set
-          of the <a>document tree</a>.
+          Style elements inside a shadow tree <strong>must</strong> not be able to set the preferred style sheet set for the document tree.
+          Style elements inside a shadow tree should still be applied if it has a <code>title</code> attribute not matching the preferred style sheet set
+          of the document tree.
           See <a href="https://github.com/w3c/webcomponents/issues/391">Issue #391</a>.
         </p>
 
         <p>
-          An iframe in a <a>shadow tree</a> <strong>must</strong> not have any effect on <code>window.history</code> neither <code>window.frames</code>.
+          An iframe in a shadow tree <strong>must</strong> not have any effect on <code>window.history</code> neither <code>window.frames</code>.
           See <a href="https://github.com/w3c/webcomponents/issues/184">Issue #184</a>.
         </p>
 
         <p>
-          <code>:root</code> pseudo class does not match any element if the rule is used in a <a>shadow tree</a>.
+          <code>:root</code> pseudo class does not match any element if the rule is used in a shadow tree.
         </p>
       </section>
 
     </section>
 
-    <section>
+    <section class='normative'>
       <h2>Elements and DOM interfaces</h2>
 
       <section>
@@ -970,160 +214,23 @@ with an optional <i>suppress observers flag</i>, run these steps: </p>
             Element? elementFromPoint(double x, double y);
             sequence&lt;Element&gt; elementsFromPoint(double x, double y);
             CaretPosition? caretPositionFromPoint(double x, double y);
-            readonly attribute Element? activeElement;
-            readonly attribute StyleSheetList styleSheets;
           };
         </pre>
 
         <ul class="note">
           <li>
-            Except for <code>activeElement</code>, these methods and attributes are defined in the similar way as currently defined in Document,
+            These methods and attributes are defined in the similar way as currently defined in Document,
             considering only the current node tree.
           </li>
           <li>
-            Regarding <code>elementFromPoint</code> and <code>elementsFromPoints</code>, they should return the result of running the <a>retargeting algorithm</a> with <a>context object</a> and the original result as input.
+            Regarding <code>elementFromPoint</code> and <code>elementsFromPoints</code>, they should return the result of running the retargeting algorithm with context object and the original result as input.
           </li>
           <li>
-            Regarding <code>styleSheets</code>, it should return an empty <a>StyleSheetList</a> if the context object is not <a>in a shadow-including document</a>.
-          </li>
-          <li>
-            We should remove these methods and attributes from Document when this section is upstreamed to DOM Standard.
+            We should remove these methods and attributes from Document when this section is upstreamed.
           </li>
         </ul>
       </section>
 
-      <section>
-
-   <h3 class="heading settled" data-level="3.8" id="interface-shadowroot"><span class="secno"></span><span class="content">Interface <code class="idl"><a data-link-type="idl" href="#shadowroot">ShadowRoot</a></code></span></h3>
-
-   <p class="warning">
-     This section is a copy of <a href="https://dom.spec.whatwg.org/#interface-shadowroot">Interface ShadowRoot</a> section in [[WHATWG-DOM]]. This section is expected to be synced with that periodically.
-     </p>
-
-<pre class="idl highlight def">[<a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=<span class="n">Window</span>]
-<span class="kt">interface</span> <dfn class="nv idl-code" data-dfn-type="interface" data-export="" id="shadowroot">ShadowRoot<a class="self-link" href="#shadowroot"></a></dfn> : <a class="n" data-link-type="idl-name" href="#documentfragment">DocumentFragment</a> {
-  <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n" data-link-type="idl-name" href="#enumdef-shadowrootmode">ShadowRootMode</a> <a class="nv idl-code" data-link-type="attribute" data-readonly="" data-type="ShadowRootMode" href="#dom-shadowroot-mode">mode</a>;
-  <span class="kt">readonly</span> <span class="kt">attribute</span> <a class="n" data-link-type="idl-name" href="#element">Element</a> <a class="nv idl-code" data-link-type="attribute" data-readonly="" data-type="Element" href="#dom-shadowroot-host">host</a>;
-};
-
-<span class="kt">enum</span> <dfn class="nv idl-code" data-dfn-type="enum" data-export="" id="enumdef-shadowrootmode">ShadowRootMode<a class="self-link" href="#enumdef-shadowrootmode"></a></dfn> { <dfn class="s idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;open&quot;|open" id="dom-shadowrootmode-open">"open"<a class="self-link" href="#dom-shadowrootmode-open"></a></dfn>, <dfn class="s idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;closed&quot;|closed" id="dom-shadowrootmode-closed">"closed"<a class="self-link" href="#dom-shadowrootmode-closed"></a></dfn> };
-</pre>
-   <p><code class="idl"><a data-link-type="idl" href="#shadowroot">ShadowRoot</a></code> <a data-link-type="dfn" href="#concept-node">nodes</a> are simply known as <dfn data-dfn-type="dfn" data-export="" data-lt="shadow root" id="concept-shadow-root">shadow roots<a class="self-link" href="#concept-shadow-root"></a></dfn>. </p>
-   <p><a data-link-type="dfn" href="#concept-shadow-root">Shadow roots</a> have an associated <dfn data-dfn-for="ShadowRoot" data-dfn-type="dfn" data-noexport="" id="shadowroot-mode">mode<a class="self-link" href="#shadowroot-mode"></a></dfn> ("<code>open</code>"
-or "<code>closed</code>").</p>
-   <p><a data-link-type="dfn" href="#concept-shadow-root">Shadow roots</a>’s associated <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is never null.</p>
-   <p>A <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#get-the-parent">get the parent</a> algorithm, given an <var>event</var>, returns
-null if <var>event</var>’s <a data-link-type="dfn" href="#composed-flag">composed flag</a> is unset and <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> is the <a data-link-type="dfn" href="#concept-tree-root">root</a> of <var>event</var>’s <a data-link-type="dfn" href="#event-path">path</a>’s first tuple’s <b>item</b>, and <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> otherwise. </p>
-   <p>The <code>mode</code><a class="self-link" href="#dom-shadowroot-mode"></a> attribute’s getter must return the <a data-link-type="dfn" href="#context-object">context object</a>’s <a data-link-type="dfn" href="#shadowroot-mode">mode</a>.</p>
-   <p>The <dfn class="idl-code" data-dfn-for="ShadowRoot" data-dfn-type="attribute" data-export="" id="dom-shadowroot-host"><code>host</code><a class="self-link" href="#dom-shadowroot-host"></a></dfn> attribute’s getter must return the <a data-link-type="dfn" href="#context-object">context object</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>. </p>
-   <hr>
-   <p>In <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-tree-order">shadow-including tree order<a class="self-link" href="#concept-shadow-including-tree-order"></a></dfn>, is <a data-link-type="dfn" href="#shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal</a> of a <a data-link-type="dfn" href="#concept-node-tree">node tree</a>. <dfn data-dfn-type="dfn" data-noexport="" id="shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal<a class="self-link" href="#shadow-including-preorder-depth-first-traversal"></a></dfn> of a <a data-link-type="dfn" href="#concept-node-tree">node tree</a> <var>tree</var> is preorder, depth-first traversal of <var>tree</var>, with for each <a data-link-type="dfn" href="#element-shadow-host">shadow host</a> encountered in <var>tree</var>, <a data-link-type="dfn" href="#shadow-including-preorder-depth-first-traversal">shadow-including preorder, depth-first traversal</a> of that <a data-link-type="dfn" href="#concept-element">element</a>’s <a data-link-type="dfn" href="#concept-element-shadow-root">shadow root</a>’s <a data-link-type="dfn" href="#concept-node-tree">node tree</a> just after it is encountered. </p>
-   <p>The <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-root">shadow-including root<a class="self-link" href="#concept-shadow-including-root"></a></dfn> of an object is its <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>’s <a data-link-type="dfn" href="#concept-shadow-including-root">shadow-including root</a>, if the
-object’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>, and its <a data-link-type="dfn" href="#concept-tree-root">root</a> otherwise.</p>
-   <p>An object <var>A</var> is a <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-descendant">shadow-including descendant<a class="self-link" href="#concept-shadow-including-descendant"></a></dfn> of an object <var>B</var>, if <var>A</var> is a <a data-link-type="dfn" href="#concept-tree-descendant">descendant</a> of <var>B</var>, or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> and <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-descendant">shadow-including inclusive descendant</a> of <var>B</var>. </p>
-   <p>A <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-inclusive-descendant">shadow-including inclusive descendant<a class="self-link" href="#concept-shadow-including-inclusive-descendant"></a></dfn> is an object or one of its <a data-link-type="dfn" href="#concept-shadow-including-descendant">shadow-including descendants</a>. </p>
-   <p>An object <var>A</var> is a <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-ancestor">shadow-including ancestor<a class="self-link" href="#concept-shadow-including-ancestor"></a></dfn> of an object <var>B</var>, if and only if <var>B</var> is a <a data-link-type="dfn" href="#concept-shadow-including-descendant">shadow-including descendant</a> of <var>A</var>. </p>
-   <p>A <dfn data-dfn-type="dfn" data-export="" id="concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor<a class="self-link" href="#concept-shadow-including-inclusive-ancestor"></a></dfn> is an object or one of its <a data-link-type="dfn" href="#concept-shadow-including-ancestor">shadow-including ancestors</a>. </p>
-   <p>A <a data-link-type="dfn" href="#concept-node">node</a> <var>A</var> is <dfn data-dfn-type="dfn" data-export="" id="concept-closed-shadow-hidden">closed-shadow-hidden<a class="self-link" href="#concept-closed-shadow-hidden"></a></dfn> from a <a data-link-type="dfn" href="#concept-node">node</a> <var>B</var> if all of the following conditions are true: </p>
-   <ul>
-    <li>
-     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>. </p>
-    <li>
-     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is not a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>B</var>. </p>
-    <li>
-     <p><var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a> whose <a data-link-type="dfn" href="#shadowroot-mode">mode</a> is "<code>closed</code>" or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a> is <a data-link-type="dfn" href="#concept-closed-shadow-hidden">closed-shadow-hidden</a> from <var>B</var>. </p>
-   </ul>
-   <p>To <dfn data-dfn-type="dfn" data-export="" data-lt="retarget|retargeting" id="retarget">retarget<a class="self-link" href="#retarget"></a></dfn> an object <var>A</var> against an object <var>B</var>, repeat these steps until they return an object:</p>
-   <ol>
-    <li>
-     <p>If <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is not a <a data-link-type="dfn" href="#concept-shadow-root">shadow root</a>, or <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a> is a <a data-link-type="dfn" href="#concept-shadow-including-inclusive-ancestor">shadow-including inclusive ancestor</a> of <var>B</var>, then return <var>A</var>. </p>
-    <li>
-     <p>Set <var>A</var> to <var>A</var>’s <a data-link-type="dfn" href="#concept-tree-root">root</a>’s <a data-link-type="dfn" href="#concept-documentfragment-host">host</a>. </p>
-   </ol>
-      </section>
-
-    </section>
-
-    <section>
-      <h2>Shadow DOM Example</h2>
-
-      <p>Bob was asked to turn a simple list of links into a News Widget, which has links organized into two categories: breaking news and just news. The current document markup for the stories looks like this:</p>
-      <pre class="example highlight">
-&lt;ul class="stories"&gt;
-    &lt;li&gt;&lt;a href="//example.com/stories/1"&gt;A story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="//example.com/stories/2"&gt;Another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="breaking" slot="breaking"&gt;&lt;a href="//example.com/stories/3"&gt;Also a story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="//example.com/stories/4"&gt;Yet another story&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="//example.com/stories/5"&gt;Awesome story&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="breaking" slot="breaking"&gt;&lt;a href="//example.com/stories/6"&gt;Horrible story&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-      </pre>
-
-      <p class="issue">
-       It's weird that there are slot attributes in this markup because Bob has not decided to use Shadow DOM yet.
-      </p>
-
-      <p>To organize the stories, Bob decides to use <strong>shadow DOM</strong>. Doing so will allow Bob to keep the document markup uncluttered, and harnessing the power of insertion point makes sorting stories by class name a very simple task. After getting another cup of <a href="http://en.wikipedia.org/wiki/List_of_coffee_beverages#Green_Eye">Green Eye</a>, he quickly mocks up the following shadow tree, to be hosted by the <code>ul</code> element:</p>
-      <pre class="example highlight">
-&lt;div class="breaking"&gt;
-    &lt;ul&gt;
-        &lt;slot name="breaking"&gt;&lt;/slot&gt; &lt;!-- slot for breaking news --&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="other"&gt;
-    &lt;ul&gt;
-        &lt;slot&gt;&lt;/slot&gt; &lt;!-- slot for the rest of the news --&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;
-      </pre>
-      <p>Bob then styles the newborn widget according to comps from the designer by adding this to the shadow tree mockup:</p>
-      <pre class="example highlight">
-&lt;style&gt;
-    div.breaking {
-        color: Red;
-        font-size: 20px;
-        border: 1px dashed Purple;
-    }
-    div.other {
-        padding: 2px 0 0 0;
-        border: 1px solid Cyan;
-    }
-&lt;/style&gt;
-      </pre>
-      <p>While pondering if his company should start looking for a new designer, Bob converts the mockup to code:</p>
-      <pre class="example highlight">
-function createStoryGroup(className, slotName)
-{
-    var group = document.createElement('div');
-    group.className = className;
-    // Empty string in slot name attribute or absence thereof work the same, so no need for special handling.
-    group.innerHTML = '&lt;ul&gt;&lt;slot name="' + slotName + '"&gt;&lt;/slot&gt;&lt;/ul&gt;';
-    return group;
-}
-
-function createStyle()
-{
-    var style = document.createElement('style');
-    style.textContent = 'div.breaking { color: Red;font-size: 20px; border: 1px dashed Purple; }' +
-        'div.other { padding: 2px 0 0 0; border: 1px solid Cyan; }';
-    return style;
-}
-
-function makeShadowTree(storyList)
-{
-    var root = storyList.attachShadow({mode: 'open'});
-    root.appendChild(createStyle());
-    root.appendChild(createStoryGroup('breaking', 'breaking'));
-    root.appendChild(createStoryGroup('other', ''));
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('ul.stories').forEach(makeShadowTree);
-});
-      </pre>
-
-      <p>Well done, Bob! With the cup of coffee still half-full, the work is complete. Recognizing his awesomeness, Bob returns to teaching n00bs the ways of <a href="https://en.wikipedia.org/wiki/Splatoon">Splatoon</a>.</p>
-    </section>
 
     <section class="appendix">
       <h2>Acknowledgments</h2>
@@ -1135,8 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><span class="vcard">Dominic Cooney</span>, <span class="vcard">Hajime Morrita</span>, and <span class="vcard">Roland Steiner</span> worked tirelessly to scope the problem of functional encapsulation within the confines of the Web platform and provided a solid foundation for this document.</p>
 
       <p>The editor would also like to thank <span class="vcard">Alex Komoroske</span>, <span class="vcard">Anne van Kesteren</span>, <span class="vcard">Brandon Payton</span>, <span class="vcard">Brian Kardell</span>, <span class="vcard">Darin Fisher</span>, <span class="vcard">Eric Bidelman</span>, <span class="vcard">Deepak Sherveghar</span>, <span class="vcard">Edward O'Connor</span>, <span class="vcard">Elisée Maurer</span>, <span class="vcard">Elliott Sprehn</span>, <span class="vcard">Erik Arvidsson</span>, <span class="vcard">Glenn Adams</span>, <span class="vcard">Jonas Sicking</span>, <span class="vcard">Koji Ishii</span>, <span class="vcard">Malte Ubl</span>, <span class="vcard">Mike Taylor</span>, <span class="vcard">Oliver Nightingale</span>, <span class="vcard">Olli Pettay</span>, <span class="vcard">Rafael Weinstein</span>, <span class="vcard">Richard Bradshaw</span>, <span class="vcard">Ruud Steltenpool</span>, <span class="vcard">Sam Dutton</span>, <span class="vcard">Sergey G. Grekhov</span>, <span class="vcard">Shinya Kawanaka</span>, <span class="vcard">Tab Atkins</span>, <span class="vcard">Takashi Sakamoto</span>, and <span class="vcard">Yoshinori Sano</span> for their comments and contributions to this specification.</p>
-
-      <p>This list is too short. There's a lot of work left to do. Please contribute by reviewing and filing bugs&mdash;and don't forget to ask the editor to add your name into this section.</p>
     </section>
 
   </body>
