@@ -53,10 +53,10 @@ Mixing declarative API and imperative API would be troublesome and can cause con
 We *can* invent complex rules. However, no one wants to remember complex rules. Also, supporting both in the same shadow tree would make a browser engine complex.
 
 Thus, we don't allow mixing the declarative and imperative APIs in the same shadow tree. Web developers must explicitly opt-in
-to use an imperative API for each shadow tree. They do this with a new "slotting" parameter on attachShadow():
+to use an imperative API for each shadow tree. They do this with a new "slotAssignment" parameter on attachShadow():
 
 ```js
-const sr = attachShadow({ mode: ..., (optional) slotting: 'manual' });
+const sr = attachShadow({ mode: ..., (optional) slotAssignment: 'manual' });
 ```
 
 Here, "manual" means "we support only imperative APIs for the shadow tree". If no calls to `slot.assign()` are made, then [assigned nodes] will be left empty.
@@ -76,7 +76,7 @@ partial interface HTMLSlotElement {
 
 `slot.assign(sequence<Node> nodes)` runs the following steps:
 
-1. Check `slotting` is "manual", throw otherwise.
+1. Check `slotAssignment` is "manual", throw otherwise.
 2. Validate each node in nodes that its node.parentNode == slot.rootNode.host. Throw if not equal.
 3. Set the slot's `manually-assigned-nodes` to `nodes`.
 4. Run [assign slotables for a tree] with slot’s tree.
@@ -96,7 +96,7 @@ Note: The detail is explained later, however, it would be worth noting that `man
 ``` webidl
 ShadowRootInit {
    ...
-   (optional) sloting: 'manual'|'auto' //  (if omitted, it is 'auto');
+   (optional) slotAssignment: 'manual'|'auto' //  (if omitted, it is 'auto');
 }
 ```
 
@@ -110,9 +110,9 @@ ShadowRootInit {
 
     3. Otherwise, insert node into parent’s children before child’s index.
     
-    4. [Update Step] If parent is a shadow host, its shadow's `slotting` is not "manual" and node is a slotable, then assign a slot for node.
+    4. [Update Step] If parent is a shadow host, its shadow's `slotAssignment` is not "manual" and node is a slotable, then assign a slot for node.
 
-    5. [New Step] If parent's root is a shadow root, shadow's `slotting` is "manual", and parent is a slot, throw exception.
+    5. [New Step] If parent's root is a shadow root, shadow's `slotAssignment` is "manual", and parent is a slot, throw exception.
     
     6. If parent’s root is a shadow root, and parent is a slot whose assigned nodes is the empty list, then run signal a slot change for parent.
 
@@ -134,15 +134,15 @@ ShadowRootInit {
 
 4. If the open flag is set and shadow’s mode is not "open", then return null.
 
-5. [New Step] If shadow's `slotting` is "manual", return the associated slot in shadow’s tree whose `manually-assigned-nodes` includes slotable, if any, and null otherwise.
+5. [New Step] If shadow's `slotAssignment` is "manual", return the associated slot in shadow’s tree whose `manually-assigned-nodes` includes slotable, if any, and null otherwise.
 
 6. Return the first slot in shadow’s tree whose name is slotable’s name, if any, and null otherwise. (<= No change)
 
 Note: This change implies:
 
 -   `manually-assigned-nodes` should be considered an implementation detail. As long as the external behavior doesn't change, UA doesn't allocate `manually-assigned-nodes` for a slot.
--   `manually-assigned-nodes` is used only when a slot is in a shadow tree whose `slotting` is "manual".
--   `manually-assigned-nodes` is not used when a slot is in a shadow tree whose `slotting` is "auto".
+-   `manually-assigned-nodes` is used only when a slot is in a shadow tree whose `slotAssignment` is "manual".
+-   `manually-assigned-nodes` is not used when a slot is in a shadow tree whose `slotAssignment` is "auto".
 
      Web developers can not call `slot.assign(...)` for such a slot, it will throw exception to keep it consistent with when invalid nodes are passed in the "manual" case.
 
@@ -152,11 +152,11 @@ Note: This change implies:
 
 ## Examples
 
-### Example 1: How imperative slotting API works in slotting=manual.
+### Example 1: How imperative slotting API works in slotAssignment=manual.
 
 ``` text
 host
-├──/shadowroot (slotting=manual)
+├──/shadowroot (slotAssignment=manual)
 │   ├── slot1
 │   └── slot2
 ├── A
@@ -205,12 +205,12 @@ assert(slot2.assignedNodes() == []);
 
 ```
 
-### Example 2: Imperative slotting API doesn't have any effect in a shadow root with slotting=auto.
+### Example 2: Imperative slotting API doesn't have any effect in a shadow root with slotAssignment=auto.
 
 
 ``` text
 host
-├──/shadowroot (slotting=auto) (default)
+├──/shadowroot (slotAssignment=auto) (default)
 │   ├── slot1 name=slot1
 │   └── slot2 name=slot2
 ├── A slot=slot1
@@ -233,12 +233,12 @@ assert(slot2.assignedNodes() == [B]);
 
 ``` text
 host1
-├──/shadowroot1 (slotting=manual)
+├──/shadowroot1 (slotAssignment=manual)
 │   └── slot1
 └── A
 
 host2
-├──/shadowroot2 (slotting=manual)
+├──/shadowroot2 (slotAssignment=manual)
 │   └── slot2
 └── B
     └── C
@@ -263,7 +263,7 @@ assert(slot1.assignedNodes() == []);   // Assignment is absolute. Once slotables
 
 ``` text
 host
-└──/shadowroot (slotting=manual)
+└──/shadowroot (slotAssignment=manual)
     └── slot1
 ```
 
@@ -291,14 +291,14 @@ assert(slot1.assignedNodes() == [A, B]);
 
 ``` text
 host1
-├──/shadowroot1 (slotting=manual)
+├──/shadowroot1 (slotAssignment=manual)
 │   ├── slot1
 │   └── slot2
 ├── A
 └── B
 
 host3
-├──/shadowroot3 (slotting=manual)
+├──/shadowroot3 (slotAssignment=manual)
 │   └── slot3
 ```
 
