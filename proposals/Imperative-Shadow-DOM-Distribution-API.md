@@ -10,7 +10,7 @@ For more context, please see [the WHATWG HTML Standard issue](https://github.com
 One of the drawbacks of Shadow DOM v1, when compared to Shadow DOM v0, is that web developers have to specify slot= attribute for every shadow host's children (except for elements for the *default* slot).
  
 #### Case 1:  Slot attributes is required in markup.
-```
+```html
 <shadow-host>
   <div slot=slot1></div>
   <div slot=slot2></div>
