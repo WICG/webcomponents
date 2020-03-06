@@ -3,7 +3,7 @@
 Authors: yuzhehan@chromium.org, hayato@google.com
 
 This is a strawperson proposal for Imperative Shadow DOM distribution API.
-For more context, please see [the WhatWG issue](https://github.com/whatwg/html/issues/3534).
+For more context, please see [the WHATWG HTML Standard issue](https://github.com/whatwg/html/issues/3534).
 
 ## Motivation
 
