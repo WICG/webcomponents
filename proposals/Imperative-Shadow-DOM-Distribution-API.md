@@ -108,14 +108,14 @@ partial interface HTMLSlotElement {
 
 Step 4 is required because we have to re-calculate [assigned nodes] of every slot in the tree at this timing.
 
-Note: The detail is explained [later](#4.2.2.3.-Finding-slots-and-slotables), however, it would be worth noting that `manuallyAssignedNodes` is not used as
+Note: It would be worth noting that `manuallyAssignedNodes` is not used as
 [assigned nodes] as is. You can think of `slot.assign(sequence<Node> nodes)` as telling the engine a set of "candidate nodes" from which [assigned nodes] are constructed.
 
 [assign slotables for a tree]: https://dom.spec.whatwg.org/#assign-slotables-for-a-tree
 
 ## Changes to DOM Standard
 
-## [ShadowRootInit](https://dom.spec.whatwg.org/#dictdef-shadowrootinit)
+### [Shadow Root Init](https://dom.spec.whatwg.org/#dictdef-shadowrootinit)
 
 ``` webidl
 dictionary ShadowRootInit {
@@ -125,7 +125,7 @@ dictionary ShadowRootInit {
 };
 ```
 
-## [ShadowRoot](https://dom.spec.whatwg.org/#shadowroot) 
+### [Shadow Root](https://dom.spec.whatwg.org/#shadowroot) 
 
 ``` webidl
 [Exposed=Window]
@@ -139,8 +139,6 @@ interface ShadowRoot : DocumentFragment {
 enum ShadowRootMode { "open", "closed" };
 enum SlotAssignmentMode { "manual", "auto" };
 ```
-
-enum ShadowRootMode { "open", "closed" };
 
 ### [concept node insert](https://dom.spec.whatwg.org/#concept-node-insert)
 
