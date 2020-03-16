@@ -140,26 +140,6 @@ enum ShadowRootMode { "open", "closed" };
 enum SlotAssignmentMode { "manual", "auto" };
 ```
 
-### [concept node insert](https://dom.spec.whatwg.org/#concept-node-insert)
-
-7. For each node in nodes, in tree order:
-
-    1. Adopt node into parent's node document.
-
-    2. If child is null, then append node to parent's children.
-
-    3. Otherwise, insert node into parent's children before child's index.
-    
-    4. [Update Step] If parent is a shadow host, its shadow's `slotAssignment` is not "manual" and node is a slotable, then assign a slot for node.
-
-    5. [New Step] If parent's root is a shadow root, shadow's `slotAssignment` is "manual", and parent is a slot, throw exception.
-    
-    6. If parent's root is a shadow root, and parent is a slot whose assigned nodes is the empty list, then run signal a slot change for parent.
-
-    7. Run assign slotables for a tree with node's root.
-    
-    ...
-
 ### 4.2.2.3. Finding slots and slotables
 
 [To find a slot] needs to be updated here. The other steps don't appear to require any updates from the standard's perspective.
