@@ -355,3 +355,7 @@ Basically, `slot.assign(sequence<Node> nodes)` sets the slot's `manuallyAssigned
 
 - *manuallyAssignedNodes* is an internal field. It is write-only. Users cannot read the value directly.
 - *manuallyAssignedNodes* are different than [assigned nodes]. They are candidates for slot assignments. However, we check each node's slotable validity. If an invalid node is detected, we throw an exception in `slot.assign()` and clear `manuallyAssignedNodes`. If the validity check is successful, the browser recalculates [assigned nodes] later, based on `manuallyAssignedNodes`. The calculated [assigned nodes] are then observable.
+
+#### Security and Privacy Considerations
+
+The new API sets the assigned nodes for a slot element. It can't be used to track users. Since it's a new API, maybe its presence can be used in some way to finger print users. However, this would be the case for all new APIs. 
