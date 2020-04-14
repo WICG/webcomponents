@@ -121,7 +121,7 @@ Note: It would be worth noting that `manuallyAssignedNodes` is not used as
 dictionary ShadowRootInit {
   required ShadowRootMode mode;
   boolean delegatesFocus = false;
-  SlotAssignmentMode slotAssignment;   // optional. (defaults to 'auto')
+  SlotAssignmentMode slotAssignment = "auto";
 };
 ```
 
