@@ -22,7 +22,7 @@ Blink has a special logic for some built-in elements to control node-to-slot map
  
 #### Case 2: Slot based on condition. 
 ```html
-<custom-tab show-panel=”2”>
+<custom-tab show-panel="2">
    <tab-panel></tab-panel>
    <tab-panel></tab-panel>
    <tab-panel></tab-panel>
