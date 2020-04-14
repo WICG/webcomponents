@@ -43,33 +43,44 @@ The following code demonstrate how to use the new API to solve [Case 2](#Case-2:
 
 ```js
 class CustomTab extends HTMLElement {
+    static get observedAttributes() {
+      return ['show-tab'];
+    }
     constructor() {
         super();
-        const template = `
+        const shadowRoot = this.attachShadow({mode: 'open', slotAssignment: 'manual'});
+        shadowRoot.innerHTML = `
             <div class="custom-tab">
                 <slot></slot>
             </div>`;
-        const shadowRoot = this.attachShadow({mode: 'open', slotAssignment: 'manual'});
-        const div = document.createElement('div');
-        div.innerHTML = template;
-        shadowRoot.appendChild(div);
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        UpdateDisplayTab(this, newValue);
     }
     connectedCallback() {
         if (!this._observed) {
            const target = this;
-           const showPanel = this.getAttribute('show-panel');
-           this._slot = this.shadowRoot.querySelector("slot");
+           const showTab = this.getAttribute('show-tab');
            const observer = new MutationObserver(function(mutations) {
-                const panels = target.querySelectorAll('tab-panel');
-                if (panels.length && showPanel > 0 && showPanel <= panels.length ) {
-                  target._slot.assign([panels[showTab-1]]);
-                } 
+                UpdateDisplayTab(target, showTab);
             });
             observer.observe(this, {childList: true});
             this._observed = true;
         }
     }
 }
+
+function  UpdateDisplayTab(elem, tabIdx) {
+    const shadow = elem.shadowRoot;
+    const slot = shadow.querySelector("slot");
+    const panels = elem.querySelectorAll('tab-panel');
+    if (panels.length && tabIdx && tabIdx <= panels.length ) {
+      slot.assign([panels[tabIdx-1]]);
+    } else {
+      slot.assign([]);
+    }
+}
+
 ```
 
 ## Declarative API and Imperative API should be exclusively used in each shadow tree
