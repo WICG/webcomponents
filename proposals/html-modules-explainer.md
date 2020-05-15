@@ -35,7 +35,7 @@ HTML Modules will be imported using the same `import` statements currently used 
 
 The MIME-type in the HTTP response header will be checked to determine whether a given module should be treated as script or HTML.  Each imported HTML Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the ES6 Module map and module dependency graphs.
 
-An HTML Module will be parsed per the normal HTML5 parsing rules, with the exception that it is only allowed to contain `<script>` elements of `type="module"` (non-module scripts will cause HTML Module creation to fail).  This greatly simplifies the integration of HTML Modules into the current ES6 Module system since module scripts have defer semantics and we therefore don't need to worry about synchronous script elements causing side-effects during parsing.  This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
+An HTML Module will be parsed per the normal HTML5 parsing rules, with the exception that it is only allowed to contain `<script>` elements of `type="module"` (non-module scripts will cause HTML Module creation to fail) and `<template>` elements.  This greatly simplifies the integration of HTML Modules into the current ES6 Module system since module scripts have defer semantics and we therefore don't need to worry about synchronous script elements causing side-effects during parsing.  This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
 
 ### Accessing declarative content from within an HTML Module
 
