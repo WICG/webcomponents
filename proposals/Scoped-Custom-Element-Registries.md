@@ -8,6 +8,8 @@ This proposal allows for multiple custom element definitions for a single tag na
 
 This is accomplished by allowing user code to create multiple custom element registries and associate them with shadow roots that function as scopes for element creation and custom element definitions. Potentially custom elements created within a scope use the registry for that scope to perform upgrades. New element construction APIs are added to ShadowRoot to allow element creation to be associated with a scope.
 
+This proposal is focused on the MVP to provide encapsulation for element definitions, and it could be extended in the future if needed to provide more versatility.
+
 ### Why do developers need scoped custom element registries?
 
 It's quite common for web applications to contain libraries from multiple sources, whether from different teams, vendors, package managers, etc. These libraries must currently contend for the global shared resource that is the `CustomElementRegistry`. If more than one library (or more than one instance of a library) tries to define the same tag name, the application will fail. 
@@ -36,9 +38,11 @@ This proposal allows user code to create new instances of `CustomElementRegistry
 
 ```js
 const registry = new CustomElementRegistry();
+```
 
 and associate them with a ShadowRoot:
 
+```js
 export class MyElement extends HTMLElement {
   constructor() {
     this.attachShadow({mode: 'open', registry});
@@ -64,9 +68,9 @@ this.shadowRoot.innerHTML = `<other-element></other-element>`;
 
 These scoped registries will allow for different parts of a page to contain definitions for the same tag name.
 
-### Creating and using a CustomElementRegistry
+### Creating and using a `CustomElementRegistry`
 
-A new CustomElementRegistry is created with the CustomElementRegistry constructor, and attached to a ShadowRoot with the `registry` option to `HTMLElement.prototype.attachShadow`:
+A new `CustomElementRegistry` is created with the `CustomElementRegistry` constructor, and attached to a ShadowRoot with the `registry` option to `HTMLElement.prototype.attachShadow`:
 
 ```js
 import {OtherElement} from './my-element.js';
@@ -91,36 +95,13 @@ In order to support scoped registries we add new scoped APIs, that were previous
 * `createElementNS()`
 * `importNode()`
 
-These APIs work the same as their Document equivalents, but use scoped registries instead of the global registry.
-
-### Registry Inheritance
-
-In a shadow root with a scoped registry, all element creation APIs use that shadow root's registry, and not the document's, to look up definitions. To inherit definitions from the global, or another scoped registry, a parent registry can be passed in at construction time:
-
-```js
-const registry = new CustomElementRegistry({
-    parent: window.customElements,
-});
-```
-
-This inheritance is live. New registrations added to the parent registry are available to inheriting registries. This is useful in the case where an element is already written to use the global registry, but needs to register a private helper element, or override only a single element in conflict with the global. It may also be useful in plug-in architectures where the host program provides a number of elements to plugins.
-
-For non-live inheritance, we can add a method to CustomElementRegistry that returns all of its registrations:
-
-```js
-const registry = new CustomElementRegistry({
-    definitions: {
-      ...window.customElements.getDefinitions(),
-      'local-element': LocalElement,
-    }
-});
-```
+These APIs work the same as their `Document` equivalents, but use scoped registries instead of the global registry.
 
 ### Finding a custom element definition
 
 Because there is no longer a single global custom element registry, when creating elements, the steps to look up a custom element definition need to be updated to be able to find the correct registry.
 
-That process needs to take a context node that is used to look up the definition. The registry is found by getting the context node's root. If the root has a CustomElementRegistry, use that registry to look up the definition, otherwise use the global objects CustomElementRegistry object.
+That process needs to take a context node that is used to look up the definition. The registry is found by getting the context node's root. If the root has a `CustomElementRegistry`, use that registry to look up the definition, otherwise use the global objects CustomElementRegistry object.
 
 The context node is the node that hosts the element creation API that was invoked, such as `ShadowRoot.prototype.createElement()`, or `HTMLElement.prototype.innerHTML`. For `ShadowRoot.prototype.createElement()`, the context node and root are the same.
 
@@ -134,49 +115,9 @@ Another option for looking up registries is to store an element's originating re
 
 Constructors need special care with scoped registries. With a single global registry there is a strict 1-to-1 relationship between tag names and constructors. Scoped registries change this by allowing the same tag name to be associated with multiple constructors, which is solved by the altered look up a custom element definition process allowing the browser to find the correct constructor given a tag name.
 
-In the other direction, we want to be able to call `new MyElement()`, which means we need to be able to locate the correct tag name from a constructor as well.
+As a result, it must limit constructors by default to only looking up registrations from the global registry. If the constructor is not defined in the global registry, it will throw.
 
-The way this is done is by limiting constructors by default to only looking up registrations from the global registry. If the constructor is not defined in the global registry, it will throw. In order to get a constructor that creates a scoped definition, customElementRegistry.define() returns a new constructor:
-
-```js
-import {OtherElement} from './my-element.js';
-
-const registry = new CustomElementRegistry();
-
-// define() returns a new class:
-const LocalOtherElement = registry.define('other-element-2', OtherElement);
-const el = new LocalOtherElement();
-el.tagName === 'other-element-2';
-
-// The same class is available from registry.get():
-const O = registry.get('other-element-2')
-const el2 = new O();
-el2.tagName === 'other-element-2';
-```
-
-The constructor returned by `define()` is from a trivial subclass of the registered class.
-
-### Sugar for bulk registrations
-
-To make importing and registering multiple definitions easier, the CustomElementRegistry constructor can take an object containing multiple definitions:
-
-```js
-import {ElementOne} from './element-one.js';
-import {ElementTwo} from './element-two.js';
-
-const registry = new CustomElementRegistry({
-  definitions: {
-    'element-one': ElementOne,
-    'element-two': ElementTwo,
-  }
-});
-
-export class MyElement extends HTMLElement {
-  constructor() {
-    this.attachShadow({mode: 'open', registry});
-  }
-}
-```
+This poses a limitation for authors trying to use the constructor to create new elements associated to scoped registries but not registered as global. More flexibility can be analyzed post MVP, for now, a user-land abstraction can help by keeping track of the constructor and its respective registry.
 
 ## API
 
@@ -184,17 +125,13 @@ export class MyElement extends HTMLElement {
 
 #### Constructor
 
-The CustomElementRegistry constructor creates a new instance of CustomElementRegistry, independent of the instance available at `window.customElements`.
+The `CustomElementRegistry` constructor creates a new instance of CustomElementRegistry, independent of the instance available at `window.customElements`.
 
 ##### Syntax
 
 ```js
-const registry = new CustomElementRegistry({parent, definitions});
+const registry = new CustomElementRegistry();
 ```
-
-##### Parameters
-parent A parent CustomElementRegistry to inherit definitions from.
-definitions An object whose keys are custom element names and values are the associated constructors.
 
 ### ShadowRoot
 
@@ -205,6 +142,24 @@ ShadowRoot adds element creation APIs that were previously only available on Doc
 * `importNode()`
 
 These are added to provide a root and possible registry to look up a custom element definition.
+
+## Open Questions
+
+### Adopted elements and Scoped Registry
+
+There are concern about what happens when an element with a custom registry moves to another document and the GC implications. We debated briefly about possible solutions:
+
+1. make the registry a simple key, value pairs that can be moved around.
+2. recreate a new registry entry when moving the element, and let the author to repopulate it in `adoptedCallback`. This is problematic because the registry is created before attaching the shadowRoot.
+3. create a new callback that can receive the new registry when moved. This is problematic as well because what happen when the registries are coming from another library, already created by someone else?
+4. find ways for implementers to preserve the original registry (ideal).
+
+### Intersection with Declarative Shadow Root
+
+Although these two proposals are in early stages, we need to solve the intersection semantics. There are two main issues:
+
+1. if a declarative shadow root is created, elements inside that shadow should not be upgraded with the global registry. a possible solution is to add a new attribute, similar to `mode` to indicate to the parser that a custom registry is going to be eventually associated to this shadow.
+2. if the component is planning to reuse the instance of the declarative shadow root (which is ideal), how can the component associate that instance with a registry? this indicates that maybe the association between ShadowRoot and CustomElementRegistry cannot be defined via `attachShadow()`, and instead, something like `ElementInternals` is much more flexible.
 
 ##  Alternatives to allowing multiple definitions
 
