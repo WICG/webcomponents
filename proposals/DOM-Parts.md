@@ -1,5 +1,7 @@
 # DOM Part API - First Step of Template Instantiation
 
+This is a joint proposal by Ryosuke Niwa and Theresa O'Connor at Apple and Justin Fagnani, Mason Freed, and Yuzhe Han at Google.
+
 ## Motivation
 
 The HTML5 specification defines the [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element)
@@ -63,7 +65,7 @@ interface NodePart : Part {
     readonly attribute Node node;
 };
 
-interface AttributePart : NodePart {
+interface AttributePart : Part {
     constructor(Element element, DOMString qualifiedName, DOMString? namespace);
     readonly attribute DOMString prefix;
     readonly attribute DOMString localName;
@@ -107,6 +109,9 @@ Then assigning values as follows will update the DOM:
 namePart.value = "Ryosuke Niwa"
 emailPart.value = "rniwa@webkit.org"
 emailAttributePart.value = "mailto:rniwa@webkit.org"
+namePart.commit();
+emailPart.commit();
+emailAttributePart.commit();
 ```
 
 The resultant DOM will look like this:
@@ -157,7 +162,7 @@ After running this code, `instance` would contain a DOM tree equivalent of:
 
 Then we can assign values to various parts we’ve just created as follows:
 ```js
-updateParts(parts, {name: "Ryosuke Niwa", email: "rniwa@webkit.org", "mailAddress": "mailto:rniwa@webkit.org"})
+updateParts(parts, {name: "Ryosuke Niwa", email: "rniwa@webkit.org", "emailAddress": "mailto:rniwa@webkit.org"})
 
 function updateParts(parts, object) {
     for (const name in object) {
