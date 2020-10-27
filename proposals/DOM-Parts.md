@@ -136,7 +136,7 @@ container.appendChild(instance);
 
 function createParts(node, parts = {}) {
     const add = (replaceable, part) => {
-        parts[replaceable.substring(1, expression.length - 1)] = part;
+        parts[replaceable.substring(1, replaceable.length - 1)] = part;
     }
     if (node.nodeType == Node.TEXT_NODE && node.data.match(/^\{\w+\}$/)) {
         add(node.data, new ChildNodePart(node.parentNode, node.previousSibling, node.nextSibling));
