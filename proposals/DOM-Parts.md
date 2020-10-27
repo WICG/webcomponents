@@ -13,13 +13,13 @@ and [Angular](https://angular.io/guide/template-syntax) allow.
 In 2017, [Apple proposed the Template Instantiation API](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md),
 a Web API to parameterize a template instance and allow interpolation of JavaScript data during the initial instantiation as well as in subsequent updates.
 
-Reflecting on many feedbacks we’ve received including whether such as
+Reflecting on many feedbacks we've received including whether such as
 us having to [ensure API materially improves the platform at all](https://github.com/w3c/webcomponents/issues/704),
 this refined proposal focuses on the essence of the previous proposal:
 [`NodeTemplatePart`](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md#46-nodetemplatepart-interface)
 and [`AttributeTemplatePart`](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md#45-attributetemplatepart-interface)
 which provide mechanisms to insert or replace content at a specific location in a DOM tree.
-We’ve heard from multiple library and framework authors that such API, if designed right,
+We've heard from multiple library and framework authors that such API, if designed right,
 can be adopted and reduce the amount of code they have to write.
 The fact there is a [similar proposal made by a framework author](https://github.com/whatwg/dom/issues/736) gives us confidence
 that extracting the essence of `NodeTemplatePart` and `AttributeTemplatePart` would bring a material benefit to the platform
@@ -46,8 +46,8 @@ or its [properties]((https://tc39.es/ecma262/#sec-object-type))
 Instead, the new value is staged to be later committed in a batch,
 which is defined by an ordered set of *DOM parts* called **DOM parts group**.
 Each *DOM part* may belong to at most one *DOM part group*.
-This batching reduces the runtime overhead of constantly returning control back from browser’s implementation to JavaScript
-between each DOM mutation and allows browser engine’s to avoid or batch certain sanity checks and housekeeping tasks.
+This batching reduces the runtime overhead of constantly returning control back from browser's implementation to JavaScript
+between each DOM mutation and allows browser engine's to avoid or batch certain sanity checks and housekeeping tasks.
 
 In the [old proposal](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md#3-proposal),
 a *DOM part group* was represented by a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element).
@@ -103,7 +103,7 @@ and `AttributePart` for [`a` element](https://html.spec.whatwg.org/multipage/tex
 ```js
 namePart = new ChildNodePart(name)
 emailPart = new ChildNodePart(link)
-emailAttributePart = new AttributePart(link, ’href’)
+emailAttributePart = new AttributePart(link, 'href')
 
 Then assigning values as follows will update the DOM:
 namePart.value = "Ryosuke Niwa"
@@ -146,7 +146,7 @@ function createParts(node, parts = {}) {
     for (const attr of (node.attributes || [])) {
         if (attr.value.match(/^\{\w+\}$/)) {
             add(attr.value, new AttributePart(node, attr.name, attr.namespaceURI);
-            attr.value = ‘’;
+            attr.value = ‘';
         }
     }
     for (const childNode of node.childNodes)
@@ -160,7 +160,7 @@ After running this code, `instance` would contain a DOM tree equivalent of:
 <section><h1 id="name"></h1>Email: <a id="link" href=""></a></section>
 ```
 
-Then we can assign values to various parts we’ve just created as follows:
+Then we can assign values to various parts we've just created as follows:
 ```js
 updateParts(parts, {name: "Ryosuke Niwa", email: "rniwa@webkit.org", "emailAddress": "mailto:rniwa@webkit.org"})
 
@@ -190,12 +190,12 @@ had initially contained `mailto: before `{email}` but we could not capture this 
 because `AttributePart` could only set the whole attribute value.
 One native solution for this limitation is to add the support for specifying a prefix or an offset within the attribute value like so:
 ```js
-emailAttributePart = new AttributePart(link, ’href’, {’prefix’: ’mailto:’})
+emailAttributePart = new AttributePart(link, 'href', {'prefix': 'mailto:'})
 ```
 
 or:
 ```js
-emailAttributePart = new AttributePart(link, ’href’, 7)
+emailAttributePart = new AttributePart(link, 'href', 7)
 ```
 
 However, this approach falls apart once when we have multiple parts within a single attribute
@@ -213,7 +213,7 @@ This approach worked in the old proposal because
 the [browser engine was parsing](https://github.com/rniwa/webcomponents/blob/gh-pages/proposals/Template-Instantiation.md#43-creating-template-parts)
 a [template element](https://html.spec.whatwg.org/multipage/scripting.html#the-template-element)'s mustache syntax
 and generated a group of `AttributeTemplatePart` together.
-The same approach can’t be taken in the world we're introducing `AttributePart` as a primitive API.
+The same approach can't be taken in the world we're introducing `AttributePart` as a primitive API.
 
 Here, we consider a few alternatives.
 We can create a group of `AttributePart` together and implicitly relate them, create a specific `AttributePartGroup` object,
@@ -225,7 +225,7 @@ In this approach, `AttributePart` gets a new static function which creates
 a list of `AttributePart`s which work together to set a value when the values are to be committed:
 
 ```js
-const [firstName, lastName] = AttributePart.create(element, ‘title’, null, [null, ’ ’, null]);
+const [firstName, lastName] = AttributePart.create(element, ‘title', null, [null, ' ', null]);
 // Syntax to be improved. Here, a new AttributePart is created between each string.
 ```
 
@@ -238,13 +238,13 @@ In this approach, we group multiple `AttributePart`s together by creating an exp
 ```js
 const firstName = new AttributePart();
 const lastName = new AttributePart();
-const group = AttributePartGroup(element, ‘title’);
-group.append(firstName, ‘ ’, lastName);
+const group = AttributePartGroup(element, ‘title');
+group.append(firstName, ‘ ', lastName);
 ```
 
 This is morally equivalent to option 1 except there is an explicit grouping step.
 
-* **Pros**: Nicer syntax by the virtue of individual "partial" `AttributePart`’s existence at the time of grouping.
+* **Pros**: Nicer syntax by the virtue of individual "partial" `AttributePart`'s existence at the time of grouping.
     Code that assigns values to `AttributePart` only needs to know about `AttributePart`
 * **Cons**: More objects / complexity. `AttributePart` will have two modes.
 
@@ -256,11 +256,11 @@ meaning that `AttributePart` in option 3 plays the role of `AttributePartGroup` 
 ```js
 const firstNamePartial = new PartialAttributePart();
 const lastNamePartial = new PartialAttributePart();
-const part = AttributePart(element, ‘title’);
-part.values = [firstNamePartial, ‘ ’, lastNamePartial];
+const part = AttributePart(element, ‘title');
+part.values = [firstNamePartial, ‘ ', lastNamePartial];
 ```
 
-* **Pros**: Nicer syntax by the virtue of individual `PartialAttributePart`’s existence at the time of grouping.
+* **Pros**: Nicer syntax by the virtue of individual `PartialAttributePart`'s existence at the time of grouping.
     `AttributePart` just knows one thing to do: to set the whole content attribute value.
 * **Cons**: More objects / complexity. Code that uses a template has to deal with two different kinds of objects:
     `PartialAttributePart` and `AttributePart`.
@@ -280,7 +280,7 @@ In this approach, `ChildNodePart` gets a new static function
 which creates a list of `ChildNodePart`s which work together to set a value when the values are to be committed:
 
 ```js
-const [firstName, lastName] = ChildNodePart.create(element, null, null, [null, ’ ’, null]);
+const [firstName, lastName] = ChildNodePart.create(element, null, null, [null, ' ', null]);
 ```
 
 * **Pros**: Simplicity.
@@ -290,11 +290,11 @@ const [firstName, lastName] = ChildNodePart.create(element, null, null, [null, �
 
 In this approach, we group multiple `ChildNodePart`s together by creating an explicit group:
 
-```
+```js
 const firstName = new ChildNodePart();
 const lastName = new ChildNodePart();
 const group = ChildNodePartGroup(element, null, null);
-group.append(firstName, ‘ ’, lastName);
+group.append(firstName, ‘ ', lastName);
 ```
 
 This is morally equivalent to option 1 except there is an explicit grouping step.
@@ -311,7 +311,7 @@ This creates `PartialNodeChildPart` from `ChildNodePart`:
 const firstNamePartial = new PartialNodeChildPart();
 const lastNamePartial = new PartialNodeChildPart();
 const part = NodeChildPart(element, null, null);
-part.values = [firstNamePartial, ‘ ’, lastNamePartial];
+part.values = [firstNamePartial, ‘ ', lastNamePartial];
 ```
 
 * **Pros**: Nicer syntax by the virtue of individual `PartialChildNodePart`s existence at the time of grouping.
@@ -339,9 +339,9 @@ const lastName = new NodeChildPart(element, firstName);
 element.append(firstName, lastName); // For illustration purposes, there is no space between the two parts.
 ```
 
-Note that `lastName` takes `firstName` as the previous sibling but `firstName` doesn’t `lastName` as the next sibling
-(since `lastName` doesn’t exist at that point in time).
-This would mean that we’d have to do a bit of implicit updating of previous/next sibling of other parts in the constructor.
+Note that `lastName` takes `firstName` as the previous sibling but `firstName` doesn't `lastName` as the next sibling
+(since `lastName` doesn't exist at that point in time).
+This would mean that we'd have to do a bit of implicit updating of previous/next sibling of other parts in the constructor.
 
 An alternative is to add an explicit API to chain multiple parts togethers:
 ```js
@@ -351,7 +351,7 @@ ChildNodePart.chain(firstName, lastName);
 element.append(firstName, lastName); // For illustration purposes, there is no space between the two parts.
 ```
 
-* **Pros**: API simplicity. Only `NodeChildPart` is involved but construction isn’t as awkward as option 1.
+* **Pros**: API simplicity. Only `NodeChildPart` is involved but construction isn't as awkward as option 1.
 * **Cons**: "Chained" `NodeChildPart` must coordinate when applying mutations.
 
 ## Updating JS Property / Invoking Setter
@@ -387,11 +387,11 @@ and another set of `AttributePart` and `PropertyPart` for another [element](http
 and a sequence of updates as shown below where each A* and B* are `AttributePart`s and `PropertyPart`s for respective elements:
 
 ```js
-BProp.value = ‘foo’;
-AAttr1.value = ‘foo’;
-BAttr.value = ‘foo’;
-AProp.value = ‘foo’;
-AAttr2.value = ‘foo’;
+BProp.value = ‘foo';
+AAttr1.value = ‘foo';
+BAttr.value = ‘foo';
+AProp.value = ‘foo';
+AAttr2.value = ‘foo';
 ```
 
 Recall that these assignments to *DOM parts* simply stage values to be set when the *DOM part group*s later commit these changes.
@@ -458,8 +458,8 @@ In effect, this allows non-[partitioned](https://en.wikipedia.org/wiki/Partition
 
 There is also a question of how mutable parts should be,
 and whether a `PartGroup` can appear as a part of another `PartGroup` for nested template instances or not.
-It doesn’t make much sense for the list of *DOM parts* associated with `PartGroup` to get mutated after
-we’ve started committing things but there certainly is a room for adding or removing *DOM parts* based on new input or state.
+It doesn't make much sense for the list of *DOM parts* associated with `PartGroup` to get mutated after
+we've started committing things but there certainly is a room for adding or removing *DOM parts* based on new input or state.
 
 If we made the relationship between *DOM parts* and `PartGroup` not dynamically mutable,
 users of this API could still create a new `PartGroup` each time such a mutation would have needed instead.
@@ -468,18 +468,18 @@ users of this API could still create a new `PartGroup` each time such a mutation
 
 What order should the *DOM part group* commit each *DOM parts*' new values?
 In the old proposal, the [tree order](https://dom.spec.whatwg.org/#concept-tree-order)
-at the time of parsing the template element’s content was an obvious choice.
+at the time of parsing the template element's content was an obvious choice.
 
-This isn’t possible in `Part`-only API because there isn’t a single point in time when all *DOM parts* are created.
+This isn't possible in `Part`-only API because there isn't a single point in time when all *DOM parts* are created.
 We could re-evaluate each time a new *DOM part* is added to a *DOM part group* but that would incur a high runtime cost
 since it would likely require traversing all [node trees](https://dom.spec.whatwg.org/#concept-node-tree) referenced by each *DOM part*.
-Dynamically evaluating at the time of committing pending changes doesn’t work either
+Dynamically evaluating at the time of committing pending changes doesn't work either
 because some of the [nodes](https://dom.spec.whatwg.org/#concept-node) might not be
 a part of the same [node tree](https://dom.spec.whatwg.org/#concept-node-tree) until some of the pending changes are committed.
 
 The simplest choice is probably the order in which *DOM part* was inserted to a given *DOM part group*.
 Although there could be multiple *DOM parts* which reference the same element in different parts of the array,
-that doesn’t necessarily pose an obvious issue other than a slight inefficiency in batching certain DOM operations.
+that doesn't necessarily pose an obvious issue other than a slight inefficiency in batching certain DOM operations.
 Because the template engine is the one which creates these `Part` objects,
 this is also probably not an issue in practice.
 In any case, we can batch mutations per [element](https://dom.spec.whatwg.org/#concept-element)
@@ -511,7 +511,7 @@ dictionary NodeWithParts {
 };
 ```
 
-Here, we’re proposing a slightly nicer API by combining [`importNode`](https://dom.spec.whatwg.org/#dom-document-importnode)
+Here, we're proposing a slightly nicer API by combining [`importNode`](https://dom.spec.whatwg.org/#dom-document-importnode)
 and [`cloneNode`](https://dom.spec.whatwg.org/#dom-node-clonenode)
 and making the [cloning](https://dom.spec.whatwg.org/#concept-node-clone) deep by default.
 
