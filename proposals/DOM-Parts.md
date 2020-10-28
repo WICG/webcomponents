@@ -146,7 +146,7 @@ function createParts(node, parts = {}) {
     for (const attr of (node.attributes || [])) {
         if (attr.value.match(/^\{\w+\}$/)) {
             add(attr.value, new AttributePart(node, attr.name, attr.namespaceURI);
-            attr.value = ‘';
+            attr.value = '';
         }
     }
     for (const childNode of node.childNodes)
@@ -186,7 +186,7 @@ and the same DOM tree would get updated according to the values of the object pa
 ## Partial Attribute Updates
 
 Note in that above example, [`href` attribute](https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-href)
-had initially contained `mailto: before `{email}` but we could not capture this prefix in the attribute value
+had initially contained `mailto:` before `{email}` but we could not capture this prefix in the attribute value
 because `AttributePart` could only set the whole attribute value.
 One native solution for this limitation is to add the support for specifying a prefix or an offset within the attribute value like so:
 ```js
@@ -225,7 +225,7 @@ In this approach, `AttributePart` gets a new static function which creates
 a list of `AttributePart`s which work together to set a value when the values are to be committed:
 
 ```js
-const [firstName, lastName] = AttributePart.create(element, ‘title', null, [null, ' ', null]);
+const [firstName, lastName] = AttributePart.create(element, 'title', null, [null, ' ', null]);
 // Syntax to be improved. Here, a new AttributePart is created between each string.
 ```
 
@@ -238,8 +238,8 @@ In this approach, we group multiple `AttributePart`s together by creating an exp
 ```js
 const firstName = new AttributePart();
 const lastName = new AttributePart();
-const group = AttributePartGroup(element, ‘title');
-group.append(firstName, ‘ ', lastName);
+const group = AttributePartGroup(element, 'title');
+group.append(firstName, ' ', lastName);
 ```
 
 This is morally equivalent to option 1 except there is an explicit grouping step.
@@ -256,8 +256,8 @@ meaning that `AttributePart` in option 3 plays the role of `AttributePartGroup` 
 ```js
 const firstNamePartial = new PartialAttributePart();
 const lastNamePartial = new PartialAttributePart();
-const part = AttributePart(element, ‘title');
-part.values = [firstNamePartial, ‘ ', lastNamePartial];
+const part = AttributePart(element, 'title');
+part.values = [firstNamePartial, ' ', lastNamePartial];
 ```
 
 * **Pros**: Nicer syntax by the virtue of individual `PartialAttributePart`'s existence at the time of grouping.
@@ -294,7 +294,7 @@ In this approach, we group multiple `ChildNodePart`s together by creating an exp
 const firstName = new ChildNodePart();
 const lastName = new ChildNodePart();
 const group = ChildNodePartGroup(element, null, null);
-group.append(firstName, ‘ ', lastName);
+group.append(firstName, ' ', lastName);
 ```
 
 This is morally equivalent to option 1 except there is an explicit grouping step.
@@ -311,7 +311,7 @@ This creates `PartialNodeChildPart` from `ChildNodePart`:
 const firstNamePartial = new PartialNodeChildPart();
 const lastNamePartial = new PartialNodeChildPart();
 const part = NodeChildPart(element, null, null);
-part.values = [firstNamePartial, ‘ ', lastNamePartial];
+part.values = [firstNamePartial, ' ', lastNamePartial];
 ```
 
 * **Pros**: Nicer syntax by the virtue of individual `PartialChildNodePart`s existence at the time of grouping.
@@ -387,11 +387,11 @@ and another set of `AttributePart` and `PropertyPart` for another [element](http
 and a sequence of updates as shown below where each A* and B* are `AttributePart`s and `PropertyPart`s for respective elements:
 
 ```js
-BProp.value = ‘foo';
-AAttr1.value = ‘foo';
-BAttr.value = ‘foo';
-AProp.value = ‘foo';
-AAttr2.value = ‘foo';
+BProp.value = 'foo';
+AAttr1.value = 'foo';
+BAttr.value = 'foo';
+AProp.value = 'foo';
+AAttr2.value = 'foo';
 ```
 
 Recall that these assignments to *DOM parts* simply stage values to be set when the *DOM part group*s later commit these changes.
