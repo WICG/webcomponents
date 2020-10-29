@@ -7,12 +7,12 @@ We have not necessarily come to a conclusion as to whether this is the best appr
 
 First, with the proposed template instantiation API in mind, we imagined a HTML syntax to define a custom element as follows:
 
-```
+```html
 <definition name="my-element" constructor="MyElement">
-<template shadowmode="closed">~</template>
-<script>
-class MyElement extends HTMLElement { ~ }
-</script>
+    <template shadowmode="closed">~</template>
+    <script>
+      class MyElement extends HTMLElement { ~ }
+    </script>
 </definition>
 ```
 
@@ -20,12 +20,12 @@ Here, `definition` is a new element which defines a custom element. `name` conte
 
 This still requires having to repeat the constructor name twice. We can avoid this if we checked the result of each script element's *program* and checked if any of them evaluates to a class extending HTML element in the case the constructor content attribute is omitted. This is a bit weird and won't technically work since a class statement doesn't yield a value according to ECMA2017 although browser behaviors have been inconsistent in this regard until now (e.g. in the shipping version of Safari, a class statement still evaluates to the declared class, and Chrome used to do the same until earlier this year) so it's probably still possible to change ECMA spec to always yield a value just like function declarations. With that, we can make the constructor content attribute optional:
 
-```
+```html
 <definition name="my-element">
-<template shadowmode="closed">~</template>
-<script type="module">
-class MyElement extends HTMLElement { ~ }
-</script>
+    <template shadowmode="closed">~</template>
+    <script type="module">
+      export default class MyElement extends HTMLElement { ~ }
+    </script>
 </definition>
 ```
 
@@ -33,7 +33,7 @@ class MyElement extends HTMLElement { ~ }
 
 In the case we didn't have any script, we can automatically create a new default custom element class, which is equivalent to having the following JavaScript code, and attach a shadow tree with an instance of template using the proposed template instantiation API. 
 
-```
+```js
 class /* default custom element */ extends HTMLElement {
     #shadowRoot; // This is the syntax for a private variable in ECMAScript 2018+
     #templateInstance;
@@ -55,7 +55,7 @@ Here, `customElements.getTemplate` is a helper function which finds the template
 
 Note that the shadow root of the custom element is passed to createInstance's state variable. This allows the template in a custom element to use custom element's instance's attribute values without writing a single line of scripts as follows:
 
-```
+```html
 <definition name="percentage-bar">
     <template shadowmode="closed">
         <div id="progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{root.attributes.percentage.value}}">
@@ -74,7 +74,7 @@ Note that the shadow root of the custom element is passed to createInstance's st
 
 We could use the following instance to make a bar graph showing 20% progress:
 
-```
+```html
 <percentage-bar percentage="20">Initializing...</percentage-bar>
 ```
 
@@ -89,20 +89,20 @@ In the case the author supplies the custom element class (which is probably the 
 
 To make creating a shadow root for a custom element easy, we can provide a helper function which finds the template element associated with the custom element and automatically attach a shadow root as follows: 
 
-```
+```html
 <definition name="my-vdom-custom-element">
     <template>~</template>
     <script type="module">
-    class MyVDOMCustomElement extends HTMLElement {
-        #template;
-        constructor(state, ...args) {
-            super(state, ...args);
-            #template = customElements.attachTemplateAsShadow(this, state);
+        export default class MyVDOMCustomElement extends HTMLElement {
+            #template;
+            constructor(state, ...args) {
+                super(state, ...args);
+                #template = customElements.attachTemplateAsShadow(this, state);
+            }
+            render(state) {
+                #template.update(state);
+            }
         }
-        render(state) {
-            #template.update(state);
-        }
-    }
     </script>
 </definition>
 ```
