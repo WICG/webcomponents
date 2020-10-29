@@ -475,58 +475,6 @@ If the Document is an <a>imported document</a>, its <code>currentScript</code> i
 </section>
 </section>
 
-<section id="style-imports">
-<h2>Style processing with Imports</h2>
-
-<p>The contents of the <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-style-element">style</a></code> elements and
-the external resources of the <code><a href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element">link</a></code> elements in <a data-lt="import">import</a> MUST be considered as input sources of the <a href="http://www.w3.org/TR/CSS21/intro.html#processing-model">style processing model</a> [[!CSS2]] of the <a>master document</a>.</p>
-
-<section id="import-link-tree">
-<h3>Import Link Tree</h3>
-
-<p>A set of imports that are associated with a <a>master document</a> forms an <dfn id="dfn-import-link-tree">import link tree</dfn>, a <a data-lt="master document">tree</a> structure. Following <dfn id="dfn-import-link-tree-forming">import link tree forming</dfn> algorithm, being applied with <code>null</code> as <var>PARENT</var>, <a>master document</a> as <var>TREE</var> and all of its imports as <var>POOL</var>, defines the <a>import link tree</a>:</p>
-
-<section class="algorithm">
-<dl>
-<dt>Input</dt>
-<dd><var>PARENT</var>, a document tree node</dd>
-<dd><var>CURRENT</var>, a document</dd>
-<dd><var>POOL</var>, a list of document</dd>
-<dt>Output</dt>
-<dd><var>TREE</var>, a tree of document</dd>
-</dl>
-
-<ol>
-  <li>Let <var>TREE</var> be a tree node.</li>
-  <li>Let <var>TREE</var>'s value be <var>CURRENT</var>
-  <li>Let <var>TREE</var>'s <a href="https://dom.spec.whatwg.org/#concept-tree-parent">parent</a> be <var>PARENT</var>.</li>
-  <li>Make <var>TREE</var>'s <a href="https://dom.spec.whatwg.org/#concept-tree-child">child</a> list empty.</li>
-  <li>For each <var>LINK</var>, a <code>link</code> element of an import in <var>CURRENT</var>, in document order:
-  <ol>
-    <li>Let <var>IMPORT</var> be the import of <var>LINK</var>.</li>
-    <li>If <var>IMPORT</var> is not in <var>POOL</var>, try next.</li>
-    <li>Remove <var>LINK</var> from <var>POOL</var>.</li>
-    <li>Invoke the <a>import link tree forming</a> algorithm with <var>TREE</var> as <var>PARENT</var>, <var>IMPORT</var> as <var>CURRENT</var> and <var>POOL</var> as <var>POOL</var>, let the result be <var>CHILD</var>.
-    <li>Append <var>CHILD</var> to <var>TREE</var>'s <a href="https://dom.spec.whatwg.org/#concept-tree-child">child</a> list.</li>
-  </ol></li>
-  <li><strong>stop</strong>.</li>
-</ol>
-</section>
-
-<p class='note'>
-The <a>import link tree</a> algorithm defines a order of imports using a depth first traversal. This <a>import link tree</a> is different from the one formed by <a>import link list</a>. The former is based on the document tree of each import. The later is built through <a href="#loading-imports">import loading process</a> and isn't affected by document tree mutation.
-</p>
-
-</section>
-
-<section id="order-of-appearances">
-<h3>Order of Appearances and Imports</h3>
-
-<p>The <a href="https://www.w3.org/TR/css3-cascade/#cascade-order">order of appearances</a> of declarations [[!CSS-CASCADE-3]] which come from different documents are determined by the <a>import link tree</a>. If <a href="https://dom.spec.whatwg.org/#concept-node-document">node documents</a> of two declarations differ, compare the <a href="https://dom.spec.whatwg.org/#concept-tree-order">tree order</a> of these documents in the <a>import link tree</a>. The last one wins.</p>
-
-</section>
-</section>
-
 <section id="events-imports">
 <h2>Events in Imports</h2>
 
