@@ -119,6 +119,41 @@ As a result, it must limit constructors by default to only looking up registrati
 
 This poses a limitation for authors trying to use the constructor to create new elements associated to scoped registries but not registered as global. More flexibility can be analyzed post MVP, for now, a user-land abstraction can help by keeping track of the constructor and its respective registry.
 
+## Interaction with Declarative Shadow DOM
+
+[Declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) allows HTML to construct shadow roots for elements from `<template>` elements with a `shadowroot` attribute.
+
+Since these shadow roots are not created by a host calling `attachShadow()`, the host doesn't have a chance to pass in a scoped custom element registry. If a host is using a scoped registry, we need to force the declarative shadow root to not use the global registry and instead leave custom elements un-upgraded until the host can create and assign the correct registry.
+
+To do this we add a `shadowrootregistry` attribute, according to the [declarative shadow root explainer section on additional `attachShadow()` options](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md#additional-arguments-for-attachshadow). This attribute causes the declarative shadow root to have no registry associated with it at all:
+
+```html
+<template shadowroot="open" shadowrootregistry="">
+  <some-scoped-element></some-scoped-element>
+</template>
+```
+
+When the host is defined and upgrades with an existing shadow root, it can assign the registry:
+
+```ts
+const registry = new CustomElementRegistry();
+
+class MyElement extends HTMLElement {
+  #internals = null;
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+    if (this.#internals.shadowRoot) {
+      this.#internals.shadowRoot.registry = registry;
+    } else {
+      this.attachShadow({mode: 'open', registry});
+    }
+  }
+}
+```
+
+Having `ShadowRoot.prototype.registry` be settable raises the question of whether it can change over time once being set. To simplify the semantics we can restrict this to only being settable once. If it's already defined, setting is disallowed.
+
 ## API
 
 ### CustomElementRegistry
@@ -143,6 +178,10 @@ ShadowRoot adds element creation APIs that were previously only available on Doc
 
 These are added to provide a root and possible registry to look up a custom element definition.
 
+ShadowRoot also adds a `registry` property:
+
+* `registry`: `CustomElementRegistry`
+
 ## Open Questions
 
 ### Adopted elements and Scoped Registry
@@ -153,13 +192,6 @@ There are concern about what happens when an element with a custom registry move
 2. recreate a new registry entry when moving the element, and let the author to repopulate it in `adoptedCallback`. This is problematic because the registry is created before attaching the shadowRoot.
 3. create a new callback that can receive the new registry when moved. This is problematic as well because what happen when the registries are coming from another library, already created by someone else?
 4. find ways for implementers to preserve the original registry (ideal).
-
-### Intersection with Declarative Shadow Root
-
-Although these two proposals are in early stages, we need to solve the intersection semantics. There are two main issues:
-
-1. if a declarative shadow root is created, elements inside that shadow should not be upgraded with the global registry. a possible solution is to add a new attribute, similar to `mode` to indicate to the parser that a custom registry is going to be eventually associated to this shadow.
-2. if the component is planning to reuse the instance of the declarative shadow root (which is ideal), how can the component associate that instance with a registry? this indicates that maybe the association between ShadowRoot and CustomElementRegistry cannot be defined via `attachShadow()`, and instead, something like `ElementInternals` is much more flexible.
 
 ##  Alternatives to allowing multiple definitions
 
