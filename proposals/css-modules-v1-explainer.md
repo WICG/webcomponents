@@ -22,7 +22,7 @@ There is demand for this functionality in the developer community -- see [this t
 CSS modules will be imported using the same `import` statements currently used for other ES modules:
 
 ```JavaScript
-import styles from "styles.css";
+import styles from "./styles.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, styles];
 ```
 
@@ -127,7 +127,7 @@ The following example shows shows how the same custom element definition could i
 <html>
     <head>
         <script type="module">
-            import styles from './html5Element.css';
+            import styles from "./html5Element.css" assert { type: "css" };
 
             class HTML5Element extends HTMLElement {
                 constructor() {
