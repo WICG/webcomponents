@@ -19,10 +19,11 @@ CSS modules solves these issues by extending the ES modules infrastructure to al
 There is demand for this functionality in the developer community -- see [this thread](https://github.com/w3c/webcomponents/issues/759) where there a number of developers have expressed interest.  The popularity of CSS loaders in JS bundlers is also indicative of demand for this functionality.
 
 ## Importing a CSS Module
-CSS modules will be imported using the same `import` statements currently used for other ES modules:
+CSS modules will be imported using the same `import` statements currently used for other ES modules,
+with the addition of an [import assertion](https://github.com/tc39/proposal-import-assertions) module type check:
 
 ```JavaScript
-import styles from "styles.css";
+import styles from "./styles.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, styles];
 ```
 
@@ -32,7 +33,15 @@ If a CSS module `import` in a given module graph fails, it prevents the module g
 
 ## Some implementation details
 
-The MIME-type in the HTTP response header is checked to determine how a given module should interpreted.  A MIME-type of `text/css` will be treated as a CSS module.  Each imported CSS Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the module map and module dependency graphs.
+The MIME type in the HTTP response header is checked to determine how a given module should be
+interpreted. A resource with a MIME type of `text/css` will be treated as a CSS module. Additionally,
+if the MIME type is `text/css` and there is no [asserted module type](https://github.com/tc39/proposal-import-assertions)
+or if the asserted module type is something other than `"css"`, the module load will fail. This
+prevents a [security issue](https://github.com/w3c/webcomponents/issues/839) where the module type
+could unexpectedly change and execute script if the server that owns the module resource starts
+responding with a JavaScript MIME type.
+
+Each imported CSS Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the module map and module dependency graphs.
 
 The V1 of CSS Modules will be built using Synthetic Modules.  Specifically, to create a new CSS module given a fetched `text/css` file:
 1. Create a CSSStyleSheet() via the [constructor](https://wicg.github.io/construct-stylesheets/#dom-cssstylesheet-cssstylesheet).
@@ -127,7 +136,7 @@ The following example shows shows how the same custom element definition could i
 <html>
     <head>
         <script type="module">
-            import styles from './html5Element.css';
+            import styles from './html5Element.css' assert { type: 'css' };
 
             class HTML5Element extends HTMLElement {
                 constructor() {
