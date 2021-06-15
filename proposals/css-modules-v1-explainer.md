@@ -23,7 +23,7 @@ CSS modules will be imported using the same `import` statements currently used f
 with the addition of an [import assertion](https://github.com/tc39/proposal-import-assertions) module type check:
 
 ```JavaScript
-import styles from "styles.css" assert { type: "css" };
+import styles from "./styles.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, styles];
 ```
 
