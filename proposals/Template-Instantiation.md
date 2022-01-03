@@ -409,7 +409,7 @@ The  `createInstance(optional any state)` method on `HTMLTemplateElement`, when 
         5. For every *token* in *tokens*:
             1. If the type of *token* is “string”,
                 1. Append the string to end of the _attribute template part list_*.*
-            2. Otherwise (if *token* is of the type “pair”),
+            2. Otherwise (if *token* is of the type “part”),
                 1. Let *attributePart* be a new instance of `AttributeTemplatePart` with *attributeValueSetter* and null string.
                 2. Append *attributePart* to the end of the _attribute template part list_.
                 3. Append *attributePart* to the end of *parts*.
