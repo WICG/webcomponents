@@ -60,7 +60,7 @@ registry.define('other-element', OtherElement);
 
 Definitions in this registry do not apply to the main document, and vice-versa. The registry must contain definitions for all elements used.
 
-Note that, in the above example, `<other-element>` is defined in the scoped registry, not `<my-element>`. The registry applies to definitions _within_ the shadow root, not the element that the shadow root is attached to.
+Note that, in the above example, `<other-element>` is scoped to the shadow root inside of `<my-element>`. So `<other-element>` is defined within the scoped registry, not `<my-element>`.
 
 Once a registry and scope are created, element creation associated with the scope will use that registry to look up custom element definitions:
 
