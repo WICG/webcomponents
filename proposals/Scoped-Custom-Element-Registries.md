@@ -45,7 +45,7 @@ and associate them with a ShadowRoot:
 ```js
 export class MyElement extends HTMLElement {
   constructor() {
-    this.attachShadow({mode: 'open', registry});
+    this.attachShadow({mode: 'open', customElements: registry});
   }
 }
 ```
@@ -70,7 +70,7 @@ These scoped registries will allow for different parts of a page to contain defi
 
 ### Creating and using a `CustomElementRegistry`
 
-A new `CustomElementRegistry` is created with the `CustomElementRegistry` constructor, and attached to a ShadowRoot with the `registry` option to `HTMLElement.prototype.attachShadow`:
+A new `CustomElementRegistry` is created with the `CustomElementRegistry` constructor, and attached to a ShadowRoot with the `customElements` option to `HTMLElement.prototype.attachShadow()`:
 
 ```js
 import {OtherElement} from './my-element.js';
@@ -80,7 +80,7 @@ registry.define('other-element', OtherElement);
 
 export class MyElement extends HTMLElement {
   constructor() {
-    this.attachShadow({mode: 'open', registry});
+    this.attachShadow({mode: 'open', customElements: registry});
   }
 }
 ```
@@ -107,7 +107,7 @@ The context node is the node that hosts the element creation API that was invoke
 
 #### Note on looking up registries
 
-One consequence of looking up a registry from the root at element creation time is that different registries could be used over time for some APIs like HTMLElement.prototype.innerHTML, if the context node moves between shadow roots. This should be exceedingly rare though.
+One consequence of looking up a registry from the root at element creation time is that different registries could be used over time for some APIs like `HTMLElement.prototype.innerHTML`, if the context node moves between shadow roots. This should be exceedingly rare though.
 
 Another option for looking up registries is to store an element's originating registry with the element. The Chrome DOM team was concerned about the small additional memory overhead on all elements. Looking up the root avoids this.
 
@@ -137,7 +137,7 @@ To do this we add a `shadowrootregistry` attribute, according to the [declarativ
 
 The shadow root created by this HTML will have a `null` registry, and be in a "awaiting scoped registry" state that allows the registry to be set once after creation.
 
-To identify this "no registry, but awaiting one" state, ShadowRoot will have a `scopedRegistry` boolean property. `scopedRegistry` will set to `true` for all ShadowRoots with a scoped registry, or awaiting a scoped registry. Code can tell that ShadowRoot has an assignable `registry` property if `root.registry === null && root.scopedRegistry === true`.
+To identify this "no registry, but awaiting one" state, ShadowRoot will have a `hasScopedRegistry` boolean property. `hasScopedRegistry` will set to `true` for all ShadowRoots with a scoped registry, or awaiting a scoped registry. Code can tell that ShadowRoot has an assignable `customElements` property if `root.customElements === null && root.hasScopedRegistry === true`.
 
 Host elements with declarative scoped registries can assign the correct registry during upgrades, like so:
 
@@ -151,11 +151,11 @@ class MyElement extends HTMLElement {
     this.#internals = this.attachInternals();
     let shadowRoot = this.#internals.shadowRoot;
     if (shadowRoot !== null) {
-      if (shadowRoot.registry === null &&
-          shadowRoot.scopedRegistry) {
-        this.#internals.shadowRoot.registry = registry;
+      if (shadowRoot.customElements === null &&
+          shadowRoot.hasScopedRegistry) {
+        this.#internals.shadowRoot.customElements = registry;
       } else {
-        console.error(`Expected shadowRoot.scopedRegistry to be true`);
+        console.error(`Expected shadowRoot.hasScopedRegistry to be true`);
       }
     } else {
       this.attachShadow({mode: 'open', registry});
@@ -178,6 +178,12 @@ The `CustomElementRegistry` constructor creates a new instance of CustomElementR
 const registry = new CustomElementRegistry();
 ```
 
+### ShadowRootInit
+
+ShadowRootInit adds the `customElements` property:
+
+* `customElements`: `CustomElementRegistry | null | undefined`
+
 ### ShadowRoot
 
 ShadowRoot adds element creation APIs that were previously only available on Document:
@@ -188,9 +194,10 @@ ShadowRoot adds element creation APIs that were previously only available on Doc
 
 These are added to provide a root and possible registry to look up a custom element definition.
 
-ShadowRoot also adds a `registry` property:
+ShadowRoot also adds `customElements`, and `hasScopedRegistry` properties:
 
-* `registry`: `CustomElementRegistry`
+* `customElements`: `CustomElementRegistry | null`
+* `hasScopedRegistry`: `boolean`
 
 ## Open Questions
 
