@@ -121,19 +121,25 @@ This poses a limitation for authors trying to use the constructor to create new 
 
 ## Interaction with Declarative Shadow DOM
 
-[Declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) allows HTML to construct shadow roots for elements from `<template>` elements with a `shadowroot` attribute.
+[Declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) allows HTML to construct shadow roots for elements from `<template>` elements with a `shadowrootmode` attribute.
 
 Since these shadow roots are not created by a host calling `attachShadow()`, the host doesn't have a chance to pass in a scoped custom element registry. If a host is using a scoped registry, we need to force the declarative shadow root to not use the global registry and instead leave custom elements un-upgraded until the host can create and assign the correct registry.
 
 To do this we add a `shadowrootregistry` attribute, according to the [declarative shadow root explainer section on additional `attachShadow()` options](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md#additional-arguments-for-attachshadow). This attribute causes the declarative shadow root to have no registry associated with it at all:
 
 ```html
-<template shadowroot="open" shadowrootregistry="">
-  <some-scoped-element></some-scoped-element>
-</template>
+<my-element>
+  <template shadowrootmode="open" shadowrootregistry="">
+    <some-scoped-element></some-scoped-element>
+  </template>
+</my-element>
 ```
 
-When the host is defined and upgrades with an existing shadow root, it can assign the registry:
+The shadow root created by this HTML will have a `null` registry, and be in a "awaiting scoped registry" state that allows the registry to be set once after creation.
+
+To identify this "no registry, but awaiting one" state, ShadowRoot will have a `scopedRegistry` boolean property. `scopedRegistry` will set to `true` for all ShadowRoots with a scoped registry, or awaiting a scoped registry. Code can tell that ShadowRoot has an assignable `registry` property if `root.registry === null && root.scopedRegistry === true`.
+
+Host elements with declarative scoped registries can assign the correct registry during upgrades, like so:
 
 ```ts
 const registry = new CustomElementRegistry();
@@ -143,16 +149,20 @@ class MyElement extends HTMLElement {
   constructor() {
     super();
     this.#internals = this.attachInternals();
-    if (this.#internals.shadowRoot) {
-      this.#internals.shadowRoot.registry = registry;
+    let shadowRoot = this.#internals.shadowRoot;
+    if (shadowRoot !== null) {
+      if (shadowRoot.registry === null &&
+          shadowRoot.scopedRegistry) {
+        this.#internals.shadowRoot.registry = registry;
+      } else {
+        console.error(`Expected shadowRoot.scopedRegistry to be true`);
+      }
     } else {
       this.attachShadow({mode: 'open', registry});
     }
   }
 }
 ```
-
-Having `ShadowRoot.prototype.registry` be settable raises the question of whether it can change over time once being set. To simplify the semantics we can restrict this to only being settable once. If it's already defined, setting is disallowed.
 
 ## API
 
