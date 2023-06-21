@@ -471,6 +471,45 @@ make it easier to have repeated `ChildNodePart`s.
   confusing states.
 - **Cons**: Parts need to be aware of one another.
 
+## `ChildNodePart` After DOM Mutations
+
+A `ChildNodePart` can be constructed with a `previousSibling` and/or
+`nextSibling`. This raises the question of what happens if these nodes are
+mutated, such as being removed from the DOM or added underneath a different
+parent.
+
+### Option 1. Part validity
+
+It does not make sense to treat DOM parts as valid if the nodes in the DOM are
+not in a state that is logical. So a new validity concept could be introduced
+with the following constraints for `ChildNodePart`:
+
+1. `previousSibling` and `nextSibling` do not share the same parent
+1. Another `ChildNodePart` is overlapping, meaning it starts before
+   `previousSibling` and ends between `previousSibling` and `nextSibling` or
+   starts between `previousSibling` and `nextSibling` and ends after
+   `nextSibling`.
+
+If a `ChildNodePart` is invalid, `.value` is empty string and setting it does
+nothing, and `.commit()` throws an Error.
+
+For `NodePart` and `AttributePart`, validity could also be whether the related
+`Node` was in a `document`, but it could also make sense to allow updates to
+disconnected `Node`s.
+
+### Option 2. Use an invisible markers after construction.
+
+`ChildNodePart` could create an invisible marker immediately after
+`previousSibling` and immediately before `nextSibling`, much like how `Range`
+works. This comes with all the drawbacks or `Range`, but does have better
+performance because they can only be added to via `ChildNodePart` APIs, and
+always are scoped to a single `Node`'s children.
+
+These invisible markers would not be `Node`s and so would be backwards
+compatible. DOM mutations would follow shrinking `Range` semantics, meaning the
+`ChildNodePart` would remove any `Node` that is removed in between the markers,
+and would only add a `Node` if it is added in between the markers.
+
 ## `PropertyPart` and `CustomCallbackPart`
 
 Adding the support to set a
