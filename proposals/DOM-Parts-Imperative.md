@@ -298,24 +298,24 @@ step.
   only needs to know about `AttributePart`
 - **Cons**: More objects / complexity. `AttributePart` will have two modes.
 
-### Option 3. Introduce `PartialAttributePart`
+### Option 3. Introduce `AttributePartFragment`
 
-Unlike option 2, this creates `PartialAttributePart`s from `AttributePart`,
+Unlike option 2, this creates `AttributePartFragment`s from `AttributePart`,
 meaning that `AttributePart` in option 3 plays the role of `AttributePartGroup`
 in option 2:
 
 ```js
-const firstNamePartial = new PartialAttributePart();
-const lastNamePartial = new PartialAttributePart();
+const firstNamePartial = new AttributePartFragment();
+const lastNamePartial = new AttributePartFragment();
 const part = AttributePart(element, "title");
 part.values = [firstNamePartial, " ", lastNamePartial];
 ```
 
-- **Pros**: Nicer syntax by the virtue of individual `PartialAttributePart`'s
+- **Pros**: Nicer syntax by the virtue of individual `AttributePartFragment`'s
   existence at the time of grouping. `AttributePart` just knows one thing to do:
   to set the whole content attribute value.
 - **Cons**: More objects / complexity. Code that uses a template has to deal
-  with two different kinds of objects: `PartialAttributePart` and
+  with two different kinds of objects: `AttributePartFragment` and
   `AttributePart`.
 
 ### Option 4. Support arbitrary JavaScript objects

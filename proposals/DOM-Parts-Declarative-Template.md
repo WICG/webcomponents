@@ -70,4 +70,4 @@ it could even be something that is declared as the placeholder.
 
 It may be challenging to implement `<template>` parsing of `{{}}` for
 compatability reasons, so there may need to be restrictions such as only
-aweb llowing this template syntax in a new API like `createTemplateWithParts()`.
+allowing this template syntax in a new API like `createTemplateWithParts()`.
