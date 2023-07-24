@@ -9,6 +9,7 @@ A DOM part is represented by the `Part` interface and its sub interfaces.
 ```webidl
 interface Part {
     attribute any value;
+    readonly attribute Array<Part> parts;
     void commit();
 };
 
@@ -32,7 +33,8 @@ interface ChildNodePart : Part {
 ```
 
 The `Part` has one property named "value" of
-[_any_ type](https://heycam.github.io/webidl/#idl-any).
+[_any_ type](https://heycam.github.io/webidl/#idl-any). It also has a readonly `parts` property that
+contains any contained parts, if applicable.
 
 When a new value is set or assigned to a DOM part, the change does not
 immediately reflect back to the corresponding
@@ -112,60 +114,20 @@ The resultant DOM will look like this:
 </section>
 ```
 
-## Part Groups
+## `DocumentPart`
 
-DOM parts need grouping and ownership to provide batching and to enable parts
-created declaratively to be retrieved and updated by JavaScript.
-
-### Option 1. `PartGroup`
-
-One option is to make the concept of DOM part group a real DOM
-[interface](https://heycam.github.io/webidl/#idl-interfaces):
+A dynamic list of parts is maintained at the document or document fragment level that would allow fetching all parts.
 
 ```webidl
-interface PartGroup {
-    constructor(sequence<Part> parts);
-    readonly attribute FrozenArray<Part> parts;
-    void commit();
-}
-```
-
-Note that if we allow a single `Part` to belong to multiple `PartGroup`s, the
-first `PartGroup` which commits the changes would apply the mutations. In
-effect, this allows
-non-[partitioned](https://en.wikipedia.org/wiki/Partition_of_a_set) grouping of
-`Part` objects to be committed together.
-
-There is also a question of how mutable parts should be, and whether a
-`PartGroup` can appear as a part of another `PartGroup` for nested template
-instances or not. It doesn't make much sense for the list of _DOM parts_
-associated with `PartGroup` to get mutated after we've started committing things
-but there certainly is a room for adding or removing _DOM parts_ based on new
-input or state.
-
-If we made the relationship between DOM parts and `PartGroup` not dynamically
-mutable, users of this API could still create a new `PartGroup` each time such a
-mutation would have needed instead.
-
-The `parts` order would be the order in which DOM part was inserted to the
-`PartGroup`. Although there could be multiple DOM parts which reference the same
-element in different parts of the array, that doesn't necessarily pose an
-obvious issue other than a slight inefficiency in batching certain DOM
-operations.
-
-### Option 2. `DocumentPartGroup`
-
-A dynamic list of parts could be maintained at the `document` (and document
-fragment) level that would allow fetching all parts.
-
-```webidl
-interface DocumentPartGroup {
-  readonly attribute Array<Part> parts;
-  void commit();
+interface DocumentPart : Part {
 }
 
 partial interface Document {
-  readonly attribute DocumentPartGroup documentPart;
+  DocumentPart getPart();
+}
+
+partial interface DocumentFragment {
+  DocumentPart getPart();
 }
 ```
 
@@ -174,62 +136,23 @@ lazy recalculation for any new `Part` that was declaratively or imperatively
 added to the `document`.
 
 The `parts` array would be in DOM-order. The exact algorithm for how to keep the
-`parts` array up to date with the `document` is an open question.
+`parts` array up to date with the `document` is up to the user-agent, but is invalidated anytime
+the user-agent detects changes to the DOM that could invalidate the array.
 
-### Option 3. `ChildNodePart` is a `PartGroup`
+## `ChildNodePart` `parts` array
 
-To make `DocumentPartGroup` more performant and to provide better structure to
-`Part` relationships for a more optimal DOM walk, `ChildNodePart` could itself
-be a `PartGroup`, and would contain any `Part` objects that were nested inside
-its range, and child `parts` would not be part of any parent `ChildNodePart` or
-`DocumentPartGroup`.
+Much like `DocumentPart`, any parts contained within a `ChildNodePart` are also contained within a
+cached `parts` array.
 
-```webidl
-interface ChildNodePart {
-  readonly attribute Array<Part> parts;
-  void commit();
-}
-```
+### Open Cloning Questions
 
-The `parts` array would be in DOM-order. The exact algorithm for how to keep the
-`parts` array up to date with the DOM subtree rooted by the `ChildNodePart` is
-an open question.
+The precise specification of invalidation, caching, etc. is still yet to be described.
 
 ## Cloning Parts
 
 Cloning parts along with the nodes they refer to is a major use case for DOM
-parts.
-
-### Option 1: `cloneWithParts`
-
-One option would to add a new API to `Node`:
-
-```webidl
-partial interface Node {
-    NodeWithParts cloneWithParts(optional CloneOptions options = {});
-};
-
-dictionary CloneOptions {
-    boolean deep = true;
-    Document? document;
-    PartGroup? partGroup;
-};
-
-dictionary NodeWithParts {
-    Node node;
-    PartGroup? partGroup;
-};
-```
-
-Here, we're proposing a slightly nicer API by combining
-[`importNode`](https://dom.spec.whatwg.org/#dom-document-importnode) and
-[`cloneNode`](https://dom.spec.whatwg.org/#dom-node-clonenode) and making the
-[cloning](https://dom.spec.whatwg.org/#concept-node-clone) deep by default.
-
-### Option 2: `cloneWithParts` on `DocumentPart` and `ChildNodePart`
-
-Since `DocumentPart` and `ChildNodePart` both are rooted at a specific node, the
-clone semantics are clearer:
+parts. Cloning is supported for `DocumentPart` and `ChildNodePart`, which returns a `NodeWithParts`
+object that contains a root node as well as a parts array with top-level parts.
 
 ```webidl
 partial interface DocumentPart {
@@ -241,12 +164,10 @@ partial interface ChildNodePart {
 }
 ```
 
-### Other Cloning Questions
+### Open Cloning Questions
 
-There are some questions here as well. What happens to the current values of DOM
-parts? Do we allow DOM parts to have some non-initial values and do we clone
-those values as well? If so, what do we do with proposed extensions like
-`PropertyPart` / `CustomPart`?
+There are some edge cases that are worth thinking about, like whether un-committed values of parts
+are cloned or whether invalid parts should be cloned.
 
 ## Partial Attribute Updates
 
@@ -256,106 +177,30 @@ had initially contained `mailto:` before `{email}` but we could not capture this
 prefix in the attribute value because `AttributePart` could only set the whole
 attribute value.
 
-There are a few options for how to support the use case of updating attributes
-with embedded static content such as `mailto:`
-
-### Option 1. Create Multiple `AttributePart`s Together
-
-In this approach, `AttributePart` gets a new static function which creates a
-list of `AttributePart`s which work together to set a value when the values are
-to be committed:
+Instead of `AttributePart` having a single string `value`, it could optionally take an `Array` that
+contains values that should be concatenated together. This allows updating individually parts of the
+attribute without needing to serialize the entire string.
 
 ```js
-const [firstName, lastName] = AttributePart.create(element, "title", null, [
-  null,
-  " ",
-  null,
-]);
-// Syntax to be improved. Here, a new AttributePart is created between each string.
+const part = AttributePart(element, "href");
+part.value = ["mailto: ", email];
 ```
 
-- **Pros**: Simplicity.
-- **Cons**: Coming up with a nice syntax to create a sequence of AttributePart
-  and string can be tricky.
-
-### Option 2. Introduce `AttributePartGroup`
-
-In this approach, we group multiple `AttributePart`s together by creating an
-explicit group:
+This API may be strengthened further to optionally take in a `TemplateStringsArray` and variables,
+which would allow the browser to determine which parts of the attribute were compile-time
+constants. This could allow using tagged template literals to pass static content to the browser.
 
 ```js
-const firstName = new AttributePart();
-const lastName = new AttributePart();
-const group = AttributePartGroup(element, "title");
-group.append(firstName, " ", lastName);
+const part = AttributePart(element, "href", {template: attribute`mailto: ${0}`});
+part.value = [email];
 ```
-
-This is morally equivalent to option 1 except there is an explicit grouping
-step.
-
-- **Pros**: Nicer syntax by the virtue of individual "partial" `AttributePart`'s
-  existence at the time of grouping. Code that assigns values to `AttributePart`
-  only needs to know about `AttributePart`
-- **Cons**: More objects / complexity. `AttributePart` will have two modes.
-
-### Option 3. Introduce `AttributePartFragment`
-
-Unlike option 2, this creates `AttributePartFragment`s from `AttributePart`,
-meaning that `AttributePart` in option 3 plays the role of `AttributePartGroup`
-in option 2:
-
-```js
-const firstNamePartial = new AttributePartFragment();
-const lastNamePartial = new AttributePartFragment();
-const part = AttributePart(element, "title");
-part.values = [firstNamePartial, " ", lastNamePartial];
-```
-
-- **Pros**: Nicer syntax by the virtue of individual `AttributePartFragment`'s
-  existence at the time of grouping. `AttributePart` just knows one thing to do:
-  to set the whole content attribute value.
-- **Cons**: More objects / complexity. Code that uses a template has to deal
-  with two different kinds of objects: `AttributePartFragment` and
-  `AttributePart`.
-
-### Option 4. Support arbitrary JavaScript objects
-
-One way of punting is to support arbitrary JavaScript objects as `value` that
-conform to some interface. This interface could be as simple as `toString()`, or
-could use `Symbol` to determine how to populate attributes. This would allow
-code that wanted to represent partial attributes, but would maintain the
-property that parts represent nodes or groupings of nodes.
-
-```js
-class TitleAttributeValue {
-  constructor() {
-    this.firstName = "";
-    this.lastName = "";
-  }
-
-  toString() {
-    return `${this.firstName} ${this.lastName}`;
-  }
-}
-
-const part = AttributePart(element, "title");
-part.value = new TitleAttributeValue();
-part.value.firstName = "Ryosuke";
-part.value.lastName = "Niwa";
-```
-
-- **Pros** No need for new `PartialAttributePart` or `AttributePart`
-  coordination. Does not block a future API object that represents partial
-  attributes.
-- **Cons** Need a way to represent partial attributes that are declaratively
-  defined.
 
 ## Sibling `ChildNodePart`s
 
 Like partial attribute updates, when there are multiple points of interests
 under a single [parent](https://dom.spec.whatwg.org/#concept-tree-parent)
 [node](https://dom.spec.whatwg.org/#concept-node), and they're next to each
-other, index does not adequately describe a specific location in the DOM when
+other, previous and next sibling does not adequately describe a specific location in the DOM when
 other parts [insert](https://dom.spec.whatwg.org/#concept-node-insert) or
 [remove](https://dom.spec.whatwg.org/#concept-node-remove)
 [children](https://dom.spec.whatwg.org/#concept-tree-child).
