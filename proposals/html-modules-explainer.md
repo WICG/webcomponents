@@ -24,16 +24,16 @@ Integrating HTML Modules into the existing ES6 Module system, rather than creati
 ## High-level summary
 
 ### Importing an HTML Module
-HTML Modules will be imported using the same `import` statements currently used for Script Modules:
+HTML Modules will be imported using the [import attributes](https://github.com/tc39/proposal-import-attributes) syntax:
 
 ```html
 <script type="module">
-    import {content} from "import.html"
+    import {content} from "foo.html" with {type: "html"};
     document.body.appendChild(content);
 </script>
 ```
 
-The MIME-type in the HTTP response header will be checked to determine whether a given module should be treated as script or HTML.  Each imported HTML Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the ES6 Module map and module dependency graphs.
+Each imported HTML Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the ES6 Module map and module dependency graphs.
 
 An HTML Module will be parsed per the normal HTML5 parsing rules, with the exception that it is only allowed to contain `<script>` elements of `type="module"` (non-module scripts will cause HTML Module creation to fail).  This greatly simplifies the integration of HTML Modules into the current ES6 Module system since module scripts have defer semantics and we therefore don't need to worry about synchronous script elements causing side-effects during parsing.  This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
 
@@ -95,7 +95,7 @@ Example:
 **blog.html**
 ```html
 <script type="module">
-    import {blogPost} from "module.html"
+    import {blogPost} from "module.html" with {type: "html"};
     document.body.appendChild(blogPost);
 </script>
 ```
@@ -114,7 +114,7 @@ Example:
 ```
   **main.html:**
 ```javascript
-import importedDoc from "module.html"
+import importedDoc from "module.html" with {type: "html"};
 let theTemplate = importedDoc.querySelector("template");
 ```
 
@@ -135,8 +135,7 @@ The following list is **not** comprehensive of all open issues; the intent here 
 - Should HTML Modules use a new MIME type, or the existing `text/html`? [[1](https://github.com/w3c/webcomponents/issues/742)]
 - How should HTML modules interact with CSP?  In particular, should their inline scripts be allowed to run even without an `unsafe-inline` directive? [[1](https://github.com/w3c/webappsec/issues/544)], [[2](https://discourse.wicg.io/t/proposal-html-modules/3309/2)]
 - Should non-`type="module"` scripts in an HTML module yield an error or be implicitly interpreted as module scripts? [[1](https://github.com/w3c/webcomponents/issues/798)]
-- Should there be a declarative way to consume HTML modules?
-    - [[1](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/9)], [[2](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456319294)], [[3](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456326249)]
+- Should there be a declarative way to consume HTML modules? [[1](https://github.com/WICG/webcomponents/issues/863)], [[2](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456319294)]
 
 ## Additional information
 
