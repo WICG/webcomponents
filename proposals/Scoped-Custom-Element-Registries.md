@@ -45,7 +45,7 @@ and associate them with a ShadowRoot:
 ```js
 export class MyElement extends HTMLElement {
   constructor() {
-    this.attachShadow({mode: 'open', registry});
+    this.attachShadow({mode: 'open', customElements: registry});
   }
 }
 ```
@@ -70,7 +70,7 @@ These scoped registries will allow for different parts of a page to contain defi
 
 ### Creating and using a `CustomElementRegistry`
 
-A new `CustomElementRegistry` is created with the `CustomElementRegistry` constructor, and attached to a ShadowRoot with the `registry` option to `HTMLElement.prototype.attachShadow`:
+A new `CustomElementRegistry` is created with the `CustomElementRegistry` constructor, and attached to a ShadowRoot with the `customElements` option to `HTMLElement.prototype.attachShadow()`:
 
 ```js
 import {OtherElement} from './my-element.js';
@@ -80,7 +80,7 @@ registry.define('other-element', OtherElement);
 
 export class MyElement extends HTMLElement {
   constructor() {
-    this.attachShadow({mode: 'open', registry});
+    this.attachShadow({mode: 'open', customElements: registry});
   }
 }
 ```
@@ -107,7 +107,7 @@ The context node is the node that hosts the element creation API that was invoke
 
 #### Note on looking up registries
 
-One consequence of looking up a registry from the root at element creation time is that different registries could be used over time for some APIs like HTMLElement.prototype.innerHTML, if the context node moves between shadow roots. This should be exceedingly rare though.
+One consequence of looking up a registry from the root at element creation time is that different registries could be used over time for some APIs like `HTMLElement.prototype.innerHTML`, if the context node moves between shadow roots. This should be exceedingly rare though.
 
 Another option for looking up registries is to store an element's originating registry with the element. The Chrome DOM team was concerned about the small additional memory overhead on all elements. Looking up the root avoids this.
 
@@ -118,6 +118,51 @@ Constructors need special care with scoped registries. With a single global regi
 As a result, it must limit constructors by default to only looking up registrations from the global registry. If the constructor is not defined in the global registry, it will throw.
 
 This poses a limitation for authors trying to use the constructor to create new elements associated to scoped registries but not registered as global. More flexibility can be analyzed post MVP, for now, a user-land abstraction can help by keeping track of the constructor and its respective registry.
+
+## Interaction with Declarative Shadow DOM
+
+[Declarative shadow DOM](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md) allows HTML to construct shadow roots for elements from `<template>` elements with a `shadowrootmode` attribute.
+
+Since these shadow roots are not created by a host calling `attachShadow()`, the host doesn't have a chance to pass in a scoped custom element registry. If a host is using a scoped registry, we need to force the declarative shadow root to not use the global registry and instead leave custom elements un-upgraded until the host can create and assign the correct registry.
+
+To do this we add a `shadowrootregistry` attribute, according to the [declarative shadow root explainer section on additional `attachShadow()` options](https://github.com/mfreed7/declarative-shadow-dom/blob/master/README.md#additional-arguments-for-attachshadow). This attribute causes the declarative shadow root to have no registry associated with it at all:
+
+```html
+<my-element>
+  <template shadowrootmode="open" shadowrootregistry="">
+    <some-scoped-element></some-scoped-element>
+  </template>
+</my-element>
+```
+
+The shadow root created by this HTML will have a `null` registry, and be in a "awaiting scoped registry" state that allows the registry to be set once after creation.
+
+To identify this "no registry, but awaiting one" state, ShadowRoot will have a `hasScopedRegistry` boolean property. `hasScopedRegistry` will set to `true` for all ShadowRoots with a scoped registry, or awaiting a scoped registry. Code can tell that ShadowRoot has an assignable `customElements` property if `root.customElements === null && root.hasScopedRegistry === true`.
+
+Host elements with declarative scoped registries can assign the correct registry during upgrades, like so:
+
+```ts
+const registry = new CustomElementRegistry();
+
+class MyElement extends HTMLElement {
+  #internals = null;
+  constructor() {
+    super();
+    this.#internals = this.attachInternals();
+    let shadowRoot = this.#internals.shadowRoot;
+    if (shadowRoot !== null) {
+      if (shadowRoot.customElements === null &&
+          shadowRoot.hasScopedRegistry) {
+        this.#internals.shadowRoot.customElements = registry;
+      } else {
+        console.error(`Expected shadowRoot.hasScopedRegistry to be true`);
+      }
+    } else {
+      this.attachShadow({mode: 'open', registry});
+    }
+  }
+}
+```
 
 ## API
 
@@ -133,6 +178,12 @@ The `CustomElementRegistry` constructor creates a new instance of CustomElementR
 const registry = new CustomElementRegistry();
 ```
 
+### ShadowRootInit
+
+ShadowRootInit adds the `customElements` property:
+
+* `customElements`: `CustomElementRegistry | null | undefined`
+
 ### ShadowRoot
 
 ShadowRoot adds element creation APIs that were previously only available on Document:
@@ -142,6 +193,11 @@ ShadowRoot adds element creation APIs that were previously only available on Doc
 * `importNode()`
 
 These are added to provide a root and possible registry to look up a custom element definition.
+
+ShadowRoot also adds `customElements`, and `hasScopedRegistry` properties:
+
+* `customElements`: `CustomElementRegistry | null`
+* `hasScopedRegistry`: `boolean`
 
 ## Open Questions
 
@@ -153,13 +209,6 @@ There are concern about what happens when an element with a custom registry move
 2. recreate a new registry entry when moving the element, and let the author to repopulate it in `adoptedCallback`. This is problematic because the registry is created before attaching the shadowRoot.
 3. create a new callback that can receive the new registry when moved. This is problematic as well because what happen when the registries are coming from another library, already created by someone else?
 4. find ways for implementers to preserve the original registry (ideal).
-
-### Intersection with Declarative Shadow Root
-
-Although these two proposals are in early stages, we need to solve the intersection semantics. There are two main issues:
-
-1. if a declarative shadow root is created, elements inside that shadow should not be upgraded with the global registry. a possible solution is to add a new attribute, similar to `mode` to indicate to the parser that a custom registry is going to be eventually associated to this shadow.
-2. if the component is planning to reuse the instance of the declarative shadow root (which is ideal), how can the component associate that instance with a registry? this indicates that maybe the association between ShadowRoot and CustomElementRegistry cannot be defined via `attachShadow()`, and instead, something like `ElementInternals` is much more flexible.
 
 ##  Alternatives to allowing multiple definitions
 
