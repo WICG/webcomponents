@@ -129,7 +129,7 @@ The following is an example of how a custom element might be defined today, wher
 </html>
 ```
 
-The following example shows shows how the same custom element definition could incorporate a CSS module to avoid CSS-as-a-JS-string (or inserting a `<style>` tag, etc.):
+The following example shows how the same custom element definition could incorporate a CSS module to avoid CSS-as-a-JS-string (or inserting a `<style>` tag, etc.):
 
 ```JavaScript
 <!doctype html>
