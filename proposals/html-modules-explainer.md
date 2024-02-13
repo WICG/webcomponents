@@ -4,38 +4,38 @@ Author: [@dandclark](https://github.com/dandclark)
 
 ## Introduction
 
-We are proposing an extension of the ES6 Script Modules system to include HTML Modules.  These will allow web developers to package and access declarative content from script in a way that allows for good componentization and reusability, and integrates well into the existing ES6 Modules infrastructure.
+We are proposing an extension of the ES Modules system to include HTML Modules.  These will allow web developers to package and access declarative content from script in a way that allows for good componentization and reusability, and integrates well into the existing ES Modules infrastructure.
 
 ## Why are HTML Modules needed?
 
-The introduction of ES6 Script Modules has provided several benefits for JavaScript developers including more componentized code and better dependency management.  However, easy access to declarative content has been a consistent limitation with Script Modules.  For example, if one wants to pack a custom element definition in a module, how should the HTML for the element's shadow tree be created?  Current solutions would involve generating it dynamically (document.createElement,  innerHTML or by using template literals), but it would be preferable from both a developer convenience and from a performance standpoint to simply write HTML and include it with the module.  With HTML Modules this will be possible.
+The introduction of ES Script Modules has provided several benefits for JavaScript developers including more componentized code and better dependency management.  However, easy access to declarative content has been a consistent limitation with Script Modules.  For example, if one wants to pack a custom element definition in a module, how should the HTML for the element's shadow tree be created?  Current solutions would involve generating it dynamically (document.createElement,  innerHTML or by using template literals), but it would be preferable from both a developer convenience and from a performance standpoint to simply write HTML and include it with the module.  With HTML Modules this will be possible.
 
 There is clear demand for this functionality in the developer community -- see [this thread](https://github.com/w3c/webcomponents/issues/645) where ideas pertaining to HTML Modules have resulted in a great deal of developer and browser implementer engagement.
 
-[HTML Imports](https://www.w3.org/TR/html-imports/) were proposed (and implemented in Chromium) as a solution, but they were developed independently of ES6 Modules and have several limitations:
+[HTML Imports](https://www.w3.org/TR/html-imports/) were proposed (and implemented in Chromium) as a solution, but they were developed independently of ES Modules and have several limitations:
 
-* **Global object pollution:** vars created in an HTML Import show up on the global object by default.  An ideal solution would minimize such side-effects.  Accordingly, global object pollution does not occur in ES6 Modules.
-* **Parse blocking with inline script:** the parsing of an HTML Import will block the main document's parser if included prior to an inline script element.  ES6 Modules have defer semantics and thus do not block the parser.
-* **Independent dependency resolution infrastructures between HTML Imports and ES6 Script Modules:** since these systems were developed independently their infrastructures for dependency resolution don't talk to each other, leading to missed performance opportunities and to bugs like [this one](https://bugs.chromium.org/p/chromium/issues/detail?id=767841).
+* **Global object pollution:** vars created in an HTML Import show up on the global object by default.  An ideal solution would minimize such side-effects.  Accordingly, global object pollution does not occur in ES Modules.
+* **Parse blocking with inline script:** the parsing of an HTML Import will block the main document's parser if included prior to an inline script element.  ES Modules have defer semantics and thus do not block the parser.
+* **Independent dependency resolution infrastructures between HTML Imports and ES Script Modules:** since these systems were developed independently their infrastructures for dependency resolution don't talk to each other, leading to missed performance opportunities and to bugs like [this one](https://bugs.chromium.org/p/chromium/issues/detail?id=767841).
 * **Non-intuitive import pass through:** HTML Imports require the consumer to access their content from standard DOM queries like getElementById and querySelector.  This is clumsy and limited relative to Script Modules' import/export statements that allow for explicit specification of the API surface provided by a module.
 
-Integrating HTML Modules into the existing ES6 Module system, rather than creating it as a standalone component, will address these gaps.
+Integrating HTML Modules into the existing ES Module system, rather than creating it as a standalone component, will address these gaps.
 
 ## High-level summary
 
 ### Importing an HTML Module
-HTML Modules will be imported using the same `import` statements currently used for Script Modules:
+HTML Modules will be imported using the [import attributes](https://github.com/tc39/proposal-import-attributes) syntax:
 
 ```html
 <script type="module">
-    import {content} from "import.html"
+    import {content} from "foo.html" with {type: "html"};
     document.body.appendChild(content);
 </script>
 ```
 
-The MIME-type in the HTTP response header will be checked to determine whether a given module should be treated as script or HTML.  Each imported HTML Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the ES6 Module map and module dependency graphs.
+Each imported HTML Module will have its own [module record](https://tc39.github.io/ecma262/#sec-abstract-module-records) as introduced in the ES6 spec and will participate in the ES Module map and module dependency graphs.
 
-An HTML Module will be parsed per the normal HTML5 parsing rules, with the exception that it is only allowed to contain `<script>` elements of `type="module"` (non-module scripts will cause HTML Module creation to fail).  This greatly simplifies the integration of HTML Modules into the current ES6 Module system since module scripts have defer semantics and we therefore don't need to worry about synchronous script elements causing side-effects during parsing.  This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES6 Modules system.
+An HTML Module will be parsed per the normal HTML5 parsing rules, with the exception that it is only allowed to contain `<script>` elements of `type="module"` (non-module scripts will cause HTML Module creation to fail).  This greatly simplifies the integration of HTML Modules into the current ES Module system since module scripts have defer semantics and we therefore don't need to worry about synchronous script elements causing side-effects during parsing.  This allows us to resolve the entire import graph before executing any script -- which is a key aspect of the ES Modules system.
 
 ### Accessing declarative content from within an HTML Module
 
@@ -77,7 +77,7 @@ for (ModuleScript in HtmlModuleRecord.[[RequestedModules]]) {
 }
 ```
 
-This is the fundamental way in which HTML Modules will expose their content to their referrer (the document/module that imported them) -- the HTML Module can take its HTML elements, classes, functions, etc., and export them from any inline script in the HTML Module's document. This allows HTML Modules to operate with the same import/export syntax as ES modules. Note that in the existing ES6 implementation, exports from an inline Script Module previously had no real use; in this way we grant them one.
+This is the fundamental way in which HTML Modules will expose their content to their referrer (the document/module that imported them) -- the HTML Module can take its HTML elements, classes, functions, etc., and export them from any inline script in the HTML Module's document. This allows HTML Modules to operate with the same import/export syntax as ES modules. Note that in the existing ES implementation, exports from an inline Script Module previously had no real use; in this way we grant them one.
 
 Example:
 
@@ -95,7 +95,7 @@ Example:
 **blog.html**
 ```html
 <script type="module">
-    import {blogPost} from "module.html"
+    import {blogPost} from "module.html" with {type: "html"};
     document.body.appendChild(blogPost);
 </script>
 ```
@@ -114,7 +114,7 @@ Example:
 ```
   **main.html:**
 ```javascript
-import importedDoc from "module.html"
+import importedDoc from "module.html" with {type: "html"};
 let theTemplate = importedDoc.querySelector("template");
 ```
 
@@ -135,8 +135,7 @@ The following list is **not** comprehensive of all open issues; the intent here 
 - Should HTML Modules use a new MIME type, or the existing `text/html`? [[1](https://github.com/w3c/webcomponents/issues/742)]
 - How should HTML modules interact with CSP?  In particular, should their inline scripts be allowed to run even without an `unsafe-inline` directive? [[1](https://github.com/w3c/webappsec/issues/544)], [[2](https://discourse.wicg.io/t/proposal-html-modules/3309/2)]
 - Should non-`type="module"` scripts in an HTML module yield an error or be implicitly interpreted as module scripts? [[1](https://github.com/w3c/webcomponents/issues/798)]
-- Should there be a declarative way to consume HTML modules?
-    - [[1](https://github.com/MicrosoftEdge/MSEdgeExplainers/issues/9)], [[2](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456319294)], [[3](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456326249)]
+- Should there be a declarative way to consume HTML modules? [[1](https://github.com/WICG/webcomponents/issues/863)], [[2](https://github.com/w3ctag/design-reviews/issues/334#issuecomment-456319294)]
 
 ## Additional information
 
