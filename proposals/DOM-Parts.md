@@ -103,4 +103,4 @@ There are a few component pieces to this proposal, so it is easiest to split it
 into multiple documents.
 
 1. [Imperative API to construct DOM parts](./DOM-Parts-Imperative.md)
-1. [Declarative API to construct DOM parts in `<template>`](./DOM-Parts-Declarative-Template.md)
+1. [Declarative API to construct DOM parts](./DOM-Parts-Declarative.md)
