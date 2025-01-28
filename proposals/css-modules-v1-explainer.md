@@ -16,7 +16,7 @@ The introduction of ES6 JavaScript Modules has provided several benefits for web
 
 CSS modules solves these issues by extending the ES modules infrastructure to allow importing a CSSStyleSheet object from a CSS file, which can then be added to the document or a shadowRoot via the [adoptedStyleSheets](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets) array.
 
-There is demand for this functionality in the developer community -- see [this thread](https://github.com/w3c/webcomponents/issues/759) where there a number of developers have expressed interest.  The popularity of CSS loaders in JS bundlers is also indicative of demand for this functionality.
+There is demand for this functionality in the developer community -- see [this thread](https://github.com/w3c/webcomponents/issues/759) where a number of developers have expressed interest.  The popularity of CSS loaders in JS bundlers is also indicative of demand for this functionality.
 
 ## Importing a CSS Module
 CSS modules will be imported using the same `import` statements currently used for other ES modules,
