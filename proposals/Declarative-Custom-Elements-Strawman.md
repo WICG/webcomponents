@@ -9,7 +9,8 @@ First, with the proposed template instantiation API in mind, we imagined a HTML 
 
 ```html
 <definition name="my-element" constructor="MyElement">
-    <template shadowmode="closed">~</template>
+    <shadowoptions mode="open"></shadowoptions>
+    <template>~</template>
     <script>
       class MyElement extends HTMLElement { ~ }
     </script>
@@ -22,7 +23,8 @@ This still requires having to repeat the constructor name twice. We can avoid th
 
 ```html
 <definition name="my-element">
-    <template shadowmode="closed">~</template>
+    <shadowoptions mode="closed"></shadowoptions>
+    <template>~</template>
     <script type="module">
       export default class MyElement extends HTMLElement { ~ }
     </script>
@@ -42,7 +44,8 @@ class /* default custom element */ extends HTMLElement {
         const template = customElements.getTemplate(this);
         if (!template)
             return;
-        #shadowRoot = this.attachShadow({mode: template.getAttribute('shadowmode')});
+        const shadowOptions = customElements.getShadowOptions(this);
+        #shadowRoot = this.attachShadow(shadowOptions);
         #templateInstance = #shadowRoot.appendChild(template.createInstance(#shadowRoot));
     }
     attributeChangedCallback(attributeName, oldValue, newValue, namespace) {
@@ -57,7 +60,8 @@ Note that the shadow root of the custom element is passed to createInstance's st
 
 ```html
 <definition name="percentage-bar">
-    <template shadowmode="closed">
+    <shadowoptions mode="closed"></shadowoptions>
+    <template>
         <div id="progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{root.attributes.percentage.value}}">
             <div id="bar" style="width: {{root.attributes.percentage.value}}%"></div>
             <div id="label"><slot></slot></div>
