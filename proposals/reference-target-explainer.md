@@ -184,7 +184,7 @@ In certain circumstances, the listbox component needs to enclose its options ins
 
 ```html
 <input role="combobox" type="text" aria-controls="listbox" aria-activedescendant="???">
-<animals-listbox id="listbox>
+<animals-listbox id="listbox">
   #shadow-root
   | <div role="listbox" id="listbox">
   |   <div role="option" id="opt1">Otter</div>
@@ -215,10 +215,10 @@ even if the rest of the component is.
 
 1. Allow web components [enclosing an element](#components-which-enclose-existing-elements-to-add-functionality-via-composition)
    in order to compose capabilities on top of it
-   to function equivalently to the enclosed element when used as a target for IDREF-based or
-   [IDL attribute](https://html.spec.whatwg.org/#reflecting-content-attributes-in-idl-attributes:reflected-idl-attribute-32)-based
-   attributes.
-2. Allow finer-grained references to be created to
+   to function equivalently to the enclosed element when used as a target for IDREF-based content attributes
+   or their equivalent
+   [IDL attributes](https://html.spec.whatwg.org/#reflecting-content-attributes-in-idl-attributes:reflected-idl-attribute-32).
+3. Allow finer-grained references to be created to
    [specific elements within a shadow root](#referring-to-specific-elements-within-a-components-shadow-dom).
 
 Any solution should:
@@ -234,7 +234,7 @@ The following are real and interesting problems, but out of scope for this work:
 1. Allow attributes on the host to be "forwarded" to the [enclosed element](#components-which-enclose-existing-elements-to-add-functionality-via-composition).
    - For example, to allow `role` or `aria-label` on the host to be applied to the enclosed element.
 2. Straightforward form association for enclosed [form-associated](https://html.spec.whatwg.org/multipage/forms.html#form-associated-element) elements. 
-3. Provide a serializable way to create references between elements in shadow DOM and light DOM.
+3. Provide a serializable way to create references from elements in shadow DOM to elements in light DOM.
 
 ## Proposal: Reference Target
 
@@ -460,7 +460,7 @@ In the example below, `input.ariaControlsElements` is the `<fancy-listbox>` elem
 
 ##### Interaction with `HTMLInputElement.labels` and `ElementInternals.labels`
 
-The [`HTMLInputElement.labels`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/labels) attribute returns list of the label elements targeting a certain input element. This API should continue to work if the input element is itself the target of a custom element. The labels will be in [shadow-including tree order](https://dom.spec.whatwg.org/#concept-shadow-including-tree-order).
+The [`HTMLInputElement.labels`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/labels) attribute returns a list of the label elements targeting a certain input element. This API should continue to work if the input element is itself the target of a custom element. The labels will be in [shadow-including tree order](https://dom.spec.whatwg.org/#concept-shadow-including-tree-order).
 
 Since custom elements inherit from `HTMLElement` and _not_ `HTMLInputElement`, they don't have a `labels` attribute. However, if the custom element is form-associated _and_ has a `referenceTarget`, then [`ElementInternals.labels`](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals/labels) will return an empty list `[]`, since all labels are forwarded to the reference target and not associated with the custom element itself.
 
