@@ -308,7 +308,7 @@ This can improve the experience of using the components described in the [Backgr
 
 ```html
 <button commandFor="pets">
-<md-dialog id="pets>
+<md-dialog id="pets">
   <template shadowRootMode="open"
             shadowRootReferenceTarget="dialog">
     <div class="scrim"></div> <!-- emulate modal dialog ::backdrop -->
