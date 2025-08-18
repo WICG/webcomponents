@@ -53,7 +53,7 @@ These elements are typically intended to be used in place of elements they enclo
 
 For example, Spectrum Web Components' [`sp-checkbox` component](https://opensource.adobe.com/spectrum-web-components/components/checkbox/)
 composes an `<input type=checkbox>`,
-augmenting its functionality in several ways including adding an `indeterminate` state:
+augmenting its functionality in several ways including adding an `indeterminate` content attribute:
 
 <img width="597" height="254" alt="Screenshot of the sp-checkbox documentation section on the `indeterminate` state" src="https://github.com/user-attachments/assets/c0006adc-57a3-4829-8cbe-fd0ae054bd62" />
 
@@ -64,13 +64,14 @@ In this example, when the author uses the component like this:
 ```
 
 The component encapsulates a visual rendering for an indeterminate state with a built-in `<input type=checkbox>`
-which handles click and keyboard events,
+with the [`indeterminate` IDL attribute](https://opensource.adobe.com/spectrum-web-components/components/checkbox/) set,
+which handles click and keyboard events
 as well as being labelable and benefiting from `<label>` element behaviour such as toggling when the label is clicked.
 
 ```html
 <sp-checkbox indeterminate="" dir="ltr" tabindex="0">
   #shadow-root
-  | <input id="input" type="checkbox"> <!-- ideally this should have aria-checked=mixed as well -->
+  | <input id="input" type="checkbox"> <!-- has .indeterminate IDL attribute set -->
   | <span id="box"><!-- partial checkmark rendering --></span>
   | <label id="label" for="input">
   |   <slot></slot>
@@ -78,6 +79,7 @@ as well as being labelable and benefiting from `<label>` element behaviour such 
 Indeterminate
 </sp-checkbox>
 ```
+
 
 This example also illustrates one of the fundamental limitations of this technique:
 it's not quite a drop-in replacement for `<input type="checkbox">` because page authors can't use `<label>` as they normally would,
