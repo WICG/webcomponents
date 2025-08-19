@@ -1,120 +1,334 @@
 # Reference Target for Cross-Root ARIA
 
-Author: [Ben Howell](https://github.com/behowell)
+Original proposal author: [Ben Howell](https://github.com/behowell)
 
 ## Introduction
 
-Reference Target is a feature to enable using IDREF attributes such as `for` and `aria-labelledby` to refer to elements inside a component's shadow DOM, while maintaining encapsulation of the internal details of the shadow DOM. The main goal of this feature is to enable ARIA to work across shadow root boundaries.
+Reference Target allows attributes referring to a component host element to be forwarded to one or more elements inside its shadow DOM,
+while strictly maintaining the encapsulation guarantees provided by shadow DOM.
+The motivating goal of this feature is to enable [ARIA relationship attributes](https://www.w3.org/TR/wai-aria-1.3/#attrs_relationships)
+to work across shadow root boundaries.
 
 This proposal is based on [@Westbrook](https://github.com/Westbrook)'s [Cross-root ARIA Reflection API](https://github.com/Westbrook/cross-root-aria-reflection/blob/main/cross-root-aria-reflection.md) proposal, as well as borrowing ideas from [@alice](https://github.com/alice)'s [Semantic Delegate](https://github.com/alice/aom/blob/gh-pages/semantic-delegate.md) proposal.
 
 ## Background
 
-### Cross-Root ARIA
+A shadow root creates a [separate node tree](https://dom.spec.whatwg.org/#shadow-trees),
+while ID references like the value of the label element's [`for` attribute](https://html.spec.whatwg.org/#attr-label-for)
+can only refer to elements in the same node tree.
+IDL attributes like [`popoverTargetElement`](https://html.spec.whatwg.org/#dom-popovertargetelement) are also able to 
+[refer to elements](https://html.spec.whatwg.org/#reflecting-content-attributes-in-idl-attributes:element)
+in trees whose root is a shadow-including ancestor of their containing shadow root
+(i.e. these attributes can "refer out" of shadow roots).
 
-For an in-depth description the cross-root ARIA problem, see [@alice](https://github.com/alice)'s article [How Shadow DOM and accessibility are in conflict](https://alice.pages.igalia.com/blog/how-shadow-dom-and-accessibility-are-in-conflict/). The article describes the two main problems that need to be solved:
+<img width="699" height="333" alt="Examples of the types of references described above. See below for detailed description." src="https://github.com/user-attachments/assets/10e5786f-abb4-4c0e-b467-49feb655d7bf" />
 
-#### 1. Referring from Shadow DOM outwards
+<details><summary>Detailed description of diagram</summary>
+A document tree with annotations:
 
-The existing [ARIAMixin IDL attributes](https://w3c.github.io/aria/#ARIAMixin) (such as `ariaLabelledbyElements` and `ariaActiveDescendantElement`) unlock part of the solution to the cross-root ARIA problem. They allow for an element inside a shadow DOM to create an ARIA link to an element outside that shadow DOM. However, they are limited in that they can't reference an element inside another component's shadow DOM. The specifics of this limitation are described in more detail in _How Shadow DOM and accessibility are in conflict_.
+- Document
+  - Element: label for="sibling"
+  - Element: input id="sibling" (annotation: an arrow from the previous element to this one, saying "Allowed - same tree")
+  - 
+  - Element: label id="light"
+  - Element: custom-input
+    - Shadow root
+      - Element: input ariaLabelledByElements=[light] (annotation: an arrow from this element to the preceding label, saying "Allowed - ancestor tree")
+  - 
+  - Element: label for="shadow"
+  - Element: custom-input
+    - Shadow root
+      - Element: input id="shadow" (annotation: an arrow from the preceding label, saying "DISALLOWED - can't refer in to shadow tree")
+     
+</details>
 
-#### 2. Referring into Shadow DOM
+There are varied scenarios in which developers need to create cross-shadow root references.
 
-The "missing piece" to solving the cross-root ARIA problem is the ability to refer into Shadow DOM. The Reference Target feature described in this explainer intends to solve this problem in a way that is compatible with the ARIAMixin attributes.
+### Components which enclose existing elements to add functionality via composition
 
-When Reference Target is used in conjunction with ARIAMixin, it is possible to create references between elements in sibling shadow DOMs, or between any two unrelated shadow DOMs on the page, as long as the components have provided the API to do so, through reference targets and custom attributes.
+This technique has emerged in web component authoring as a way to reuse the functionality of built-in elements while encapsulating styling and other specialisations.
+These elements are typically intended to be used in place of elements they enclose.
 
-### Web components as drop-in replacements for builtin elements
+#### `sp-checkbox`
 
-Web components have an increasing number of features that allow them to work and act like builtin elements. For example:
+For example, Spectrum Web Components' [`sp-checkbox` component](https://opensource.adobe.com/spectrum-web-components/components/checkbox/)
+composes an `<input type=checkbox>`,
+augmenting its functionality in several ways including adding an `indeterminate` content attribute:
 
-- [Form-Associated Custom Elements](https://html.spec.whatwg.org/dev/custom-elements.html#form-associated-custom-element) can participate in forms like a builtin input.
-- [delegatesFocus](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot/delegatesFocus) allows a component to work better with keyboard navigation.
+<img width="597" height="254" alt="Screenshot of the sp-checkbox documentation section on the `indeterminate` state" src="https://github.com/user-attachments/assets/c0006adc-57a3-4829-8cbe-fd0ae054bd62" />
 
-However, there are still missing pieces that prevent a web component from truly being a drop-in replacement for a built-in, including:
+In this example, when the author uses the component like this:
 
-1. Can't create ID reference links to elements inside a [shadow tree](https://dom.spec.whatwg.org/#shadow-trees).
-2. Can't use built-in attributes like `aria-label` or `role` on the host and have them apply to an element inside the shadow root.
-3. Non-trivial amount of code required to hook up custom attributes on the host to ARIAMixin attributes on an element inside the shadow root.
-4. Can't get form-association for "free" by delegating to an input inside.
+```html
+<sp-checkbox indeterminate>Indeterminate</sp-checkbox>
+```
 
-This proposal solves only the first problem: referring into the shadow DOM. It leaves the other problems to be solved by other features. While all of the problems may seem related, they can be designed separately.
+The component encapsulates a visual rendering for an indeterminate state with a built-in `<input type=checkbox>`
+with the [`indeterminate` IDL attribute](https://opensource.adobe.com/spectrum-web-components/components/checkbox/) set,
+which handles click and keyboard events
+as well as being labelable and benefiting from `<label>` element behaviour such as toggling when the label is clicked.
+
+```html
+<sp-checkbox indeterminate="" dir="ltr" tabindex="0">
+  #shadow-root
+  | <input id="input" type="checkbox"> <!-- has .indeterminate IDL attribute set -->
+  | <span id="box"><!-- partial checkmark rendering --></span>
+  | <label id="label" for="input">
+  |   <slot></slot>
+  | </label>
+Indeterminate
+</sp-checkbox>
+```
+
+
+This example also illustrates one of the fundamental limitations of this technique:
+it's not quite a drop-in replacement for `<input type="checkbox">` because page authors can't use `<label>` as they normally would,
+without doing significant extra work to make the custom element [form-associated](https://html.spec.whatwg.org/multipage/custom-elements.html#form-associated-custom-element)
+(which seems particularly burdensome when there is a perfectly good `<input>` right there);
+instead, the component has to include the `<label>` in its shadow DOM so that the association can be set up.
+
+#### `md-dialog`
+
+Another example of this technique is Material Web Components' [`md-dialog`](https://material-web.dev/components/dialog/),
+which encloses a `<dialog>` element,
+enhancing it with pre-defined styles and animations, with slots for a headline, content and actions,
+with features to emulate modal dialog behaviour even when `openModal()` isn't used,
+and with API features which make the dialog easier to use.
+
+<img width="363" height="373" alt="Screenshot of a dialog headlined 'Choose your favorite pet', with radio buttons labelled 'Cats', 'Dogs' and 'Birds', and buttons labelled 'Cancel' and 'Ok'." src="https://github.com/user-attachments/assets/06ad1b4b-fc09-4737-b38d-80af105da49d" />
+
+The author can create the above component like this: 
+
+```html
+<md-dialog>
+  <div slot="headline">Choose your favorite pet</div>
+  <form id="form" slot="content" method="dialog">
+    <label>
+      <md-radio name="pet" value="cats" checked></md-radio>
+      <span>Cats</span>
+    </label>
+    <!-- Similar items for "Dogs" and "Birds" -->
+  </form>
+  <div slot="actions">
+    <md-text-button form="form" value="cancel">Cancel</md-text-button>
+    <md-text-button form="form" autofocus value="ok">OK</md-text-button>
+  </div>
+</md-dialog>
+```
+
+The author-provided content is slotted into the `<dialog>` inside the component's shadow DOM:
+
+```html
+<md-dialog>
+  #shadow-root
+  | <div class="scrim"></div> <!-- emulate modal dialog ::backdrop -->
+  | <dialog aria-labelledby="headline" open>
+  |   <div class="focus-trap" tabindex="0" aria-hidden="true"></div> <!-- emulate focus trapping behaviour -->
+  |   <div class="container">
+  |     <h2 id="headline">
+  |       <slot name="headline"></slot>
+  |     </h2>
+  |     <div class="scroller">
+  |       <slot name="content"></slot>
+  |     </div>
+  |     <div class="actions">
+  |       <slot name="actions"></slot>
+  |     </div>
+  |   </div>
+  |   <div class="focus-trap" tabindex="0" aria-hidden="true"></div>
+  | </dialog>
+  <!-- Author-provided content as shown above -->
+</md-dialog>
+```
+
+Since the `<dialog>` is inside the shadow root,
+the `<md-dialog>` element can't be used with [`commandFor`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#commandfor),
+but requires authors to use JavaScript to open and close the dialog,
+either by setting its `open` attribute or by using the `show()` and `close()` methods.
+
+### Referring to specific elements within a component's shadow DOM
+
+There are also cases where authors need to refer to specific elements within a component's shadow DOM.
+This is distinct from the cases above, where the component _as a whole_ is expected to behave comparably to the element it has enclosed.
+
+#### `aria-activedescendant` and comboboxes
+
+[`aria-activedescandant`](https://w3c.github.io/aria/#aria-activedescendant) allows authors to convey to assistive technologies,
+such as screen readers,
+that an element other than the one which has keyboard focus is "active" and immediately relevant to the user.
+
+This is canonically used for [accessible comboboxes](https://sarahmhigley.com/writing/activedescendant/#when-to-use-aria-activedescendant)
+(or, more generally, accessible autocomplete patterns):
+keyboard focus must necessarily be on the text input, so that the user can continue to type into it,
+but the user also needs to know which autocomplete option has been selected in order to commit an autocompletion.
+
+<img width="944" height="460" alt="image of an open combobox labeled best pet, with screaming hairy armadillo selected. The image is marked up: the input is highlighted and labeled as the focused element, and the screaming hairy armadillo option inside the open listbox popup is highlighted and labelled activedescendant" src="https://github.com/user-attachments/assets/55392ef1-4cb4-40fc-89b1-99062f8d8fd0" />
+
+(Image and description by Sarah Higley, from https://sarahmhigley.com/writing/activedescendant/)
+
+These components typically consist of a text input and a listbox containing the autocomplete option,
+using `aria-controls` to establish the link between the text input and the list,
+and `aria-activedescendant` to mark the selected option as the active "descendant" of the text input.
+
+```html
+<input type="text" aria-controls="listbox" aria-activedescendant="opt2">
+<div role="listbox" id="listbox">
+  <div role="option" id="opt1">Otter</div>
+  <!-- this is a descendant of the listbox, which is pointed to by aria-controls, so it is OK -->
+  <div role="option" id="opt2">Opossum</div>
+  <div role="option" id="opt3">Ocelot</div>
+</div>
+```
+
+(Code example from https://sarahmhigley.com/writing/activedescendant/#when-to-use-aria-activedescendant#how-to-use-aria-activedescendant)
+
+In certain circumstances, the listbox component needs to enclose its options inside its shadow root:
+
+```html
+<input role="combobox" type="text" aria-controls="listbox" aria-activedescendant="???">
+<animals-listbox id="listbox">
+  #shadow-root
+  | <div role="listbox" id="listbox">
+  |   <div role="option" id="opt1">Otter</div>
+  |   <div role="option" id="opt2">Opossum</div>
+  |   <div role="option" id="opt3">Ocelot</div>
+  | </div>
+</animals-listbox>
+```
+
+Note that, in this case, the selected `option` is conceptually a descendant of the `<input>`,
+but may be in a separate shadow root in order to allow separate re-use of the listbox component.
+However, the relationship truly is between the `<input>` and the `option`,
+in addition to that between the `<input>` and the `listbox`.
+
+#### Fine-grained `aria-labelledby` and `aria-describedby`
+
+[`aria-labelledby`](https://w3c.github.io/aria/#aria-labelledby) and [`aria-describedby`](https://w3c.github.io/aria/#aria-describedby)
+allow authors to refer to one or more elements in order to create an accessible name or accessible description for an element, respectively.
+
+Occasions can arise where authors need to refer to elements _within_ a component
+to be used as an accessible name or description for another element.
+This can happen because the logical encapsulation grouping for component _behaviour_
+can result in elements whose [text equivalent](https://www.w3.org/TR/accname-1.2/#mapping_additional_nd_te)
+wouldn't be a useful addition to the name of the element to be labelled,
+even if the rest of the component is.
+
+## Goals
+
+1. Allow web components [enclosing an element](#components-which-enclose-existing-elements-to-add-functionality-via-composition)
+   in order to compose capabilities on top of it
+   to function equivalently to the enclosed element when used as a target for IDREF-based content attributes
+   or their equivalent
+   [IDL attributes](https://html.spec.whatwg.org/#reflecting-content-attributes-in-idl-attributes:reflected-idl-attribute-32).
+3. Allow finer-grained references to be created to
+   [specific elements within a shadow root](#referring-to-specific-elements-within-a-components-shadow-dom).
+
+Any solution should:
+
+1. Be serializable.
+2. Work for both closed and open shadow roots.
+3. Preserve shadow DOM encapsulation.
+
+## Non-goals
+
+The following are real and interesting problems, but out of scope for this work:
+
+1. Allow attributes on the host to be "forwarded" to the [enclosed element](#components-which-enclose-existing-elements-to-add-functionality-via-composition).
+   - For example, to allow `role` or `aria-label` on the host to be applied to the enclosed element.
+2. Straightforward form association for enclosed [form-associated](https://html.spec.whatwg.org/multipage/forms.html#form-associated-element) elements. 
+3. Provide a serializable way to create references from elements in shadow DOM to elements in light DOM.
 
 ## Proposal: Reference Target
 
-Reference Target is a new feature that enables creating ARIA links to elements inside a component's shadow DOM, while maintaining encapsulation of the internal details of the shadow DOM.
-
-#### Goals
-
-- Solve only the "missing piece" of cross-root ARIA: how to handle IDREF attributes referring into the shadow DOM. Avoid scope creep.
-- Create a mechanism for ID reference attributes like `aria-activedescendant` and `for` to refer to an element inside a component's shadow DOM.
-- Should work the same for both closed and open shadow roots.
-- Shadow DOM encapsulation should be preserved: No direct access to any elements inside the shadow tree, and no implementation details leaked into a web component's API.
-- Should allow creating references into multiple nested shadow roots, and across "sibling" shadow roots that don't have a direct parent/child relationship.
-- The solution should be serializable, i.e. support declarative syntax that is expressible in HTML without needing JavaScript.
-
-#### Non-Goals
-
-- This is scoped to only solve the problem of referring _into_ the shadow DOM. It relies on ARIAMixin to refer _out_ of the shadow DOM.
-- This feature does not solve the [bottleneck effect](https://alice.pages.igalia.com/blog/how-shadow-dom-and-accessibility-are-in-conflict/#limitations-of-these-apis). It is difficult to find a compelling real-world example where this is a problem.
-- This does not affect how attributes set on the host element work. For example, this does not tackle the problem of forwarding `role` or `aria-label`, etc. from the host element to an element inside.
+Reference Target is a new feature that enables references to the host element to be forwarded to an element inside a component's shadow DOM, 
+while maintaining encapsulation of the internal details of the shadow DOM.
 
 #### Phases
 
 This proposal is broken into two phases:
 
-- [Phase 1](#phase-1) adds the ability to designate a single element as the target for _all_ IDREF properties that refer to the host.
-- [Phase 2](#phase-2) adds a way to re-target specific properties (like `aria-activedescendant`) to refer a separate element.
-
-The goal of breaking it into phases is to get the simpler syntax and simpler use cases working first. The solutions to Phase 2 are more complex and may need more discussion before they are ready.
+- [Phase 1](#phase-1) addresses [enclosing elements](#components-which-enclose-existing-elements-to-add-functionality-via-composition)
+- [Phase 2](#phase-2) addresses [finer-grained references](#referring-to-specific-elements-within-a-components-shadow-dom).
+  
+The goal of breaking it into phases is to get the more straightforward and better-understood use cases working first.
+The problems Phase 2 aims to address are less well-understood and more complex,
+and may need more experience and discussion before we can be confident in any proposed solution.
 
 ### <a id="phase-1"></a> Phase 1: ShadowRoot `referenceTarget` attribute
 
-A component can specify an element in its shadow tree to act as its "reference target". When the host component is the target of a IDREF like a label's `for` attribute, the referenceTarget becomes the effective target of the label.
+A component can specify an element in its shadow tree to act as its "reference target".
+When the host component is the target of a IDREF, like a label's `for` attribute, the referenceTarget becomes the effective target of the label.
+This allows a host element to substitute for an [enclosed element](#components-which-enclose-existing-elements-to-add-functionality-via-composition)
+for the purposes of those attributes.
 
 The shadow root specifies the ID of the target element inside the shadow DOM. This is done using one of the following methods:
 * The `referenceTarget` entry in the `ShadowRootInit` argument to `attachShadow()`.
 * The `referenceTarget` attribute on the `ShadowRoot` object.
 * In HTML markup using the `shadowrootreferencetarget` attribute on the `<template>` element.
 
-JavaScript example:
+This can improve the experience of using the components described in the [Background section](#background):
+
+[`sp-checkbox`](#sp-checkbox), demonstrating the JavaScript API options:
 
 ```html
 <script>
   customElements.define(
-    "fancy-input",
-    class FancyInput extends HTMLElement {
+    "sp-checkbox",
+    class Checkbox extends HTMLElement {
+      checked = "mixed";
+      
       constructor() {
         super();
         this.shadowRoot_ = this.attachShadow({ 
           mode: "closed",
-          referenceTarget: "real-input",
+          referenceTarget: "input",
         });
-        this.shadowRoot_.innerHTML = `<input id="real-input">`;        
+
         // Optionally, set referenceTarget on the ShadowRoot object.
         // Not needed in this case since it was set in attachShadow() instead.
-        // this.shadowRoot_.referenceTarget = "real-input";
+        // this.shadowRoot_.referenceTarget = "input";
+
+        this.render()
+      }
+      render() {
+        this.shadowRoot_.innerHTML = `
+            <input id="input"
+                   type="checkbox"
+                   ${checked == "true" ? "checked" : ""}
+                   aria-checked=${checked == "indeterminate" ? "mixed" : checked}>
+            <span id="box"></span>`;
       }
     }
   );
 </script>
 
-<label for="fancy-input">Fancy input</label>
-<fancy-input id="fancy-input"></fancy-input>
+<label for="consent">I consent to cookies</label>
+<sp-checkbox id="consent"></sp-checkbox>
 ```
 
-Equivalent with declarative shadow DOM:
+[`md-dialog`](#md-dialog), demonstrating the declarative shadow DOM option:
 
 ```html
-<label for="fancy-input">Fancy input</label>
-<fancy-input id="fancy-input">
-  <template
-    shadowrootmode="closed"
-    shadowrootreferencetarget="real-input"
-  >
-    <input id="real-input">
+<button commandFor="pets">
+<md-dialog id="pets">
+  <template shadowRootMode="open"
+            shadowRootReferenceTarget="dialog">
+    <div class="scrim"></div> <!-- emulate modal dialog ::backdrop -->
+    <dialog id="dialog" aria-labelledby="headline">
+      <div class="focus-trap" tabindex="0" aria-hidden="true"></div> <!-- emulate focus trapping behaviour -->
+      <div class="container">
+        <h2 id="headline">
+          <slot name="headline"></slot>
+        </h2>
+        <!-- Other dialog components as shown above -->
+      </div>
+      <div class="focus-trap" tabindex="0" aria-hidden="true"></div>
+    </dialog>
   </template>
-</fancy-input>
+
+  <div slot="headline">Choose your favorite pet</div>
+  <!-- Other content as shown above -->
+</md-dialog>
 ```
 
 #### Supported attributes
@@ -143,128 +357,28 @@ This feature is intended to work with **all** attributes that refer to another e
 
 > _Please comment if there are any attributes missing from this list._
 
-### <a id="phase-2"></a> Phase 2: ShadowRoot `referenceTargetMap` attribute
-
-There are situations where it is necessary to target different reference types to different elements. For example, a listbox may want to target `aria-controls` to its root, and `aria-activedescendant` to one of the items inside the listbox.
-
-The `ShadowRoot.referenceTargetMap` attribute allows for specifying target elements based on the attribute that is being used to reference the host.
-
-The equivalent declarative attribute is `shadowrootreferencetargetmap`, which is a comma-separated list of attribute to ID mappings.
-
-> Note: the syntax of `shadowrootreferencetargetmap` is based on the [`exportparts`](https://drafts.csswg.org/css-shadow-parts/#exportparts-attr) attribute that contains a comma-separated map of part names.
-
-```html
-<input
-  role="combobox"
-  aria-controls="fancy-listbox"
-  aria-activedescendant="fancy-listbox"
-/>
-<fancy-listbox id="fancy-listbox">
-  <template
-    shadowrootmode="closed"
-    shadowrootreferencetargetmap="aria-controls: real-listbox,
-                                  aria-activedescendant: option-1"
-  >
-    <div id="real-listbox" role="listbox">
-      <div id="option-1" role="option">Option 1</div>
-      <div id="option-2" role="option">Option 2</div>
-    </div>
-  </template>
-</fancy-listbox>
-```
-
-The JavaScript API reflects the mappings using camelCase names for the properties, and `htmlFor` for `for`:
-
-```js
-this.shadowRoot_.referenceTargetMap.ariaControls = "real-listbox";
-this.shadowRoot_.referenceTargetMap.ariaActiveDescendant = "option-1";
-this.shadowRoot_.referenceTargetMap.htmlFor = "real-input";
-```
-
 #### Live references
 
 Reference targets are a "live reference". Any of the following changes could result in an element reference being updated:
-* The host changes its `referenceTarget` or `referenceTargetMap` to refer to a different ID.
+* The host changes its `referenceTarget` to refer to a different ID.
 * An element with an `id` that matches its host's referenceTarget is added to or removed from the host's shadow tree.
 * The `id` attribute of an element inside the host's shadow tree is changed to or from the referenceTarget ID.
 * The host is added or removed from the DOM.
 * The host's `id` attribute is changed.
 
-In the example above, if the `aria-activedescendant` mapping is changed, then the `aria-activedescendant` of `<input>` will be changed to refer to the newly-mapped element.
+#### Interaction with other features
 
-- **Before**: `<input aria-activedescendant="fancy-listbox">` initially maps to 'option-1'.
-- fancy-listbox internally updates its mapping:
-  ```js
-  this.shadowRoot_.referenceTargetMap.ariaActiveDescendant = "option-2";
-  ```
-- **After**: `<input aria-activedescendant="fancy-listbox">` now maps to 'option-2', without needing to update the input element itself.
-
-#### Combining `referenceTarget` and `referenceTargetMap`
-
-In the case where both attributes are specified, `referenceTargetMap` takes priority for individual attributes, and `referenceTarget` acts as the fallback for attributes that are not specified.
-
-In the example below, `"real-listbox"` is the target for all attributes _except_ `aria-activedescendant`, which is targeted to `"option-2"`.
-
-```html
-<input
-  role="combobox"
-  aria-controls="fancy-listbox"
-  aria-activedescendant="fancy-listbox"
-/>
-<fancy-listbox id="fancy-listbox">
-  <template
-    shadowrootmode="open"
-    shadowrootreferencetarget="real-listbox"
-    shadowrootreferencetargetmap="aria-activedescendant: option-2"
-  >
-    <div id="real-listbox" role="listbox">
-      <div id="option-1" role="option">Option 1</div>
-      <div id="option-2" role="option">Option 2</div>
-    </div>
-  </template>
-</fancy-listbox>
-```
-
-#### Delegating to multiple elements
-
-Some attributes such as `aria-labelledby`, `aria-describedby`, etc. support multiple targets. Using `referenceTargetMap` with those attributes support a space-separated list of IDs.
-
-This example shows a `<description-with-tooltip>` component that contains a "More Info" button to show the tooltip but is not intended to be included in the description text. It targets `aria-describedby: message tooltip` to forward to only the content that should be included in the description text.
-
-```html
-<input aria-describedby="description-with-tooltip" />
-<!--
-  The resulting description text is: 
-  "Inline description text. Tooltip with more information."
--->
-<description-with-tooltip id="description-with-tooltip">
-  <template
-    shadowrootmode="closed"
-    shadowrootreferencetargetmap="aria-describedby: message tooltip"
-  >
-    <div>
-      <span id="message">Inline description text.</span>
-      <button onmouseover="showTooltip()" onmouseout="hideTooltip()">More Info</button>
-      <div id="tooltip" role="tooltip" style="display: none">Tooltip with more information.</div>
-    </div>
-  </template>
-</description-with-tooltip>
-```
-
-### Interaction with other features
-
-#### Interaction with CSS Selectors
+##### Interaction with CSS Selectors
 
 The referenceTarget does not affect CSS selectors in any way. An ID selector will target the host element that has the matching `id` attribute, and _not_ its referenceTarget.
 
-#### Form-associated custom elements
+##### Form-associated custom elements
 
 A [form-associated custom element](https://html.spec.whatwg.org/dev/custom-elements.html#form-associated-custom-element) supports being the target of a label's `for` attribute. But if the element has a Reference Target for the `for` attribute, then the label applies to the target instead. There are no other changes to the behavior of a form-associated custom element.
 
-#### Nesting inside `<label>`
+##### Nesting inside `<label>`
 
-Reference Target allows for labels to be implicitly associated with the target element when the host is nested inside a `<label>` element. The shadow tree's reference target will be associated with the label that contains the element. If the shadow tree is using `referenceTargetMap`, this uses the `for` attribute from the map.
-
+Reference Target allows for labels to be implicitly associated with the target element when the host is nested inside a `<label>` element. The shadow tree's reference target will be associated with the label that contains the element. 
 In the following example, the label of the `<input id="real-input">` is "Fancy input".
 
 ```html
@@ -277,8 +391,6 @@ In the following example, the label of the `<input id="real-input">` is "Fancy i
         this.shadowRoot_ = this.attachShadow({ 
           mode: "closed",
           referenceTarget: "real-input",
-          // Alternatively, set the referenceTargetMap with the `for` attribute:
-          // referenceTargetMap: { htmlFor: "real-input" },
         });
         this.shadowRoot_.innerHTML = `<input id="real-input" />`;
       }
@@ -292,11 +404,11 @@ In the following example, the label of the `<input id="real-input">` is "Fancy i
 </label>
 ```
 
-#### Nesting inside `<form>`
+##### Nesting inside `<form>`
 
 Reference target does not change the behavior of the host element when it is nested inside a form. It does _not_ implicitly associate the target element with the form if it is not a form-associated custom element.
 
-#### JavaScript attributes that reflect `Element` objects
+##### JavaScript attributes that reflect `Element` objects
 
 Some JavaScript attributes reflect HTML attributes as Element objects rather than ID strings. These include:
 
@@ -318,9 +430,10 @@ Some JavaScript attributes reflect HTML attributes as Element objects rather tha
 
 These will _never_ directly return the referenceTarget element that's inside the shadow tree. This is because an [IDL attribute with type Element](https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#reflecting-content-attributes-in-idl-attributes:element) can only refer to an element that is a descendant of a [shadow-including ancestor](https://dom.spec.whatwg.org/#concept-shadow-including-ancestor) of the element hosting the attribute.
 
-Instead, most attributes return the **host** element that they're targeting, as long as the attribute's expected type is `HTMLElement`. However, The `.form` and `.list` attributes will return `null` when used with a referenceTarget, because they are expected to be `HTMLFormElement` or `HTMLDataListElement` and the host element itself is not a form or datalist. Importantly, the underlying association will still exist: the input will be connected to the form, for example; it's just not reflected by the `.form` attribute.
+Instead, most attributes return the **host** element that they're targeting, as long as the attribute's expected type is compatible.
 
-> Note: It may be possible to add new attributes `.formElement` and `.listElement`, which could return the host element. However, that is beyond the scope of this proposal.
+> The `.form` and `.list` attributes are currently specced to be `HTMLFormElement` or `HTMLDataListElement`,
+> so they should be updated so the host element can be returned.
 
 In the example below, `input.ariaControlsElements` is the `<fancy-listbox>` element that was targeted by `aria-activedescendant="fancy-listbox"`, even though the active descendant internally targets `<div id="option-2">`.
 
@@ -345,29 +458,9 @@ In the example below, `input.ariaControlsElements` is the `<fancy-listbox>` elem
 </script>
 ```
 
-This example shows a submit button connected to a form inside a shadow tree. The button's `.form` attribute returns `null`, but the button _is_ still associated with the form, and clicking it will submit the form.
+##### Interaction with `HTMLInputElement.labels` and `ElementInternals.labels`
 
-```html
-<button id="submit" type="submit" form="fancy-form">Submit</button>
-<fancy-form id="fancy-form">
-  <template
-    shadowrootmode="open"
-    shadowrootreferencetarget="real-form"
-  >
-    <form id="real-form"></form>
-  </template>
-</fancy-form>
-
-<script>
-  const submit = document.getElementById("submit");
-  console.log(submit.form); // Logs: null
-  submit.click(); // Submits <form id="real-form">
-</script>
-```
-
-#### Interaction with `HTMLInputElement.labels` and `ElementInternals.labels`
-
-The [`HTMLInputElement.labels`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/labels) attribute returns list of the label elements targeting a certain input element. This API should continue to work if the input element is itself the target of a custom element. The labels will be in [shadow-including tree order](https://dom.spec.whatwg.org/#concept-shadow-including-tree-order).
+The [`HTMLInputElement.labels`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/labels) attribute returns a list of the label elements targeting a certain input element. This API should continue to work if the input element is itself the target of a custom element. The labels will be in [shadow-including tree order](https://dom.spec.whatwg.org/#concept-shadow-including-tree-order).
 
 Since custom elements inherit from `HTMLElement` and _not_ `HTMLInputElement`, they don't have a `labels` attribute. However, if the custom element is form-associated _and_ has a `referenceTarget`, then [`ElementInternals.labels`](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals/labels) will return an empty list `[]`, since all labels are forwarded to the reference target and not associated with the custom element itself.
 
@@ -408,6 +501,188 @@ Since custom elements inherit from `HTMLElement` and _not_ `HTMLInputElement`, t
   console.log(realInput.labels);
   // [<label id="before">, <label id="inner">, <label id="after">]
 </script>
+```
+
+### <a id="phase-2"></a> Phase 2: referring to specific elements within a shadow root
+
+In order to allow [referring to specific elements](#referring-to-specific-elements-within-a-components-shadow-dom)
+within a component's shadow root without leaking implementation details,
+there are a few avenues we could take:
+
+1. Address individual use-cases separately rather than create a generic mechanism 
+2. Allow the host to declare "parts" which may be referred to by name when using IDREF-based attributes
+3. Expand `referenceTarget` to allow references to the host to be forwarded to different elements
+
+#### Addressing individual use-cases separately
+
+Depending on what actual needs authors have in practice to refer to specific elements inside shadow DOM,
+it may make more sense to address these needs on a more piecemeal basis
+rather than developing an API intended to be general-purpose.
+
+For example, rather than developing a mechanism to allow `aria-labelledby` and/or `aria-describedby` references
+to be made to specific elements within a component, 
+it might be preferable for a component to be able to specify how its text alternative should be computed.
+
+And, it may make sense to [allow `aria-activedescendant` to be computed transitively](https://github.com/w3c/aria/issues/1500),
+at least in some situations.
+
+#### Exposing "parts" to IDREF-based attributes: `exportid`
+
+An earlier proposal, [`exportid`](https://github.com/WICG/aom/blob/gh-pages/exportid-explainer.md),
+was based on the idea of allowing a component author to mark a given element as having an "exported" ID,
+which could be used by elements outside of the shadow root to refer to that element
+without leaking any details about the component's internal structure other than the existence of an element with that ID.
+
+This design was based on [CSS `::part()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part),
+which also allows targeting specific elements within shadow roots.
+
+This could be used in the [combobox](#aria-activedescendant-and-comboboxes)
+scenario in conjunction with `referenceTarget` to allow the `<input>` to refer separately to the `listbox` element
+and the active `option`:
+
+```html
+<input role="combobox" type="text" aria-controls="listbox" aria-activedescendant="listbox::id(active)">
+<animals-listbox id="listbox>
+  <template shadowRootMode="open"
+            shadowRootReferenceTarget="listbox">
+    <div role="listbox" id="listbox">
+      <div role="option" id="active" exportid>Otter</div>
+      <div role="option">Opossum</div>
+      <div role="option">Ocelot</div>
+    </div>
+  </template>
+</animals-listbox>
+```
+
+#### Expanding `referenceTarget`: ShadowRoot `referenceTargetMap` attribute
+
+The `ShadowRoot.referenceTargetMap` attribute allows for specifying target elements based on the attribute that is being used to reference the host.
+
+This attribute would allow references to the host element to be forwarded to different elements inside of its shadow root,
+based on the attribute used to refer to the host.
+This would allow [references to be made to specific elements other than the primary reference target](#referring-to-specific-elements-within-a-components-shadow-dom)
+inside a component's shadow root,
+when the component author has anticipated the need for that attribute to refer to that element.
+
+The equivalent declarative attribute is `shadowRootReferenceTargetMap`, which is a comma-separated list of attribute to ID mappings.
+
+> Note: the syntax of `shadowRootReferenceTargetMap` is based on the [`exportparts`](https://drafts.csswg.org/css-shadow-parts/#exportparts-attr) attribute that contains a comma-separated map of part names.
+
+```html
+<input role="combobox" type="text" aria-controls="animals" aria-activedescendant="animals">
+<animals-listbox id="animals">
+  <template shadowRootMode="open"
+            shadowRootReferenceTargetMap="aria-controls: listbox,
+                                          aria-activedescendant: opt1">
+    <div role="listbox" id="listbox">
+      <div role="option" id="opt1">Otter</div>
+      <div role="option" id="opt2">Opossum</div>
+      <div role="option" id="opt3">Ocelot</div>
+    </div>
+  </template>
+</animals-listbox>
+```
+
+The JavaScript API reflects the mappings using camelCase names for the properties, and `htmlFor` for `for`:
+
+```js
+this.shadowRoot_.referenceTargetMap.ariaControls = "real-listbox";
+this.shadowRoot_.referenceTargetMap.ariaActiveDescendant = "option-1";
+this.shadowRoot_.referenceTargetMap.htmlFor = "real-input";
+```
+
+##### Combining `referenceTarget` and `referenceTargetMap`
+
+In the case where both attributes are specified, `referenceTargetMap` takes priority for individual attributes, and `referenceTarget` acts as the fallback for attributes that are not specified.
+
+In the example below, `"real-listbox"` is the target for all attributes _except_ `aria-activedescendant`, which is targeted to `"option-2"`.
+
+```html
+<input
+  role="combobox"
+  aria-controls="fancy-listbox"
+  aria-activedescendant="fancy-listbox"
+/>
+<fancy-listbox id="fancy-listbox">
+  <template
+    shadowrootmode="open"
+    shadowrootreferencetarget="real-listbox"
+    shadowrootreferencetargetmap="aria-activedescendant: option-2"
+  >
+    <div id="real-listbox" role="listbox">
+      <div id="option-1" role="option">Option 1</div>
+      <div id="option-2" role="option">Option 2</div>
+    </div>
+  </template>
+</fancy-listbox>
+```
+
+##### Delegating to multiple elements
+
+Some attributes such as `aria-labelledby`, `aria-describedby`, etc. support multiple targets. Using `referenceTargetMap` with those attributes support a space-separated list of IDs.
+
+This example shows a `<description-with-tooltip>` component that contains a "More Info" button to show the tooltip but is not intended to be included in the description text. It targets `aria-describedby: message tooltip` to forward to only the content that should be included in the description text.
+
+```html
+<input aria-describedby="description-with-tooltip" />
+<!--
+  The resulting description text is: 
+  "Inline description text. Tooltip with more information."
+-->
+<description-with-tooltip id="description-with-tooltip">
+  <template
+    shadowrootmode="closed"
+    shadowrootreferencetargetmap="aria-describedby: message tooltip"
+  >
+    <div>
+      <span id="message">Inline description text.</span>
+      <button onmouseover="showTooltip()" onmouseout="hideTooltip()">More Info</button>
+      <div id="tooltip" role="tooltip" style="display: none">Tooltip with more information.</div>
+    </div>
+  </template>
+</description-with-tooltip>
+```
+
+#### Live references
+
+As with `referenceTarget`, `referenceTargetMap` reference are "live".
+
+In the example above, if the `aria-activedescendant` mapping is changed, then the `aria-activedescendant` of `<input>` will be changed to refer to the newly-mapped element.
+
+- **Before**: `<input aria-activedescendant="fancy-listbox">` initially maps to 'option-1'.
+- fancy-listbox internally updates its mapping:
+  ```js
+  this.shadowRoot_.referenceTargetMap.ariaActiveDescendant = "option-2";
+  ```
+- **After**: `<input aria-activedescendant="fancy-listbox">` now maps to 'option-2', without needing to update the input element itself.
+
+##### Nesting inside `<label>`
+
+If the shadow tree is using `referenceTargetMap`, implicit label association uses the `for` attribute from the map.
+
+In the following example, the label of the `<input id="real-input">` is "Fancy input".
+
+```html
+<script>
+  customElements.define(
+    "fancy-input",
+    class FancyInput extends HTMLElement {
+      constructor() {
+        super();
+        this.shadowRoot_ = this.attachShadow({ 
+          mode: "closed",
+          referenceTargetMap: { htmlFor: "real-input" },
+        });
+        this.shadowRoot_.innerHTML = `<input id="real-input" />`;
+      }
+    }
+  );
+</script>
+
+<label>
+  Fancy input
+  <fancy-input></fancy-input>
+</label>
 ```
 
 ## Privacy and Security Considerations
