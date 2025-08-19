@@ -434,8 +434,6 @@ Instead, most attributes return the **host** element that they're targeting, as 
 
 > The `.form` and `.list` attributes are currently specced to be `HTMLFormElement` or `HTMLDataListElement`,
 > so they should be updated so the host element can be returned.
-> However, the underlying association still exists even if the IDL getter returns null:
-> the input would be connected to the form, for example; it's just not reflected by the `.form` attribute.
 
 In the example below, `input.ariaControlsElements` is the `<fancy-listbox>` element that was targeted by `aria-activedescendant="fancy-listbox"`, even though the active descendant internally targets `<div id="option-2">`.
 
