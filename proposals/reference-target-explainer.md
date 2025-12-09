@@ -294,8 +294,8 @@ This can improve the experience of using the components described in the [Backgr
         this.shadowRoot_.innerHTML = `
             <input id="input"
                    type="checkbox"
-                   ${checked == "true" ? "checked" : ""}
-                   aria-checked=${checked == "indeterminate" ? "mixed" : checked}>
+                   ${this.checked == "true" ? "checked" : ""}
+                   aria-checked=${this.checked == "indeterminate" ? "mixed" : this.checked}>
             <span id="box"></span>`;
       }
     }
