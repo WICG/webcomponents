@@ -60,6 +60,8 @@ registry.define('other-element', OtherElement);
 
 Definitions in this registry do not apply to the main document, and vice-versa. The registry must contain definitions for all elements used.
 
+Note that, in the above example, `<other-element>` is scoped to the shadow root inside of `<my-element>`. So `<other-element>` is defined within the scoped registry, not `<my-element>`.
+
 Once a registry and scope are created, element creation associated with the scope will use that registry to look up custom element definitions:
 
 ```js
@@ -118,6 +120,23 @@ Constructors need special care with scoped registries. With a single global regi
 As a result, it must limit constructors by default to only looking up registrations from the global registry. If the constructor is not defined in the global registry, it will throw.
 
 This poses a limitation for authors trying to use the constructor to create new elements associated to scoped registries but not registered as global. More flexibility can be analyzed post MVP, for now, a user-land abstraction can help by keeping track of the constructor and its respective registry.
+
+### Note on light DOM custom elements
+
+Custom elements that use light DOM (i.e. that don't call `this.attachShadow()`) may be scoped, but they must be scoped within a shadow root. For example:
+
+```html
+<body>
+  <shadow-element>
+    #shadow-root (registry=myCustomRegistry)
+      <light-element>
+        <div>Light DOM</div>
+      </light-element>
+  </shadow-element>
+</body>
+```
+
+In the above example, `<light-element>` is scoped within the shadow root of its containing `<shadow-element>`, whereas `<shadow-element>` is defined at the global document level.
 
 ## API
 
