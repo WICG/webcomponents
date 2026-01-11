@@ -181,7 +181,7 @@ Example:
 > <div id="blogPost">
 > 	<p> Some Amazing Content </p>
 > </div>
-> <script>
+> <script type="module">
 > 	let blogPost = import.meta.document.querySelector("#blogPost");
 > 	export {blogPost}
 > </script>
