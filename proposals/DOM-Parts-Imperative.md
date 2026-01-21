@@ -24,8 +24,8 @@ interface AttributePart : Part {
     readonly attribute DOMString namespaceURI;
 };
 
-interface ChildNodePart : Part {
-    constructor(Node node, Node? previousSibling, Node? nextSibling);
+interface ChildNodePart : NodePart {
+    constructor(Node parentNode, Node? previousSibling, Node? nextSibling);
     readonly attribute Node? previousSibling;
     readonly attribute Node? nextSibling;
 };
@@ -54,6 +54,10 @@ In the most basic level, this proposal consists of three DOM parts:
    [child](https://dom.spec.whatwg.org/#concept-tree-child)
    [nodes](https://dom.spec.whatwg.org/#concept-node) of a node which can be
    [replaced](https://dom.spec.whatwg.org/#concept-node-replace).
+   1.    Can represent the entire range within a parent node (when previousSibling
+         and nextSibling are missing), the range from a node to the end of an
+         element (when nextSibling is missing), or all nodes up to an element
+         (when previousSibling is missing).
 
 ### Basic Examples
 
@@ -110,6 +114,16 @@ The resultant DOM will look like this:
   <h1 id="name">Ryosuke Niwa</h1>
   Email: <a id="link" href="mailto:rniwa@webkit.org">rniwa@webkit.org</a>
 </section>
+```
+
+A `NodePart` can be used to add event listeners or other dynamically set attributes.
+
+```js
+const link = staticContent.getElementById("link");
+const nodePart = new NodePart(link);
+/// ... some code later
+nodePart.node.addEventListener('click', () => {});
+nodePart.setAttribute('data-foo', someValue);
 ```
 
 ## Part Groups
