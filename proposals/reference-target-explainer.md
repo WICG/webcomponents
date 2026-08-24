@@ -351,7 +351,7 @@ This feature is intended to work with **all** attributes that refer to another e
   - `popovertarget`
   - `anchor` (proposed in the [Popover API Explainer](https://open-ui.org/components/popover.research.explainer/#anchoring))
   - `commandfor` (proposed in [Invokers Explainer](https://open-ui.org/components/invokers.explainer/))
-  - `interesttarget` (proposed in [Invokers Explainer](https://open-ui.org/components/invokers.explainer/))
+  - `interestfor` (proposed in [Interest Invokers Explainer](https://open-ui.org/components/interest-invokers.explainer/))
 - Tables
   - `headers`
 
@@ -420,7 +420,7 @@ Some JavaScript attributes reflect HTML attributes as Element objects rather tha
 - `ARIAMixin.ariaFlowToElements`
 - `ARIAMixin.ariaLabelledByElements`
 - `ARIAMixin.ariaOwnsElements`
-- `HTMLButtonElement.interestTargetElement`
+- `HTMLButtonElement.interestForElement`
 - `HTMLButtonElement.popoverTargetElement`
 - `HTMLElement.anchorElement`
 - `HTMLInputElement.form`
@@ -742,7 +742,7 @@ An alternative to a single attribute `shadowrootreferencetargetmap` / `ShadowRoo
 - `shadowrootlisttarget`
 - `shadowrootpopovertargettarget`
 - `shadowrootinvoketargettarget`
-- `shadowrootinteresttargettarget`
+- `shadowrootinterestfortarget`
 - `shadowrootheaderstarget`
 - `shadowrootitemreftarget`
 - `shadowrootreferencetarget` -- all other references except the ones specified above
